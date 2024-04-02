@@ -15,6 +15,7 @@ public class Application {
 
     // The window handle
     private long window;
+    public Thread game;
 
     public void run() {
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -47,8 +48,9 @@ public class Application {
 
         // Create the window
         window = glfwCreateWindow(300, 300, "the game!", glfwGetPrimaryMonitor(), NULL);
-
+        // Resize the window
         glfwSetWindowSize(window, 1920, 1080);
+
         if ( window == NULL )
             throw new RuntimeException("Failed to create the GLFW window");
 
@@ -103,13 +105,12 @@ public class Application {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
             glfwSwapBuffers(window); // swap the color buffers
-
+            glEnable(GL_DEPTH_TEST);
             // Poll for window events. The key callback above will only be
             // invoked during this call.
             glfwPollEvents();
         }
     }
-
     public static void main(String[] args) {
         new Application().run();
     }
