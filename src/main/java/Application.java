@@ -109,8 +109,49 @@ public class Application {
             // Poll for window events. The key callback above will only be
             // invoked during this call.
             glfwPollEvents();
+            render();
         }
     }
+    public void render(){
+        glLoadIdentity();
+        glTranslated(1, 1, 1);
+        glRotatef(0, 0.1f, 0.0f, 0.0f);
+
+        glBegin(GL_QUADS);
+        glColor3f(0,1,1);
+        glVertex3f(2f, 2f, 2f);
+        glVertex3f(2f, 2f,2f);
+        glVertex3f( 2f, 2f,-2f);
+        glVertex3f(2f, 2f, 2f);
+        glColor3f(1,0,0);
+        glVertex3f(-2f,-2f,-2f);
+        glVertex3f( 2f,-2f,-2f);
+        glVertex3f( 2f, 2f,-2f);
+        glVertex3f(-2f, 2f,-2f);
+        glColor3f(0,1,0);
+        glVertex3f(-2f,-2f,-2f);
+        glVertex3f(-2f,-2f, 2f);
+        glVertex3f(-2f, 2f, 2f);
+        glVertex3f(-2f, 2f,-2f);
+        glColor3f(0,0,1);
+        glVertex3f( 2f,-2f, 2f);
+        glVertex3f( 2f,-2f,-2f);
+        glVertex3f( 2f, 2f,-2f);
+        glVertex3f( 2f, 2f, 2f);
+        glColor3f(1,1,0);
+        glVertex3f(-2f,-2f,-2f);
+        glVertex3f( 2f,-2f,-2f);
+        glVertex3f( 2f,-2f, 2f);
+        glVertex3f(-2f,-2f, 2f);
+        glColor3f(1,0,1);
+        glVertex3f(-2f,-2f, 2f);
+        glVertex3f( 2f,-2f, 2f);
+        glVertex3f( 2f, 2f, 2f);
+        glVertex3f(-2f, 2f, 2f);
+        glEnd();
+
+    }
+
     public static void main(String[] args) {
         new Application().run();
     }
