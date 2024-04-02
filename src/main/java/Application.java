@@ -46,7 +46,9 @@ public class Application {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
         // Create the window
-        window = glfwCreateWindow(300, 300, "Hello World!", NULL, NULL);
+        window = glfwCreateWindow(300, 300, "the game!", glfwGetPrimaryMonitor(), NULL);
+
+        glfwSetWindowSize(window, 1920, 1080);
         if ( window == NULL )
             throw new RuntimeException("Failed to create the GLFW window");
 
