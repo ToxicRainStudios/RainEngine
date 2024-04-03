@@ -11,6 +11,8 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import geometry.*;
+import util.Color;
 public class Application {
 
     // The window handle
@@ -133,8 +135,9 @@ public class Application {
             // Enable depth testing
             glEnable(GL_DEPTH_TEST);
 
-            // Draw the cube
-            drawCube();
+            // Draw the shapes
+            Cube.drawCube(Color.BLUE,1,1,1, 0,0, -5);
+            Pyramid.drawPyramid(Color.RED,1,1,1, 0,0, -1);
 
             // Process input
             processInput();
@@ -158,55 +161,6 @@ public class Application {
             cameraY -= cameraSpeed;
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
             cameraY += cameraSpeed;
-    }
-
-    private void drawCube() {
-        // Set the color of the cube
-        glColor3f(1.0f, 1.0f, 1.0f);
-
-        // Set up transformations
-        glPushMatrix();
-        glTranslatef(0.0f, 0.0f, -5.0f);
-        glRotatef(0, 1.0f, 1.0f, 1.0f);
-        glScalef(1, 1, 1);
-
-        // Draw the cube
-        glBegin(GL_QUADS);
-        // Front face
-        glVertex3f(-1.0f, -1.0f, 1.0f);
-        glVertex3f(1.0f, -1.0f, 1.0f);
-        glVertex3f(1.0f, 1.0f, 1.0f);
-        glVertex3f(-1.0f, 1.0f, 1.0f);
-        // Back face
-        glVertex3f(-1.0f, -1.0f, -1.0f);
-        glVertex3f(-1.0f, 1.0f, -1.0f);
-        glVertex3f(1.0f, 1.0f, -1.0f);
-        glVertex3f(1.0f, -1.0f, -1.0f);
-        // Top face
-        glVertex3f(-1.0f, 1.0f, -1.0f);
-        glVertex3f(-1.0f, 1.0f, 1.0f);
-        glVertex3f(1.0f, 1.0f, 1.0f);
-        glVertex3f(1.0f, 1.0f, -1.0f);
-        // Bottom face
-        glVertex3f(-1.0f, -1.0f, -1.0f);
-        glVertex3f(1.0f, -1.0f, -1.0f);
-        glVertex3f(1.0f, -1.0f, 1.0f);
-        glVertex3f(-1.0f, -1.0f, 1.0f);
-        // Right face
-        glVertex3f(1.0f, -1.0f, -1.0f);
-        glVertex3f(1.0f, 1.0f, -1.0f);
-        glVertex3f(1.0f, 1.0f, 1.0f);
-        glVertex3f(1.0f, -1.0f, 1.0f);
-        // Left face
-        glVertex3f(-1.0f, -1.0f, -1.0f);
-        glVertex3f(-1.0f, -1.0f, 1.0f);
-        glVertex3f(-1.0f, 1.0f, 1.0f);
-        glVertex3f(-1.0f, 1.0f, -1.0f);
-        glEnd();
-
-        // Restore the previous matrix
-        glPopMatrix();
-
     }
 
     public static void main(String[] args) {

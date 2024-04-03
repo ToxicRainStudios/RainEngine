@@ -40,16 +40,16 @@ public enum Color {
         this.blue = blue;
     }
 
-    public float getRed() {
-        return red;
+    public static float getRed(Color color) {
+        return color.red;
     }
 
-    public float getGreen() {
-        return green;
+    public static float getGreen(Color color) {
+        return color.green;
     }
 
-    public float getBlue() {
-        return blue;
+    public static float getBlue(Color color) {
+        return color.blue;
     }
 
 }
