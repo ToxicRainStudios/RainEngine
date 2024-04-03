@@ -39,6 +39,8 @@ dependencies {
 
     implementation "com.github.crykn.guacamole:gdx-desktop:$guacamoleVersion"
 
+    implementation "org.json:json:20171018"
+
 }
 
 mainClassName = 'Application'
