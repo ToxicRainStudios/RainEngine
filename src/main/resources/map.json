@@ -1,0 +1,23 @@
+{
+  "mapname": "map",
+  "mapauthor": "smeagle",
+  "creationdate": "1",
+  "brushes": [
+    {
+      "type": "cube",
+      "height": 2,
+      "width": 3,
+      "depth": 1,
+      "rotation": 0
+    },
+    {
+      "type": "sphere",
+      "radius": 2,
+      "rotation": 0
+    },
+	{
+      "type": "pyramid",
+      "scale": 2
+    }
+  ]
+}

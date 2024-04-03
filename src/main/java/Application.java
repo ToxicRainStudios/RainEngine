@@ -11,8 +11,9 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-import geometry.*;
-import util.Color;
+import map.MapLoader;
+import util.movement.Camera;
+import util.constant.Constants;
 public class Application {
 
     // The window handle
@@ -54,7 +55,7 @@ public class Application {
         // Create the window
         window = glfwCreateWindow(300, 300, "the game!", glfwGetPrimaryMonitor(), NULL);
         // Resize the window
-        glfwSetWindowSize(window, 1920, 1080);
+        glfwSetWindowSize(window, (int) Constants.windowWidth, (int) Constants.windowHeight);
 
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
@@ -116,15 +117,8 @@ public class Application {
             // Set up the projection matrix
             glMatrixMode(GL_PROJECTION);
             glLoadIdentity();
-            float aspectRatio = 1920.0f / 1080.0f; // Adjust this according to your window size
-            float fov = 45.0f; // Field of view
-            float near = 0.1f; // Near clipping plane
-            float far = 100.0f; // Far clipping plane
-            float top = near * (float) Math.tan(Math.toRadians(fov / 2));
-            float bottom = -top;
-            float right = top * aspectRatio;
-            float left = -right;
-            glFrustum(left, right, bottom, top, near, far);
+
+            glFrustum(Camera.left, Camera.right, Camera.bottom, Camera.top, Camera.near, Camera.far);
 
             // Set up the view matrix
             glMatrixMode(GL_MODELVIEW);
@@ -136,8 +130,7 @@ public class Application {
             glEnable(GL_DEPTH_TEST);
 
             // Draw the shapes
-            Cube.drawCube(Color.BLUE,1,1,1, 0,0, -5);
-            Pyramid.drawPyramid(Color.RED,1,1,1, 0,0, -1);
+            MapLoader.LoadMap();
 
             // Process input
             processInput();
