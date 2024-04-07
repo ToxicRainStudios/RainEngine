@@ -5,8 +5,13 @@ import java.io.IOException;
 
 public class JSONParser {
     public static int height = 0;
+    public static String color = "BLUE";
     public static int width = 0;
     public static int depth = 0;
+    public static int xpos = 0;
+    public static int ypos = 0;
+    public static int zpos = 0;
+
     public static int cubeCount = 0;
 
     public static void load() {
@@ -21,20 +26,21 @@ public class JSONParser {
                     JSONObject brush = brushesArray.getJSONObject(i);
                     String type = brush.getString("type");
                     // Additional attributes specific to each brush type
-                    switch (type) {
-                        case "cube":
-                            setHeight(brush.getInt("height"));
-                            setWidth(brush.getInt("width"));
-                            setDepth(brush.getInt("depth"));
-                            //int rotation = brush.getInt("rotation");
-                            cubeCount++;
-                            break;
-                        case "sphere":
-                            //int radius = brush.getInt("radius");
-                            break;
-                        case "pyramid":
+                    if ("cube".equals(type)) {
+                        setHeight(brush.getInt("height"));
+                        setColor(brush.getString("color"));
+                        setWidth(brush.getInt("width"));
+                        setDepth(brush.getInt("depth"));
+                        setXPos(brush.getInt("xposition"));
+                        setYPos(brush.getInt("yposition"));
+                        setZPos(brush.getInt("zposition"));
+                        incrementCubeCount();
+                    }
+                    else if ("sphere".equals(type)) {
+                        //int radius = brush.getInt("radius");
+                    }
+                    else if ("pyramid".equals(type)) {
                             //int scale = brush.getInt("scale");
-                            break;
                     }
                 }
 
@@ -47,7 +53,13 @@ public class JSONParser {
         }
         public static int getHeight () {
         return height;
-    }
+        }
+        public static void setColor ( String color){
+            JSONParser.color = color;
+        }
+        public static String getColor () {
+            return color;
+        }
         public static void setWidth ( int width){
             JSONParser.width = width;
         }
@@ -56,8 +68,33 @@ public class JSONParser {
         }
         public static void setDepth ( int depth){
             JSONParser.depth = depth;
+
         }
         public static int getDepth () {
             return depth;
+        }
+        public static void setXPos ( int xpos){
+            JSONParser.xpos = xpos;
+        }
+        public static int getXPos () {
+            return xpos;
+        }
+        public static void setYPos ( int ypos){
+            JSONParser.ypos = ypos;
+        }
+        public static int getYPos () {
+            return ypos;
+        }
+        public static void setZPos ( int zpos){
+            JSONParser.zpos = zpos;
+        }
+        public static int getZPos () {
+            return zpos;
+        }
+        public static void incrementCubeCount () {
+            JSONParser.cubeCount = cubeCount + 1;
+        }
+        public static int getCubeCount () {
+            return cubeCount;
         }
     }

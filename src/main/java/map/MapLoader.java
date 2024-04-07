@@ -1,16 +1,21 @@
 package map;
 
 import util.Color;
-
+import org.json.*;
 import geometry.Cube;
 import util.json.JSONParser;
 
-
 public class MapLoader {
     public static void LoadMap() {
-        new JSONParser().load();
-        for (int i = 0; i < JSONParser.cubeCount; i++) {
-            Cube.drawCube(Color.BLUE, JSONParser.getWidth(), JSONParser.getHeight(), JSONParser.getDepth(), 0, 0, -5);
+        JSONParser.load();
+                Cube.drawCube(
+                        Color.from(JSONParser.getColor()),
+                        JSONParser.getWidth(),
+                        JSONParser.getHeight(),
+                        JSONParser.getDepth(),
+                        JSONParser.getXPos(),
+                        JSONParser.getYPos(),
+                        JSONParser.getZPos()
+                );
         }
-}
-}
+    }
