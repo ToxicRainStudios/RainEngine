@@ -28,10 +28,13 @@ public class JSONParser {
                             setDepth(brush.getInt("depth"));
                             //int rotation = brush.getInt("rotation");
                             cubeCount++;
+                            break;
                         case "sphere":
                             //int radius = brush.getInt("radius");
+                            break;
                         case "pyramid":
                             //int scale = brush.getInt("scale");
+                            break;
                     }
                 }
 
@@ -43,8 +46,8 @@ public class JSONParser {
             JSONParser.height = height;
         }
         public static int getHeight () {
-            return height;
-        }
+        return height;
+    }
         public static void setWidth ( int width){
             JSONParser.width = width;
         }
