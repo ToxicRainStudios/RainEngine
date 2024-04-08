@@ -1,6 +1,7 @@
 package util.json;
 
 import org.json.*;
+import util.FileUtils;
 import java.io.IOException;
 
 public class JSONParser {
@@ -16,7 +17,7 @@ public class JSONParser {
 
     public static void load() {
             try {
-                JSONObject jsonObject = JSONDataReader.readJsonFile("C:\\Users\\hudso\\OneDrive\\Desktop\\MWC\\game\\src\\main\\resources\\map.json");
+                JSONObject jsonObject = JSONDataReader.readJsonFile(FileUtils.getFileFromResourceAsStream("map.json").toString());
                 final String mapName = jsonObject.getString("mapname");
                 final String mapAuthor = jsonObject.getString("mapauthor");
                 final String creationDate = jsonObject.getString("creationdate");
