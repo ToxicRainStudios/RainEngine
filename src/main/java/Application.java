@@ -14,6 +14,9 @@ import static org.lwjgl.system.MemoryUtil.*;
 import map.MapLoader;
 import util.movement.Camera;
 import util.constant.Constants;
+
+import static de.damios.guacamole.gdx.StartOnFirstThreadHelper.startNewJvmIfRequired;
+
 public class Application {
 
     // The window handle
@@ -51,7 +54,12 @@ public class Application {
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
-
+        
+        // Starts a new JVM if the application was started on macOS without the
+        // -XstartOnFirstThread argument.
+        if (startNewJvmIfRequired()) {
+            System.exit(0);
+        }
         // Create the window
         window = glfwCreateWindow(300, 300, "the game!", glfwGetPrimaryMonitor(), NULL);
         // Resize the window
