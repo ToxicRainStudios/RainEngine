@@ -1,14 +1,11 @@
 package geometry;
 
-import de.damios.guacamole.annotations.Beta;
-
 import util.Color;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class Cube {
-  
-  @Beta
+public class Brushes {
+
   public static void drawCube(Color color, float hightx, float highty, float hightz, float x, float y, float z) {
         // Set the color of the cube
         float red = Color.getRed(color);
@@ -60,8 +57,7 @@ public class Cube {
         glPopMatrix();
 
     }
-  
-  @Beta
+
   public static void drawPyramid(Color color, float hightx, float highty, float hightz, float x, float y, float z){
         // Set the color of the pyramid
         float red = Color.getRed(color);
