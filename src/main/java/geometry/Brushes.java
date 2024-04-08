@@ -3,14 +3,15 @@ package geometry;
 import util.Color;
 
 import static org.lwjgl.opengl.GL11.*;
+import static util.Color.*;
 
 public class Brushes {
 
   public static void drawCube(Color color, float hightx, float highty, float hightz, float x, float y, float z) {
         // Set the color of the cube
-        float red = Color.getRed(color);
-        float green = Color.getGreen(color);
-        float blue = Color.getBlue(color);
+        float red = getRed(color);
+        float green = getGreen(color);
+        float blue = getBlue(color);
         glColor3f(red,green,blue);
 
         // Set up transformations
@@ -60,9 +61,9 @@ public class Brushes {
 
   public static void drawPyramid(Color color, float hightx, float highty, float hightz, float x, float y, float z){
         // Set the color of the pyramid
-        float red = Color.getRed(color);
-        float green = Color.getGreen(color);
-        float blue = Color.getBlue(color);
+        float red = getRed(color);
+        float green = getGreen(color);
+        float blue = getBlue(color);
         glColor3f(red,green,blue);
 
         glTranslatef(x, y, z);
