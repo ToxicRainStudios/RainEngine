@@ -1,32 +1,32 @@
 package core;
 
-import org.lwjgl.*;
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
-
-import java.nio.*;
-import java.util.Objects;
-
-import static org.lwjgl.glfw.Callbacks.*;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
-
 import map.MapLoader;
-import util.movement.Camera;
+import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.system.MemoryStack;
 import util.constant.Constants;
+import util.movement.Camera;
+
+import java.nio.IntBuffer;
 
 import static de.damios.guacamole.gdx.StartOnFirstThreadHelper.startNewJvmIfRequired;
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
 public class GameEngine {
 
+    //The window handle
     public static long window;
 
-    private static float cameraX = 0.0f;
-    private static float cameraY = 0.0f;
-    private static float cameraZ = 5.0f;
-    private static float cameraSpeed = 0.05f;
+    private static float cameraX = 0.0f; //Camera X position
+    private static float cameraY = 0.0f; //Camera Y position
+    private static float cameraZ = 5.0f; //Camera Z position
+    private static float cameraSpeed = 0.05f; //Camera Speed
 
     public static void run(String windowTile) {
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
