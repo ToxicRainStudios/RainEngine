@@ -23,10 +23,10 @@ public class GameEngine {
 
     public static long window;
 
-    private float cameraX = 0.0f;
-    private float cameraY = 0.0f;
-    private float cameraZ = 5.0f;
-    private float cameraSpeed = 0.05f;
+    private static float cameraX = 0.0f;
+    private static float cameraY = 0.0f;
+    private static float cameraZ = 5.0f;
+    private static float cameraSpeed = 0.05f;
 
     public GameEngine(String windowTile){
         GameEngine.run(windowTile);
@@ -175,7 +175,7 @@ public class GameEngine {
         }
     }
 
-    private void processInput() {
+    private static void processInput() {
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
             cameraZ -= cameraSpeed;
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
