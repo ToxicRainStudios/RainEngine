@@ -31,8 +31,8 @@ public class GameEngine {
     public static void run(String windowTile) {
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
 
-        GameEngine.init(windowTile, true);
-        GameEngine.loop();
+        init(windowTile, true);
+        loop();
 
         // Free the window callbacks and destroy the window
         glfwFreeCallbacks(window);
@@ -43,13 +43,6 @@ public class GameEngine {
         glfwSetErrorCallback(null).free();
     }
     private static void init(String windowTitle, boolean vSync) {
-
-        // The window handle
-
-        float cameraX = 0.0f;
-        float cameraY = 0.0f;
-        float cameraZ = 5.0f;
-        float cameraSpeed = 0.05f;
 
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
@@ -114,7 +107,6 @@ public class GameEngine {
                 glfwSwapInterval(0);
                 glfwShowWindow(window);
             }
-
     }
     private static void loop() {
         // This line is critical for LWJGL's interoperation with GLFW's
