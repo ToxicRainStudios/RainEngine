@@ -28,8 +28,8 @@ public class GameEngine {
     private float cameraZ = 5.0f;
     private float cameraSpeed = 0.05f;
 
-    public static void GameEngine(String windowTile){
-        GameEngine.init(windowTile, true);
+    public GameEngine(String windowTile){
+        GameEngine.run(windowTile);
 
         // Free the window callbacks and destroy the window
         glfwFreeCallbacks(window);
@@ -38,6 +38,21 @@ public class GameEngine {
         // Terminate GLFW and free the error callback
         glfwTerminate();
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+    }
+
+    public static void run(String windowTile) {
+        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
+
+        GameEngine.init(windowTile, true);
+        GameEngine.loop();
+
+        // Free the window callbacks and destroy the window
+        glfwFreeCallbacks(window);
+        glfwDestroyWindow(window);
+
+        // Terminate GLFW and free the error callback
+        glfwTerminate();
+        glfwSetErrorCallback(null).free();
     }
     private static void init(String windowTitle, boolean vSync) {
 
@@ -113,7 +128,7 @@ public class GameEngine {
             }
 
     }
-    private void loop() {
+    private static void loop() {
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.
         // LWJGL detects the context that is current in the current thread,
