@@ -28,18 +28,6 @@ public class GameEngine {
     private static float cameraZ = 5.0f;
     private static float cameraSpeed = 0.05f;
 
-    public GameEngine(String windowTile){
-        GameEngine.run(windowTile);
-
-        // Free the window callbacks and destroy the window
-        glfwFreeCallbacks(window);
-        glfwDestroyWindow(window);
-
-        // Terminate GLFW and free the error callback
-        glfwTerminate();
-        Objects.requireNonNull(glfwSetErrorCallback(null)).free();
-    }
-
     public static void run(String windowTile) {
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
 
