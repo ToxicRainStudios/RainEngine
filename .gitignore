@@ -1,6 +1,13 @@
+# IntelliJ Idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
 
+# Gradle
+build
+.gradle
+
+# Misc
 .DS_Store
-/.gradle
-/build
-/.idea
-/build/tmp
