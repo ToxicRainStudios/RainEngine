@@ -23,35 +23,35 @@ public class Brushes {
         // Draw the cube
         glBegin(GL_QUADS);
         // Front face
-        glVertex3f(-1.0f * hightx, -1.0f * highty, 1.0f * hightz);
-        glVertex3f(1.0f * hightx, -1.0f * highty, 1.0f * hightz);
-        glVertex3f(1.0f * hightx, 1.0f * highty, 1.0f * hightz);
-        glVertex3f(-1.0f * hightx, 1.0f * highty, 1.0f * hightz);
+        glVertex3f(-1.0f * hightx, -1.0f * highty, hightz);
+        glVertex3f(hightx, -1.0f * highty, hightz);
+        glVertex3f(hightx, highty, hightz);
+        glVertex3f(-1.0f * hightx, highty, hightz);
         // Back face
         glVertex3f(-1.0f * hightx, -1.0f * highty, -1.0f * hightz);
-        glVertex3f(-1.0f* hightx, 1.0f * highty, -1.0f * hightz);
-        glVertex3f(1.0f * hightx, 1.0f * highty, -1.0f * hightz);
-        glVertex3f(1.0f * hightx, -1.0f * highty, -1.0f * hightz);
+        glVertex3f(-1.0f* hightx, highty, -1.0f * hightz);
+        glVertex3f(hightx, highty, -1.0f * hightz);
+        glVertex3f(hightx, -1.0f * highty, -1.0f * hightz);
         // Top face
-        glVertex3f(-1.0f * hightx, 1.0f * highty, -1.0f * hightz);
-        glVertex3f(-1.0f * hightx, 1.0f * highty, 1.0f * hightz);
-        glVertex3f(1.0f * hightx, 1.0f * highty, 1.0f * hightz);
-        glVertex3f(1.0f * hightx, 1.0f * highty, -1.0f * hightz);
+        glVertex3f(-1.0f * hightx, highty, -1.0f * hightz);
+        glVertex3f(-1.0f * hightx, highty, hightz);
+        glVertex3f(hightx, highty, hightz);
+        glVertex3f(hightx, highty, -1.0f * hightz);
         // Bottom face
         glVertex3f(-1.0f * hightx, -1.0f * highty, -1.0f * hightz);
-        glVertex3f(1.0f * hightx, -1.0f * highty, -1.0f * hightz);
-        glVertex3f(1.0f * hightx, -1.0f * highty, 1.0f * hightz);
-        glVertex3f(-1.0f * hightx, -1.0f * highty, 1.0f * hightz);
+        glVertex3f(hightx, -1.0f * highty, -1.0f * hightz);
+        glVertex3f(hightx, -1.0f * highty, hightz);
+        glVertex3f(-1.0f * hightx, -1.0f * highty, hightz);
         // Right face
-        glVertex3f(1.0f * hightx, -1.0f * highty, -1.0f * hightz);
-        glVertex3f(1.0f * hightx, 1.0f * highty, -1.0f * hightz);
-        glVertex3f(1.0f * hightx, 1.0f * highty, 1.0f * hightz);
-        glVertex3f(1.0f * hightx, -1.0f * highty, 1.0f * hightz);
+        glVertex3f(hightx, -1.0f * highty, -1.0f * hightz);
+        glVertex3f(hightx, highty, -1.0f * hightz);
+        glVertex3f(hightx, highty, hightz);
+        glVertex3f(hightx, -1.0f * highty, hightz);
         // Left face
         glVertex3f(-1.0f * hightx, -1.0f * highty, -1.0f * hightz);
-        glVertex3f(-1.0f * hightx, -1.0f * highty, 1.0f * hightz);
-        glVertex3f(-1.0f * hightx, 1.0f * highty, 1.0f * hightz);
-        glVertex3f(-1.0f * hightx, 1.0f * highty, -1.0f * hightz);
+        glVertex3f(-1.0f * hightx, -1.0f * highty, hightz);
+        glVertex3f(-1.0f * hightx, highty, hightz);
+        glVertex3f(-1.0f * hightx, highty, -1.0f * hightz);
         glEnd();
 
         // Restore the previous matrix
