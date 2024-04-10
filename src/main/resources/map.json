@@ -15,6 +15,17 @@
 	  "zposition": -5
     },
     {
+      "type": "cube",
+      "color": "BLUE",
+      "height": 10,
+      "width": 2,
+      "depth": 1,
+      "rotation": 0,
+      "xposition": 10,
+      "yposition": 0,
+      "zposition": -10
+    },
+    {
       "type": "sphere",
       "radius": 2,
       "rotation": 0
