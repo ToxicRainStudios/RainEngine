@@ -2,6 +2,11 @@ package util;
 
 import static java.util.Arrays.stream;
 
+/**
+ * The Color class provides basic color tools
+ *
+ * @author strubium
+ */
 public enum Color {
     BLANK(-1f, -1f, -1f),
     BLACK(0.000f, 0.000f, 0.000f),
@@ -34,6 +39,9 @@ public enum Color {
                 .orElse(null);
     }
 
+    /**
+     * Make a new color
+     */
     Color(float red, float green, float blue) {
         this.red = red;
         this.green = green;

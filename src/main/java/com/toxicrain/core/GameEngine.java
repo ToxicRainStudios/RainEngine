@@ -1,6 +1,5 @@
 package core;
 
-import map.MapLoader;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -8,7 +7,6 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 import util.constant.Constants;
-import util.movement.Camera;
 
 import java.nio.IntBuffer;
 
@@ -18,6 +16,11 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
+
+//Non library stuff (Stuff ive made)
+import util.constant.Constants;
+
+
 public class  GameEngine {
 
     //The window handle
@@ -53,7 +56,7 @@ public class  GameEngine {
             throw new IllegalStateException("Unable to initialize GLFW");
 
         // Configure GLFW
-        glfwDefaultWindowHints(); // optional, the current window hints are already the default
+        glfwDefaultWindowHints(); // the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
@@ -132,7 +135,7 @@ public class  GameEngine {
             glMatrixMode(GL_PROJECTION);
             glLoadIdentity();
 
-            glFrustum(Camera.left, Camera.right, Camera.bottom, Camera.top, Camera.near, Camera.far);
+            glFrustum(1, 1, 1, 1, 1, 1);
 
             // Set up the view matrix
             glMatrixMode(GL_MODELVIEW);
@@ -142,9 +145,6 @@ public class  GameEngine {
 
             // Enable depth testing
             glEnable(GL_DEPTH_TEST);
-
-            // Draw the shapes
-            MapLoader.LoadMap();
 
             // Process input
             processInput();
