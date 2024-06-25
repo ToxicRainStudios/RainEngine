@@ -8,6 +8,8 @@ package util.constant;
  * globally (i.e. public static). Do not put anything functional in this class.
  */
 public class Constants {
+    /**Engine's version, do not change willy-nilly*/
+    public static String engineVersion = "1.0.0";
     public static String engineMakers = "Toxic Rain Studios";
     public static String credits = "";
 

@@ -1,10 +1,11 @@
-import core.GameEngine;
+import com.toxicrain.core.json.gameinfoParser;
+import com.toxicrain.core.GameEngine;
 
 public class Application {
 
     public static void main(String[] args) {
-        GameEngine.run("the game!");
+        gameinfoParser.loadGameInfo();
+        GameEngine.run(gameinfoParser.defaultWindowName);
     }
 
 }
-

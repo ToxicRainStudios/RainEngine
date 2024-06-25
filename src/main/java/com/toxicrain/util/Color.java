@@ -3,7 +3,7 @@ package util;
 import static java.util.Arrays.stream;
 
 /**
- * The Color class provides basic color tools
+ * The Color class/enum provides basic color tools
  *
  * @author strubium
  */

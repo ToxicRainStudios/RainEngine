@@ -1,4 +1,4 @@
-package core;
+package com.toxicrain.core;
 
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -19,9 +19,11 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 //Non library stuff (Stuff ive made)
 import util.constant.Constants;
+import com.toxicrain.core.Logger;
+import com.toxicrain.core.json.gameinfoParser;
 
 
-public class  GameEngine {
+public class GameEngine {
 
     //The window handle
     public static long window;
@@ -32,8 +34,11 @@ public class  GameEngine {
     private static float cameraSpeed = 0.05f; //Camera Speed
 
     public static void run(String windowTile) {
-        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
-
+        Logger.printLOG("Hello LWJGL " + Version.getVersion() + "!");
+        Logger.printLOG("Hello RainEngine " + Constants.engineVersion + "!");
+        Logger.printLOG("Running: " + gameinfoParser.gameName + " By: " + gameinfoParser.gameMakers);
+        Logger.printLOG("Version: " + gameinfoParser.gameVersion);
+        doVersionCheck();
         init(windowTile, true);
         loop();
 
@@ -72,6 +77,7 @@ public class  GameEngine {
 
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
+
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -168,6 +174,17 @@ public class  GameEngine {
             cameraY -= cameraSpeed;
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
             cameraY += cameraSpeed;
+    }
+    /**
+     * Checks the internal engine version with what gameinfo.json is asking for
+     */
+    private static void doVersionCheck() {
+        if(Constants.engineVersion.equals(gameinfoParser.engineVersion)){
+            Logger.printLOG("Engine Version check: Pass");
+        }
+        else{
+            Logger.printERROR("Engine Version check: FAIL");
+        }
     }
 
 }
