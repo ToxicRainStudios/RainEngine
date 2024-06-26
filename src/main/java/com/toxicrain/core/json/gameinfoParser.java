@@ -20,7 +20,7 @@ public class gameinfoParser {
      * Loads the gameinfo.json and parsers it into variables
      */
     public static void loadGameInfo() {
-        String filePath = "C:\\Users\\hudso\\OneDrive\\Desktop\\MWC\\game2d\\resources\\gameinfo.json"; // TODO Replace with the actual file path
+        String filePath = "C:\\Users\\hudso\\OneDrive\\Desktop\\MWC\\game2d\\gameinfo.json"; // TODO Replace with the actual file path
 
         try {
             // Read the file content into a string

@@ -34,7 +34,7 @@ public class GameEngine {
     public static void run(String windowTile) {
         Logger.printLOG("Hello LWJGL " + Version.getVersion() + "!");
         Logger.printLOG("Hello RainEngine " + Constants.engineVersion + "!");
-        Logger.printLOG("Running: " + gameinfoParser.gameName + " By " + gameinfoParser.gameMakers);
+        Logger.printLOG("Running: " + gameinfoParser.gameName + " by " + gameinfoParser.gameMakers);
         Logger.printLOG("Version: " + gameinfoParser.gameVersion);
         doVersionCheck();
         init(windowTile, true);
