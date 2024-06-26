@@ -1,4 +1,4 @@
-package util.constant;
+package com.toxicrain.util;
 
 /**
  * The Constants class provides a convenient place to hold app-wide constants.
@@ -8,7 +8,7 @@ package util.constant;
  * globally (i.e. public static). Do not put anything functional in this class.
  */
 public class Constants {
-    /**Engine's version, do not change willy-nilly*/
+    /**Engine's version*/
     public static String engineVersion = "1.0.0";
     public static String engineMakers = "Toxic Rain Studios";
     public static String credits = "";

@@ -6,7 +6,6 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
-import util.constant.Constants;
 
 import java.nio.IntBuffer;
 
@@ -18,8 +17,7 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 //Non library stuff (Stuff ive made)
-import util.constant.Constants;
-import com.toxicrain.core.Logger;
+import com.toxicrain.util.Constants;
 import com.toxicrain.core.json.gameinfoParser;
 
 
@@ -36,7 +34,7 @@ public class GameEngine {
     public static void run(String windowTile) {
         Logger.printLOG("Hello LWJGL " + Version.getVersion() + "!");
         Logger.printLOG("Hello RainEngine " + Constants.engineVersion + "!");
-        Logger.printLOG("Running: " + gameinfoParser.gameName + " By: " + gameinfoParser.gameMakers);
+        Logger.printLOG("Running: " + gameinfoParser.gameName + " By " + gameinfoParser.gameMakers);
         Logger.printLOG("Version: " + gameinfoParser.gameVersion);
         doVersionCheck();
         init(windowTile, true);

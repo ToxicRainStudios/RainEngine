@@ -3,10 +3,10 @@ package com.toxicrain.core.json;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
+
+import com.toxicrain.util.FileUtils;
 
 public class gameinfoParser {
     public static String defaultWindowName = null;
@@ -15,15 +15,16 @@ public class gameinfoParser {
     public static String gameMakers = null;
     public static String gameVersion = null;
     public static String gameWebsite = null;
+
     /**
      * Loads the gameinfo.json and parsers it into variables
      */
     public static void loadGameInfo() {
-        String filePath = "C:\\Users\\hudso\\OneDrive\\Desktop\\exampleEngine.json"; // TODO Replace with the actual file path
+        String filePath = "C:\\Users\\hudso\\OneDrive\\Desktop\\MWC\\game2d\\resources\\gameinfo.json"; // TODO Replace with the actual file path
 
         try {
             // Read the file content into a string
-            String jsonString = readFile(filePath);
+            String jsonString = FileUtils.readFile(filePath);
 
             // Parse the JSON string into a JSONArray
             JSONArray jsonArray = new JSONArray(jsonString);
@@ -31,7 +32,6 @@ public class gameinfoParser {
             // Iterate through the array
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String type = jsonObject.getString("type");
                 // Get the values array
                 JSONArray valuesArray = jsonObject.getJSONArray("values");
                 for (int j = 0; j < valuesArray.length(); j++) {
@@ -72,21 +72,5 @@ public class gameinfoParser {
         }
     }
 
-    /**
-     * Utility method to read the file content into a string
-     *
-     * @param filePath the path to the file
-     * @return the content of the file as a string
-     * @throws IOException if an I/O error occurs
-     */
-    public static String readFile(String filePath) throws IOException {
-        StringBuilder contentBuilder = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String currentLine;
-            while ((currentLine = br.readLine()) != null) {
-                contentBuilder.append(currentLine);
-            }
-        }
-        return contentBuilder.toString();
-    }
+
 }

@@ -1,0 +1,25 @@
+[
+  {
+    "type": "setup",
+    "values": [
+	  {
+        "engineVersion": "1.0.0"
+      },
+      {
+        "defaultWindowName": "the game!"
+      },
+	  {
+        "gameName": "An Example Game"
+      },
+	  {
+        "gameMakers": "dev guys"
+      },
+	  {
+        "gameVersion": "1.0.0"
+      },
+	  {
+        "gameWebsite": "exampledevguys.com"
+      }
+    ]
+  },
+]
