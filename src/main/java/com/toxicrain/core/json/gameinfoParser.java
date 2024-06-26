@@ -15,6 +15,9 @@ public class gameinfoParser {
     public static String gameMakers = null;
     public static String gameVersion = null;
     public static String gameWebsite = null;
+    /**
+     * Loads the gameinfo.json and parsers it into variables
+     */
     public static void loadGameInfo() {
         String filePath = "C:\\Users\\hudso\\OneDrive\\Desktop\\exampleEngine.json"; // TODO Replace with the actual file path
 
@@ -29,10 +32,6 @@ public class gameinfoParser {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String type = jsonObject.getString("type");
-                System.out.println("Type: " + type);
-
-
-
                 // Get the values array
                 JSONArray valuesArray = jsonObject.getJSONArray("values");
                 for (int j = 0; j < valuesArray.length(); j++) {
@@ -43,7 +42,6 @@ public class gameinfoParser {
                     while (keys.hasNext()) {
                         String key = keys.next();
                         String value = valueObject.getString(key);
-                        System.out.println(key + ": " + valueObject.get(key));
                         if (key.equals("defaultWindowName")) {
                             defaultWindowName = value;
                         }
@@ -66,13 +64,20 @@ public class gameinfoParser {
                 }
             }
         } catch (IOException e) {
+            System.err.println("Error reading file: " + filePath);
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Error parsing JSON: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     /**
-     * Utility method to read the file content into a string*
-     * @return contentBuilder.toString()
+     * Utility method to read the file content into a string
+     *
+     * @param filePath the path to the file
+     * @return the content of the file as a string
+     * @throws IOException if an I/O error occurs
      */
     public static String readFile(String filePath) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
