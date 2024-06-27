@@ -1,30 +1,25 @@
 package com.toxicrain.core;
 
+import com.toxicrain.core.json.gameinfoParser;
+import com.toxicrain.util.Constants;
 import com.toxicrain.util.TextureUtil;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.stb.STBImage;
-import java.nio.ByteBuffer;
+
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import static com.toxicrain.util.TextureUtil.floorTexture;
-import static com.toxicrain.util.TextureUtil.floorTextureID;
 import static de.damios.guacamole.gdx.StartOnFirstThreadHelper.startNewJvmIfRequired;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
-import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
-
-// Non library stuff (Stuff I've made)
-import com.toxicrain.util.Constants;
-import com.toxicrain.core.json.gameinfoParser;
 
 public class GameEngine {
 
@@ -140,7 +135,7 @@ public class GameEngine {
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
         // Run the rendering loop until the user has attempted to close
-        // the window or has pressed the ESCAPE key.
+        // the window/pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
             // Set the viewport size
             glViewport(0, 0, 1920, 1080);
@@ -148,9 +143,14 @@ public class GameEngine {
             // Clear the color and depth buffers
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            // Set up the projection matrix
+            // Set up the projection matrix with FOV of 90 degrees
             glMatrixMode(GL_PROJECTION);
+            glLoadMatrixf(createPerspectiveProjectionMatrix(90.0f, 1920.0f / 1080.0f, 1.0f, 100.0f));
+
+            // Set up the projection matrix
+            glMatrixMode(GL_MODELVIEW);
             glLoadIdentity();
+
             glFrustum(-1, 1, -1, 1, 1, 100);
 
             // Set up the view matrix
@@ -249,6 +249,35 @@ public class GameEngine {
                     (vidmode.height() - (int) Constants.windowHeight) / 2, (int) Constants.windowWidth,
                     (int) Constants.windowHeight, GLFW_DONT_CARE);
         }
+    }
+
+    private static FloatBuffer createPerspectiveProjectionMatrix(float fov, float aspectRatio, float near, float far) {
+        float f = (float) (1.0f / Math.tan(Math.toRadians(fov) / 2.0));
+        float[] projectionMatrix = new float[16];
+
+        projectionMatrix[0] = f / aspectRatio;
+        projectionMatrix[1] = 0.0f;
+        projectionMatrix[2] = 0.0f;
+        projectionMatrix[3] = 0.0f;
+
+        projectionMatrix[4] = 0.0f;
+        projectionMatrix[5] = f;
+        projectionMatrix[6] = 0.0f;
+        projectionMatrix[7] = 0.0f;
+
+        projectionMatrix[8] = 0.0f;
+        projectionMatrix[9] = 0.0f;
+        projectionMatrix[10] = (far + near) / (near - far);
+        projectionMatrix[11] = -1.0f;
+
+        projectionMatrix[12] = 0.0f;
+        projectionMatrix[13] = 0.0f;
+        projectionMatrix[14] = (2 * far * near) / (near - far);
+        projectionMatrix[15] = 0.0f;
+
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+        buffer.put(projectionMatrix).flip();
+        return buffer;
     }
 
 }
