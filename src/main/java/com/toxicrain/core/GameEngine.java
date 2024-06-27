@@ -6,38 +6,41 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
-
+import org.lwjgl.stb.STBImage;
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import static de.damios.guacamole.gdx.StartOnFirstThreadHelper.startNewJvmIfRequired;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-//Non library stuff (Stuff ive made)
+// Non library stuff (Stuff I've made)
 import com.toxicrain.util.Constants;
 import com.toxicrain.core.json.gameinfoParser;
 
-
 public class GameEngine {
 
-    //The window handle
+    // The window handle
     public static long window;
 
-    private static float cameraX = 0.0f; //Camera X position
-    private static float cameraY = 0.0f; //Camera Y position
-    private static float cameraZ = 5.0f; //Camera Z position
-    private static float cameraSpeed = 0.05f; //Camera Speed
+    private static float cameraX = 0.0f; // Camera X position
+    private static float cameraY = 0.0f; // Camera Y position
+    private static float cameraZ = 5.0f; // Camera Z position
+    private static float cameraSpeed = 0.05f; // Camera Speed
 
-    public static void run(String windowTile) {
+    private static int textureId;
+
+    public static void run(String windowTitle) {
         Logger.printLOG("Hello LWJGL " + Version.getVersion() + "!");
         Logger.printLOG("Hello RainEngine " + Constants.engineVersion + "!");
         Logger.printLOG("Running: " + gameinfoParser.gameName + " by " + gameinfoParser.gameMakers);
         Logger.printLOG("Version: " + gameinfoParser.gameVersion);
         doVersionCheck();
-        init(windowTile, true);
+        init(windowTitle, true);
         loop();
 
         // Free the window callbacks and destroy the window
@@ -48,8 +51,8 @@ public class GameEngine {
         glfwTerminate();
         glfwSetErrorCallback(null).free();
     }
-    private static void init(String windowTitle, boolean vSync) {
 
+    private static void init(String windowTitle, boolean vSync) {
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
@@ -68,6 +71,7 @@ public class GameEngine {
         if (startNewJvmIfRequired()) {
             System.exit(0);
         }
+
         // Create the window
         window = glfwCreateWindow(300, 300, windowTitle, glfwGetPrimaryMonitor(), NULL);
         // Resize the window
@@ -75,7 +79,6 @@ public class GameEngine {
 
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
-
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
@@ -105,16 +108,55 @@ public class GameEngine {
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
 
-            // Enable v-sync
-            if (vSync){
-                glfwSwapInterval(1);
-                glfwShowWindow(window);
-            }
-            else {
-                glfwSwapInterval(0);
-                glfwShowWindow(window);
-            }
+        // Enable v-sync
+        if (vSync) {
+            glfwSwapInterval(1);
+            glfwShowWindow(window);
+        } else {
+            glfwSwapInterval(0);
+            glfwShowWindow(window);
+        }
+
+        GL.createCapabilities();
+
+        textureId = loadTexture("C:\\Users\\hudso\\OneDrive\\Pictures\\Capture.png");
     }
+
+    private static int loadTexture(String filePath) {
+        int width, height;
+        ByteBuffer image;
+
+        // Load image using STBImage
+        try (MemoryStack stack = stackPush()) {
+            IntBuffer widthBuffer = stack.mallocInt(1);
+            IntBuffer heightBuffer = stack.mallocInt(1);
+            IntBuffer channelsBuffer = stack.mallocInt(1);
+
+            image = STBImage.stbi_load(filePath, widthBuffer, heightBuffer, channelsBuffer, 4);
+            if (image == null) {
+                throw new RuntimeException("Failed to load texture file: " + STBImage.stbi_failure_reason());
+            }
+
+            width = widthBuffer.get();
+            height = heightBuffer.get();
+        }
+
+        // Generate a texture ID
+        int textureId = glGenTextures();
+        // Bind the texture
+        glBindTexture(GL_TEXTURE_2D, textureId);
+
+        // Upload the texture data
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+        // Generate mipmaps
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        // Free the image memory
+        STBImage.stbi_image_free(image);
+
+        return textureId;
+    }
+
     private static void loop() {
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.
@@ -133,13 +175,12 @@ public class GameEngine {
             glViewport(0, 0, 1920, 1080);
 
             // Clear the color and depth buffers
-            GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             // Set up the projection matrix
             glMatrixMode(GL_PROJECTION);
             glLoadIdentity();
-
-            glFrustum(1, 1, 1, 1, 1, 1);
+            glFrustum(-1, 1, -1, 1, 1, 100);
 
             // Set up the view matrix
             glMatrixMode(GL_MODELVIEW);
@@ -150,6 +191,9 @@ public class GameEngine {
             // Enable depth testing
             glEnable(GL_DEPTH_TEST);
 
+            // Render the texture in 3D space
+            renderTexture(textureId);
+
             // Process input
             processInput();
 
@@ -157,6 +201,27 @@ public class GameEngine {
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
+    }
+
+    private static void renderTexture(int textureId) {
+        // Enable textures
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, textureId);
+
+        // Render a quad with the texture
+        glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3f(-1.0f, -1.0f, 0.0f);
+        glTexCoord2f(1.0f, 0.0f);
+        glVertex3f(1.0f, -1.0f, 0.0f);
+        glTexCoord2f(1.0f, 1.0f);
+        glVertex3f(1.0f, 1.0f, 0.0f);
+        glTexCoord2f(0.0f, 1.0f);
+        glVertex3f(-1.0f, 1.0f, 0.0f);
+        glEnd();
+
+        // Disable textures
+        glDisable(GL_TEXTURE_2D);
     }
 
     private static void processInput() {
@@ -173,14 +238,14 @@ public class GameEngine {
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
             cameraY += cameraSpeed;
     }
+
     /**
      * Checks the internal engine version with what gameinfo.json is asking for
      */
     private static void doVersionCheck() {
-        if(Constants.engineVersion.equals(gameinfoParser.engineVersion)){
+        if (Constants.engineVersion.equals(gameinfoParser.engineVersion)) {
             Logger.printLOG("Engine Version check: Pass");
-        }
-        else{
+        } else {
             Logger.printERROR("Engine Version check: FAIL");
         }
     }
