@@ -1,5 +1,6 @@
 package com.toxicrain.core;
 
+import com.toxicrain.util.TextureUtil;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -10,10 +11,12 @@ import org.lwjgl.stb.STBImage;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import static com.toxicrain.util.TextureUtil.floorTextureID;
 import static de.damios.guacamole.gdx.StartOnFirstThreadHelper.startNewJvmIfRequired;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -32,7 +35,8 @@ public class GameEngine {
     private static float cameraZ = 5.0f; // Camera Z position
     private static float cameraSpeed = 0.05f; // Camera Speed
 
-    private static int textureId;
+    private static boolean fullscreen = false;
+
 
     public static void run(String windowTitle) {
         Logger.printLOG("Hello LWJGL " + Version.getVersion() + "!");
@@ -118,44 +122,10 @@ public class GameEngine {
         }
 
         GL.createCapabilities();
-
-        textureId = loadTexture("C:\\Users\\hudso\\OneDrive\\Pictures\\Capture.png");
+        Logger.printLOG("Init Textures");
+        TextureUtil.initTextures();
     }
 
-    private static int loadTexture(String filePath) {
-        int width, height;
-        ByteBuffer image;
-
-        // Load image using STBImage
-        try (MemoryStack stack = stackPush()) {
-            IntBuffer widthBuffer = stack.mallocInt(1);
-            IntBuffer heightBuffer = stack.mallocInt(1);
-            IntBuffer channelsBuffer = stack.mallocInt(1);
-
-            image = STBImage.stbi_load(filePath, widthBuffer, heightBuffer, channelsBuffer, 4);
-            if (image == null) {
-                throw new RuntimeException("Failed to load texture file: " + STBImage.stbi_failure_reason());
-            }
-
-            width = widthBuffer.get();
-            height = heightBuffer.get();
-        }
-
-        // Generate a texture ID
-        int textureId = glGenTextures();
-        // Bind the texture
-        glBindTexture(GL_TEXTURE_2D, textureId);
-
-        // Upload the texture data
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-        // Generate mipmaps
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-        // Free the image memory
-        STBImage.stbi_image_free(image);
-
-        return textureId;
-    }
 
     private static void loop() {
         // This line is critical for LWJGL's interoperation with GLFW's
@@ -192,7 +162,7 @@ public class GameEngine {
             glEnable(GL_DEPTH_TEST);
 
             // Render the texture in 3D space
-            renderTexture(textureId);
+            renderTexture(floorTextureID);
 
             // Process input
             processInput();
@@ -207,6 +177,11 @@ public class GameEngine {
         // Enable textures
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, textureId);
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
         // Render a quad with the texture
         glBegin(GL_QUADS);
@@ -225,6 +200,9 @@ public class GameEngine {
     }
 
     private static void processInput() {
+        if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS) {
+            toggleFullscreen();
+        }
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
             cameraZ -= cameraSpeed;
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -247,6 +225,24 @@ public class GameEngine {
             Logger.printLOG("Engine Version check: Pass");
         } else {
             Logger.printERROR("Engine Version check: FAIL");
+        }
+    }
+
+    private static void toggleFullscreen() {
+        fullscreen = !fullscreen;
+
+        // Get the primary monitor
+        long monitor = glfwGetPrimaryMonitor();
+        GLFWVidMode vidmode = glfwGetVideoMode(monitor);
+
+        if (fullscreen) {
+            // Switch to fullscreen mode
+            glfwSetWindowMonitor(window, monitor, 0, 0, vidmode.width(), vidmode.height(), vidmode.refreshRate());
+        } else {
+            // Switch back to windowed mode
+            glfwSetWindowMonitor(window, NULL, (vidmode.width() - (int) Constants.windowWidth) / 2,
+                    (vidmode.height() - (int) Constants.windowHeight) / 2, (int) Constants.windowWidth,
+                    (int) Constants.windowHeight, GLFW_DONT_CARE);
         }
     }
 
