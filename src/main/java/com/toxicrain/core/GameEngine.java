@@ -57,14 +57,15 @@ public class GameEngine {
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
 
+        Logger.printLOG("Initializing GLFW");
         // Initialize GLFW. Most GLFW functions will not work before doing this.
         if (!glfwInit())
             throw new IllegalStateException("Unable to initialize GLFW");
 
         // Configure GLFW
         glfwDefaultWindowHints(); // the current window hints are already the default
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+        glfwWindowHint(GLFW_VISIBLE, 0); // the window will stay hidden after creation
+        glfwWindowHint(GLFW_RESIZABLE, 1); // the window will be resizable
 
         // Starts a new JVM if the application was started on macOS without the
         // -XstartOnFirstThread argument.
@@ -72,6 +73,7 @@ public class GameEngine {
             System.exit(0);
         }
 
+        Logger.printLOG("Creating the game window");
         // Create the window
         window = glfwCreateWindow(300, 300, windowTitle, glfwGetPrimaryMonitor(), NULL);
         // Resize the window
@@ -83,7 +85,10 @@ public class GameEngine {
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-                glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+                glfwSetWindowShouldClose(window, true); // This is detected in the rendering loop
+            if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS) {
+                toggleFullscreen();
+            }
         });
 
         // Get the thread stack and push a new frame
@@ -205,9 +210,6 @@ public class GameEngine {
 
 
     private static void processInput() {
-        if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS) {
-            toggleFullscreen();
-        }
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
             cameraZ -= cameraSpeed;
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -233,6 +235,9 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Toggles fullscreen for the window
+     */
     private static void toggleFullscreen() {
         fullscreen = !fullscreen;
 

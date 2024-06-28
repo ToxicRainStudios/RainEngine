@@ -1,4 +1,4 @@
-package util;
+package com.toxicrain.util;
 
 import static java.util.Arrays.stream;
 

@@ -1,0 +1,20 @@
+[
+  {
+    "type": "map",
+    "name": "easymobs",
+    "values": [
+      {
+        "factor": 2,
+        "value": "Zombie"
+      },
+      {
+        "factor": 1,
+        "value": "Skeleton"
+      },
+      {
+        "factor": 1,
+        "value": "Spider"
+      }
+    ]
+  }
+]
