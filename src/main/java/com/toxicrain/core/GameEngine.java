@@ -148,7 +148,9 @@ public class GameEngine {
             batchRenderer.beginBatch();
 
             // Add textures to the batch (example: adding floorTexture)
-            batchRenderer.addTexture(floorTexture);
+            batchRenderer.addTexture(floorTexture,1,1,1);
+
+            batchRenderer.addTexture(floorTexture,6,1,1);
 
             // Render the batch
             batchRenderer.renderBatch();
