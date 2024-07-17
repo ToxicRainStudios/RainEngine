@@ -59,12 +59,16 @@ public class TextureUtil {
         // Generate mipmaps
         glGenerateMipmap(GL_TEXTURE_2D);
 
+        // Set texture parameters (these can be moved to the render method if needed)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
         // Free the image memory
         stbi_image_free(image);
 
         return new TextureInfo(textureId, width, height);
     }
-
-
 
 }

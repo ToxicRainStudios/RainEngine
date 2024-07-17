@@ -1,6 +1,7 @@
 package com.toxicrain.core;
 
 import com.toxicrain.core.json.gameinfoParser;
+import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.util.Constants;
 import com.toxicrain.util.TextureUtil;
 import org.lwjgl.BufferUtils;
@@ -120,6 +121,9 @@ public class GameEngine {
         // Set the clear color
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
+        // Create the batch renderer
+        BatchRenderer batchRenderer = new BatchRenderer();
+
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
             // Set the viewport size
@@ -140,8 +144,14 @@ public class GameEngine {
             // Enable depth testing
             glEnable(GL_DEPTH_TEST);
 
-            // Render the texture in 3D space
-            renderTexture(floorTexture);
+            // Begin the batch
+            batchRenderer.beginBatch();
+
+            // Add textures to the batch (example: adding floorTexture)
+            batchRenderer.addTexture(floorTexture);
+
+            // Render the batch
+            batchRenderer.renderBatch();
 
             // Process input
             processInput();
@@ -151,6 +161,7 @@ public class GameEngine {
             glfwPollEvents();
         }
     }
+
 
     private static void renderTexture(TextureInfo textureInfo) {
         // Enable textures
