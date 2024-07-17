@@ -42,7 +42,7 @@ public class GameEngine {
         Logger.printLOG("Running: " + gameinfoParser.gameName + " by " + gameinfoParser.gameMakers);
         Logger.printLOG("Version: " + gameinfoParser.gameVersion);
         doVersionCheck();
-        init(windowTitle, true);
+        init(windowTitle, true); //TODO vSync should be controllable with some sort of settings menu
         loop();
 
         // Free the window callbacks and destroy the window
@@ -55,7 +55,7 @@ public class GameEngine {
     }
 
     private static void init(String windowTitle, boolean vSync) {
-        // Setup an error callback. The default implementation will print the error message in System.err.
+        // Set up an error callback. The default implementation will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
 
         Logger.printLOG("Initializing GLFW");
