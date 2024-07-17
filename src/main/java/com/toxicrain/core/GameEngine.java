@@ -1,5 +1,6 @@
 package com.toxicrain.core;
 
+import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.json.gameinfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.util.Constants;
@@ -11,6 +12,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
+import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -111,6 +113,12 @@ public class GameEngine {
         GL.createCapabilities();
         Logger.printLOG("Creating Textures");
         TextureUtil.initTextures();
+
+        try {
+            MapInfoParser.parseMapFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void loop() {
@@ -185,7 +193,7 @@ public class GameEngine {
     }
 
     /**
-     * Toggles fullscreen for the window
+     * Toggles fullscreen for the game window
      */
     private static void toggleFullscreen() {
         fullscreen = !fullscreen;
