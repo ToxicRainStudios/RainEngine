@@ -109,7 +109,7 @@ public class GameEngine {
         glfwShowWindow(window);
 
         GL.createCapabilities();
-        Logger.printLOG("Init Textures");
+        Logger.printLOG("Creating Textures");
         TextureUtil.initTextures();
     }
 
@@ -127,7 +127,7 @@ public class GameEngine {
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
             // Set the viewport size
-            glViewport(0, 0, 1920, 1080);
+            glViewport(0, 0,  (int) Constants.windowWidth, (int) Constants.windowHeight);
 
             // Clear the color and depth buffers
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -149,8 +149,8 @@ public class GameEngine {
 
             // Add textures to the batch
             batchRenderer.addTexture(floorTexture,1,1,1);
-
             batchRenderer.addTexture(floorTexture,2,1,1);
+            batchRenderer.addTexture(floorTexture,3,1,1);
 
             // Render the batch
             batchRenderer.renderBatch();
@@ -162,36 +162,6 @@ public class GameEngine {
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
-    }
-
-
-    private static void renderTexture(TextureInfo textureInfo) {
-        // Enable textures
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, textureInfo.textureId);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-        // Calculate aspect ratio
-        float aspectRatio = (float) textureInfo.width / textureInfo.height;
-
-        // Render a quad with the texture
-        glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 0.0f);
-        glVertex3f(-aspectRatio, -1.0f, 0.0f);
-        glTexCoord2f(1.0f, 0.0f);
-        glVertex3f(aspectRatio, -1.0f, 0.0f);
-        glTexCoord2f(1.0f, 1.0f);
-        glVertex3f(aspectRatio, 1.0f, 0.0f);
-        glTexCoord2f(0.0f, 1.0f);
-        glVertex3f(-aspectRatio, 1.0f, 0.0f);
-        glEnd();
-
-        // Disable textures
-        glDisable(GL_TEXTURE_2D);
     }
 
     private static void processInput() {

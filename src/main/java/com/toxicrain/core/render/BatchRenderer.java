@@ -1,18 +1,19 @@
 package com.toxicrain.core.render;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
-
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import com.toxicrain.core.TextureInfo;
 import org.lwjgl.BufferUtils;
 
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
+
 public class BatchRenderer {
+
+    /**The max amount of textures*/
     private static final int MAX_TEXTURES = 100;
     private FloatBuffer vertexBuffer;
     private FloatBuffer texCoordBuffer;
@@ -77,7 +78,7 @@ public class BatchRenderer {
         if (textureVertexInfos.isEmpty()) return;
 
         // Sort the textures by texture ID
-        Collections.sort(textureVertexInfos, Comparator.comparingInt(t -> t.textureId));
+        textureVertexInfos.sort(Comparator.comparingInt(t -> t.textureId));
 
         glEnable(GL_TEXTURE_2D);
         glEnableClientState(GL_VERTEX_ARRAY);
