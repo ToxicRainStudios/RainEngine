@@ -134,7 +134,7 @@ public class GameEngine {
 
             // Set up the projection matrix with FOV of 90 degrees
             glMatrixMode(GL_PROJECTION);
-            glLoadMatrixf(createPerspectiveProjectionMatrix(90.0f, 1920.0f / 1080.0f, 1.0f, 100.0f));
+            glLoadMatrixf(createPerspectiveProjectionMatrix(90.0f, Constants.windowWidth / Constants.windowHeight, 1.0f, 100.0f));
 
             // Set up the view matrix
             glMatrixMode(GL_MODELVIEW);
@@ -147,10 +147,10 @@ public class GameEngine {
             // Begin the batch
             batchRenderer.beginBatch();
 
-            // Add textures to the batch (example: adding floorTexture)
+            // Add textures to the batch
             batchRenderer.addTexture(floorTexture,1,1,1);
 
-            batchRenderer.addTexture(floorTexture,6,1,1);
+            batchRenderer.addTexture(floorTexture,2,1,1);
 
             // Render the batch
             batchRenderer.renderBatch();
