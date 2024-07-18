@@ -5,6 +5,7 @@ import com.toxicrain.core.json.gameinfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.util.Constants;
 import com.toxicrain.util.TextureUtil;
+import com.toxicrain.util.MouseUtils;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -33,9 +34,9 @@ public class GameEngine {
     // The window handle
     public static long window;
 
-    private static float cameraX = 0.0f; // Camera X position
-    private static float cameraY = 0.0f; // Camera Y position
-    private static float cameraZ = 5.0f; // Camera Z position
+    public static float cameraX = 0.0f; // Camera X position
+    public static float cameraY = 0.0f; // Camera Y position
+    public static float cameraZ = 5.0f; // Camera Z position
     private static float cameraSpeed = 0.05f; // Camera Speed
     private static float scrollSpeed = 0.5f;  // The max scroll in/out speed
     private static float scrollOffset = 0.0f; // Track the scroll input
@@ -162,6 +163,8 @@ public class GameEngine {
             glLoadIdentity();
             glTranslatef(-cameraX, -cameraY, -cameraZ);
 
+            MouseUtils mouseInput = new MouseUtils(window);
+
             // Enable depth testing
             glEnable(GL_DEPTH_TEST);
 
@@ -175,8 +178,14 @@ public class GameEngine {
             batchRenderer.addTexture(floorTexture,2,1,1);
             batchRenderer.addTexture(floorTexture,3,1,1);
 
+
+            // Get mouse position relative to window
+            float[] mousePos = mouseInput.getMousePosition();
+            // Convert mouse coordinates to OpenGL coordinates
+            float[] openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) Constants.windowWidth, (int) Constants.windowHeight);
+
             // This is the player!
-            batchRenderer.addTexture(floorTexture, center.x, center.y, 3, 0);
+            batchRenderer.addTexture(floorTexture, center.x, center.y, 3, openglMousePos[0], openglMousePos[1]);
 
             // Render the batch
             batchRenderer.renderBatch();
@@ -238,7 +247,7 @@ public class GameEngine {
     }
 
     private static Vector3f getCenter() {
-        FloatBuffer projMatrixBuffer = createPerspectiveProjectionMatrix(90.0f, Constants.windowWidth / Constants.windowHeight, 1.0f, 100.0f);
+        FloatBuffer projMatrixBuffer = getPerspectiveProjectionMatrixBuffer();
         Matrix4f projectionMatrix = new Matrix4f();
         projectionMatrix.set(projMatrixBuffer);
 
@@ -264,6 +273,7 @@ public class GameEngine {
         return worldPos;
     }
 
+    private static FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
     private static FloatBuffer createPerspectiveProjectionMatrix(float fov, float aspectRatio, float near, float far) {
         float f = (float) (1.0f / Math.tan(Math.toRadians(fov) / 2.0));
         float[] projectionMatrix = new float[16];
@@ -288,8 +298,11 @@ public class GameEngine {
         projectionMatrix[14] = (2 * far * near) / (near - far);
         projectionMatrix[15] = 0.0f;
 
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
         buffer.put(projectionMatrix).flip();
+        return buffer;
+    }
+
+    public static FloatBuffer getPerspectiveProjectionMatrixBuffer() {
         return buffer;
     }
 }

@@ -1,6 +1,8 @@
 package com.toxicrain.core.render;
 
 import com.toxicrain.core.TextureInfo;
+import org.joml.Matrix3f;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
@@ -76,15 +78,19 @@ public class BatchRenderer {
      * @param x the x-coordinate of the texture
      * @param y the y-coordinate of the texture
      * @param z the z-coordinate of the texture
-     * @param angle the rotation angle of the texture in radians
      */
-    public void addTexture(TextureInfo textureInfo, float x, float y, float z, float angle) {
+    public void addTexture(TextureInfo textureInfo, float x, float y, float z, float mouseX, float mouseY) {
         if (textureVertexInfos.size() >= MAX_TEXTURES) {
             renderBatch(); // Render the current batch if maximum is reached
             beginBatch();
         }
 
         float aspectRatio = (float) textureInfo.width / textureInfo.height;
+
+        // Calculate angle relative to the mouse position
+        float dx = mouseX - x;
+        float dy = mouseY - y;
+        float angle = (float) Math.atan2(dy, dx);
 
         // Original vertices without rotation
         float[] originalVertices = {
@@ -95,9 +101,9 @@ public class BatchRenderer {
         };
 
         // Rotate the vertices
-        float[] rotatedVertices = new float[12];
         float cosTheta = (float) Math.cos(angle);
         float sinTheta = (float) Math.sin(angle);
+        float[] rotatedVertices = new float[12];
 
         for (int i = 0; i < 4; i++) {
             float vx = originalVertices[i * 3];
