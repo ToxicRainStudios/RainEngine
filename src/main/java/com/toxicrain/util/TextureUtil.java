@@ -12,19 +12,16 @@ import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
 public class TextureUtil {
-    public static int exampleTextureID;
-    public static int floorTextureID;
-
     public static TextureInfo exampleTexture;
     public static TextureInfo floorTexture;
+    public static TextureInfo playerTexture;
 
     /**Init the textures used by the rest of the project*/
     public static void initTextures(){
         exampleTexture = loadTexture("C:\\Users\\hudso\\OneDrive\\Pictures\\Capture.png");
-        floorTexture = loadTexture("C:\\Users\\hudso\\Downloads\\floor.png");
+        floorTexture = loadTexture("C:/Users/hudso/OneDrive/Desktop/MWC/game2d/resources/images/floor.png");
+        playerTexture = loadTexture("C:/Users/hudso/OneDrive/Desktop/MWC/game2d/resources/images/player_shotgun_stolen.png");
 
-        exampleTextureID = exampleTexture.textureId;
-        floorTextureID = floorTexture.textureId;
     }
 
     public static TextureInfo loadTexture(String filePath) {

@@ -22,6 +22,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import static com.toxicrain.util.TextureUtil.floorTexture;
+import static com.toxicrain.util.TextureUtil.playerTexture;
 import static de.damios.guacamole.gdx.StartOnFirstThreadHelper.startNewJvmIfRequired;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -146,6 +147,13 @@ public class GameEngine {
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
 
+        try {
+            enableBlending();
+        }
+        catch(Exception e) {
+            Logger.printERROR("Error enabling blending");
+        }
+
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
             // Set the viewport size
@@ -185,7 +193,7 @@ public class GameEngine {
             float[] openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) Constants.windowWidth, (int) Constants.windowHeight);
 
             // This is the player!
-            batchRenderer.addTexture(floorTexture, center.x, center.y, 3, openglMousePos[0], openglMousePos[1]);
+            batchRenderer.addTexture(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1]);
 
             // Render the batch
             batchRenderer.renderBatch();
@@ -307,5 +315,9 @@ public class GameEngine {
 
     public static FloatBuffer getPerspectiveProjectionMatrixBuffer() {
         return buffer;
+    }
+    private static void enableBlending() {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 }
