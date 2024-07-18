@@ -200,6 +200,9 @@ public class GameEngine {
     }
 
     private static void processInput() {
+        //Sprinting
+        cameraSpeed = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ? 0.1f : 0.05f;
+
         // Handle left and right movement
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) cameraX -= cameraSpeed;
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) cameraX += cameraSpeed;
