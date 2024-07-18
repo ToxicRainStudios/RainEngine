@@ -11,6 +11,7 @@ import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
@@ -36,6 +37,8 @@ public class GameEngine {
     private static float cameraY = 0.0f; // Camera Y position
     private static float cameraZ = 5.0f; // Camera Z position
     private static float cameraSpeed = 0.05f; // Camera Speed
+    private static float scrollSpeed = 0.5f;  // The max scroll in/out speed
+    private static float scrollOffset = 0.0f; // Track the scroll input
 
     private static boolean fullscreen = false;
 
@@ -88,6 +91,13 @@ public class GameEngine {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) glfwSetWindowShouldClose(window, true); // This is detected in the rendering loop
             if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS) {
                 toggleFullscreen();
+            }
+        });
+        // Create and set the scroll callback
+        glfwSetScrollCallback(window, new GLFWScrollCallback() {
+            @Override
+            public void invoke(long window, double xoffset, double yoffset) {
+                scrollOffset = (float) yoffset;
             }
         });
 
@@ -165,7 +175,8 @@ public class GameEngine {
             batchRenderer.addTexture(floorTexture,2,1,1);
             batchRenderer.addTexture(floorTexture,3,1,1);
 
-            batchRenderer.addTexture(floorTexture, center.x, center.y, 3);
+            // This is the player!
+            batchRenderer.addTexture(floorTexture, center.x, center.y, 3, 0);
 
             // Render the batch
             batchRenderer.renderBatch();
@@ -180,13 +191,19 @@ public class GameEngine {
     }
 
     private static void processInput() {
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) cameraZ -= cameraSpeed;
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) cameraZ += cameraSpeed;
+        // Handle left and right movement
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) cameraX -= cameraSpeed;
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) cameraX += cameraSpeed;
-        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) cameraY -= cameraSpeed;
-        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) cameraY += cameraSpeed;
+
+        // Handle up and down movement
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) cameraY += cameraSpeed;
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) cameraY -= cameraSpeed;
+
+        // Update cameraZ based on the scroll input
+        cameraZ += scrollOffset * scrollSpeed;
+        scrollOffset = 0.0f; // Reset the scroll offset after applying it
     }
+
 
     /**
      * Checks the internal engine version with what gameinfo.json is asking for
