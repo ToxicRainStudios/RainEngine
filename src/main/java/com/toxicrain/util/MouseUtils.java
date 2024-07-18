@@ -5,10 +5,19 @@ import org.lwjgl.glfw.GLFW;
 import static com.toxicrain.core.GameEngine.cameraX;
 import static com.toxicrain.core.GameEngine.cameraY;
 
+
+/**
+ * The MouseUtils class provides help working with mice
+ */
 public class MouseUtils {
 
     private long window;
 
+    /**
+     * Constructs a MouseUtils object with the specified window handle.
+     *
+     * @param window The window handle
+     */
     public MouseUtils(long window) {
         this.window = window;
     }

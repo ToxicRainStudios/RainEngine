@@ -1,7 +1,7 @@
 package com.toxicrain.core;
 
 import com.toxicrain.core.json.MapInfoParser;
-import com.toxicrain.core.json.gameinfoParser;
+import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.util.Constants;
 import com.toxicrain.util.TextureUtil;
@@ -47,8 +47,8 @@ public class GameEngine {
     public static void run(String windowTitle) {
         Logger.printLOG("Hello LWJGL " + Version.getVersion() + "!");
         Logger.printLOG("Hello RainEngine " + Constants.engineVersion + "!");
-        Logger.printLOG("Running: " + gameinfoParser.gameName + " by " + gameinfoParser.gameMakers);
-        Logger.printLOG("Version: " + gameinfoParser.gameVersion);
+        Logger.printLOG("Running: " + GameInfoParser.gameName + " by " + GameInfoParser.gameMakers);
+        Logger.printLOG("Version: " + GameInfoParser.gameVersion);
         doVersionCheck();
         init(windowTitle, true); //TODO vSync should be controllable with some sort of settings menu
         loop();
@@ -229,7 +229,7 @@ public class GameEngine {
      * Checks the internal engine version with what gameinfo.json is asking for
      */
     private static void doVersionCheck() {
-        if (Constants.engineVersion.equals(gameinfoParser.engineVersion)) {
+        if (Constants.engineVersion.equals(GameInfoParser.engineVersion)) {
             Logger.printLOG("Engine Version check: Pass");
         } else {
             Logger.printERROR("Engine Version check: FAIL");

@@ -1,8 +1,7 @@
 package com.toxicrain.core.render;
 
 import com.toxicrain.core.TextureInfo;
-import org.joml.Matrix3f;
-import org.joml.Vector3f;
+import com.toxicrain.core.json.GameInfoParser;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
@@ -20,7 +19,7 @@ import static org.lwjgl.opengl.GL15.*;
 public class BatchRenderer {
 
     /** The max amount of textures */
-    private static final int MAX_TEXTURES = 100;
+    private static final int MAX_TEXTURES = GameInfoParser.maxTexturesPerBatch;
     private final FloatBuffer vertexBuffer;
     private final FloatBuffer texCoordBuffer;
     private final List<TextureVertexInfo> textureVertexInfos;

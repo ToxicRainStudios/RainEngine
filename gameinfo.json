@@ -19,7 +19,10 @@
       },
 	  {
         "gameWebsite": "exampledevguys.com"
+      },
+      {
+        "maxTexturesPerBatch": "100"
       }
     ]
-  },
+  }
 ]
