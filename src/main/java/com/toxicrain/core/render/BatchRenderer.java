@@ -78,7 +78,7 @@ public class BatchRenderer {
      * @param y the y-coordinate of the texture
      * @param z the z-coordinate of the texture
      */
-    public void addTexture(TextureInfo textureInfo, float x, float y, float z, float mouseX, float mouseY) {
+    public void addTextureFacingMouse(TextureInfo textureInfo, float x, float y, float z, float mouseX, float mouseY) {
         if (textureVertexInfos.size() >= MAX_TEXTURES) {
             renderBatch(); // Render the current batch if maximum is reached
             beginBatch();

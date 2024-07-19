@@ -193,7 +193,7 @@ public class GameEngine {
             float[] openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) Constants.windowWidth, (int) Constants.windowHeight);
 
             // This is the player!
-            batchRenderer.addTexture(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1]);
+            batchRenderer.addTextureFacingMouse(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1]);
 
             // Render the batch
             batchRenderer.renderBatch();
