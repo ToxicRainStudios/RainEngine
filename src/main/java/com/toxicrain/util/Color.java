@@ -15,7 +15,7 @@ public enum Color {
     LIME(0.000f, 1.000f, 0.000f),
     BLUE(0.000f, 0.000f, 1.000f),
     YELLOW(1.000f, 1.000f, 0.000f),
-    CYAN_AQUA( 	0.000f, 1.000f, 1.000f),
+    CYAN_AQUA(0.000f, 1.000f, 1.000f),
     MAGENTA(1.000f, 0.000f, 1.000f),
     SILVER(0.753f, 0.753f, 0.753f),
     GRAY(0.502f, 0.502f, 0.502f),
@@ -30,7 +30,6 @@ public enum Color {
     private final float red;
     private final float green;
     private final float blue;
-
 
     public static Color from(String colorName) {
         return stream(Color.values())
@@ -60,4 +59,8 @@ public enum Color {
         return color.blue;
     }
 
+    public static float[] toFloatArray(float alpha, Color color) {
+        return new float[]{color.red, color.green, color.blue, alpha};
+    }
 }
+
