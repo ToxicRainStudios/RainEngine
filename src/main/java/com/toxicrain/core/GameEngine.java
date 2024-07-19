@@ -180,9 +180,9 @@ public class GameEngine {
 
             // Add textures to the batch
             batchRenderer.addTexture(floorTexture,1,1,1,0, Color.toFloatArray(1.0f, Color.WHITE));
-            batchRenderer.addTexture(floorTexture,2,1,1,0, Color.toFloatArray(1.0f, Color.WHITE));
             batchRenderer.addTexture(floorTexture,3,1,1,0, Color.toFloatArray(1.0f, Color.WHITE));
-            batchRenderer.addTexture(splatterTexture,2,1,1.01f,0, Color.toFloatArray(0.4f, Color.WHITE));
+            batchRenderer.addTexture(floorTexture,4,1,1,0, Color.toFloatArray(1.0f, Color.WHITE));
+            batchRenderer.addTexture(splatterTexture,3,1,1.01f,0, Color.toFloatArray(0.4f, Color.WHITE));
 
 
             // Get mouse position relative to window
