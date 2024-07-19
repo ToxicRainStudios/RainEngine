@@ -78,7 +78,7 @@ public class BatchRenderer {
      * @param y the y-coordinate of the texture
      * @param z the z-coordinate of the texture
      */
-    public void addTextureFacingMouse(TextureInfo textureInfo, float x, float y, float z, float mouseX, float mouseY) {
+    public void addTexturePos(TextureInfo textureInfo, float x, float y, float z, float posX, float posY) {
         if (textureVertexInfos.size() >= MAX_TEXTURES) {
             renderBatch(); // Render the current batch if maximum has been reached
             beginBatch();
@@ -87,8 +87,8 @@ public class BatchRenderer {
         float aspectRatio = (float) textureInfo.width / textureInfo.height;
 
         // Calculate angle relative to the mouse position
-        float dx = mouseX - x;
-        float dy = mouseY - y;
+        float dx = posX - x;
+        float dy = posY - y;
         float angle = (float) Math.atan2(dy, dx);
 
         // Original vertices without rotation
@@ -176,23 +176,11 @@ public class BatchRenderer {
 
         for (TextureVertexInfo info : textureVertexInfos) {
             if (info.textureId != currentTextureId) {
-                // Render the current batch
+                // Render the current batch if it exists
                 if (currentTextureId != -1) {
                     vertexBuffer.flip();
                     texCoordBuffer.flip();
-
-                    // Upload vertex data to VBO
-                    glBindBuffer(GL_ARRAY_BUFFER, vertexVboId);
-                    glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_DYNAMIC_DRAW);
-                    glVertexPointer(3, GL_FLOAT, 0, 0);
-
-                    // Upload texture coordinate data to VBO
-                    glBindBuffer(GL_ARRAY_BUFFER, texCoordVboId);
-                    glBufferData(GL_ARRAY_BUFFER, texCoordBuffer, GL_DYNAMIC_DRAW);
-                    glTexCoordPointer(2, GL_FLOAT, 0, 0);
-
-                    glDrawArrays(GL_QUADS, 0, vertexBuffer.limit() / 3);
-
+                    renderCurrentBatch();
                     vertexBuffer.clear();
                     texCoordBuffer.clear();
                 }
@@ -205,22 +193,11 @@ public class BatchRenderer {
             texCoordBuffer.put(info.texCoords);
         }
 
-        // Render the last batch
+        // Render the last batch if it exists
         if (currentTextureId != -1) {
             vertexBuffer.flip();
             texCoordBuffer.flip();
-
-            // Upload vertex data to VBO
-            glBindBuffer(GL_ARRAY_BUFFER, vertexVboId);
-            glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_DYNAMIC_DRAW);
-            glVertexPointer(3, GL_FLOAT, 0, 0);
-
-            // Upload texture coordinate data to VBO
-            glBindBuffer(GL_ARRAY_BUFFER, texCoordVboId);
-            glBufferData(GL_ARRAY_BUFFER, texCoordBuffer, GL_DYNAMIC_DRAW);
-            glTexCoordPointer(2, GL_FLOAT, 0, 0);
-
-            glDrawArrays(GL_QUADS, 0, vertexBuffer.limit() / 3);
+            renderCurrentBatch();
         }
 
         glDisableClientState(GL_VERTEX_ARRAY);
@@ -230,6 +207,21 @@ public class BatchRenderer {
         // Unbind VBOs
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
+
+    private void renderCurrentBatch() {
+        // Upload vertex data to VBO
+        glBindBuffer(GL_ARRAY_BUFFER, vertexVboId);
+        glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_DYNAMIC_DRAW);
+        glVertexPointer(3, GL_FLOAT, 0, 0);
+
+        // Upload texture coordinate data to VBO
+        glBindBuffer(GL_ARRAY_BUFFER, texCoordVboId);
+        glBufferData(GL_ARRAY_BUFFER, texCoordBuffer, GL_DYNAMIC_DRAW);
+        glTexCoordPointer(2, GL_FLOAT, 0, 0);
+
+        glDrawArrays(GL_QUADS, 0, vertexBuffer.limit() / 3);
+    }
 }
+
 
 

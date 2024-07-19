@@ -21,8 +21,7 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import static com.toxicrain.util.TextureUtil.floorTexture;
-import static com.toxicrain.util.TextureUtil.playerTexture;
+import static com.toxicrain.util.TextureUtil.*;
 import static de.damios.guacamole.gdx.StartOnFirstThreadHelper.startNewJvmIfRequired;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -147,12 +146,8 @@ public class GameEngine {
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
 
-        try {
-            enableBlending();
-        }
-        catch(Exception e) {
-            Logger.printERROR("Error enabling blending");
-        }
+        enableBlending();
+
 
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
@@ -193,7 +188,7 @@ public class GameEngine {
             float[] openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) Constants.windowWidth, (int) Constants.windowHeight);
 
             // This is the player!
-            batchRenderer.addTextureFacingMouse(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1]);
+            batchRenderer.addTexturePos(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1]);
 
             // Render the batch
             batchRenderer.renderBatch();
