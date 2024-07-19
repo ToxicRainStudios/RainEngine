@@ -62,5 +62,8 @@ public enum Color {
     public static float[] toFloatArray(float alpha, Color color) {
         return new float[]{color.red, color.green, color.blue, alpha};
     }
+    public static float[] toFloatArray(Color color) {
+        return new float[]{color.red, color.green, color.blue, 1.0f};
+    }
 }
 

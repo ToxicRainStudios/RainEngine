@@ -149,11 +149,13 @@ public class GameEngine {
 
         enableBlending();
 
-
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
+            // Check if the window has focus
+            boolean windowFocused = glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0;
+
             // Set the viewport size
-            glViewport(0, 0,  (int) Constants.windowWidth, (int) Constants.windowHeight);
+            glViewport(0, 0, (int) Constants.windowWidth, (int) Constants.windowHeight);
 
             // Clear the color and depth buffers
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -167,8 +169,6 @@ public class GameEngine {
             glLoadIdentity();
             glTranslatef(-cameraX, -cameraY, -cameraZ);
 
-            MouseUtils mouseInput = new MouseUtils(window);
-
             // Enable depth testing
             glEnable(GL_DEPTH_TEST);
 
@@ -179,20 +179,23 @@ public class GameEngine {
             batchRenderer.setBlendingEnabled(true);
 
             // Add textures to the batch
-            batchRenderer.addTexture(floorTexture,1,1,1,0, Color.toFloatArray(1.0f, Color.WHITE));
-            batchRenderer.addTexture(floorTexture,3,1,1,0, Color.toFloatArray(1.0f, Color.WHITE));
-            batchRenderer.addTexture(floorTexture,4,1,1,0, Color.toFloatArray(1.0f, Color.WHITE));
-            batchRenderer.addTexture(splatterTexture,3,1,1.01f,0, Color.toFloatArray(0.4f, Color.WHITE));
+            batchRenderer.addTexture(floorTexture, 1, 1, 1, 0, Color.toFloatArray(Color.WHITE));
+            batchRenderer.addTexture(floorTexture, 3, 1, 1, 0, Color.toFloatArray(Color.WHITE));
+            batchRenderer.addTexture(floorTexture, 4, 1, 1, 0, Color.toFloatArray(Color.WHITE));
+            batchRenderer.addTexture(splatterTexture, 3, 1, 1.01f, 0, Color.toFloatArray(0.4f, Color.WHITE));
 
+            float[] openglMousePos = new float[2];
+            if (windowFocused) {
+                // Get mouse position relative to window
+                MouseUtils mouseInput = new MouseUtils(window);
+                float[] mousePos = mouseInput.getMousePosition();
 
-            // Get mouse position relative to window
-            float[] mousePos = mouseInput.getMousePosition();
-            // Convert mouse coordinates to OpenGL coordinates
-            float[] openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) Constants.windowWidth, (int) Constants.windowHeight);
-
+                // Convert mouse coordinates to OpenGL coordinates
+                openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) Constants.windowWidth, (int) Constants.windowHeight);
+                
+            }
             // This is the player!
             batchRenderer.addTexturePos(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1], Color.toFloatArray(1.0f, Color.WHITE));
-
             // Render the batch
             batchRenderer.renderBatch();
 
