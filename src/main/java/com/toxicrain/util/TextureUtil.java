@@ -15,12 +15,14 @@ public class TextureUtil {
     public static TextureInfo exampleTexture;
     public static TextureInfo floorTexture;
     public static TextureInfo playerTexture;
+    public static TextureInfo splatterTexture;
 
     /**Init the textures used by the rest of the project*/
     public static void initTextures(){
         exampleTexture = loadTexture("C:\\Users\\hudso\\OneDrive\\Pictures\\Capture.png");
         floorTexture = loadTexture("C:/Users/hudso/OneDrive/Desktop/MWC/game2d/resources/images/floor.png");
         playerTexture = loadTexture("C:/Users/hudso/OneDrive/Desktop/MWC/game2d/resources/images/player_shotgun_stolen.png");
+        splatterTexture = loadTexture("C:/Users/hudso/OneDrive/Desktop/MWC/game2d/resources/images/splatter.png");
     }
 
     public static TextureInfo loadTexture(String filePath) {
