@@ -80,7 +80,7 @@ public class BatchRenderer {
      */
     public void addTextureFacingMouse(TextureInfo textureInfo, float x, float y, float z, float mouseX, float mouseY) {
         if (textureVertexInfos.size() >= MAX_TEXTURES) {
-            renderBatch(); // Render the current batch if maximum is reached
+            renderBatch(); // Render the current batch if maximum has been reached
             beginBatch();
         }
 
