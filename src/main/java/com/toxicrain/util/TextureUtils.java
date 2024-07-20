@@ -11,11 +11,14 @@ import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
-public class TextureUtil {
+public class TextureUtils {
     public static TextureInfo exampleTexture;
     public static TextureInfo floorTexture;
     public static TextureInfo playerTexture;
     public static TextureInfo splatterTexture;
+    public static TextureInfo concreteTexture1;
+    public static TextureInfo concreteTexture2;
+
 
     /**Init the textures used by the rest of the project*/
     public static void initTextures(){
@@ -23,6 +26,10 @@ public class TextureUtil {
         floorTexture = loadTexture("C:/Users/hudso/OneDrive/Desktop/MWC/game2d/resources/images/floor.png");
         playerTexture = loadTexture("C:/Users/hudso/OneDrive/Desktop/MWC/game2d/resources/images/player_shotgun_stolen.png");
         splatterTexture = loadTexture("C:/Users/hudso/OneDrive/Desktop/MWC/game2d/resources/images/splatter.png");
+        concreteTexture1 = loadTexture("C:/Users/hudso/OneDrive/Desktop/MWC/game2d/resources/images/floor_concrete.png");
+        concreteTexture2 = loadTexture("C:/Users/hudso/OneDrive/Desktop/MWC/game2d/resources/images/floor_concrete2.png");
+
+
     }
 
     public static TextureInfo loadTexture(String filePath) {

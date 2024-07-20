@@ -1,7 +1,7 @@
 package com.toxicrain.util;
 
 /**
- * The Constants class provides a convenient place to hold app-wide constants.
+ * The Constants class provides a convenient place to hold constants.
  * This class should not be used for any other purpose.
  *
  * All constants should be declared

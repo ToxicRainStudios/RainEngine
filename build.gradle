@@ -4,7 +4,7 @@ plugins {
 }
 
 group "com.toxicrain"
-version "Dev-1"
+version "Dev-2"
 
 sourceCompatibility = 1.11
 
@@ -41,7 +41,6 @@ dependencies {
     implementation "com.github.crykn.guacamole:gdx-desktop:$guacamoleVersion"
 
     implementation group: 'org.json', name: 'json', version: '20220320'
-    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 
     implementation "io.github.spair:imgui-java-binding:1.86.11"
     implementation "io.github.spair:imgui-java-lwjgl3:1.86.11"

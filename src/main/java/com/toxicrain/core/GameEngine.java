@@ -5,7 +5,7 @@ import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.util.Color;
 import com.toxicrain.util.Constants;
-import com.toxicrain.util.TextureUtil;
+import com.toxicrain.util.TextureUtils;
 import com.toxicrain.util.MouseUtils;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import static com.toxicrain.util.TextureUtil.*;
+import static com.toxicrain.util.TextureUtils.*;
 import static de.damios.guacamole.gdx.StartOnFirstThreadHelper.startNewJvmIfRequired;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -39,10 +39,10 @@ public class GameEngine {
     public static float cameraY = 0.0f; // Camera Y position
     public static float cameraZ = 5.0f; // Camera Z position
     private static float cameraSpeed = 0.05f; // Camera Speed
-    private static float scrollSpeed = 0.5f;  // The max scroll in/out speed
+    private static final float scrollSpeed = 0.5f;  // The max scroll in/out speed
     private static float scrollOffset = 0.0f; // Track the scroll input
 
-    private static boolean fullscreen = false;
+    private static boolean fullscreen = true;
 
     public static void run(String windowTitle) {
         Logger.printLOG("Hello LWJGL " + Version.getVersion() + "!");
@@ -127,13 +127,14 @@ public class GameEngine {
 
         GL.createCapabilities();
         Logger.printLOG("Creating Textures");
-        TextureUtil.initTextures();
+        TextureUtils.initTextures();
 
         try {
             MapInfoParser.parseMapFile();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        enableBlending();
     }
 
     private static void loop() {
@@ -147,7 +148,6 @@ public class GameEngine {
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
 
-        enableBlending();
 
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
@@ -176,13 +176,14 @@ public class GameEngine {
 
             // Begin the batch
             batchRenderer.beginBatch();
-            batchRenderer.setBlendingEnabled(true);
 
             // Add textures to the batch
-            batchRenderer.addTexture(floorTexture, 1, 1, 1, 0, Color.toFloatArray(Color.WHITE));
-            batchRenderer.addTexture(floorTexture, 3, 1, 1, 0, Color.toFloatArray(Color.WHITE));
-            batchRenderer.addTexture(floorTexture, 4, 1, 1, 0, Color.toFloatArray(Color.WHITE));
-            batchRenderer.addTexture(splatterTexture, 3, 1, 1.01f, 0, Color.toFloatArray(0.4f, Color.WHITE));
+            batchRenderer.addTexture(floorTexture, 1, 1, 1, 0, Color.toFloatArray(Color.WHITE)); // Top-left corner
+            batchRenderer.addTexture(floorTexture, 2.5f, 1, 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
+            batchRenderer.addTexture(floorTexture, 1, 2, 1, 0, Color.toFloatArray(Color.WHITE)); // Bottom-left corner
+            batchRenderer.addTexture(floorTexture, 2.5f, 2, 1, 0, Color.toFloatArray(Color.WHITE)); // Bottom-right corner
+
+            //batchRenderer.addTexture(splatterTexture, 2, 1, 1.01f, 0, Color.toFloatArray(0.4f, Color.WHITE));
 
             float[] openglMousePos = new float[2];
             if (windowFocused) {

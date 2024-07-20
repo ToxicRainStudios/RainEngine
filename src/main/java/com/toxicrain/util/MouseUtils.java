@@ -11,7 +11,7 @@ import static com.toxicrain.core.GameEngine.cameraY;
  */
 public class MouseUtils {
 
-    private long window;
+    private final long window;
 
     /**
      * Constructs a MouseUtils object with the specified window handle.
