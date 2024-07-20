@@ -1,10 +1,15 @@
 package com.toxicrain.util;
 
+import com.toxicrain.core.Logger;
 import com.toxicrain.core.TextureInfo;
 import org.lwjgl.system.MemoryStack;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
@@ -38,18 +43,21 @@ public class TextureUtils {
         ByteBuffer image;
 
         // Load image using STBImage
-        try (MemoryStack stack = stackPush()) {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
             IntBuffer widthBuffer = stack.mallocInt(1);
             IntBuffer heightBuffer = stack.mallocInt(1);
             IntBuffer channelsBuffer = stack.mallocInt(1);
 
+            // Load image with 4 channels (RGBA)
             image = stbi_load(filePath, widthBuffer, heightBuffer, channelsBuffer, 4);
             if (image == null) {
-                throw new RuntimeException("Failed to load texture file: " + stbi_failure_reason());
+                throw new RuntimeException("Failed to load texture file: " + filePath + " - " + stbi_failure_reason());
             }
 
             width = widthBuffer.get();
             height = heightBuffer.get();
+            long fileSize = FileUtils.getFileSize(filePath);
+            Logger.printLOG("Loaded texture: " + filePath + " (Width: " + width + ", Height: " + height + ", File Size: (bytes) " + fileSize + ")");
         }
 
         // Generate a texture ID
@@ -62,7 +70,7 @@ public class TextureUtils {
         // Generate mipmaps
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        // Set texture parameters (these can be moved to the render method if needed)
+        // Set texture parameters
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -73,5 +81,4 @@ public class TextureUtils {
 
         return new TextureInfo(textureId, width, height);
     }
-
 }

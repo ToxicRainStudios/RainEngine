@@ -4,11 +4,15 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class FileUtils {
 
     private FileUtils() {}
 
+    @Deprecated
     public static InputStream getFileFromResourceAsStream(String filePath) {
         InputStream inputStream = FileUtils.class.getClassLoader().getResourceAsStream(filePath);
 
@@ -35,5 +39,20 @@ public class FileUtils {
             }
         }
         return contentBuilder.toString();
+    }
+
+    /**
+     * Utility method to get the file path as a long
+     *
+     * @param filePath the path to the file
+     * @return the size of the file as a long
+     */
+    public static long getFileSize(String filePath) {
+        try {
+            Path path = Paths.get(filePath);
+            return Files.size(path);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to get file size: " + filePath, e);
+        }
     }
 }
