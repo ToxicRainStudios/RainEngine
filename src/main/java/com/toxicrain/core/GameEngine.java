@@ -2,6 +2,7 @@ package com.toxicrain.core;
 
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.json.GameInfoParser;
+import com.toxicrain.core.json.PackInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.util.Color;
 import com.toxicrain.util.Constants;
@@ -126,6 +127,10 @@ public class GameEngine {
         glfwShowWindow(window);
 
         GL.createCapabilities();
+
+        Logger.printLOG("Loading pack.json"); //MUST be called before TextureUtils.initTextures()
+        PackInfoParser.loadPackInfo("C:\\Users\\hudso\\OneDrive\\Desktop\\MWC\\game2d\\json\\pack.json");
+
         Logger.printLOG("Creating Textures");
         TextureUtils.initTextures();
 
@@ -134,6 +139,7 @@ public class GameEngine {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
         enableBlending();
     }
 
@@ -179,9 +185,9 @@ public class GameEngine {
 
             // Add textures to the batch
             batchRenderer.addTexture(floorTexture, 1, 1, 1, 0, Color.toFloatArray(Color.WHITE)); // Top-left corner
-            batchRenderer.addTexture(floorTexture, 2.5f, 1, 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
-            batchRenderer.addTexture(floorTexture, 1, 2, 1, 0, Color.toFloatArray(Color.WHITE)); // Bottom-left corner
-            batchRenderer.addTexture(concreteTexture2, 2.5f, 2, 1, 0, Color.toFloatArray(Color.WHITE)); // Bottom-right corner
+            batchRenderer.addTexture(floorTexture, 4, 1, 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
+            batchRenderer.addTexture(concreteTexture1, 1, 3, 1, 0, Color.toFloatArray(Color.WHITE)); // Bottom-left corner
+            batchRenderer.addTexture(missingTexture, 4, 3, 1, 0, Color.toFloatArray(Color.WHITE)); // Bottom-right corner
 
             //batchRenderer.addTexture(splatterTexture, 2, 1, 1.01f, 0, Color.toFloatArray(0.4f, Color.WHITE));
 
@@ -193,7 +199,7 @@ public class GameEngine {
 
                 // Convert mouse coordinates to OpenGL coordinates
                 openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) Constants.windowWidth, (int) Constants.windowHeight);
-                
+
             }
             // This is the player!
             batchRenderer.addTexturePos(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1], Color.toFloatArray(1.0f, Color.WHITE));

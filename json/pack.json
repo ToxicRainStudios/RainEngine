@@ -1,0 +1,25 @@
+[
+  {
+    "type": "pack",
+    "values": [
+	  {
+        "playerTexture": "player_shotgun_stolen.png"
+      },
+      {
+        "floorTexture": "floor.png"
+      },
+	  {
+        "splatterTexture": "splatter.png"
+      },
+	  {
+        "concreteTexture1": "floor_concrete.png"
+      },
+	  {
+        "concreteTexture2": "floor_concrete2.png"
+      },
+	  {
+        "missingTexture": "missing.png"
+      }
+    ]
+  }
+]

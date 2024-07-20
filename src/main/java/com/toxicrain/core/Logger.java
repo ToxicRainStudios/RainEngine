@@ -19,7 +19,7 @@ public class Logger {
      * @param input The error message to be logged.
      */
     public static void printERROR(String input){
-        System.out.println("[ERROR]: " + input);
+        System.err.println("[ERROR]: " + input);
     }
 
 }

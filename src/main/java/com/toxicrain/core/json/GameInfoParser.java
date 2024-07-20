@@ -8,6 +8,10 @@ import java.util.Iterator;
 
 import com.toxicrain.util.FileUtils;
 
+/**
+ * GameInfoParser parsers the gameinfo.json file
+ * needed for game functionality
+ */
 public class GameInfoParser {
     public static String defaultWindowName = null;
     public static String engineVersion = null;
@@ -16,6 +20,7 @@ public class GameInfoParser {
     public static String gameVersion = null;
     public static String gameWebsite = null;
     public static int maxTexturesPerBatch = 100; //Safety, don't crash if we forget to add this to gameinfo.json
+    public static String localFilePath = null;
 
     /**
      * Loads the gameinfo.json and parsers it into variables
@@ -64,6 +69,9 @@ public class GameInfoParser {
                         if (key.equals("maxTexturesPerBatch")) {
                             maxTexturesPerBatch = Integer.parseInt(value);
                         }
+                        if (key.equals("localFilePath")) {
+                            localFilePath = value;
+                        }
                     }
                 }
             }
@@ -75,6 +83,4 @@ public class GameInfoParser {
             e.printStackTrace();
         }
     }
-
-
 }

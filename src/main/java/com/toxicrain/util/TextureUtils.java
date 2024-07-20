@@ -2,6 +2,7 @@ package com.toxicrain.util;
 
 import com.toxicrain.core.Logger;
 import com.toxicrain.core.TextureInfo;
+import com.toxicrain.core.json.PackInfoParser;
 import org.lwjgl.system.MemoryStack;
 
 import java.io.IOException;
@@ -23,32 +24,30 @@ public class TextureUtils {
     public static TextureInfo splatterTexture;
     public static TextureInfo concreteTexture1;
     public static TextureInfo concreteTexture2;
+    public static TextureInfo missingTexture;
 
 
     /**Init the textures used by the rest of the project*/
     public static void initTextures(){
-        exampleTexture = loadTexture("C:\\Users\\hudso\\OneDrive\\Pictures\\Capture.png");
-        floorTexture = loadTexture("C:/Users/hudso/OneDrive/Desktop/MWC/game2d/resources/images/floor.png");
-        playerTexture = loadTexture("C:/Users/hudso/OneDrive/Desktop/MWC/game2d/resources/images/player_shotgun_stolen.png");
-        splatterTexture = loadTexture("C:/Users/hudso/OneDrive/Desktop/MWC/game2d/resources/images/splatter.png");
-        concreteTexture1 = loadTexture("C:/Users/hudso/OneDrive/Desktop/MWC/game2d/resources/images/floor_concrete.png");
-        concreteTexture2 = loadTexture("C:/Users/hudso/OneDrive/Desktop/MWC/game2d/resources/images/floor_concrete2.png");
-
+        concreteTexture1 = loadTexture(PackInfoParser.concreteTexture1);
+        missingTexture = loadTexture(PackInfoParser.missingTexture);
+        floorTexture = loadTexture(PackInfoParser.floorTexture);
+        playerTexture = loadTexture(PackInfoParser.playerTexture);
+        splatterTexture = loadTexture(PackInfoParser.splatterTexture);
+        concreteTexture2 = loadTexture(PackInfoParser.concreteTexture2);
 
     }
 
     public static TextureInfo loadTexture(String filePath) {
-        int width;
-        int height;
+        int width, height;
         ByteBuffer image;
 
-        // Load image using STBImage
         try (MemoryStack stack = MemoryStack.stackPush()) {
             IntBuffer widthBuffer = stack.mallocInt(1);
             IntBuffer heightBuffer = stack.mallocInt(1);
             IntBuffer channelsBuffer = stack.mallocInt(1);
 
-            // Load image with 4 channels (RGBA)
+            // Load the image with RGBA channels
             image = stbi_load(filePath, widthBuffer, heightBuffer, channelsBuffer, 4);
             if (image == null) {
                 throw new RuntimeException("Failed to load texture file: " + filePath + " - " + stbi_failure_reason());
@@ -57,17 +56,17 @@ public class TextureUtils {
             width = widthBuffer.get();
             height = heightBuffer.get();
             long fileSize = FileUtils.getFileSize(filePath);
-            Logger.printLOG("Loaded texture: " + filePath + " (Width: " + width + ", Height: " + height + ", File Size: (bytes) " + fileSize + ")");
+            Logger.printLOG(String.format("Loaded texture: %s (Width: %d, Height: %d, File Size: %d bytes)", filePath, width, height, fileSize));
+        } catch (Exception e) {
+            throw new RuntimeException("Error loading texture: " + filePath, e);
         }
 
-        // Generate a texture ID
+        // Generate and configure the texture
         int textureId = glGenTextures();
-        // Bind the texture
         glBindTexture(GL_TEXTURE_2D, textureId);
 
         // Upload the texture data
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-        // Generate mipmaps
         glGenerateMipmap(GL_TEXTURE_2D);
 
         // Set texture parameters

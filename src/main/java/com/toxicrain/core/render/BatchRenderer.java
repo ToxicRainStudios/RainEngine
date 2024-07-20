@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL20.*;
  */
 public class BatchRenderer {
 
-    /** The max amount of textures */
+    /** The maximum number of textures per batch */
     private static final int MAX_TEXTURES = GameInfoParser.maxTexturesPerBatch;
     private final FloatBuffer vertexBuffer;
     private final FloatBuffer texCoordBuffer;
@@ -128,9 +128,10 @@ public class BatchRenderer {
         };
 
         float[] colors = new float[16];
-        for (int i = 0; i < 4; i++) {
-            System.arraycopy(color, 0, colors, i * 4, 4);
-        }
+        System.arraycopy(color, 0, colors, 0, 4);
+        System.arraycopy(color, 0, colors, 4, 4);
+        System.arraycopy(color, 0, colors, 8, 4);
+        System.arraycopy(color, 0, colors, 12, 4);
 
         textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, rotatedVertices, texCoords, colors));
     }
@@ -189,13 +190,13 @@ public class BatchRenderer {
         };
 
         float[] colors = new float[16];
-        for (int i = 0; i < 4; i++) {
-            System.arraycopy(color, 0, colors, i * 4, 4);
-        }
+        System.arraycopy(color, 0, colors, 0, 4);
+        System.arraycopy(color, 0, colors, 4, 4);
+        System.arraycopy(color, 0, colors, 8, 4);
+        System.arraycopy(color, 0, colors, 12, 4);
 
         textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, rotatedVertices, texCoords, colors));
     }
-
 
     /**
      * Renders the current batch of textures. Uploads vertex, texture coordinate, and color data
@@ -282,8 +283,11 @@ public class BatchRenderer {
      */
     public void setBlendingEnabled(boolean enabled) {
         this.blendingEnabled = enabled;
+        if (enabled) {
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        } else {
+            glDisable(GL_BLEND);
+        }
     }
 }
-
-
-
