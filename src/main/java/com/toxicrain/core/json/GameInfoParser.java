@@ -26,7 +26,7 @@ public class GameInfoParser {
      * Loads the gameinfo.json and parsers it into variables
      */
     public static void loadGameInfo() {
-        String filePath = FileUtils.getCurrentWorkingDirectory("json/gameinfo.json");
+        String filePath = FileUtils.getCurrentWorkingDirectory("resources/json/gameinfo.json");
 
         try {
             // Read the file content into a string

@@ -133,7 +133,7 @@ public class GameEngine {
         GL.createCapabilities();
 
         Logger.printLOG("Loading pack.json"); //MUST be called before TextureUtils.initTextures()
-        PackInfoParser.loadPackInfo(FileUtils.getCurrentWorkingDirectory("json/pack.json"));
+        PackInfoParser.loadPackInfo(FileUtils.getCurrentWorkingDirectory("resources/json/pack.json"));
 
         Logger.printLOG("Creating Textures");
         TextureUtils.initTextures();
