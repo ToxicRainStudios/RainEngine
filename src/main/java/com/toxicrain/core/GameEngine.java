@@ -225,6 +225,15 @@ public class GameEngine {
 
         // Update cameraZ based on the scroll input
         cameraZ += scrollOffset * scrollSpeed;
+
+        // Cap cameraZ at max 25 and min 3
+        if (cameraZ > 25) { //TODO Make these configurable
+            cameraZ = 25;
+        }
+        if (cameraZ < 3) {
+            cameraZ = 3;
+        }
+
         scrollOffset = 0.0f; // Reset the scroll offset after applying it
     }
 
