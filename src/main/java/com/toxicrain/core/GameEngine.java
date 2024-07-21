@@ -224,12 +224,30 @@ public class GameEngine {
         cameraSpeed = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ? 0.1f : 0.05f;
 
         // Handle left and right movement
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) cameraX -= cameraSpeed;
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) cameraX += cameraSpeed;
+        if ((glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) && (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)) {
+            cameraY += cameraSpeed/2;
+            cameraX -= cameraSpeed/2;
+        }
+        else if ((glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) && (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)) {
+            cameraY -= cameraSpeed/2;
+            cameraX -= cameraSpeed/2;
+        }
+        else if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) cameraX -= cameraSpeed;
+        else if ((glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) && (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)) {
+            cameraY += cameraSpeed/2;
+            cameraX += cameraSpeed/2;
+        }
+        else if ((glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) && (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)) {
+            cameraY -= cameraSpeed/2;
+            cameraX += cameraSpeed/2;
+        }
+        else if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) cameraX += cameraSpeed;
+        else if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) cameraY += cameraSpeed;
+        else if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) cameraY -= cameraSpeed;
 
         // Handle up and down movement
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) cameraY += cameraSpeed;
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) cameraY -= cameraSpeed;
+        //if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) cameraY += cameraSpeed;
+       // if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) cameraY -= cameraSpeed;
 
         // Update cameraZ based on the scroll input
         cameraZ += scrollOffset * scrollSpeed;
