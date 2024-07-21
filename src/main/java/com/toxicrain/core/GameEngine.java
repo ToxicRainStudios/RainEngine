@@ -28,6 +28,8 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+
+
 public class GameEngine {
 
     // The window handle
@@ -36,7 +38,7 @@ public class GameEngine {
     public static float cameraX = 0.0f; // Camera X position
     public static float cameraY = 0.0f; // Camera Y position
     public static float cameraZ = 5.0f; // Camera Z position
-    private static float cameraSpeed = 0.05f; // Camera Speed
+    private static float cameraSpeed = 0.02f; // Camera Speed
     private static final float scrollSpeed = 0.5f;  // The max scroll in/out speed
     private static float scrollOffset = 0.0f; // Track the scroll input
 
@@ -49,7 +51,10 @@ public class GameEngine {
         Logger.printLOG("Version: " + GameInfoParser.gameVersion);
         doVersionCheck();
         init(windowTitle, true); //TODO vSync should be controllable with some sort of settings menu
-        loop();
+        // Create the batch renderer
+        BatchRenderer batchRenderer = new BatchRenderer();
+
+        loop(batchRenderer);
 
         // Free the window callbacks and destroy the window
         glfwFreeCallbacks(window);
@@ -59,6 +64,7 @@ public class GameEngine {
         glfwTerminate();
         glfwSetErrorCallback(null).free();
     }
+
 
     private static void init(String windowTitle, boolean vSync) {
         // Set up an error callback. The default implementation will print the error message in System.err.
@@ -150,9 +156,8 @@ public class GameEngine {
     }
 
 
-    private static void loop() {
-        // Create the batch renderer
-        BatchRenderer batchRenderer = new BatchRenderer();
+    private static void loop(BatchRenderer batchRenderer) {
+
 
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
@@ -221,7 +226,7 @@ public class GameEngine {
 
     private static void processInput() {
         //Sprinting
-        cameraSpeed = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ? 0.1f : 0.05f;
+        cameraSpeed = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ? 0.1f : cameraSpeed;
 
         // Handle left and right movement
         if ((glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) && (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)) {
@@ -245,9 +250,6 @@ public class GameEngine {
         else if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) cameraY += cameraSpeed;
         else if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) cameraY -= cameraSpeed;
 
-        // Handle up and down movement
-        //if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) cameraY += cameraSpeed;
-       // if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) cameraY -= cameraSpeed;
 
         // Update cameraZ based on the scroll input
         cameraZ += scrollOffset * scrollSpeed;
