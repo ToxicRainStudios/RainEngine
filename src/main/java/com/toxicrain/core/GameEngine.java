@@ -197,6 +197,7 @@ public class GameEngine {
             batchRenderer.addTexture(floorTexture, 1, 1, 1, 0, Color.toFloatArray(Color.WHITE)); // Top-left corner
             batchRenderer.addTexture(floorTexture, 4, 1, 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
             batchRenderer.addTexture(concreteTexture1, 1, 3, 1, 0, Color.toFloatArray(Color.WHITE)); // Bottom-left corner
+            batchRenderer.addTexture(concreteTexture2, 1, 6, 1, 0, Color.toFloatArray(Color.WHITE)); // Bottom-left corner
             batchRenderer.addTexture(missingTexture, 4, 3, 1, 0, Color.toFloatArray(Color.WHITE)); // Bottom-right corner
 
             //batchRenderer.addTexture(splatterTexture, 2, 1, 1.01f, 0, Color.toFloatArray(0.4f, Color.WHITE));

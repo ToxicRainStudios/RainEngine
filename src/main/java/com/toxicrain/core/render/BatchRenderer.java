@@ -1,5 +1,6 @@
 package com.toxicrain.core.render;
 
+import com.toxicrain.core.Logger;
 import com.toxicrain.core.TextureInfo;
 import com.toxicrain.core.json.GameInfoParser;
 import org.lwjgl.BufferUtils;
@@ -37,21 +38,17 @@ public class BatchRenderer {
      * as well as the Vertex Buffer Objects (VBOs).
      */
     public BatchRenderer() {
-        vertexBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * 4 * 3); // 4 vertices, 3 components each (x, y, z)
-        texCoordBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * 4 * 2); // 4 vertices, 2 components each (u, v)
-        colorBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * 4 * 4); // 4 vertices, 4 components each (r, g, b, a)
+        vertexBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * 6 * 3); // 2 triangles per quad, 3 vertices per triangle
+        texCoordBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * 6 * 2); // 2 triangles per quad, 2 coords per vertex
+        colorBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * 6 * 4); // 2 triangles per quad, 4 colors per vertex
         textureVertexInfos = new ArrayList<>(MAX_TEXTURES);
 
-
-        //I FUCKING SWEAR HSTRUB IF YOU FORGET TO ENABLE BLENDING ONE MORE TIME...
         setBlendingEnabled(blendingEnabled);
-
 
         // Generate VBOs
         vertexVboId = glGenBuffers();
         texCoordVboId = glGenBuffers();
         colorVboId = glGenBuffers();
-
     }
 
     private static class TextureVertexInfo {
@@ -76,10 +73,6 @@ public class BatchRenderer {
         }
     }
 
-    /**
-     * Begins a new batch for rendering. Clears the current list of texture vertex infos
-     * and resets the buffers.
-     */
     public void beginBatch() {
         textureVertexInfos.clear();
         vertexBuffer.clear();
@@ -100,7 +93,7 @@ public class BatchRenderer {
      */
     public void addTexture(TextureInfo textureInfo, float x, float y, float z, float angle, float[] color) {
         if (textureVertexInfos.size() >= MAX_TEXTURES) {
-            renderBatch(); // Render the current batch if maximum has been reached
+            renderBatch();
             beginBatch();
         }
 
@@ -134,13 +127,43 @@ public class BatchRenderer {
                 0.0f, 1.0f
         };
 
-        float[] colors = new float[16];
-        System.arraycopy(color, 0, colors, 0, 4);
-        System.arraycopy(color, 0, colors, 4, 4);
-        System.arraycopy(color, 0, colors, 8, 4);
-        System.arraycopy(color, 0, colors, 12, 4);
+        float[] colors = new float[24];
+        for (int i = 0; i < 4; i++) {
+            System.arraycopy(color, 0, colors, i * 4, 4);
+        }
 
-        textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, rotatedVertices, texCoords, colors));
+        // Two triangles per quad
+        float[] triangleVertices = {
+                rotatedVertices[0], rotatedVertices[1], rotatedVertices[2],
+                rotatedVertices[3], rotatedVertices[4], rotatedVertices[5],
+                rotatedVertices[6], rotatedVertices[7], rotatedVertices[8],
+
+                rotatedVertices[0], rotatedVertices[1], rotatedVertices[2],
+                rotatedVertices[6], rotatedVertices[7], rotatedVertices[8],
+                rotatedVertices[9], rotatedVertices[10], rotatedVertices[11]
+        };
+
+        float[] triangleTexCoords = {
+                texCoords[0], texCoords[1],
+                texCoords[2], texCoords[3],
+                texCoords[4], texCoords[5],
+
+                texCoords[0], texCoords[1],
+                texCoords[4], texCoords[5],
+                texCoords[6], texCoords[7]
+        };
+
+        float[] triangleColors = {
+                colors[0], colors[1], colors[2], colors[3],
+                colors[4], colors[5], colors[6], colors[7],
+                colors[8], colors[9], colors[10], colors[11],
+
+                colors[0], colors[1], colors[2], colors[3],
+                colors[8], colors[9], colors[10], colors[11],
+                colors[12], colors[13], colors[14], colors[15]
+        };
+
+        textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, triangleVertices, triangleTexCoords, triangleColors));
     }
 
     /**
@@ -157,18 +180,16 @@ public class BatchRenderer {
      */
     public void addTexturePos(TextureInfo textureInfo, float x, float y, float z, float posX, float posY, float[] color) {
         if (textureVertexInfos.size() >= MAX_TEXTURES) {
-            renderBatch(); // Render the current batch if maximum has been reached
+            renderBatch();
             beginBatch();
         }
 
         float aspectRatio = (float) textureInfo.width / textureInfo.height;
 
-        // Calculate angle relative to the mouse position
         float dx = posX - x;
         float dy = posY - y;
         float angle = (float) Math.atan2(dy, dx);
 
-        // Original vertices without rotation
         float[] originalVertices = {
                 -aspectRatio, -1.0f, 0.0f,
                 aspectRatio, -1.0f, 0.0f,
@@ -176,7 +197,6 @@ public class BatchRenderer {
                 -aspectRatio, 1.0f, 0.0f
         };
 
-        // Rotate the vertices
         float cosTheta = (float) Math.cos(angle);
         float sinTheta = (float) Math.sin(angle);
         float[] rotatedVertices = new float[12];
@@ -196,13 +216,43 @@ public class BatchRenderer {
                 0.0f, 1.0f
         };
 
-        float[] colors = new float[16];
-        System.arraycopy(color, 0, colors, 0, 4);
-        System.arraycopy(color, 0, colors, 4, 4);
-        System.arraycopy(color, 0, colors, 8, 4);
-        System.arraycopy(color, 0, colors, 12, 4);
+        float[] colors = new float[24];
+        for (int i = 0; i < 4; i++) {
+            System.arraycopy(color, 0, colors, i * 4, 4);
+        }
 
-        textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, rotatedVertices, texCoords, colors));
+        // Two triangles per quad
+        float[] triangleVertices = {
+                rotatedVertices[0], rotatedVertices[1], rotatedVertices[2],
+                rotatedVertices[3], rotatedVertices[4], rotatedVertices[5],
+                rotatedVertices[6], rotatedVertices[7], rotatedVertices[8],
+
+                rotatedVertices[0], rotatedVertices[1], rotatedVertices[2],
+                rotatedVertices[6], rotatedVertices[7], rotatedVertices[8],
+                rotatedVertices[9], rotatedVertices[10], rotatedVertices[11]
+        };
+
+        float[] triangleTexCoords = {
+                texCoords[0], texCoords[1],
+                texCoords[2], texCoords[3],
+                texCoords[4], texCoords[5],
+
+                texCoords[0], texCoords[1],
+                texCoords[4], texCoords[5],
+                texCoords[6], texCoords[7]
+        };
+
+        float[] triangleColors = {
+                colors[0], colors[1], colors[2], colors[3],
+                colors[4], colors[5], colors[6], colors[7],
+                colors[8], colors[9], colors[10], colors[11],
+
+                colors[0], colors[1], colors[2], colors[3],
+                colors[8], colors[9], colors[10], colors[11],
+                colors[12], colors[13], colors[14], colors[15]
+        };
+
+        textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, triangleVertices, triangleTexCoords, triangleColors));
     }
 
     /**
@@ -280,7 +330,7 @@ public class BatchRenderer {
         glBufferData(GL_ARRAY_BUFFER, colorBuffer, GL_DYNAMIC_DRAW);
         glColorPointer(4, GL_FLOAT, 0, 0);
 
-        glDrawArrays(GL_QUADS, 0, vertexBuffer.limit() / 3);
+        glDrawArrays(GL_TRIANGLES, 0, vertexBuffer.limit() / 3);
     }
 
     /**
