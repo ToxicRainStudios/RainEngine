@@ -22,9 +22,6 @@
       },
       {
         "maxTexturesPerBatch": "100"
-      },
-	  {
-        "localFilePath": "C:/Users/hudso/OneDrive/Desktop/MWC/game2d/resources/images/"
       }
     ]
   }

@@ -69,9 +69,6 @@ public class GameInfoParser {
                         if (key.equals("maxTexturesPerBatch")) {
                             maxTexturesPerBatch = Integer.parseInt(value);
                         }
-                        if (key.equals("localFilePath")) {
-                            localFilePath = value;
-                        }
                     }
                 }
             }

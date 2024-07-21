@@ -42,10 +42,10 @@ public class FileUtils {
     }
 
     /**
-     * Utility method to get the file path as a long
+     * Utility method to get the size of a file as a long.
      *
      * @param filePath the path to the file
-     * @return the size of the file as a long
+     * @return the size of the file (in bytes) as a long
      */
     public static long getFileSize(String filePath) {
         try {
@@ -55,4 +55,19 @@ public class FileUtils {
             throw new RuntimeException("Failed to get file size: " + filePath, e);
         }
     }
+    public static String getUserHome() {
+        return System.getProperty("user.home");
+    }
+
+    /**
+     * Converts a relative path to an absolute path based on the current working directory.
+     *
+     * @param relativePath the relative path to convert
+     * @return the absolute path as a String
+     */
+    public static String getCurrentWorkingDirectory(String relativePath) {
+        String fullPath = Paths.get(relativePath).toAbsolutePath().toString();
+        return fullPath;
+    }
+
 }

@@ -20,6 +20,9 @@ public class PackInfoParser {
      * @param filePath The pack.json file path to parse
      */
     public static void loadPackInfo(String filePath) {
+        String workingDirectory = FileUtils.getCurrentWorkingDirectory("resources/images/");
+
+
         try {
             // Read the file content into a string
             String jsonString = FileUtils.readFile(filePath);
@@ -41,22 +44,22 @@ public class PackInfoParser {
                         String key = keys.next();
                         String value = valueObject.getString(key);
                         if (key.equals("playerTexture")) {
-                            playerTexture =  GameInfoParser.localFilePath + value;
+                            playerTexture = workingDirectory + "/" + value;
                         }
                         if (key.equals("floorTexture")) {
-                            floorTexture =  GameInfoParser.localFilePath + value;
+                            floorTexture = workingDirectory + "/" + value;
                         }
                         if (key.equals("splatterTexture")) {
-                            splatterTexture = GameInfoParser.localFilePath + value;
+                            splatterTexture = workingDirectory + "/" + value;
                         }
                         if (key.equals("concreteTexture1")) {
-                            concreteTexture1 = GameInfoParser.localFilePath + value;
+                            concreteTexture1 = workingDirectory + "/" + value;
                         }
                         if (key.equals("concreteTexture2")) {
-                            concreteTexture2 = GameInfoParser.localFilePath + value;
+                            concreteTexture2 = workingDirectory + "/" + value;
                         }
                         if (key.equals("missingTexture")) {
-                            missingTexture = GameInfoParser.localFilePath + value;
+                            missingTexture = workingDirectory + "/" + value;
                         }
                     }
                 }
