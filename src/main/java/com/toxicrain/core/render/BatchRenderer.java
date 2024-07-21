@@ -29,7 +29,8 @@ public class BatchRenderer {
     private final int texCoordVboId;
     private final int colorVboId;
 
-    private boolean blendingEnabled = false;
+    private boolean blendingEnabled = true;
+
 
     /**
      * Constructs a BatchRenderer and initializes the vertex, texture coordinate, and color buffers
@@ -41,10 +42,16 @@ public class BatchRenderer {
         colorBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * 4 * 4); // 4 vertices, 4 components each (r, g, b, a)
         textureVertexInfos = new ArrayList<>(MAX_TEXTURES);
 
+
+        //I FUCKING SWEAR HSTRUB IF YOU FORGET TO ENABLE BLENDING ONE MORE TIME...
+        setBlendingEnabled(blendingEnabled);
+
+
         // Generate VBOs
         vertexVboId = glGenBuffers();
         texCoordVboId = glGenBuffers();
         colorVboId = glGenBuffers();
+
     }
 
     private static class TextureVertexInfo {

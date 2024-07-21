@@ -157,6 +157,11 @@ public class GameEngine {
 
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
+
+            // Process input
+            processInput();
+
+
             // Check if the window has focus
             boolean windowFocused = glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0;
 
@@ -179,6 +184,7 @@ public class GameEngine {
             glEnable(GL_DEPTH_TEST);
 
             Vector3f center = getCenter();
+
 
             // Begin the batch
             batchRenderer.beginBatch();
@@ -206,8 +212,7 @@ public class GameEngine {
             // Render the batch
             batchRenderer.renderBatch();
 
-            // Process input
-            processInput();
+
 
             // Swap buffers and poll events
             glfwSwapBuffers(window);
