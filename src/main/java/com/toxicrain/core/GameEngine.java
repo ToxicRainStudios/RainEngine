@@ -151,7 +151,6 @@ public class GameEngine {
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
 
-
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
             // Check if the window has focus
