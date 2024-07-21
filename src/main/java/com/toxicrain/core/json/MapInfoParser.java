@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * This class provides functionality to parse map information from a JSON file.
  */
-public class MapInfoParser {
+/*public class MapInfoParser {
     public static void parseMapFile() throws IOException {
         // Read JSON file as String
         String jsonString = FileUtils.readFile("C:/Users/hudso/OneDrive/Desktop/MWC/game2d/json/map.json");
@@ -50,4 +50,5 @@ public class MapInfoParser {
             }
         }
     }
-}
+
+ */

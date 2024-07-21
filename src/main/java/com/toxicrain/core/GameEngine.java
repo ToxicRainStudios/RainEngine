@@ -1,6 +1,6 @@
 package com.toxicrain.core;
 
-import com.toxicrain.core.json.MapInfoParser;
+//import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.PackInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
@@ -88,7 +88,8 @@ public class GameEngine {
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) glfwSetWindowShouldClose(window, true); // This is detected in the rendering loop
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
+                glfwSetWindowShouldClose(window, true); // This is detected in the rendering loop
             if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS) {
                 toggleFullscreen();
             }
@@ -131,14 +132,17 @@ public class GameEngine {
         Logger.printLOG("Creating Textures");
         TextureUtils.initTextures();
 
-        try {
-            MapInfoParser.parseMapFile();
+       /* try {
+           MapInfoParser.parseMapFile();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         enableBlending();
     }
+    */
+    }
+
 
     private static void loop() {
         // This line is critical for LWJGL's interoperation with GLFW's OpenGL context, or any context that is managed externally.
