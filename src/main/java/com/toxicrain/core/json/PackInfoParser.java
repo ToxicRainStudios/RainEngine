@@ -22,7 +22,6 @@ public class PackInfoParser {
     public static void loadPackInfo(String filePath) {
         String workingDirectory = FileUtils.getCurrentWorkingDirectory("resources/images/");
 
-
         try {
             // Read the file content into a string
             String jsonString = FileUtils.readFile(filePath);

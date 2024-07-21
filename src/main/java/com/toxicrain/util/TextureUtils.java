@@ -5,20 +5,14 @@ import com.toxicrain.core.TextureInfo;
 import com.toxicrain.core.json.PackInfoParser;
 import org.lwjgl.system.MemoryStack;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 import static org.lwjgl.stb.STBImage.*;
-import static org.lwjgl.system.MemoryStack.stackPush;
 
 public class TextureUtils {
-    public static TextureInfo exampleTexture;
     public static TextureInfo floorTexture;
     public static TextureInfo playerTexture;
     public static TextureInfo splatterTexture;
