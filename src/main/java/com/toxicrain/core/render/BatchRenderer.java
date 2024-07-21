@@ -262,9 +262,6 @@ public class BatchRenderer {
     public void renderBatch() {
         if (textureVertexInfos.isEmpty()) return;
 
-        // Sort the textures by texture ID
-        textureVertexInfos.sort(Comparator.comparingInt(t -> t.textureId));
-
         glEnable(GL_TEXTURE_2D);
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
