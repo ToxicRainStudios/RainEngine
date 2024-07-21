@@ -11,7 +11,7 @@ public class Constants {
     /**Engine's version*/
     public static String engineVersion = "1.0.0";
     public static String engineMakers = "Toxic Rain Studios";
-    public static String credits = "";
+    public static String credits = "notdeadpool456: Making the textures";
 
 
 

@@ -127,7 +127,7 @@ public class GameEngine {
         GL.createCapabilities();
 
         Logger.printLOG("Loading pack.json"); //MUST be called before TextureUtils.initTextures()
-        PackInfoParser.loadPackInfo(FileUtils.getCurrentWorkingDirectory("json/pack.json"));
+        PackInfoParser.loadPackInfo(FileUtils.getCurrentWorkingDirectory("resources/json/pack.json"));
 
         Logger.printLOG("Creating Textures");
         TextureUtils.initTextures();
@@ -221,7 +221,7 @@ public class GameEngine {
 
     private static void processInput() {
         //Sprinting
-        cameraSpeed = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ? 0.1f : 0.05f;
+        cameraSpeed = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ? 0.1f : cameraSpeed;
 
         // Handle left and right movement
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) cameraX -= cameraSpeed;
