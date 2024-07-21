@@ -157,10 +157,10 @@ public class GameEngine {
 
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
-
-            // Process input
-            processInput();
-
+            for(int eFrames = 3; eFrames >= 0; eFrames --) { //Put Everything GameEngine-e here. eFrames = engineFrames
+                // Process input
+                processInput();
+            }
 
             // Check if the window has focus
             boolean windowFocused = glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0;
