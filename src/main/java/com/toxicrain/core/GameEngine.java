@@ -1,13 +1,16 @@
 package com.toxicrain.core;
 
 //import com.toxicrain.core.json.MapInfoParser;
+
 import com.toxicrain.artifacts.Player;
 import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.json.PackInfoParser;
 import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
+import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.util.*;
+import imgui.internal.ImGui;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -18,12 +21,11 @@ import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
-import java.util.Random;
-
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Random;
 
 import static com.toxicrain.util.TextureUtils.*;
 import static de.damios.guacamole.gdx.StartOnFirstThreadHelper.startNewJvmIfRequired;
@@ -32,6 +34,9 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
+
+import imgui.app.Application;
+import imgui.app.Configuration;
 
 
 
@@ -44,9 +49,11 @@ public class GameEngine {
     private static boolean fullscreen = true;
 
     private static FPSUtils fpsUtils;
+    private static ImguiHandler imguiApp;
 
     public GameEngine(){
         fpsUtils = new FPSUtils();
+        imguiApp = new ImguiHandler(window);
     }
 
     public static void run(String windowTitle) {
@@ -158,6 +165,10 @@ public class GameEngine {
 
         GL.createCapabilities();
 
+        // Create and initialize ImguiHandler
+        imguiApp = new ImguiHandler(window);
+        imguiApp.initialize();
+
         Logger.printLOG("Loading pack.json"); //MUST be called before TextureUtils.initTextures()
         PackInfoParser.loadPackInfo();
 
@@ -213,8 +224,8 @@ public class GameEngine {
             for(int engineFrames = 3; engineFrames >= 0; engineFrames --) { //Put things that need to run 3 times a frame, ex: input
                 // Process input
                 Player.processInput( window);
-            }
 
+            }
             // Check if the window has focus
             boolean windowFocused = glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0;
 
@@ -231,6 +242,11 @@ public class GameEngine {
 
             // Enable depth testing
             glEnable(GL_DEPTH_TEST);
+            imguiApp.handleInput(window);
+
+            imguiApp.newFrame();
+            imguiApp.drawUI();
+            imguiApp.render();
 
             Vector3f center = getCenter();
 

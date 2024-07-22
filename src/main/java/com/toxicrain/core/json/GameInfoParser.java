@@ -76,7 +76,6 @@ public class GameInfoParser {
                         else if (key.equals("maxZoom")) {
                             maxZoom = Integer.parseInt(value);
                         }
-
                     }
                 }
             }

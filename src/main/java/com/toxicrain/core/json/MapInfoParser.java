@@ -33,8 +33,8 @@ public class MapInfoParser {
 
             // Check if required keys are present
             if (!part.has("type") || !part.has("xsize") || !part.has("ysize") || !part.has("slices")) {
-                System.out.println("Missing keys in JSON object at index " + i);
-                System.out.println(part.toString(4)); // Print the JSON object with missing keys for debugging
+                Logger.printERROR("Missing keys in JSON object at index " + i);
+                Logger.printERROR(part.toString(4)); // Print the JSON object with missing keys for debugging
                 continue;
             }
             if(doExtraLogs) {
@@ -43,19 +43,19 @@ public class MapInfoParser {
                 ysize = part.getInt("ysize");
 
                 // Print part details
-                System.out.println("type: " + type);
-                System.out.println("xsize: " + xsize);
-                System.out.println("ysize: " + ysize);
+                Logger.printLOG("type: " + type);
+                Logger.printLOG("xsize: " + xsize);
+                Logger.printLOG("ysize: " + ysize);
             }
             // Get slices
             JSONArray slices = part.getJSONArray("slices");
-            if(doExtraLogs) Logger.printLOG("Number of slices: " + slices.length());
+            Logger.printLOGConditional("Number of slices: " + slices.length(), doExtraLogs);
             for (int j = 0; j < slices.length(); j++) {
                 JSONArray slice = slices.getJSONArray(j);
-                if(doExtraLogs)Logger.printLOG("Processing slice " + j + " with length: " + slice.length());
+                Logger.printLOGConditional("Processing slice " + j + " with length: " + slice.length(), doExtraLogs);
                 for (int k = 0; k < slice.length(); k++) {
                     String row = slice.getString(k);
-                    if(doExtraLogs) Logger.printLOG("Processing row " + k + ": " + row);
+                    Logger.printLOGConditional("Processing row " + k + ": " + row, doExtraLogs);
                     // Check each character in the row
                     for (int l = 0; l < row.length(); l++) {
                         if (!(row.charAt(l) == ' ')) {
@@ -64,7 +64,7 @@ public class MapInfoParser {
                             int yCoordinate = k;
 
                             // Log position and add to data
-                            if(doExtraLogs)  Logger.printLOG("Found"+ row.charAt(l) +"at row " + k + ", column " + l);
+                            Logger.printLOGConditional("Found"+ row.charAt(l) +"at row " + k + ", column " + l, doExtraLogs);
                             tiles++;
                             mapDataX.add(xCoordinate * 2);
                             mapDataY.add(yCoordinate * -2);
