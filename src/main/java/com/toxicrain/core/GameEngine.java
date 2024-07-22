@@ -10,7 +10,6 @@ import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.util.*;
-import imgui.internal.ImGui;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -35,8 +34,6 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-import imgui.app.Application;
-import imgui.app.Configuration;
 
 
 
