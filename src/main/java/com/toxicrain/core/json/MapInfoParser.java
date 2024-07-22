@@ -14,6 +14,7 @@ public class MapInfoParser {
     public static int tiles = 0;
     public static ArrayList<Integer> mapDataX = new ArrayList<>();
     public static ArrayList<Integer> mapDataY = new ArrayList<>();
+    public static ArrayList<Character> mapDataType = new ArrayList<>();
 
     public static void parseMapFile() throws IOException {
         // Read JSON file as String
@@ -37,6 +38,10 @@ public class MapInfoParser {
             xsize = part.getInt("xsize");
             ysize = part.getInt("ysize");
 
+            // Print part details
+            System.out.println("type: " + type);
+            System.out.println("xsize: " + xsize);
+            System.out.println("ysize: " + ysize);
 
             // Get slices
             JSONArray slices = part.getJSONArray("slices");
@@ -49,8 +54,8 @@ public class MapInfoParser {
                     Logger.printLOG("Processing row " + k + ": " + row);
                     // Check each character in the row
                     for (int l = 0; l < row.length(); l++) {
-                        if (row.charAt(l) == ':') {
-                            // Calculate coordinates
+                        if (!(row.charAt(l) == ' ')) {
+                            // Calculate coordinates (consider adjusting multiplier based on your actual map scale)
                             int xCoordinate = l;
                             int yCoordinate = k;
 
@@ -59,15 +64,17 @@ public class MapInfoParser {
                             tiles++;
                             mapDataX.add(xCoordinate * 2);
                             mapDataY.add(yCoordinate * 2);
+                            mapDataType.add(row.charAt(l));
                         }
                     }
                 }
                 System.out.println("----");
             }
+        }
 
             // Log the final map data
             System.out.println("mapDataX: " + mapDataX);
             System.out.println("mapDataY: " + mapDataY);
         }
     }
-}
+

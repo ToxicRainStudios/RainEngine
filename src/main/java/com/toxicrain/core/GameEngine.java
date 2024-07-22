@@ -1,6 +1,7 @@
 package com.toxicrain.core;
 
 //import com.toxicrain.core.json.MapInfoParser;
+import com.sun.prism.Texture;
 import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.json.PackInfoParser;
@@ -174,12 +175,26 @@ public class GameEngine {
         for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
             // Ensure that indices are valid
             if (k >= 0 && k < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
-                batchRenderer.addTexture(floorTexture, MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
+                batchRenderer.addTexture(getTextrue(MapInfoParser.mapDataType.get(k)), MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
             } else {
                 Logger.printLOG("Index out of bounds: space=" + k);
             }
         }
 
+    }
+    private static TextureInfo getTextrue(char textureMap){
+        TextureInfo returnTexture = missingTexture;
+        if(textureMap == ':'){
+            returnTexture = floorTexture;
+        }
+        else if(textureMap == '+'){
+            returnTexture = concreteTexture1;
+        }
+        else{
+            returnTexture = missingTexture;
+        }
+
+        return returnTexture;
     }
 
     private static void loop(BatchRenderer batchRenderer) {
