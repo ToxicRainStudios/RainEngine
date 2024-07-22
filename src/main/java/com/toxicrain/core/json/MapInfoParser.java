@@ -8,9 +8,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * This class provides functionality to parse map information from a JSON file.
- */
 public class MapInfoParser {
     public static float xpos, ypos;
     public static int xsize, ysize;
@@ -51,10 +48,16 @@ public class MapInfoParser {
                 JSONArray slice = slices.getJSONArray(j);
                 for (int k = 0; k < slice.length(); k++) {
                     String row = slice.getString(k);
+                    System.out.println("Processing row " + j + ": " + row);
                     // Check each character in the row
                     for (int l = 0; l < row.length(); l++) {
                         if (row.charAt(l) == ':') {
-                            Logger.printLOG("HIIII");
+                            // Calculate coordinates (consider adjusting multiplier based on your actual map scale)
+                            int xCoordinate = l;
+                            int yCoordinate = j;
+
+                            // Log position and add to data
+                            Logger.printLOG("Found ':' at row " + j + ", column " + l);
                             tiles++;
                             mapDataX.add(l * 2);
                             mapDataY.add(k * 2);
@@ -64,5 +67,9 @@ public class MapInfoParser {
                 System.out.println("----");
             }
         }
+
+        // Log the final map data
+        System.out.println("mapDataX: " + mapDataX);
+        System.out.println("mapDataY: " + mapDataY);
     }
 }
