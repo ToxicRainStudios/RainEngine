@@ -14,12 +14,14 @@ public class Player{
     public float posY;
     public float posZ;
     public TextureInfo texture;
+    public boolean isSprinting;
 
-    public Player(float posX, float posY, float posZ, TextureInfo texture) {
+    public Player(float posX, float posY, float posZ, TextureInfo texture, boolean isSprinting) {
         this.posX = posX;
         this.posY = posY;
         this.posZ = posZ;
         this.texture = texture;
+        this.isSprinting = isSprinting;
     }public static float cameraX = 15.0f; // Camera X position
     public static float cameraY = 15.0f; // Camera Y position
     public static float cameraZ = 5.0f; // Camera Z position
