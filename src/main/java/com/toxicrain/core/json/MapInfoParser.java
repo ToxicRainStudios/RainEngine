@@ -1,5 +1,6 @@
 package com.toxicrain.core.json;
 
+
 import com.toxicrain.core.Logger;
 import com.toxicrain.util.FileUtils;
 import org.json.JSONArray;
@@ -10,6 +11,13 @@ import java.util.ArrayList;
 
 
 public class MapInfoParser {
+    public static ArrayList<Float> extentTop = new ArrayList<Float>();
+    public static ArrayList<Float> extentBottom = new ArrayList<Float>();
+    public static ArrayList<Float> extentLeft = new ArrayList<Float>();
+    public static ArrayList<Float> extentRight = new ArrayList<Float>();
+    public static ArrayList<Float> extentCenterY = new ArrayList<Float>();
+    public static ArrayList<Float> extentCenterX = new ArrayList<Float>();
+
     public static boolean doExtraLogs = false;
     public static float xpos, ypos;
     public static int xsize, ysize;
@@ -69,6 +77,16 @@ public class MapInfoParser {
                             mapDataX.add(xCoordinate * 2);
                             mapDataY.add(yCoordinate * -2);
                             mapDataType.add(row.charAt(l));
+                            extentTop.add(((float)yCoordinate*-2)+1);
+                            extentBottom.add(((float)yCoordinate*-2)-1);
+                            extentLeft.add(((float)xCoordinate*2)-1);
+                            extentRight.add(((float)xCoordinate*2)+1);
+                            extentCenterY.add(((float)yCoordinate*-2));
+                            extentCenterX.add(((float)xCoordinate*2));
+
+
+
+
                         }
                     }
                 }
