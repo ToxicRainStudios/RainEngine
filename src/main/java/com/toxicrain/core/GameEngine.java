@@ -49,11 +49,9 @@ public class GameEngine {
     private static boolean fullscreen = true;
 
     private static FPSUtils fpsUtils;
-    private static BatchRenderer batchRenderer;
 
     public GameEngine(){
         fpsUtils = new FPSUtils();
-        batchRenderer = new BatchRenderer();
     }
 
     public static void run(String windowTitle) {
