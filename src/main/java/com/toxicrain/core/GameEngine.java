@@ -261,7 +261,7 @@ public class GameEngine {
         cameraZ += scrollOffset * scrollSpeed;
 
         // Cap cameraZ at max 25 and min 3
-        if (cameraZ > GameInfoParser.maxZoom) { //TODO Make these configurable
+        if (cameraZ > GameInfoParser.maxZoom) {
             cameraZ = GameInfoParser.maxZoom;
         }
         if (cameraZ < GameInfoParser.minZoom) {
