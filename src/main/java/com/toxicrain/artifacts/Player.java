@@ -33,45 +33,38 @@ public class Player{
     private static float opY = 1.0f;
     private static void handleCollisions() {
 
-        for (int i = MapInfoParser.extentTop.size()-1; i >= 0; i--) {
+        for (int i = 0; i >= 0; i--) {
 
-            if((cameraY <= MapInfoParser.extentTop.get(i)) && (cameraY >= MapInfoParser.extentCenterY.get(i))) {
-                if ((cameraX >= MapInfoParser.extentLeft.get(i)) && !(cameraX >= MapInfoParser.extentCenterX.get(i))) {
-                    cameraY += 0.02f;
-                } else if ((cameraX <= MapInfoParser.extentRight.get(i)) &&!(cameraX <= MapInfoParser.extentCenterX.get(i))) {
-                    cameraY += 0.02f;
+            if((cameraY < MapInfoParser.extentTop.get(i)) && (cameraY > MapInfoParser.extentCenterY.get(i))) {
+                if ((cameraX > MapInfoParser.extentLeft.get(i)) && !(cameraX > MapInfoParser.extentCenterX.get(i))) {
+                    cameraY += cameraSpeed;
+                } else if ((cameraX < MapInfoParser.extentRight.get(i)) &&!(cameraX < MapInfoParser.extentCenterX.get(i))) {
+                    cameraY += cameraSpeed;
                 }
             }
-             if((cameraY >= MapInfoParser.extentBottom.get(i)) && (cameraY <= MapInfoParser.extentCenterY.get(i))) {
-               if ((cameraX >= MapInfoParser.extentLeft.get(i)) && !(cameraX >= MapInfoParser.extentCenterX.get(i))) {
-                    cameraY -= 0.02f;
-               } else if ((cameraX <= MapInfoParser.extentRight.get(i)) && !(cameraX <= MapInfoParser.extentCenterX.get(i))) {
-                   cameraY -= 0.02f;
+             if((cameraY > MapInfoParser.extentBottom.get(i)) && (cameraY < MapInfoParser.extentCenterY.get(i))) {
+               if ((cameraX > MapInfoParser.extentLeft.get(i)) && !(cameraX > MapInfoParser.extentCenterX.get(i))) {
+                    cameraY -= cameraSpeed;
+               } else if ((cameraX < MapInfoParser.extentRight.get(i)) && !(cameraX < MapInfoParser.extentCenterX.get(i))) {
+                   cameraY -= cameraSpeed;
                }
             }
-           if((cameraX <= MapInfoParser.extentRight.get(i)) && (cameraX >= MapInfoParser.extentCenterX.get(i))) {
-                if ((cameraY >= MapInfoParser.extentBottom.get(i)) && !(cameraY > MapInfoParser.extentCenterY.get(i))) {
-                    cameraX += 0.02f;
-                } else if ((cameraY <= MapInfoParser.extentTop.get(i)) && !(cameraY <= MapInfoParser.extentCenterY.get(i))) {
-                    cameraX += 0.02f;
+           if((cameraX < MapInfoParser.extentRight.get(i)) && (cameraX > MapInfoParser.extentCenterX.get(i))) {
+                if ((cameraY > MapInfoParser.extentBottom.get(i)) && !(cameraY > MapInfoParser.extentCenterY.get(i))) {
+                    cameraX += cameraSpeed;
+                } else if ((cameraY < MapInfoParser.extentTop.get(i)) && !(cameraY < MapInfoParser.extentCenterY.get(i))) {
+                    cameraX += cameraSpeed;
                 }
             }
-             if((cameraX >= MapInfoParser.extentLeft.get(i)) && (cameraX <= MapInfoParser.extentCenterX.get(i))) {
-                if ((cameraY >= MapInfoParser.extentBottom.get(i)) && !(cameraY >= MapInfoParser.extentCenterY.get(i))) {
-                    cameraX -= 0.02f;
-                } else if ((cameraY <= MapInfoParser.extentTop.get(i)) && !(cameraY <= MapInfoParser.extentCenterY.get(i))) {
-                    cameraX -= 0.02f;
+             if((cameraX > MapInfoParser.extentLeft.get(i)) && (cameraX < MapInfoParser.extentCenterX.get(i))) {
+                if ((cameraY > MapInfoParser.extentBottom.get(i)) && !(cameraY > MapInfoParser.extentCenterY.get(i))) {
+                    cameraX -= cameraSpeed;
+                } else if ((cameraY < MapInfoParser.extentTop.get(i)) && !(cameraY < MapInfoParser.extentCenterY.get(i))) {
+                    cameraX -= cameraSpeed;
                 }
-            }
-
-
-
-
-
-
-
             }
         }
+    }
 
 
     private static void handleMovement(float opX, float opY){
