@@ -14,6 +14,9 @@ public class PackInfoParser {
     public static String concreteTexture1 = null;
     public static String concreteTexture2 = null;
     public static String missingTexture = null;
+    public static String dirtTexture1 = null;
+    public static String grassTexture1 = null;
+    public static String dirtTexture2 = null;
 
     /**
      * Loads the pack.json and parsers it into variables
@@ -56,6 +59,15 @@ public class PackInfoParser {
                         }
                         if (key.equals("concreteTexture2")) {
                             concreteTexture2 = workingDirectory + "/" + value;
+                        }
+                        if (key.equals("dirtTexture1")) {
+                            dirtTexture1 = workingDirectory + "/" + value;
+                        }
+                        if (key.equals("grassTexture1")) {
+                            grassTexture1 = workingDirectory + "/" + value;
+                        }
+                        if (key.equals("dirtTexture2")) {
+                            dirtTexture2 = workingDirectory + "/" + value;
                         }
                         if (key.equals("missingTexture")) {
                             missingTexture = workingDirectory + "/" + value;

@@ -18,6 +18,7 @@ import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
+import java.util.Random;
 
 
 import java.io.IOException;
@@ -189,6 +190,23 @@ public class GameEngine {
         }
         else if(textureMap == '+'){
             returnTexture = concreteTexture1;
+        }
+        else if(textureMap == '='){
+
+            Random rand = new Random();
+            int randNum = rand.nextInt(2);
+            switch (randNum) {
+                case 0:
+                    returnTexture = dirtTexture1;
+                    break;
+                case 1:
+                    returnTexture = grassTexture1;
+                    break;
+
+                default:
+                    returnTexture = dirtTexture2;
+
+            }
         }
         else{
             returnTexture = missingTexture;
