@@ -9,23 +9,20 @@ import java.util.Iterator;
 import com.toxicrain.util.FileUtils;
 
 /**
- * GameInfoParser parsers the gameinfo.json file
+ * SettingsInfoParser parsers the settings.json file
  * needed for game functionality
  */
-public class GameInfoParser {
-    public static String defaultWindowName = null;
-    public static String engineVersion = null;
-    public static String gameName = null;
-    public static String gameMakers = null;
-    public static String gameVersion = null;
-    public static String gameWebsite = null;
-    public static int maxTexturesPerBatch = 100; //Safety, don't crash if we forget to add this to gameinfo.json
+public class SettingsInfoParser {
+    public static boolean vSync = true;
+    public static float windowWidth = 1920;
+    public static float windowHeight = 1080;
+    public static float fov = 90f;
 
     /**
-     * Loads the gameinfo.json and parsers it into variables
+     * Loads the settings.json and parsers it into variables
      */
-    public static void loadGameInfo() {
-        String filePath = FileUtils.getCurrentWorkingDirectory("resources/json/gameinfo.json");
+    public static void loadSettingsInfo() {
+        String filePath = FileUtils.getCurrentWorkingDirectory("resources/json/settings.json");
 
         try {
             // Read the file content into a string
@@ -47,26 +44,17 @@ public class GameInfoParser {
                     while (keys.hasNext()) {
                         String key = keys.next();
                         String value = valueObject.getString(key);
-                        if (key.equals("defaultWindowName")) {
-                            defaultWindowName = value;
+                        if (key.equals("vSync")) {
+                            vSync = Boolean.parseBoolean(value);
                         }
-                        if (key.equals("engineVersion")) {
-                            engineVersion = value;
+                        if (key.equals("windowWidth")) {
+                            windowWidth = Float.parseFloat(value);
                         }
-                        if (key.equals("gameName")) {
-                            gameName = value;
+                        if (key.equals("windowHeight")) {
+                            windowHeight = Float.parseFloat(value);
                         }
-                        if (key.equals("gameMakers")) {
-                            gameMakers = value;
-                        }
-                        if (key.equals("gameVersion")) {
-                            gameVersion = value;
-                        }
-                        if (key.equals("gameWebsite")) {
-                            gameWebsite = value;
-                        }
-                        if (key.equals("maxTexturesPerBatch")) {
-                            maxTexturesPerBatch = Integer.parseInt(value);
+                        if (key.equals("fov")) {
+                            fov = Float.parseFloat(value);
                         }
                     }
                 }

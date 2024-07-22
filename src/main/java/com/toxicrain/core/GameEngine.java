@@ -1,8 +1,10 @@
 package com.toxicrain.core;
 
 //import com.toxicrain.core.json.MapInfoParser;
+
 import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.PackInfoParser;
+import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.util.*;
 import org.joml.Matrix4f;
@@ -16,7 +18,6 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
-import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -48,9 +49,12 @@ public class GameEngine {
         Logger.printLOG("Hello LWJGL " + Version.getVersion() + "!");
         Logger.printLOG("Hello RainEngine " + Constants.engineVersion + "!");
         Logger.printLOG("Running: " + GameInfoParser.gameName + " by " + GameInfoParser.gameMakers);
-        Logger.printLOG("Version: " + GameInfoParser.gameVersion);
+        Logger.printLOG("Game Version: " + GameInfoParser.gameVersion);
         doVersionCheck();
-        init(windowTitle, true); //TODO vSync should be controllable with some sort of settings menu
+        Logger.printLOG("Loading User Settings");
+        SettingsInfoParser.loadSettingsInfo();
+
+        init(windowTitle, SettingsInfoParser.vSync); //TODO vSync should be controllable with some sort of settings menu
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
 
@@ -88,7 +92,7 @@ public class GameEngine {
         // Create the window
         window = glfwCreateWindow(300, 300, windowTitle, glfwGetPrimaryMonitor(), NULL);
         // Resize the window
-        glfwSetWindowSize(window, (int) Constants.windowWidth, (int) Constants.windowHeight);
+        glfwSetWindowSize(window, (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
 
         if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
 
@@ -170,14 +174,14 @@ public class GameEngine {
             boolean windowFocused = glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0;
 
             // Set the viewport size
-            glViewport(0, 0, (int) Constants.windowWidth, (int) Constants.windowHeight);
+            glViewport(0, 0, (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
 
             // Clear the color and depth buffers
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             // Set up the projection matrix with FOV of 90 degrees
             glMatrixMode(GL_PROJECTION);
-            glLoadMatrixf(createPerspectiveProjectionMatrix(90.0f, Constants.windowWidth / Constants.windowHeight, 1.0f, 100.0f));
+            glLoadMatrixf(createPerspectiveProjectionMatrix(SettingsInfoParser.fov, SettingsInfoParser.windowWidth / SettingsInfoParser.windowHeight, 1.0f, 100.0f));
 
             // Set up the view matrix
             glMatrixMode(GL_MODELVIEW);
@@ -209,7 +213,7 @@ public class GameEngine {
                 float[] mousePos = mouseInput.getMousePosition();
 
                 // Convert mouse coordinates to OpenGL coordinates
-                openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) Constants.windowWidth, (int) Constants.windowHeight);
+                openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
 
             }
             // This is the player!
@@ -293,9 +297,9 @@ public class GameEngine {
             glfwSetWindowMonitor(window, monitor, 0, 0, vidmode.width(), vidmode.height(), vidmode.refreshRate());
         } else {
             // Switch back to windowed mode
-            glfwSetWindowMonitor(window, NULL, (vidmode.width() - (int) Constants.windowWidth) / 2,
-                    (vidmode.height() - (int) Constants.windowHeight) / 2, (int) Constants.windowWidth,
-                    (int) Constants.windowHeight, GLFW_DONT_CARE);
+            glfwSetWindowMonitor(window, NULL, (vidmode.width() - (int) SettingsInfoParser.windowWidth) / 2,
+                    (vidmode.height() - (int) SettingsInfoParser.windowHeight) / 2, (int) SettingsInfoParser.windowWidth,
+                    (int) SettingsInfoParser.windowHeight, GLFW_DONT_CARE);
         }
     }
 
@@ -312,12 +316,12 @@ public class GameEngine {
         Matrix4f invProjectionViewMatrix = new Matrix4f(projectionViewMatrix).invert();
 
         // Get the center of the screen in window coordinates
-        float screenX = Constants.windowWidth / 2.0f;
-        float screenY = Constants.windowHeight / 2.0f;
+        float screenX = SettingsInfoParser.windowWidth / 2.0f;
+        float screenY = SettingsInfoParser.windowHeight / 2.0f;
 
         // Convert window coordinates to NDC (Normalized Device Coordinates)
-        float ndcX = (2.0f * screenX) / Constants.windowWidth - 1.0f;
-        float ndcY = 1.0f - (2.0f * screenY) / Constants.windowHeight;
+        float ndcX = (2.0f * screenX) / SettingsInfoParser.windowWidth - 1.0f;
+        float ndcY = 1.0f - (2.0f * screenY) / SettingsInfoParser.windowHeight;
 
         // Convert NDC to world coordinates
         Vector4f ndcPos = new Vector4f(ndcX, ndcY, -1.0f, 1.0f).mul(invProjectionViewMatrix);

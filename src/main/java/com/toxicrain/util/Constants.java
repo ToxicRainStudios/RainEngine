@@ -9,14 +9,7 @@ package com.toxicrain.util;
  */
 public class Constants {
     /**Engine's version*/
-    public static String engineVersion = "1.0.0";
-    public static String engineMakers = "Toxic Rain Studios";
-    public static String credits = "notdeadpool456: Making the textures";
-
-
-
-    //TODO: Move these out of here
-    public static float windowWidth = 1920.0f;
-
-    public static float windowHeight = 1080.0f;
+    public static final String engineVersion = "1.0.0";
+    public static final String engineMakers = "Toxic Rain Studios";
+    public static final String credits = "notdeadpool456: Making the textures";
 }
