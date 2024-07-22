@@ -240,8 +240,8 @@ public class GameEngine {
 
             // Enable depth testing
             glEnable(GL_DEPTH_TEST);
-            imguiApp.handleInput(window);
 
+            imguiApp.handleInput(window);
             imguiApp.newFrame();
             imguiApp.drawUI();
             imguiApp.render();

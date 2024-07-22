@@ -2,10 +2,10 @@ package com.toxicrain.gui;
 
 import com.toxicrain.core.json.SettingsInfoParser;
 import imgui.ImGui;
-import imgui.app.Application;
-import imgui.app.Configuration;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
+import imgui.internal.flag.ImGuiItemFlags;
+import imgui.type.ImInt;
 import org.lwjgl.glfw.GLFW;
 
 public class ImguiHandler {
@@ -68,17 +68,20 @@ public class ImguiHandler {
 
     public void drawUI() {
         // Start a new ImGui window
-        ImGui.begin("Test Window");
+        ImGui.begin("RainEngine Settings");
+        ImGui.text("Here is where you can change settings");
 
-        ImGui.setWindowSize(300, 200); // Width and Height in pixels
+        ImGui.setWindowSize(300, 300); // Width and Height in pixels
 
-        // Add a button and check if it's pressed
-        if (ImGui.button("Click Me!")) {
-            System.out.println("Button clicked!");
-        }
+        ImInt FOV = new ImInt((int) SettingsInfoParser.fov);
 
-        // Optionally add more UI elements here
-        ImGui.text("This is a sample text");
+        ImGui.beginDisabled(); // Disables all following widgets
+        ImGui.checkbox("vSync", SettingsInfoParser.vSync);
+        ImGui.sliderInt("FOV", FOV.getData(), 0, 100);
+
+        ImGui.endDisabled(); // Re-enables widgets
+
+
 
         // End the ImGui window
         ImGui.end();
