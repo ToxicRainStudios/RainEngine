@@ -68,8 +68,6 @@ public class GameEngine {
             throw new RuntimeException(e);
         }
 
-        Logger.printLOG(String.valueOf(MapInfoParser.mapDataY.size()));
-        Logger.printLOG(String.valueOf(MapInfoParser.mapDataX.size()));
 
             for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
                 // Ensure that indices are valid
