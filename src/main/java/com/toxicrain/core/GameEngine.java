@@ -60,7 +60,10 @@ public class GameEngine {
         Logger.printLOG("Running: " + GameInfoParser.gameName + " by " + GameInfoParser.gameMakers);
         Logger.printLOG("Version: " + GameInfoParser.gameVersion);
         doVersionCheck();
-        init(windowTitle, true); //TODO vSync should be controllable with some sort of settings menu
+        Logger.printLOG("Loading User Settings");
+        SettingsInfoParser.loadSettingsInfo();
+
+        init(windowTitle, SettingsInfoParser.vSync);
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
         MapInfoParser mapInfoParser = new MapInfoParser();
@@ -81,10 +84,6 @@ public class GameEngine {
                     Logger.printLOG("Index out of bounds: space=" + k);
                 }
             }
-        Logger.printLOG("Loading User Settings");
-        SettingsInfoParser.loadSettingsInfo();
-
-        init(windowTitle, SettingsInfoParser.vSync);
 
         loop(batchRenderer);
 
