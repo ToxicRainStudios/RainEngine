@@ -240,7 +240,7 @@ public class GameEngine {
 
             imguiApp.handleInput(window);
             imguiApp.newFrame();
-            imguiApp.drawUI();
+            imguiApp.drawSettingsUI();
             imguiApp.render();
 
             Vector3f center = getCenter();

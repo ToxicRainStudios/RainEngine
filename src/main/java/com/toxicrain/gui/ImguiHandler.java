@@ -66,7 +66,7 @@ public class ImguiHandler {
         ImGui.destroyContext();
     }
 
-    public void drawUI() {
+    public void drawSettingsUI() {
         // Start a new ImGui window
         ImGui.begin("RainEngine Settings");
         ImGui.text("Here is where you can change settings");
