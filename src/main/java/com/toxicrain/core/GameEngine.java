@@ -205,13 +205,19 @@ public class GameEngine {
 
             Logger.printLOG(String.valueOf(MapInfoParser.mapDataY.size()));
             Logger.printLOG(String.valueOf(MapInfoParser.mapDataX.size()));
-            for(int j = MapInfoParser.mapDataY.size(); j >0; j--) {
-                for (int k = MapInfoParser.mapDataX.size(); k > 0; k--) {
+            for (int j = MapInfoParser.mapDataY.size() - 1; j >= 0; j--) {
+                for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
                     Logger.printLOG(String.valueOf(k));
                     Logger.printLOG(String.valueOf(j));
-                    batchRenderer.addTexture(floorTexture, MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(j), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
+                    // Ensure that indices are valid
+                    if (j >= 0 && j < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
+                        batchRenderer.addTexture(floorTexture, MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(j), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
+                    } else {
+                        Logger.printLOG("Index out of bounds: j=" + j + ", k=" + k);
+                    }
                 }
             }
+
             // Add textures to the batch
             /*batchRenderer.addTexture(floorTexture, 1, 1, 1, 0, Color.toFloatArray(Color.WHITE)); // Top-left corner
 
