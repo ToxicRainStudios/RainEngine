@@ -77,10 +77,10 @@ public class MapInfoParser {
                             mapDataX.add(xCoordinate * 2);
                             mapDataY.add(yCoordinate * -2);
                             mapDataType.add(row.charAt(l));
-                            extentTop.add(((float)yCoordinate*-2)+1);
-                            extentBottom.add(((float)yCoordinate*-2)-1);
-                            extentLeft.add(((float)xCoordinate*2)-1);
-                            extentRight.add(((float)xCoordinate*2)+1);
+                            extentTop.add(((float)yCoordinate*-2)+1.1f);
+                            extentBottom.add(((float)yCoordinate*-2)-1.1f);
+                            extentLeft.add(((float)xCoordinate*2)-1.1f);
+                            extentRight.add(((float)xCoordinate*2)+1.1f);
                             extentCenterY.add(((float)yCoordinate*-2));
                             extentCenterX.add(((float)xCoordinate*2));
 
