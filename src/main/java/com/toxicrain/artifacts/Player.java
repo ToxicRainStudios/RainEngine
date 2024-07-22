@@ -37,7 +37,6 @@ public class Player{
             cameraY -= cameraSpeed/2;
             cameraX -= cameraSpeed/2;
         }
-        else if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) cameraX -= cameraSpeed;
         else if ((glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) && (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)) {
             cameraY += cameraSpeed/2;
             cameraX += cameraSpeed/2;
@@ -46,6 +45,7 @@ public class Player{
             cameraY -= cameraSpeed/2;
             cameraX += cameraSpeed/2;
         }
+        else if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) cameraX -= cameraSpeed;
         else if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) cameraX += cameraSpeed;
         else if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) cameraY += cameraSpeed;
         else if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) cameraY -= cameraSpeed;
