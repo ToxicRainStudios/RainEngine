@@ -1,6 +1,7 @@
 package com.toxicrain.core;
 
 //import com.toxicrain.core.json.MapInfoParser;
+import com.toxicrain.artifacts.Player;
 import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.json.PackInfoParser;
@@ -39,12 +40,6 @@ public class GameEngine {
     // The window handle
     public static long window;
 
-    public static float cameraX = 0.0f; // Camera X position
-    public static float cameraY = 0.0f; // Camera Y position
-    public static float cameraZ = 5.0f; // Camera Z position
-    private static float cameraSpeed = 0.02f; // Camera Speed
-    private static final float scrollSpeed = 0.5f;  // The max scroll in/out speed
-    private static float scrollOffset = 0.0f; // Track the scroll input
 
     private static boolean fullscreen = true;
 
@@ -135,7 +130,7 @@ public class GameEngine {
         glfwSetScrollCallback(window, new GLFWScrollCallback() {
             @Override
             public void invoke(long window, double xoffset, double yoffset) {
-                scrollOffset = (float) yoffset;
+                Player.scrollOffset = (float) yoffset;
             }
         });
 
@@ -217,7 +212,7 @@ public class GameEngine {
         while (!glfwWindowShouldClose(window)) {
             for(int engineFrames = 3; engineFrames >= 0; engineFrames --) { //Put things that need to run 3 times a frame, ex: input
                 // Process input
-                processInput();
+                Player.processInput( window);
             }
 
             // Check if the window has focus
@@ -232,7 +227,7 @@ public class GameEngine {
             // Set up the view matrix
             glMatrixMode(GL_MODELVIEW);
             glLoadIdentity();
-            glTranslatef(-cameraX, -cameraY, -cameraZ);
+            glTranslatef(-Player.cameraX, -Player.cameraY, -Player.cameraZ);
 
             // Enable depth testing
             glEnable(GL_DEPTH_TEST);
@@ -278,47 +273,7 @@ public class GameEngine {
         }
     }
 
-    private static void processInput() {
-        //Sprinting
-        cameraSpeed = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ? 0.1f : cameraSpeed;
 
-        // Handle left and right movement
-        if ((glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) && (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)) {
-            cameraY += cameraSpeed/2;
-            cameraX -= cameraSpeed/2;
-        }
-        else if ((glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) && (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)) {
-            cameraY -= cameraSpeed/2;
-            cameraX -= cameraSpeed/2;
-        }
-        else if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) cameraX -= cameraSpeed;
-        else if ((glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) && (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)) {
-            cameraY += cameraSpeed/2;
-            cameraX += cameraSpeed/2;
-        }
-        else if ((glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) && (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)) {
-            cameraY -= cameraSpeed/2;
-            cameraX += cameraSpeed/2;
-        }
-        else if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) cameraX += cameraSpeed;
-        else if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) cameraY += cameraSpeed;
-        else if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) cameraY -= cameraSpeed;
-
-
-        // Update cameraZ based on the scroll input
-        cameraZ += scrollOffset * scrollSpeed;
-
-        // Cap cameraZ at max 25 and min 3
-        if (cameraZ > GameInfoParser.maxZoom) {
-            cameraZ = GameInfoParser.maxZoom;
-
-        }
-        if (cameraZ < 3) {
-            cameraZ = 3;
-        }
-
-        scrollOffset = 0.0f; // Reset the scroll offset after applying it
-    }
 
 
     /**
@@ -360,7 +315,7 @@ public class GameEngine {
         projectionMatrix.set(projMatrixBuffer);
 
         // Set up the view matrix
-        Matrix4f viewMatrix = new Matrix4f().identity().translate(-cameraX, -cameraY, -cameraZ);
+        Matrix4f viewMatrix = new Matrix4f().identity().translate(-Player.cameraX, -Player.cameraY, -Player.cameraZ);
 
         // Calculate the combined projection and view matrix
         Matrix4f projectionViewMatrix = new Matrix4f(projectionMatrix).mul(viewMatrix);

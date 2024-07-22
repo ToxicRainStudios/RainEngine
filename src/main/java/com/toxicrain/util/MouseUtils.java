@@ -1,9 +1,9 @@
 package com.toxicrain.util;
 
+import com.toxicrain.artifacts.Player;
 import org.lwjgl.glfw.GLFW;
 
-import static com.toxicrain.core.GameEngine.cameraX;
-import static com.toxicrain.core.GameEngine.cameraY;
+
 
 
 /**
@@ -49,6 +49,6 @@ public class MouseUtils {
         float openglMouseX = mouseX / screenWidth * 2 - 1;
         float openglMouseY = 1 - mouseY / screenHeight * 2;
 
-        return new float[]{openglMouseX + cameraX, openglMouseY + cameraY};
+        return new float[]{openglMouseX + Player.cameraX, openglMouseY + Player.cameraY};
     }
 }
