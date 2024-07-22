@@ -52,28 +52,28 @@ public class GameInfoParser {
                         if (key.equals("defaultWindowName")) {
                             defaultWindowName = value;
                         }
-                        if (key.equals("engineVersion")) {
+                        else if (key.equals("engineVersion")) {
                             engineVersion = value;
                         }
-                        if (key.equals("gameName")) {
+                        else if (key.equals("gameName")) {
                             gameName = value;
                         }
-                        if (key.equals("gameMakers")) {
+                        else if (key.equals("gameMakers")) {
                             gameMakers = value;
                         }
-                        if (key.equals("gameVersion")) {
+                        else if (key.equals("gameVersion")) {
                             gameVersion = value;
                         }
-                        if (key.equals("gameWebsite")) {
+                        else if (key.equals("gameWebsite")) {
                             gameWebsite = value;
                         }
-                        if (key.equals("maxTexturesPerBatch")) {
+                        else if (key.equals("maxTexturesPerBatch")) {
                             maxTexturesPerBatch = Integer.parseInt(value);
                         }
-                        if (key.equals("minZoom")) {
+                        else if (key.equals("minZoom")) {
                             minZoom = Integer.parseInt(value);
                         }
-                        if (key.equals("maxZoom")) {
+                        else if (key.equals("maxZoom")) {
                             maxZoom = Integer.parseInt(value);
                         }
 

@@ -47,13 +47,13 @@ public class SettingsInfoParser {
                         if (key.equals("vSync")) {
                             vSync = Boolean.parseBoolean(value);
                         }
-                        if (key.equals("windowWidth")) {
+                        else if (key.equals("windowWidth")) {
                             windowWidth = Float.parseFloat(value);
                         }
-                        if (key.equals("windowHeight")) {
+                        else if (key.equals("windowHeight")) {
                             windowHeight = Float.parseFloat(value);
                         }
-                        if (key.equals("fov")) {
+                        else if (key.equals("fov")) {
                             fov = Float.parseFloat(value);
                         }
                     }

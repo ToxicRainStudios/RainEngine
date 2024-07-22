@@ -45,19 +45,19 @@ public class PackInfoParser {
                         if (key.equals("playerTexture")) {
                             playerTexture = workingDirectory + "/" + value;
                         }
-                        if (key.equals("floorTexture")) {
+                        else if (key.equals("floorTexture")) {
                             floorTexture = workingDirectory + "/" + value;
                         }
-                        if (key.equals("splatterTexture")) {
+                        else if (key.equals("splatterTexture")) {
                             splatterTexture = workingDirectory + "/" + value;
                         }
-                        if (key.equals("concreteTexture1")) {
+                        else if (key.equals("concreteTexture1")) {
                             concreteTexture1 = workingDirectory + "/" + value;
                         }
-                        if (key.equals("concreteTexture2")) {
+                        else if (key.equals("concreteTexture2")) {
                             concreteTexture2 = workingDirectory + "/" + value;
                         }
-                        if (key.equals("missingTexture")) {
+                        else if (key.equals("missingTexture")) {
                             missingTexture = workingDirectory + "/" + value;
                         }
                     }
