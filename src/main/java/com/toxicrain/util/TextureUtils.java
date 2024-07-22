@@ -33,7 +33,7 @@ public class TextureUtils {
         splatterTexture = loadTexture(PackInfoParser.splatterTexture);
         concreteTexture2 = loadTexture(PackInfoParser.concreteTexture2);
         dirtTexture1 = loadTexture((PackInfoParser.dirtTexture1));
-        dirtTexture2 = loadTexture((PackInfoParser.dirtTexture1));
+        dirtTexture2 = loadTexture((PackInfoParser.dirtTexture2));
         grassTexture1 = loadTexture((PackInfoParser.grassTexture1));
 
     }

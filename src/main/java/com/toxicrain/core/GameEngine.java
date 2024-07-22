@@ -171,6 +171,7 @@ public class GameEngine {
         glMatrixMode(GL_PROJECTION);
         glLoadMatrixf(createPerspectiveProjectionMatrix(90.0f, SettingsInfoParser.windowWidth / SettingsInfoParser.windowHeight, 1.0f, 100.0f));
     }
+
     private static void drawMap(BatchRenderer batchRenderer){
         for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
             // Ensure that indices are valid
@@ -189,16 +190,14 @@ public class GameEngine {
                 return floorTexture;
             case '+':
                 return concreteTexture1;
-            case '=':
-                int randNum = rand.nextInt(2);
-                switch (randNum) {
-                    case 0:
-                        return dirtTexture1;
-                    case 1:
-                        return grassTexture1;
-                    default:
-                        return dirtTexture2;
-                }
+            case '-':
+                return concreteTexture2;
+            case '1':
+                return dirtTexture1;
+            case '2':
+                return dirtTexture2;
+            case '3':
+                return grassTexture1;
             default:
                 return missingTexture;
         }
