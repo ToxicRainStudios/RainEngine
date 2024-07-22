@@ -67,9 +67,6 @@ public class GameEngine {
         Logger.printLOG(String.valueOf(MapInfoParser.mapDataX.size()));
 
             for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
-                Logger.printLOG("Space:" + String.valueOf(k));
-                Logger.printLOG("X value:" + String.valueOf(MapInfoParser.mapDataX.get(k)));
-                Logger.printLOG("Y value:" + String.valueOf(MapInfoParser.mapDataY.get(k)));
                 // Ensure that indices are valid
                 if (k >= 0 && k < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
                     batchRenderer.addTexture(floorTexture, MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
@@ -162,15 +159,6 @@ public class GameEngine {
         Logger.printLOG("Creating Textures");
         TextureUtils.initTextures();
 
-       /* try {
-           MapInfoParser.parseMapFile();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        enableBlending();
-    }
-    */
         // This line is critical for LWJGL's interoperation with GLFW's OpenGL context, or any context that is managed externally.
         // LWJGL detects the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
         GL.createCapabilities();
@@ -184,9 +172,6 @@ public class GameEngine {
     }
     private static void drawMap(BatchRenderer batchRenderer){
         for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
-            Logger.printLOG("Space:" + String.valueOf(k));
-            Logger.printLOG("X value:" + String.valueOf(MapInfoParser.mapDataX.get(k)));
-            Logger.printLOG("Y value:" + String.valueOf(MapInfoParser.mapDataY.get(k)));
             // Ensure that indices are valid
             if (k >= 0 && k < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
                 batchRenderer.addTexture(floorTexture, MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner

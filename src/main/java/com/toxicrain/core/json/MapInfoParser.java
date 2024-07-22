@@ -37,39 +37,37 @@ public class MapInfoParser {
             xsize = part.getInt("xsize");
             ysize = part.getInt("ysize");
 
-            // Print part details
-            System.out.println("type: " + type);
-            System.out.println("xsize: " + xsize);
-            System.out.println("ysize: " + ysize);
 
             // Get slices
             JSONArray slices = part.getJSONArray("slices");
+            Logger.printLOG("Number of slices: " + slices.length());
             for (int j = 0; j < slices.length(); j++) {
                 JSONArray slice = slices.getJSONArray(j);
+                Logger.printLOG("Processing slice " + j + " with length: " + slice.length());
                 for (int k = 0; k < slice.length(); k++) {
                     String row = slice.getString(k);
-                    System.out.println("Processing row " + j + ": " + row);
+                    Logger.printLOG("Processing row " + k + ": " + row);
                     // Check each character in the row
                     for (int l = 0; l < row.length(); l++) {
                         if (row.charAt(l) == ':') {
-                            // Calculate coordinates (consider adjusting multiplier based on your actual map scale)
+                            // Calculate coordinates
                             int xCoordinate = l;
-                            int yCoordinate = j;
+                            int yCoordinate = k;
 
                             // Log position and add to data
-                            Logger.printLOG("Found ':' at row " + j + ", column " + l);
+                            Logger.printLOG("Found ':' at row " + k + ", column " + l);
                             tiles++;
-                            mapDataX.add(l * 2);
-                            mapDataY.add(k * 2);
+                            mapDataX.add(xCoordinate * 2);
+                            mapDataY.add(yCoordinate * 2);
                         }
                     }
                 }
                 System.out.println("----");
             }
-        }
 
-        // Log the final map data
-        System.out.println("mapDataX: " + mapDataX);
-        System.out.println("mapDataY: " + mapDataY);
+            // Log the final map data
+            System.out.println("mapDataX: " + mapDataX);
+            System.out.println("mapDataY: " + mapDataY);
+        }
     }
 }
