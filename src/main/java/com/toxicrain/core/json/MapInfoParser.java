@@ -8,7 +8,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
 public class MapInfoParser {
+    public static boolean doExtraLogs = false;
     public static float xpos, ypos;
     public static int xsize, ysize;
     public static int tiles = 0;
@@ -19,6 +21,8 @@ public class MapInfoParser {
     public static void parseMapFile() throws IOException {
         // Read JSON file as String
         String jsonString = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory("resources/json/map.json"));
+
+
 
         // Parse JSON string
         JSONArray jsonArray = new JSONArray(jsonString);
@@ -33,25 +37,25 @@ public class MapInfoParser {
                 System.out.println(part.toString(4)); // Print the JSON object with missing keys for debugging
                 continue;
             }
+            if(doExtraLogs) {
+                String type = part.getString("type");
+                xsize = part.getInt("xsize");
+                ysize = part.getInt("ysize");
 
-            String type = part.getString("type");
-            xsize = part.getInt("xsize");
-            ysize = part.getInt("ysize");
-
-            // Print part details
-            System.out.println("type: " + type);
-            System.out.println("xsize: " + xsize);
-            System.out.println("ysize: " + ysize);
-
+                // Print part details
+                System.out.println("type: " + type);
+                System.out.println("xsize: " + xsize);
+                System.out.println("ysize: " + ysize);
+            }
             // Get slices
             JSONArray slices = part.getJSONArray("slices");
-            Logger.printLOG("Number of slices: " + slices.length());
+            if(doExtraLogs) Logger.printLOG("Number of slices: " + slices.length());
             for (int j = 0; j < slices.length(); j++) {
                 JSONArray slice = slices.getJSONArray(j);
-                Logger.printLOG("Processing slice " + j + " with length: " + slice.length());
+                if(doExtraLogs)Logger.printLOG("Processing slice " + j + " with length: " + slice.length());
                 for (int k = 0; k < slice.length(); k++) {
                     String row = slice.getString(k);
-                    Logger.printLOG("Processing row " + k + ": " + row);
+                    if(doExtraLogs) Logger.printLOG("Processing row " + k + ": " + row);
                     // Check each character in the row
                     for (int l = 0; l < row.length(); l++) {
                         if (!(row.charAt(l) == ' ')) {
@@ -60,7 +64,7 @@ public class MapInfoParser {
                             int yCoordinate = k;
 
                             // Log position and add to data
-                            Logger.printLOG("Found ':' at row " + k + ", column " + l);
+                            if(doExtraLogs)  Logger.printLOG("Found"+ row.charAt(l) +"at row " + k + ", column " + l);
                             tiles++;
                             mapDataX.add(xCoordinate * 2);
                             mapDataY.add(yCoordinate * -2);
@@ -73,8 +77,11 @@ public class MapInfoParser {
         }
 
             // Log the final map data
+        if(doExtraLogs) {
             System.out.println("mapDataX: " + mapDataX);
+
             System.out.println("mapDataY: " + mapDataY);
+        }
         }
     }
 
