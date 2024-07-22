@@ -17,14 +17,14 @@ public class PackInfoParser {
 
     /**
      * Loads the pack.json and parsers it into variables
-     * @param filePath The pack.json file path to parse
      */
-    public static void loadPackInfo(String filePath) {
+    public static void loadPackInfo() {
+        String packLocation = FileUtils.getCurrentWorkingDirectory("resources/custom/pack.json", "resources/json/pack.json");
         String workingDirectory = FileUtils.getCurrentWorkingDirectory("resources/images/");
 
         try {
             // Read the file content into a string
-            String jsonString = FileUtils.readFile(filePath);
+            String jsonString = FileUtils.readFile(packLocation);
 
             // Parse the JSON string into a JSONArray
             JSONArray jsonArray = new JSONArray(jsonString);
@@ -64,7 +64,7 @@ public class PackInfoParser {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error reading file: " + filePath);
+            System.err.println("Error reading file: " + packLocation);
             e.printStackTrace();
         } catch (Exception e) {
             System.err.println("Error parsing JSON: " + e.getMessage());
