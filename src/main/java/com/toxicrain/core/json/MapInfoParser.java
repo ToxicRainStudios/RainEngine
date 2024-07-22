@@ -63,7 +63,7 @@ public class MapInfoParser {
                             Logger.printLOG("Found ':' at row " + k + ", column " + l);
                             tiles++;
                             mapDataX.add(xCoordinate * 2);
-                            mapDataY.add(yCoordinate * 2);
+                            mapDataY.add(yCoordinate * -2);
                             mapDataType.add(row.charAt(l));
                         }
                     }
