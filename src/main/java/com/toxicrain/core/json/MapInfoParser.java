@@ -57,7 +57,7 @@ public class MapInfoParser {
                             Logger.printLOG("HIIII");
                             tiles++;
                             mapDataX.add(l * 2);
-                            mapDataY.add(j * 2);
+                            mapDataY.add(k * 2);
                         }
                     }
                 }

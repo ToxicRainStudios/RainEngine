@@ -63,6 +63,20 @@ public class GameEngine {
             throw new RuntimeException(e);
         }
 
+        Logger.printLOG(String.valueOf(MapInfoParser.mapDataY.size()));
+        Logger.printLOG(String.valueOf(MapInfoParser.mapDataX.size()));
+
+            for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
+                Logger.printLOG("Space:" + String.valueOf(k));
+                Logger.printLOG("X value:" + String.valueOf(MapInfoParser.mapDataX.get(k)));
+                Logger.printLOG("Y value:" + String.valueOf(MapInfoParser.mapDataY.get(k)));
+                // Ensure that indices are valid
+                if (k >= 0 && k < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
+                    batchRenderer.addTexture(floorTexture, MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
+                } else {
+                    Logger.printLOG("Index out of bounds: space=" + k);
+                }
+            }
 
         loop(batchRenderer);
 
@@ -203,20 +217,7 @@ public class GameEngine {
             // Begin the batch
             batchRenderer.beginBatch();
 
-            Logger.printLOG(String.valueOf(MapInfoParser.mapDataY.size()));
-            Logger.printLOG(String.valueOf(MapInfoParser.mapDataX.size()));
-            for (int j = MapInfoParser.mapDataY.size() - 1; j >= 0; j--) {
-                for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
-                    Logger.printLOG(String.valueOf(k));
-                    Logger.printLOG(String.valueOf(j));
-                    // Ensure that indices are valid
-                    if (j >= 0 && j < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
-                        batchRenderer.addTexture(floorTexture, MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(j), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
-                    } else {
-                        Logger.printLOG("Index out of bounds: j=" + j + ", k=" + k);
-                    }
-                }
-            }
+
 
             // Add textures to the batch
             /*batchRenderer.addTexture(floorTexture, 1, 1, 1, 0, Color.toFloatArray(Color.WHITE)); // Top-left corner
@@ -227,7 +228,7 @@ public class GameEngine {
 
              */
 
-            batchRenderer.addTexture(splatterTexture, 2, 1, 1.01f, 0, Color.toFloatArray(0.4f, Color.WHITE));
+           // batchRenderer.addTexture(splatterTexture, 2, 1, 1.01f, 0, Color.toFloatArray(0.4f, Color.WHITE));
 
             float[] openglMousePos = new float[2];
             if (windowFocused) {
