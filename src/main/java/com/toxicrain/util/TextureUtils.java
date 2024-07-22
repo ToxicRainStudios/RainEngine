@@ -19,6 +19,9 @@ public class TextureUtils {
     public static TextureInfo concreteTexture1;
     public static TextureInfo concreteTexture2;
     public static TextureInfo missingTexture;
+    public static TextureInfo dirtTexture1;
+    public static TextureInfo dirtTexture2;
+    public static TextureInfo grassTexture1;
 
 
     /**Init the textures used by the rest of the project*/
@@ -29,6 +32,9 @@ public class TextureUtils {
         playerTexture = loadTexture(PackInfoParser.playerTexture);
         splatterTexture = loadTexture(PackInfoParser.splatterTexture);
         concreteTexture2 = loadTexture(PackInfoParser.concreteTexture2);
+        dirtTexture1 = loadTexture((PackInfoParser.dirtTexture1));
+        dirtTexture2 = loadTexture((PackInfoParser.dirtTexture2));
+        grassTexture1 = loadTexture((PackInfoParser.grassTexture1));
 
     }
 

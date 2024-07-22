@@ -1,8 +1,8 @@
 package com.toxicrain.core;
 
 //import com.toxicrain.core.json.MapInfoParser;
-
 import com.toxicrain.core.json.GameInfoParser;
+import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.json.PackInfoParser;
 import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
@@ -17,7 +17,10 @@ import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
+import java.util.Random;
 
+
+import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -57,8 +60,29 @@ public class GameEngine {
         Logger.printLOG("Hello LWJGL " + Version.getVersion() + "!");
         Logger.printLOG("Hello RainEngine " + Constants.engineVersion + "!");
         Logger.printLOG("Running: " + GameInfoParser.gameName + " by " + GameInfoParser.gameMakers);
-        Logger.printLOG("Game Version: " + GameInfoParser.gameVersion);
+        Logger.printLOG("Version: " + GameInfoParser.gameVersion);
         doVersionCheck();
+        init(windowTitle, true); //TODO vSync should be controllable with some sort of settings menu
+        // Create the batch renderer
+        BatchRenderer batchRenderer = new BatchRenderer();
+        MapInfoParser mapInfoParser = new MapInfoParser();
+        try {
+            mapInfoParser.parseMapFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Logger.printLOG(String.valueOf(MapInfoParser.mapDataY.size()));
+        Logger.printLOG(String.valueOf(MapInfoParser.mapDataX.size()));
+
+            for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
+                // Ensure that indices are valid
+                if (k >= 0 && k < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
+                    batchRenderer.addTexture(floorTexture, MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
+                } else {
+                    Logger.printLOG("Index out of bounds: space=" + k);
+                }
+            }
         Logger.printLOG("Loading User Settings");
         SettingsInfoParser.loadSettingsInfo();
 
@@ -148,22 +172,48 @@ public class GameEngine {
         Logger.printLOG("Creating Textures");
         TextureUtils.initTextures();
 
-       /* try {
-           MapInfoParser.parseMapFile();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-    */
         // This line is critical for LWJGL's interoperation with GLFW's OpenGL context, or any context that is managed externally.
         // LWJGL detects the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
         GL.createCapabilities();
 
         // Set the clear color
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+        // Set up the projection matrix with FOV of 90 degrees
+        glMatrixMode(GL_PROJECTION);
+        glLoadMatrixf(createPerspectiveProjectionMatrix(90.0f, SettingsInfoParser.windowWidth / SettingsInfoParser.windowHeight, 1.0f, 100.0f));
     }
 
+    private static void drawMap(BatchRenderer batchRenderer){
+        for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
+            // Ensure that indices are valid
+            if (k >= 0 && k < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
+                batchRenderer.addTexture(getTexture(MapInfoParser.mapDataType.get(k)), MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
+            } else {
+                Logger.printLOG("Index out of bounds: space=" + k);
+            }
+        }
+
+    }
+    private static final Random rand = new Random();
+    private static TextureInfo getTexture(char textureMapChar) {
+        switch (textureMapChar) {
+            case ':':
+                return floorTexture;
+            case '+':
+                return concreteTexture1;
+            case '-':
+                return concreteTexture2;
+            case '1':
+                return dirtTexture1;
+            case '2':
+                return dirtTexture2;
+            case '3':
+                return grassTexture1;
+            default:
+                return missingTexture;
+        }
+    }
 
     private static void loop(BatchRenderer batchRenderer) {
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
@@ -182,10 +232,6 @@ public class GameEngine {
             // Clear the color and depth buffers
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            // Set up the projection matrix with FOV of 90 degrees
-            glMatrixMode(GL_PROJECTION);
-            glLoadMatrixf(createPerspectiveProjectionMatrix(SettingsInfoParser.fov, SettingsInfoParser.windowWidth / SettingsInfoParser.windowHeight, 1.0f, 100.0f));
-
             // Set up the view matrix
             glMatrixMode(GL_MODELVIEW);
             glLoadIdentity();
@@ -200,14 +246,19 @@ public class GameEngine {
             // Begin the batch
             batchRenderer.beginBatch();
 
+            drawMap(batchRenderer);
+
+
             // Add textures to the batch
-            batchRenderer.addTexture(floorTexture, 1, 1, 1, 0, Color.toFloatArray(Color.WHITE)); // Top-left corner
-            batchRenderer.addTexture(floorTexture, 4, 1, 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
+            /*batchRenderer.addTexture(floorTexture, 1, 1, 1, 0, Color.toFloatArray(Color.WHITE)); // Top-left corner
+
             batchRenderer.addTexture(concreteTexture1, 1, 3, 1, 0, Color.toFloatArray(Color.WHITE)); // Bottom-left corner
             batchRenderer.addTexture(concreteTexture2, 1, 6, 1, 0, Color.toFloatArray(Color.WHITE)); // Bottom-left corner
             batchRenderer.addTexture(missingTexture, 4, 3, 1, 0, Color.toFloatArray(Color.WHITE)); // Bottom-right corner
 
-            //batchRenderer.addTexture(splatterTexture, 2, 1, 1.01f, 0, Color.toFloatArray(0.4f, Color.WHITE));
+             */
+
+           // batchRenderer.addTexture(splatterTexture, 2, 1, 1.01f, 0, Color.toFloatArray(0.4f, Color.WHITE));
 
             float[] openglMousePos = new float[2];
             if (windowFocused) {
@@ -263,9 +314,10 @@ public class GameEngine {
         // Cap cameraZ at max 25 and min 3
         if (cameraZ > GameInfoParser.maxZoom) {
             cameraZ = GameInfoParser.maxZoom;
+
         }
-        if (cameraZ < GameInfoParser.minZoom) {
-            cameraZ = GameInfoParser.minZoom;
+        if (cameraZ < 3) {
+            cameraZ = 3;
         }
 
         scrollOffset = 0.0f; // Reset the scroll offset after applying it
@@ -372,5 +424,9 @@ public class GameEngine {
 
     public static FloatBuffer getPerspectiveProjectionMatrixBuffer() {
         return buffer;
+    }
+    private static void enableBlending() {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 }
