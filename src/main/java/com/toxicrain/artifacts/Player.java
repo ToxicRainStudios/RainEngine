@@ -1,10 +1,8 @@
 package com.toxicrain.artifacts;
 
-import com.toxicrain.core.Logger;
 import com.toxicrain.core.TextureInfo;
 import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
-import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -16,7 +14,6 @@ public class Player{
     public float posY;
     public float posZ;
     public TextureInfo texture;
-    public static ArrayList<Float> doCollide = new ArrayList<Float>();
 
     public Player(float posX, float posY, float posZ, TextureInfo texture) {
         this.posX = posX;
@@ -29,8 +26,7 @@ public class Player{
     public static float cameraSpeed = 0.02f; // Camera Speed
     public static final float scrollSpeed = 0.5f;  // The max scroll in/out speed
     public static float scrollOffset = 0.0f; // Track the scroll input
-    private static float opX = 1.0f;
-    private static float opY = 1.0f;
+
     private static void handleCollisions() {
 
         for (int i = MapInfoParser.extentTop.size()-1; i >= 0; i--) {
