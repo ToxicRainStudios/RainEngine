@@ -1,7 +1,6 @@
 package com.toxicrain.core;
 
 //import com.toxicrain.core.json.MapInfoParser;
-import com.sun.prism.Texture;
 import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.json.PackInfoParser;
@@ -176,43 +175,33 @@ public class GameEngine {
         for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
             // Ensure that indices are valid
             if (k >= 0 && k < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
-                batchRenderer.addTexture(getTextrue(MapInfoParser.mapDataType.get(k)), MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
+                batchRenderer.addTexture(getTexture(MapInfoParser.mapDataType.get(k)), MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
             } else {
                 Logger.printLOG("Index out of bounds: space=" + k);
             }
         }
 
     }
-    private static TextureInfo getTextrue(char textureMap){
-        TextureInfo returnTexture = missingTexture;
-        if(textureMap == ':'){
-            returnTexture = floorTexture;
+    private static final Random rand = new Random();
+    private static TextureInfo getTexture(char textureMapChar) {
+        switch (textureMapChar) {
+            case ':':
+                return floorTexture;
+            case '+':
+                return concreteTexture1;
+            case '=':
+                int randNum = rand.nextInt(2);
+                switch (randNum) {
+                    case 0:
+                        return dirtTexture1;
+                    case 1:
+                        return grassTexture1;
+                    default:
+                        return dirtTexture2;
+                }
+            default:
+                return missingTexture;
         }
-        else if(textureMap == '+'){
-            returnTexture = concreteTexture1;
-        }
-        else if(textureMap == '='){
-
-            Random rand = new Random();
-            int randNum = rand.nextInt(2);
-            switch (randNum) {
-                case 0:
-                    returnTexture = dirtTexture1;
-                    break;
-                case 1:
-                    returnTexture = grassTexture1;
-                    break;
-
-                default:
-                    returnTexture = dirtTexture2;
-
-            }
-        }
-        else{
-            returnTexture = missingTexture;
-        }
-
-        return returnTexture;
     }
 
     private static void loop(BatchRenderer batchRenderer) {
