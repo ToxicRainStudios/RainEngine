@@ -48,6 +48,14 @@ public class GameEngine {
 
     private static boolean fullscreen = true;
 
+    private static FPSUtils fpsUtils;
+    private static BatchRenderer batchRenderer;
+
+    public GameEngine(){
+        fpsUtils = new FPSUtils();
+        batchRenderer = new BatchRenderer();
+    }
+
     public static void run(String windowTitle) {
         Logger.printLOG("Hello LWJGL " + Version.getVersion() + "!");
         Logger.printLOG("Hello RainEngine " + Constants.engineVersion + "!");
@@ -75,6 +83,10 @@ public class GameEngine {
                     Logger.printLOG("Index out of bounds: space=" + k);
                 }
             }
+        Logger.printLOG("Loading User Settings");
+        SettingsInfoParser.loadSettingsInfo();
+
+        init(windowTitle, SettingsInfoParser.vSync);
 
         loop(batchRenderer);
 
@@ -155,7 +167,7 @@ public class GameEngine {
         GL.createCapabilities();
 
         Logger.printLOG("Loading pack.json"); //MUST be called before TextureUtils.initTextures()
-        PackInfoParser.loadPackInfo(FileUtils.getCurrentWorkingDirectory("resources/json/pack.json"));
+        PackInfoParser.loadPackInfo();
 
         Logger.printLOG("Creating Textures");
         TextureUtils.initTextures();
@@ -204,11 +216,9 @@ public class GameEngine {
     }
 
     private static void loop(BatchRenderer batchRenderer) {
-
-
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
-            for(int eFrames = 3; eFrames >= 0; eFrames --) { //Put Everything GameEngine-e here. eFrames = engineFrames
+            for(int engineFrames = 3; engineFrames >= 0; engineFrames --) { //Put things that need to run 3 times a frame, ex: input
                 // Process input
                 processInput();
             }
@@ -265,8 +275,6 @@ public class GameEngine {
             // Render the batch
             batchRenderer.renderBatch();
 
-
-
             // Swap buffers and poll events
             glfwSwapBuffers(window);
             glfwPollEvents();
@@ -304,8 +312,9 @@ public class GameEngine {
         cameraZ += scrollOffset * scrollSpeed;
 
         // Cap cameraZ at max 25 and min 3
-        if (cameraZ > 25) { //TODO Make these configurable
-            cameraZ = 25;
+        if (cameraZ > GameInfoParser.maxZoom) {
+            cameraZ = GameInfoParser.maxZoom;
+
         }
         if (cameraZ < 3) {
             cameraZ = 3;
@@ -323,6 +332,7 @@ public class GameEngine {
             Logger.printLOG("Engine Version check: Pass");
         } else {
             Logger.printERROR("Engine Version check: FAIL");
+            Logger.printERROR("Certain features may not work as intended");
         }
     }
 
@@ -369,12 +379,21 @@ public class GameEngine {
 
         // Convert NDC to world coordinates
         Vector4f ndcPos = new Vector4f(ndcX, ndcY, -1.0f, 1.0f).mul(invProjectionViewMatrix);
-        Vector3f worldPos = new Vector3f(ndcPos.x, ndcPos.y, ndcPos.z).div(ndcPos.w);
 
-        return worldPos;
+        return new Vector3f(ndcPos.x, ndcPos.y, ndcPos.z).div(ndcPos.w);
     }
 
-    private static FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+    private static final FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+
+    /**
+     * Creates a perspective projection matrix.
+     *
+     * @param fov the field of view angle in degrees
+     * @param aspectRatio the aspect ratio of the viewport (width/height)
+     * @param near the distance to the near clipping plane
+     * @param far the distance to the far clipping plane
+     * @return a FloatBuffer containing the perspective projection matrix
+     */
     private static FloatBuffer createPerspectiveProjectionMatrix(float fov, float aspectRatio, float near, float far) {
         float f = (float) (1.0f / Math.tan(Math.toRadians(fov) / 2.0));
         float[] projectionMatrix = new float[16];

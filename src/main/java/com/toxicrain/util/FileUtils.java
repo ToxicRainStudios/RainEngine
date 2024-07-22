@@ -70,4 +70,22 @@ public class FileUtils {
         return fullPath;
     }
 
+    /**
+     * Converts a relative path to an absolute path based on the current working directory.
+     * Checks if the first path exists; if not, it uses the second path.
+     *
+     * @param primaryPath the primary path to check and convert
+     * @param fallbackPath the fallback path to use if the primary path doesn't exist
+     * @return the absolute path as a String
+     */
+    public static String getCurrentWorkingDirectory(String primaryPath, String fallbackPath) {
+        Path path = Paths.get(primaryPath);
+        if (Files.exists(path)) {
+            return path.toAbsolutePath().toString();
+        } else {
+            Path fallback = Paths.get(fallbackPath);
+            return fallback.toAbsolutePath().toString();
+        }
+    }
+
 }
