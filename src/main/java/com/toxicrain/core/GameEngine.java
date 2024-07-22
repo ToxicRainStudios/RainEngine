@@ -177,6 +177,10 @@ public class GameEngine {
 
         // Set the clear color
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+        // Set up the projection matrix with FOV of 90 degrees
+        glMatrixMode(GL_PROJECTION);
+        glLoadMatrixf(createPerspectiveProjectionMatrix(90.0f, SettingsInfoParser.windowWidth / SettingsInfoParser.windowHeight, 1.0f, 100.0f));
     }
     private static void drawMap(BatchRenderer batchRenderer){
         for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
@@ -211,10 +215,6 @@ public class GameEngine {
 
             // Clear the color and depth buffers
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            // Set up the projection matrix with FOV of 90 degrees
-            glMatrixMode(GL_PROJECTION);
-            glLoadMatrixf(createPerspectiveProjectionMatrix(90.0f, SettingsInfoParser.windowWidth / SettingsInfoParser.windowHeight, 1.0f, 100.0f));
 
             // Set up the view matrix
             glMatrixMode(GL_MODELVIEW);
