@@ -23,7 +23,9 @@ public class Player{
         this.posY = posY;
         this.posZ = posZ;
         this.texture = texture;
-    }public static float cameraX = 15.0f; // Camera X position
+    }
+
+    public static float cameraX = 15.0f; // Camera X position
     public static float cameraY = -15.0f; // Camera Y position
     public static float cameraZ = 5.0f; // Camera Z position
     public static float cameraSpeed = 0.02f; // Camera Speed
@@ -37,41 +39,34 @@ public class Player{
 
             if((cameraY < MapInfoParser.extentTop.get(i)) && (cameraY > MapInfoParser.extentCenterY.get(i))) {
                 if ((cameraX > MapInfoParser.extentLeft.get(i)) && !(cameraX > MapInfoParser.extentCenterX.get(i))) {
-                    cameraY += 0.02f;
+                    cameraY += cameraSpeed;
                 } else if ((cameraX < MapInfoParser.extentRight.get(i)) &&!(cameraX < MapInfoParser.extentCenterX.get(i))) {
-                    cameraY += 0.02f;
+                    cameraY += cameraSpeed;
                 }
             }
              if((cameraY > MapInfoParser.extentBottom.get(i)) && (cameraY < MapInfoParser.extentCenterY.get(i))) {
                if ((cameraX > MapInfoParser.extentLeft.get(i)) && !(cameraX > MapInfoParser.extentCenterX.get(i))) {
-                    cameraY -= 0.02f;
+                    cameraY -= cameraSpeed;
                } else if ((cameraX < MapInfoParser.extentRight.get(i)) && !(cameraX < MapInfoParser.extentCenterX.get(i))) {
-                   cameraY -= 0.02f;
+                   cameraY -= cameraSpeed;
                }
             }
            if((cameraX < MapInfoParser.extentRight.get(i)) && (cameraX > MapInfoParser.extentCenterX.get(i))) {
                 if ((cameraY > MapInfoParser.extentBottom.get(i)) && !(cameraY > MapInfoParser.extentCenterY.get(i))) {
-                    cameraX += 0.02f;
+                    cameraX += cameraSpeed;
                 } else if ((cameraY < MapInfoParser.extentTop.get(i)) && !(cameraY < MapInfoParser.extentCenterY.get(i))) {
-                    cameraX += 0.02f;
+                    cameraX += cameraSpeed;
                 }
             }
              if((cameraX > MapInfoParser.extentLeft.get(i)) && (cameraX < MapInfoParser.extentCenterX.get(i))) {
                 if ((cameraY > MapInfoParser.extentBottom.get(i)) && !(cameraY > MapInfoParser.extentCenterY.get(i))) {
-                    cameraX -= 0.02f;
+                    cameraX -= cameraSpeed;
                 } else if ((cameraY < MapInfoParser.extentTop.get(i)) && !(cameraY < MapInfoParser.extentCenterY.get(i))) {
-                    cameraX -= 0.02f;
+                    cameraX -= cameraSpeed;
                 }
             }
-
-
-
-
-
-
-
-            }
         }
+    }
 
 
     private static void handleMovement(float opX, float opY){
