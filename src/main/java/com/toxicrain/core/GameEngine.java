@@ -161,8 +161,6 @@ public class GameEngine {
 
 
     private static void loop(BatchRenderer batchRenderer) {
-
-
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
             for(int eFrames = 3; eFrames >= 0; eFrames --) { //Put Everything GameEngine-e here. eFrames = engineFrames
@@ -325,12 +323,21 @@ public class GameEngine {
 
         // Convert NDC to world coordinates
         Vector4f ndcPos = new Vector4f(ndcX, ndcY, -1.0f, 1.0f).mul(invProjectionViewMatrix);
-        Vector3f worldPos = new Vector3f(ndcPos.x, ndcPos.y, ndcPos.z).div(ndcPos.w);
 
-        return worldPos;
+        return new Vector3f(ndcPos.x, ndcPos.y, ndcPos.z).div(ndcPos.w);
     }
 
-    private static FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+    private static final FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+
+    /**
+     * Creates a perspective projection matrix.
+     *
+     * @param fov the field of view angle in degrees
+     * @param aspectRatio the aspect ratio of the viewport (width/height)
+     * @param near the distance to the near clipping plane
+     * @param far the distance to the far clipping plane
+     * @return a FloatBuffer containing the perspective projection matrix
+     */
     private static FloatBuffer createPerspectiveProjectionMatrix(float fov, float aspectRatio, float near, float far) {
         float f = (float) (1.0f / Math.tan(Math.toRadians(fov) / 2.0));
         float[] projectionMatrix = new float[16];
