@@ -20,6 +20,8 @@ public class GameInfoParser {
     public static String gameVersion = null;
     public static String gameWebsite = null;
     public static int maxTexturesPerBatch = 100; //Safety, don't crash if we forget to add this to gameinfo.json
+    public static int minZoom = 3;
+    public static int maxZoom = 25;
 
     /**
      * Loads the gameinfo.json and parsers it into variables
@@ -68,6 +70,13 @@ public class GameInfoParser {
                         if (key.equals("maxTexturesPerBatch")) {
                             maxTexturesPerBatch = Integer.parseInt(value);
                         }
+                        if (key.equals("minZoom")) {
+                            minZoom = Integer.parseInt(value);
+                        }
+                        if (key.equals("maxZoom")) {
+                            maxZoom = Integer.parseInt(value);
+                        }
+
                     }
                 }
             }

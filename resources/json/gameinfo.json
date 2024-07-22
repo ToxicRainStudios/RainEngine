@@ -22,6 +22,12 @@
       },
       {
         "maxTexturesPerBatch": "100"
+      },
+      {
+        "minZoom": "3"
+      },
+      {
+        "maxZoom": "25"
       }
     ]
   }

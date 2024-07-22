@@ -54,7 +54,7 @@ public class GameEngine {
         Logger.printLOG("Loading User Settings");
         SettingsInfoParser.loadSettingsInfo();
 
-        init(windowTitle, SettingsInfoParser.vSync); //TODO vSync should be controllable with some sort of settings menu
+        init(windowTitle, SettingsInfoParser.vSync);
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
 
@@ -260,11 +260,11 @@ public class GameEngine {
         cameraZ += scrollOffset * scrollSpeed;
 
         // Cap cameraZ at max 25 and min 3
-        if (cameraZ > 25) { //TODO Make these configurable
-            cameraZ = 25;
+        if (cameraZ > GameInfoParser.maxZoom) { //TODO Make these configurable
+            cameraZ = GameInfoParser.maxZoom;
         }
-        if (cameraZ < 3) {
-            cameraZ = 3;
+        if (cameraZ < GameInfoParser.minZoom) {
+            cameraZ = GameInfoParser.minZoom;
         }
 
         scrollOffset = 0.0f; // Reset the scroll offset after applying it
@@ -361,9 +361,5 @@ public class GameEngine {
 
     public static FloatBuffer getPerspectiveProjectionMatrixBuffer() {
         return buffer;
-    }
-    private static void enableBlending() {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 }
