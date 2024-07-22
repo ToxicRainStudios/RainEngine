@@ -45,6 +45,14 @@ public class GameEngine {
 
     private static boolean fullscreen = true;
 
+    private static FPSUtils fpsUtils;
+    private static BatchRenderer batchRenderer;
+
+    public GameEngine(){
+        fpsUtils = new FPSUtils();
+        batchRenderer = new BatchRenderer();
+    }
+
     public static void run(String windowTitle) {
         Logger.printLOG("Hello LWJGL " + Version.getVersion() + "!");
         Logger.printLOG("Hello RainEngine " + Constants.engineVersion + "!");
@@ -55,8 +63,6 @@ public class GameEngine {
         SettingsInfoParser.loadSettingsInfo();
 
         init(windowTitle, SettingsInfoParser.vSync);
-        // Create the batch renderer
-        BatchRenderer batchRenderer = new BatchRenderer();
 
         loop(batchRenderer);
 
@@ -148,7 +154,6 @@ public class GameEngine {
             throw new RuntimeException(e);
         }
 
-        enableBlending();
     }
     */
         // This line is critical for LWJGL's interoperation with GLFW's OpenGL context, or any context that is managed externally.
@@ -163,7 +168,7 @@ public class GameEngine {
     private static void loop(BatchRenderer batchRenderer) {
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
-            for(int eFrames = 3; eFrames >= 0; eFrames --) { //Put Everything GameEngine-e here. eFrames = engineFrames
+            for(int engineFrames = 3; engineFrames >= 0; engineFrames --) { //Put things that need to run 3 times a frame, ex: input
                 // Process input
                 processInput();
             }
@@ -218,8 +223,6 @@ public class GameEngine {
             batchRenderer.addTexturePos(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1], Color.toFloatArray(1.0f, Color.WHITE));
             // Render the batch
             batchRenderer.renderBatch();
-
-
 
             // Swap buffers and poll events
             glfwSwapBuffers(window);
@@ -277,6 +280,7 @@ public class GameEngine {
             Logger.printLOG("Engine Version check: Pass");
         } else {
             Logger.printERROR("Engine Version check: FAIL");
+            Logger.printERROR("Certain features may not work as intended");
         }
     }
 

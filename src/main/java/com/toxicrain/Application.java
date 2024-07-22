@@ -5,7 +5,7 @@ public class Application {
 
     public static void main(String[] args) {
         GameInfoParser.loadGameInfo();
-        GameEngine.run(GameInfoParser.defaultWindowName);
+        new GameEngine().run(GameInfoParser.defaultWindowName);
     }
 
 }
