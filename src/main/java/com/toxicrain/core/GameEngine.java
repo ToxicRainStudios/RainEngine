@@ -3,6 +3,7 @@ package com.toxicrain.core;
 //import com.toxicrain.core.json.MapInfoParser;
 
 import com.toxicrain.artifacts.Player;
+import com.toxicrain.artifacts.Enemy;
 import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.json.PackInfoParser;
@@ -82,7 +83,10 @@ public class GameEngine {
                 }
             }
 
-        loop(batchRenderer);
+
+         Enemy enemy = new Enemy(0,0,1.1f);
+
+        loop(batchRenderer,enemy);
 
         // Free the window callbacks and destroy the window
         glfwFreeCallbacks(window);
@@ -213,13 +217,13 @@ public class GameEngine {
         }
     }
 
-    private static void loop(BatchRenderer batchRenderer) {
+    private static void loop(BatchRenderer batchRenderer, Enemy enemy) {
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
             for(int engineFrames = 3; engineFrames >= 0; engineFrames --) { //Put things that need to run 3 times a frame, ex: input
                 // Process input
                 Player.processInput( window);
-
+                enemy.Ai();
             }
             // Check if the window has focus
             boolean windowFocused = glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0;
@@ -233,7 +237,7 @@ public class GameEngine {
             // Set up the view matrix
             glMatrixMode(GL_MODELVIEW);
             glLoadIdentity();
-            glTranslatef(-Player.cameraX, -Player.cameraY, -Player.cameraZ);
+            glTranslatef(-Player.playerX, -Player.playerY, -Player.playerZ);
 
             // Enable depth testing
             glEnable(GL_DEPTH_TEST);
@@ -274,7 +278,11 @@ public class GameEngine {
 
             }
             // This is the player!
-            batchRenderer.addTexturePos(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1], Color.toFloatArray(1.0f, Color.WHITE));
+            batchRenderer.addTexturePos(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1], Color.toFloatArray(5.0f, Color.WHITE));
+            // Copied from player rendering!
+            batchRenderer.addTexturePos(playerTexture, enemy.x, enemy.y, 1.1f, Player.playerX, Player.playerY, Color.toFloatArray(1.0f, Color.RED));
+
+
             // Render the batch
             batchRenderer.renderBatch();
 
@@ -326,7 +334,7 @@ public class GameEngine {
         projectionMatrix.set(projMatrixBuffer);
 
         // Set up the view matrix
-        Matrix4f viewMatrix = new Matrix4f().identity().translate(-Player.cameraX, -Player.cameraY, -Player.cameraZ);
+        Matrix4f viewMatrix = new Matrix4f().identity().translate(-Player.playerX, -Player.playerY, -Player.playerZ);
 
         // Calculate the combined projection and view matrix
         Matrix4f projectionViewMatrix = new Matrix4f(projectionMatrix).mul(viewMatrix);

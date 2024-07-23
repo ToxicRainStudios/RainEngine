@@ -49,6 +49,6 @@ public class MouseUtils {
         float openglMouseX = mouseX / screenWidth * 2 - 1;
         float openglMouseY = 1 - mouseY / screenHeight * 2;
 
-        return new float[]{openglMouseX + Player.cameraX, openglMouseY + Player.cameraY};
+        return new float[]{openglMouseX + Player.playerX, openglMouseY + Player.playerY};
     }
 }
