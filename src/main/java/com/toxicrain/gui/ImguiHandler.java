@@ -13,9 +13,9 @@ import org.lwjgl.glfw.GLFW;
  */
 public class ImguiHandler {
 
-    private ImGuiImplGlfw imguiGlfw;
     private ImGuiImplGl3 imguiGl3;
-    private long window;
+    ImFloat FOV = new ImFloat(SettingsInfoParser.fov);
+    private final long window;
 
     /**
      * Constructor for ImguiHandler.
@@ -31,7 +31,7 @@ public class ImguiHandler {
      */
     public void initialize() {
         ImGui.createContext();
-        imguiGlfw = new ImGuiImplGlfw();
+        ImGuiImplGlfw imguiGlfw = new ImGuiImplGlfw();
         imguiGlfw.init(window, true);
         imguiGl3 = new ImGuiImplGl3();
         imguiGl3.init("#version 130"); // OpenGL version
@@ -90,7 +90,6 @@ public class ImguiHandler {
 
     /**
      * Draws the settings UI using ImGui.
-     * Provides a window for changing settings in the application.
      */
     public void drawSettingsUI() {
         ImGui.begin("RainEngine Settings");
@@ -98,15 +97,15 @@ public class ImguiHandler {
 
         ImGui.setWindowSize(300, 300); // Width and Height in pixels
 
-        ImFloat FOV = new ImFloat(SettingsInfoParser.fov);
+        ImGui.sliderFloat("FOV", FOV.getData(), 0, 120);
 
         ImGui.beginDisabled(); // Disables all following widgets
         ImGui.checkbox("vSync", SettingsInfoParser.vSync);
-        ImGui.sliderFloat("FOV", FOV.getData(), 0, 100);
-
-        ImGui.button("Save");
 
         ImGui.endDisabled(); // Re-enables widgets
+        if(ImGui.button("Save")){
+            SettingsInfoParser.modifyKey("fov", String.valueOf(FOV));
+        }
 
         // End the ImGui window
         ImGui.end();

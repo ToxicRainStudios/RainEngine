@@ -18,6 +18,9 @@ public class SettingsInfoParser {
     public static float windowHeight = 1080;
     public static float fov = 90f;
 
+    private static JSONArray jsonArray = new JSONArray();
+    private static JSONObject valueObject = new JSONObject();
+
     /**
      * Loads the settings.json and parsers it into variables
      */
@@ -29,7 +32,7 @@ public class SettingsInfoParser {
             String jsonString = FileUtils.readFile(filePath);
 
             // Parse the JSON string into a JSONArray
-            JSONArray jsonArray = new JSONArray(jsonString);
+            jsonArray = new JSONArray(jsonString);
 
             // Iterate through the array
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -37,24 +40,26 @@ public class SettingsInfoParser {
                 // Get the values array
                 JSONArray valuesArray = jsonObject.getJSONArray("values");
                 for (int j = 0; j < valuesArray.length(); j++) {
-                    JSONObject valueObject = valuesArray.getJSONObject(j);
+                    valueObject = valuesArray.getJSONObject(j);
 
                     // Use traditional for-each loop instead of lambda
                     Iterator<String> keys = valueObject.keys();
                     while (keys.hasNext()) {
                         String key = keys.next();
                         String value = valueObject.getString(key);
-                        if (key.equals("vSync")) {
-                            vSync = Boolean.parseBoolean(value);
-                        }
-                        else if (key.equals("windowWidth")) {
-                            windowWidth = Float.parseFloat(value);
-                        }
-                        else if (key.equals("windowHeight")) {
-                            windowHeight = Float.parseFloat(value);
-                        }
-                        else if (key.equals("fov")) {
-                            fov = Float.parseFloat(value);
+                        switch (key) {
+                            case "vSync":
+                                vSync = Boolean.parseBoolean(value);
+                                break;
+                            case "windowWidth":
+                                windowWidth = Float.parseFloat(value);
+                                break;
+                            case "windowHeight":
+                                windowHeight = Float.parseFloat(value);
+                                break;
+                            case "fov":
+                                fov = Float.parseFloat(value);
+                                break;
                         }
                     }
                 }
@@ -65,6 +70,22 @@ public class SettingsInfoParser {
         } catch (Exception e) {
             System.err.println("Error parsing JSON: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public static void modifyKey(String key, String newValue) {
+        if (valueObject == null) {
+            System.err.println("Error: valueObject is null");
+            return;
+        }
+
+        valueObject.put(key, newValue);
+        String updatedJsonString = jsonArray.toString();
+
+        try {
+            FileUtils.writeFile(FileUtils.getCurrentWorkingDirectory("resources/json/settings.json"), updatedJsonString);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

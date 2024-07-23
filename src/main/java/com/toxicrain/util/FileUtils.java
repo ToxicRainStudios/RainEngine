@@ -1,9 +1,6 @@
 package com.toxicrain.util;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -87,5 +84,12 @@ public class FileUtils {
             return fallback.toAbsolutePath().toString();
         }
     }
+
+    public static void writeFile(String filePath, String data) throws IOException {
+        try (FileWriter fileWriter = new FileWriter(filePath)) {
+            fileWriter.write(data);
+        }
+    }
+
 
 }

@@ -195,7 +195,6 @@ public class GameEngine {
         }
 
     }
-    private static final Random rand = new Random();
     private static TextureInfo getTexture(char textureMapChar) {
         switch (textureMapChar) {
             case ':':

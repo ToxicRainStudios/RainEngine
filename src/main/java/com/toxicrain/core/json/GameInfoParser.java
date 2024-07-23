@@ -50,35 +50,37 @@ public class GameInfoParser {
                     while (keys.hasNext()) {
                         String key = keys.next();
                         String value = valueObject.getString(key);
-                        if (key.equals("defaultWindowName")) {
-                            defaultWindowName = value;
-                        }
-                        else if (key.equals("engineVersion")) {
-                            engineVersion = value;
-                        }
-                        else if (key.equals("gameName")) {
-                            gameName = value;
-                        }
-                        else if (key.equals("gameMakers")) {
-                            gameMakers = value;
-                        }
-                        else if (key.equals("gameVersion")) {
-                            gameVersion = value;
-                        }
-                        else if (key.equals("gameWebsite")) {
-                            gameWebsite = value;
-                        }
-                        else if (key.equals("useIMGUI")) {
-                            useIMGUI = Boolean.parseBoolean(value);
-                        }
-                        else if (key.equals("maxTexturesPerBatch")) {
-                            maxTexturesPerBatch = Integer.parseInt(value);
-                        }
-                        else if (key.equals("minZoom")) {
-                            minZoom = Integer.parseInt(value);
-                        }
-                        else if (key.equals("maxZoom")) {
-                            maxZoom = Integer.parseInt(value);
+                        switch (key) {
+                            case "defaultWindowName":
+                                defaultWindowName = value;
+                                break;
+                            case "engineVersion":
+                                engineVersion = value;
+                                break;
+                            case "gameName":
+                                gameName = value;
+                                break;
+                            case "gameMakers":
+                                gameMakers = value;
+                                break;
+                            case "gameVersion":
+                                gameVersion = value;
+                                break;
+                            case "gameWebsite":
+                                gameWebsite = value;
+                                break;
+                            case "useIMGUI":
+                                useIMGUI = Boolean.parseBoolean(value);
+                                break;
+                            case "maxTexturesPerBatch":
+                                maxTexturesPerBatch = Integer.parseInt(value);
+                                break;
+                            case "minZoom":
+                                minZoom = Integer.parseInt(value);
+                                break;
+                            case "maxZoom":
+                                maxZoom = Integer.parseInt(value);
+                                break;
                         }
                     }
                 }
