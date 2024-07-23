@@ -21,6 +21,15 @@
         "gameWebsite": "exampledevguys.com"
       },
       {
+<<<<<<< Updated upstream
+=======
+        "playerBoxSize": "1"
+      },
+      {
+        "useIMGUI": "true"
+      },
+      {
+>>>>>>> Stashed changes
         "maxTexturesPerBatch": "100"
       },
       {

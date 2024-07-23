@@ -19,6 +19,11 @@ public class GameInfoParser {
     public static String gameMakers = null;
     public static String gameVersion = null;
     public static String gameWebsite = null;
+<<<<<<< Updated upstream
+=======
+    public static int playerBoxSize = 0;
+    public static boolean useIMGUI = true;
+>>>>>>> Stashed changes
     public static int maxTexturesPerBatch = 100; //Safety, don't crash if we forget to add this to gameinfo.json
     public static int minZoom = 3;
     public static int maxZoom = 25;
@@ -49,6 +54,7 @@ public class GameInfoParser {
                     while (keys.hasNext()) {
                         String key = keys.next();
                         String value = valueObject.getString(key);
+<<<<<<< Updated upstream
                         if (key.equals("defaultWindowName")) {
                             defaultWindowName = value;
                         }
@@ -75,6 +81,42 @@ public class GameInfoParser {
                         }
                         else if (key.equals("maxZoom")) {
                             maxZoom = Integer.parseInt(value);
+=======
+                        switch (key) {
+                            case "defaultWindowName":
+                                defaultWindowName = value;
+                                break;
+                            case "engineVersion":
+                                engineVersion = value;
+                                break;
+                            case "gameName":
+                                gameName = value;
+                                break;
+                            case "gameMakers":
+                                gameMakers = value;
+                                break;
+                            case "gameVersion":
+                                gameVersion = value;
+                                break;
+                            case "gameWebsite":
+                                gameWebsite = value;
+                                break;
+                            case "useIMGUI":
+                                useIMGUI = Boolean.parseBoolean(value);
+                                break;
+                            case "maxTexturesPerBatch":
+                                maxTexturesPerBatch = Integer.parseInt(value);
+                                break;
+                            case "minZoom":
+                                minZoom = Integer.parseInt(value);
+                                break;
+                            case "playerBoxSize":
+                                playerBoxSize = Integer.parseInt(value)/10;
+                                break;
+                            case "maxZoom":
+                                maxZoom = Integer.parseInt(value);
+                                break;
+>>>>>>> Stashed changes
                         }
                     }
                 }
