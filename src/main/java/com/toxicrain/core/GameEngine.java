@@ -9,6 +9,9 @@ import com.toxicrain.core.json.PackInfoParser;
 import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.gui.ImguiHandler;
+import com.toxicrain.sound.SoundBuffer;
+import com.toxicrain.sound.SoundManager;
+import com.toxicrain.sound.SoundSource;
 import com.toxicrain.util.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -47,10 +50,19 @@ public class GameEngine {
 
     private static FPSUtils fpsUtils;
     private static ImguiHandler imguiApp;
+    private static SoundManager soundManager;
+    private static SoundSource soundSource;
+    private static SoundBuffer soundBuffer;
+
 
     public GameEngine(){
         fpsUtils = new FPSUtils();
         imguiApp = new ImguiHandler(window);
+
+        SoundManager soundManager = new SoundManager();
+        soundManager.init();
+        SoundSource soundSource = new SoundSource();
+        SoundBuffer soundBuffer = new SoundBuffer("C:\\Users\\hudso\\Downloads/sample-3s.wav");
     }
 
     public static void run(String windowTitle) {
@@ -221,6 +233,10 @@ public class GameEngine {
                 Player.processInput( window);
 
             }
+
+            //DO NOT UNCOMMENT WILL NUKE PC
+            //soundSource.play(soundBuffer.getBufferId());
+
             // Check if the window has focus
             boolean windowFocused = glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0;
 
@@ -282,6 +298,9 @@ public class GameEngine {
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
+        soundSource.cleanup();
+        soundBuffer.cleanup();
+        soundManager.cleanup();
     }
 
 
