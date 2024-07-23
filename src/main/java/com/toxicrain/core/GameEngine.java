@@ -222,7 +222,7 @@ public class GameEngine {
     }
 
     private static void update() {
-        for(int engineFrames = 30; engineFrames >= 0; engineFrames--) { // Process input 3 times per frame
+        for(int engineFrames = 30; engineFrames >= 0; engineFrames--) { // Process input 30 times per frame
             Player.processInput(window);
         }
     }
