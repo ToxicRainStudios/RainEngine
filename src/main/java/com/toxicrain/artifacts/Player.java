@@ -1,5 +1,6 @@
 package com.toxicrain.artifacts;
 
+import com.toxicrain.core.Logger;
 import com.toxicrain.core.TextureInfo;
 import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
@@ -13,6 +14,7 @@ public class Player{
     public static float posX;
     public static float posY;
     public static float posZ;
+    public static float k;
     public static TextureInfo texture;
     public static boolean isSprinting;
 
@@ -46,35 +48,37 @@ public class Player{
 
 
     private static void handleCollisions() {
+        for (int j = 1; j > -2; j -= 1) {
+            k = (float) j * GameInfoParser.playerSize;
+            for (int i = MapInfoParser.extentTop.size() - 1; i >= 0; i--) {
 
-        for (int i = MapInfoParser.extentTop.size()-1; i >= 0; i--) {
-
-            if((cameraY <= MapInfoParser.extentTop.get(i)) && (cameraY >= MapInfoParser.extentCenterY.get(i))) {
-                if ((cameraX >= MapInfoParser.extentLeft.get(i)) && !(cameraX >= MapInfoParser.extentCenterX.get(i))) {
-                    cameraY += 0.02f;
-                } else if ((cameraX <= MapInfoParser.extentRight.get(i)) &&!(cameraX <= MapInfoParser.extentCenterX.get(i))) {
-                    cameraY += 0.02f;
+                if ((cameraY + k <= MapInfoParser.extentTop.get(i)) && (cameraY + k >= MapInfoParser.extentCenterY.get(i))) {
+                    if ((cameraX + k >= MapInfoParser.extentLeft.get(i)) && !(cameraX + k >= MapInfoParser.extentCenterX.get(i))) {
+                        cameraY += 0.02f;
+                    } else if ((cameraX + k <= MapInfoParser.extentRight.get(i)) && !(cameraX + k <= MapInfoParser.extentCenterX.get(i))) {
+                        cameraY += 0.02f;
+                    }
                 }
-            }
-             if((cameraY >= MapInfoParser.extentBottom.get(i)) && (cameraY <= MapInfoParser.extentCenterY.get(i))) {
-               if ((cameraX >= MapInfoParser.extentLeft.get(i)) && !(cameraX >= MapInfoParser.extentCenterX.get(i))) {
-                    cameraY -= 0.02f;
-               } else if ((cameraX <= MapInfoParser.extentRight.get(i)) && !(cameraX <= MapInfoParser.extentCenterX.get(i))) {
-                   cameraY -= 0.02f;
-               }
-            }
-           if((cameraX <= MapInfoParser.extentRight.get(i)) && (cameraX >= MapInfoParser.extentCenterX.get(i))) {
-                if ((cameraY >= MapInfoParser.extentBottom.get(i)) && !(cameraY > MapInfoParser.extentCenterY.get(i))) {
-                    cameraX += 0.02f;
-                } else if ((cameraY <= MapInfoParser.extentTop.get(i)) && !(cameraY <= MapInfoParser.extentCenterY.get(i))) {
-                    cameraX += 0.02f;
+                if ((cameraY + k >= MapInfoParser.extentBottom.get(i)) && (cameraY + k <= MapInfoParser.extentCenterY.get(i))) {
+                    if ((cameraX + k >= MapInfoParser.extentLeft.get(i)) && !(cameraX + k >= MapInfoParser.extentCenterX.get(i))) {
+                        cameraY -= 0.02f;
+                    } else if ((cameraX + k <= MapInfoParser.extentRight.get(i)) && !(cameraX + k <= MapInfoParser.extentCenterX.get(i))) {
+                        cameraY -= 0.02f;
+                    }
                 }
-            }
-             if((cameraX >= MapInfoParser.extentLeft.get(i)) && (cameraX <= MapInfoParser.extentCenterX.get(i))) {
-                if ((cameraY >= MapInfoParser.extentBottom.get(i)) && !(cameraY >= MapInfoParser.extentCenterY.get(i))) {
-                    cameraX -= 0.02f;
-                } else if ((cameraY <= MapInfoParser.extentTop.get(i)) && !(cameraY <= MapInfoParser.extentCenterY.get(i))) {
-                    cameraX -= 0.02f;
+                if ((cameraX + k <= MapInfoParser.extentRight.get(i)) && (cameraX + k >= MapInfoParser.extentCenterX.get(i))) {
+                    if ((cameraY + k >= MapInfoParser.extentBottom.get(i)) && !(cameraY + k > MapInfoParser.extentCenterY.get(i))) {
+                        cameraX += 0.02f;
+                    } else if ((cameraY + k <= MapInfoParser.extentTop.get(i)) && !(cameraY + k <= MapInfoParser.extentCenterY.get(i))) {
+                        cameraX += 0.02f;
+                    }
+                }
+                if ((cameraX + k >= MapInfoParser.extentLeft.get(i)) && (cameraX + k <= MapInfoParser.extentCenterX.get(i))) {
+                    if ((cameraY + k >= MapInfoParser.extentBottom.get(i)) && !(cameraY + k >= MapInfoParser.extentCenterY.get(i))) {
+                        cameraX -= 0.02f;
+                    } else if ((cameraY + k <= MapInfoParser.extentTop.get(i)) && !(cameraY + k <= MapInfoParser.extentCenterY.get(i))) {
+                        cameraX -= 0.02f;
+                    }
                 }
             }
         }

@@ -24,6 +24,9 @@
         "useIMGUI": "true"
       },
       {
+        "playerSize": "5"
+      },
+      {
         "maxTexturesPerBatch": "100"
       },
       {

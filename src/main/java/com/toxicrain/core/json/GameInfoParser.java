@@ -19,6 +19,7 @@ public class GameInfoParser {
     public static String gameMakers = null;
     public static String gameVersion = null;
     public static String gameWebsite = null;
+    public static float playerSize= 0.0f;
     public static boolean useIMGUI = true;
     public static int maxTexturesPerBatch = 100; //Safety, don't crash if we forget to add this to gameinfo.json
     public static int minZoom = 3;
@@ -71,6 +72,9 @@ public class GameInfoParser {
                                 break;
                             case "useIMGUI":
                                 useIMGUI = Boolean.parseBoolean(value);
+                                break;
+                            case "playerSize":
+                                playerSize = ((float)Integer.parseInt(value))/10;
                                 break;
                             case "maxTexturesPerBatch":
                                 maxTexturesPerBatch = Integer.parseInt(value);
