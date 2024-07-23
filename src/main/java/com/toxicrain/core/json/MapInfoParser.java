@@ -18,6 +18,12 @@ public class MapInfoParser {
     public static ArrayList<Float> extentCenterY = new ArrayList<Float>();
     public static ArrayList<Float> extentCenterX = new ArrayList<Float>();
 
+    private static ArrayList<Character> doCollide = new ArrayList<Character>();
+
+
+
+
+
     public static boolean doExtraLogs = false;
     public static float xpos, ypos;
     public static int xsize, ysize;
@@ -30,7 +36,8 @@ public class MapInfoParser {
         // Read JSON file as String
         String jsonString = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory("resources/json/map.json"));
 
-
+        doCollide.add(':');
+        //doCollide.add('1');
 
         // Parse JSON string
         JSONArray jsonArray = new JSONArray(jsonString);
@@ -77,16 +84,16 @@ public class MapInfoParser {
                             mapDataX.add(xCoordinate * 2);
                             mapDataY.add(yCoordinate * -2);
                             mapDataType.add(row.charAt(l));
-                            extentTop.add(((float)yCoordinate*-2)+1.1f);
-                            extentBottom.add(((float)yCoordinate*-2)-1.1f);
-                            extentLeft.add(((float)xCoordinate*2)-1.1f);
-                            extentRight.add(((float)xCoordinate*2)+1.1f);
-                            extentCenterY.add(((float)yCoordinate*-2));
-                            extentCenterX.add(((float)xCoordinate*2));
-
-
-
-
+                            for(int n = doCollide.size()-1; n>=0; n--) {
+                                if (row.charAt(l)==doCollide.get(n)) {
+                                    extentTop.add(((float) yCoordinate * -2) + 1.1f);
+                                    extentBottom.add(((float) yCoordinate * -2) - 1.1f);
+                                    extentLeft.add(((float) xCoordinate * 2) - 1.1f);
+                                    extentRight.add(((float) xCoordinate * 2) + 1.1f);
+                                    extentCenterY.add(((float) yCoordinate * -2));
+                                    extentCenterX.add(((float) xCoordinate * 2));
+                                }
+                            }
                         }
                     }
                 }
