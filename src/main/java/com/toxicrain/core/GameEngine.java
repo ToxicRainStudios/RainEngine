@@ -180,6 +180,8 @@ public class GameEngine {
         // Set up the projection matrix with FOV of 90 degrees
         glMatrixMode(GL_PROJECTION);
         glLoadMatrixf(createPerspectiveProjectionMatrix(90.0f, SettingsInfoParser.windowWidth / SettingsInfoParser.windowHeight, 1.0f, 100.0f));
+
+        Player player = new Player(Player.cameraX,Player.cameraY, Player.cameraZ, playerTexture, false);
     }
 
     private static void drawMap(BatchRenderer batchRenderer){
@@ -218,7 +220,8 @@ public class GameEngine {
         while (!glfwWindowShouldClose(window)) {
             for(int engineFrames = 3; engineFrames >= 0; engineFrames --) { //Put things that need to run 3 times a frame, ex: input
                 // Process input
-                Player.processInput( window);
+                Player.updatePos(Player.cameraX, Player.cameraY, Player.cameraZ);
+                Player.processInput(window);
 
             }
             // Check if the window has focus
@@ -237,11 +240,12 @@ public class GameEngine {
 
             // Enable depth testing
             glEnable(GL_DEPTH_TEST);
-
-            imguiApp.handleInput(window);
-            imguiApp.newFrame();
-            imguiApp.drawSettingsUI();
-            imguiApp.render();
+            if(GameInfoParser.useIMGUI){
+                imguiApp.handleInput(window);
+                imguiApp.newFrame();
+                imguiApp.drawSettingsUI();
+                imguiApp.render();
+            }
 
             Vector3f center = getCenter();
 
@@ -282,6 +286,7 @@ public class GameEngine {
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
+        ImguiHandler.cleanup();
     }
 
 

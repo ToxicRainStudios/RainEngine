@@ -21,6 +21,9 @@
         "gameWebsite": "exampledevguys.com"
       },
       {
+        "useIMGUI": "true"
+      },
+      {
         "maxTexturesPerBatch": "100"
       },
       {
