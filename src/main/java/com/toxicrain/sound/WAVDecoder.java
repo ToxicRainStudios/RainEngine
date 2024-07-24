@@ -3,8 +3,6 @@ package com.toxicrain.sound;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 
 import static org.lwjgl.openal.AL10.*;
 
@@ -20,50 +18,83 @@ public class WAVDecoder {
         if (buffer.getInt() != 0x45564157) // "WAVE" in little-endian
             throw new IOException("Not a valid WAV file");
 
-        if (buffer.getInt() != 0x20746D66) // "fmt " in little-endian
-            throw new IOException("Not a valid WAV file");
+        boolean fmtChunkFound = false;
+        boolean dataChunkFound = false;
+        int format = 0;
+        int sampleRate = 0;
+        int numChannels = 0;
+        int bitsPerSample = 0;
+        int dataSize = 0;
+        ByteBuffer data = null;
 
-        int fmtChunkSize = buffer.getInt();
-        int audioFormat = buffer.getShort();
-        int numChannels = buffer.getShort();
-        int sampleRate = buffer.getInt();
-        buffer.getInt(); // Byte rate
-        buffer.getShort(); // Block align
-        int bitsPerSample = buffer.getShort();
+        while (buffer.remaining() > 0) {
+            int chunkId = buffer.getInt();
+            int chunkSize = buffer.getInt();
 
-        if (fmtChunkSize > 16)
-            buffer.position(buffer.position() + fmtChunkSize - 16); // Skip extra bytes
-
-        int format;
-        if (numChannels == 1) {
-            if (bitsPerSample == 8) {
-                format = AL_FORMAT_MONO8;
-            } else if (bitsPerSample == 16) {
-                format = AL_FORMAT_MONO16;
-            } else {
-                throw new IOException("Unsupported WAV format");
+            switch (chunkId) {
+                case 0x20746D66: // "fmt "
+                    fmtChunkFound = true;
+                    int audioFormat = buffer.getShort();
+                    numChannels = buffer.getShort();
+                    sampleRate = buffer.getInt();
+                    buffer.getInt(); // Byte rate
+                    buffer.getShort(); // Block align
+                    bitsPerSample = buffer.getShort();
+                    if (chunkSize > 16) {
+                        buffer.position(buffer.position() + chunkSize - 16); // Skip extra fmt bytes
+                    }
+                    break;
+                case 0x61746164: // "data"
+                    dataChunkFound = true;
+                    dataSize = chunkSize;
+                    data = ByteBuffer.allocateDirect(dataSize);
+                    for (int i = 0; i < dataSize; i++) {
+                        data.put(buffer.get());
+                    }
+                    data.flip();
+                    break;
+                default:
+                    buffer.position(buffer.position() + chunkSize); // Skip other chunks
+                    break;
             }
-        } else if (numChannels == 2) {
-            if (bitsPerSample == 8) {
-                format = AL_FORMAT_STEREO8;
-            } else if (bitsPerSample == 16) {
-                format = AL_FORMAT_STEREO16;
-            } else {
-                throw new IOException("Unsupported WAV format");
+
+            if (fmtChunkFound && dataChunkFound) {
+                break;
             }
-        } else {
-            throw new IOException("Unsupported WAV format");
         }
 
-        if (buffer.getInt() != 0x61746164) // "data" in little-endian
-            throw new IOException("Not a valid WAV file");
-
-        int dataSize = buffer.getInt();
-        ByteBuffer data = ByteBuffer.allocateDirect(dataSize);
-        for (int i = 0; i < dataSize; i++) {
-            data.put(buffer.get());
+        if (!fmtChunkFound || !dataChunkFound) {
+            throw new IOException("Invalid WAV file: missing 'fmt ' or 'data' chunk");
         }
-        data.flip();
+
+        switch (numChannels) {
+            case 1:
+                switch (bitsPerSample) {
+                    case 8:
+                        format = AL_FORMAT_MONO8;
+                        break;
+                    case 16:
+                        format = AL_FORMAT_MONO16;
+                        break;
+                    default:
+                        throw new IOException("Unsupported WAV format: " + numChannels + " channels, " + bitsPerSample + " bits per sample");
+                }
+                break;
+            case 2:
+                switch (bitsPerSample) {
+                    case 8:
+                        format = AL_FORMAT_STEREO8;
+                        break;
+                    case 16:
+                        format = AL_FORMAT_STEREO16;
+                        break;
+                    default:
+                        throw new IOException("Unsupported WAV format: " + numChannels + " channels, " + bitsPerSample + " bits per sample");
+                }
+                break;
+            default:
+                throw new IOException("Unsupported WAV format: " + numChannels + " channels");
+        }
 
         return new SoundInfo(data, format, sampleRate);
     }

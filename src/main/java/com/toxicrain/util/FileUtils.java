@@ -92,7 +92,7 @@ public class FileUtils {
         }
     }
 
-    public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
+    public static ByteBuffer ioResourceToByteBuffer(String resource) throws IOException {
         Path path = Paths.get(resource);
         if (!Files.isReadable(path)) {
             throw new IllegalArgumentException("File not readable: " + resource);

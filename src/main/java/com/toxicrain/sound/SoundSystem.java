@@ -6,6 +6,7 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -56,18 +57,21 @@ public class SoundSystem {
         }
 
         try {
-            ByteBuffer wavBuffer = FileUtils.ioResourceToByteBuffer(filePath, 1024);
+            ByteBuffer wavBuffer = FileUtils.ioResourceToByteBuffer(filePath);
             SoundInfo wavData = WAVDecoder.decode(wavBuffer);
             alBufferData(bufferId, wavData.format, wavData.data, wavData.samplerate);
             wavData.free();
 
             long fileSize = FileUtils.getFileSize(filePath);
             Logger.printLOG(String.format("Loaded sound: %s (File Size: %d bytes)", filePath, fileSize));
+        } catch (FileNotFoundException e) {
+            Logger.printERROR("File not found: " + filePath);
+            e.printStackTrace();
         } catch (IOException e) {
-            System.err.println("Error reading file: " + filePath);
+            Logger.printERROR("Error reading file: " + filePath);
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("Error parsing JSON: " + e.getMessage());
+            Logger.printERROR("Error parsing JSON: " + e.getMessage());
             e.printStackTrace();
         }
 

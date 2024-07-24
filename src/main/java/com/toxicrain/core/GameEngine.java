@@ -188,7 +188,7 @@ public class GameEngine {
 
         // Set up the projection matrix with FOV of 90 degrees
         glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(createPerspectiveProjectionMatrix(90.0f, SettingsInfoParser.windowWidth / SettingsInfoParser.windowHeight, 1.0f, 100.0f));
+        glLoadMatrixf(createPerspectiveProjectionMatrix(SettingsInfoParser.fov, SettingsInfoParser.windowWidth / SettingsInfoParser.windowHeight, 1.0f, 100.0f));
 
         Player player = new Player(Player.cameraX,Player.cameraY, Player.cameraZ, playerTexture, false);
 
