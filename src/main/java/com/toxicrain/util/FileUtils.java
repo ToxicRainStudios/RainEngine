@@ -63,8 +63,7 @@ public class FileUtils {
      * @return the absolute path as a String
      */
     public static String getCurrentWorkingDirectory(String relativePath) {
-        String fullPath = Paths.get(relativePath).toAbsolutePath().toString();
-        return fullPath;
+        return Paths.get(relativePath).toAbsolutePath().toString();
     }
 
     /**

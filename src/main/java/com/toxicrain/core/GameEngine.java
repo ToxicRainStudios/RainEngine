@@ -24,9 +24,9 @@ import org.lwjgl.system.MemoryStack;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.Random;
 
-import static com.toxicrain.util.TextureUtils.*;
+import static com.toxicrain.util.TextureUtils.floorTexture;
+import static com.toxicrain.util.TextureUtils.playerTexture;
 import static de.damios.guacamole.gdx.StartOnFirstThreadHelper.startNewJvmIfRequired;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -195,30 +195,12 @@ public class GameEngine {
         for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
             // Ensure that indices are valid
             if (k >= 0 && k < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
-                batchRenderer.addTexture(getTexture(MapInfoParser.mapDataType.get(k)), MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
+                batchRenderer.addTexture(TextureUtils.getTexture(MapInfoParser.mapDataType.get(k)), MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
             } else {
                 Logger.printLOG("Index out of bounds: space=" + k);
             }
         }
 
-    }
-    private static TextureInfo getTexture(char textureMapChar) {
-        switch (textureMapChar) {
-            case ':':
-                return floorTexture;
-            case '+':
-                return concreteTexture1;
-            case '-':
-                return concreteTexture2;
-            case '1':
-                return dirtTexture1;
-            case '2':
-                return dirtTexture2;
-            case '3':
-                return grassTexture1;
-            default:
-                return missingTexture;
-        }
     }
 
     private static void update() {
@@ -228,9 +210,6 @@ public class GameEngine {
     }
 
     private static void render(BatchRenderer batchRenderer) {
-        // Check if the window has focus
-        boolean windowFocused = glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0;
-
         // Clear the color and depth buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -247,7 +226,8 @@ public class GameEngine {
         drawMap(batchRenderer);
 
         float[] openglMousePos = new float[2];
-        if (windowFocused) {
+        // Check if the window has focus and only do certain things if so
+        if (glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0) {
             imguiApp.handleInput(window);
             imguiApp.newFrame();
             imguiApp.drawSettingsUI();
@@ -384,9 +364,5 @@ public class GameEngine {
 
     public static FloatBuffer getPerspectiveProjectionMatrixBuffer() {
         return buffer;
-    }
-    private static void enableBlending() {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 }

@@ -11,14 +11,14 @@ import java.util.ArrayList;
 
 
 public class MapInfoParser {
-    public static ArrayList<Float> extentTop = new ArrayList<Float>();
-    public static ArrayList<Float> extentBottom = new ArrayList<Float>();
-    public static ArrayList<Float> extentLeft = new ArrayList<Float>();
-    public static ArrayList<Float> extentRight = new ArrayList<Float>();
-    public static ArrayList<Float> extentCenterY = new ArrayList<Float>();
-    public static ArrayList<Float> extentCenterX = new ArrayList<Float>();
+    public static ArrayList<Float> extentTop = new ArrayList<>();
+    public static ArrayList<Float> extentBottom = new ArrayList<>();
+    public static ArrayList<Float> extentLeft = new ArrayList<>();
+    public static ArrayList<Float> extentRight = new ArrayList<>();
+    public static ArrayList<Float> extentCenterY = new ArrayList<>();
+    public static ArrayList<Float> extentCenterX = new ArrayList<>();
 
-    private static ArrayList<Character> doCollide = new ArrayList<Character>();
+    private static final ArrayList<Character> doCollide = new ArrayList<>();
 
 
 
@@ -74,7 +74,8 @@ public class MapInfoParser {
                     // Check each character in the row
                     for (int l = 0; l < row.length(); l++) {
                         if (!(row.charAt(l) == ' ')) {
-                            // Calculate coordinates (consider adjusting multiplier based on your actual map scale)
+                            // Calculate coordinates
+                            // TODO consider adjusting multiplier based on map scale)
                             int xCoordinate = l;
                             int yCoordinate = k;
 
