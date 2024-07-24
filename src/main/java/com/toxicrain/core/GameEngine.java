@@ -9,9 +9,7 @@ import com.toxicrain.core.json.PackInfoParser;
 import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.gui.ImguiHandler;
-import com.toxicrain.sound.SoundBuffer;
-import com.toxicrain.sound.SoundManager;
-import com.toxicrain.sound.SoundSource;
+import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.util.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -50,19 +48,14 @@ public class GameEngine {
 
     private static FPSUtils fpsUtils;
     private static ImguiHandler imguiApp;
-    private static SoundManager soundManager;
-    private static SoundSource soundSource;
-    private static SoundBuffer soundBuffer;
+    private static SoundSystem soundSystem = new SoundSystem();
 
 
     public GameEngine(){
         fpsUtils = new FPSUtils();
         imguiApp = new ImguiHandler(window);
 
-        SoundManager soundManager = new SoundManager();
-        soundManager.init();
-        SoundSource soundSource = new SoundSource();
-        SoundBuffer soundBuffer = new SoundBuffer("C:\\Users\\hudso\\Downloads/sample-3s.wav");
+
     }
 
     public static void run(String windowTitle) {
@@ -192,6 +185,8 @@ public class GameEngine {
         // Set up the projection matrix with FOV of 90 degrees
         glMatrixMode(GL_PROJECTION);
         glLoadMatrixf(createPerspectiveProjectionMatrix(90.0f, SettingsInfoParser.windowWidth / SettingsInfoParser.windowHeight, 1.0f, 100.0f));
+
+        soundSystem.init();
     }
 
     private static void drawMap(BatchRenderer batchRenderer){
@@ -262,6 +257,9 @@ public class GameEngine {
             Vector3f center = getCenter();
 
 
+            int bufferId = soundSystem.loadSound("C:\\Users\\hudso\\Downloads\\sample-3s.wav");
+            soundSystem.play(bufferId);
+
             // Begin the batch
             batchRenderer.beginBatch();
 
@@ -298,9 +296,7 @@ public class GameEngine {
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
-        soundSource.cleanup();
-        soundBuffer.cleanup();
-        soundManager.cleanup();
+        soundSystem.cleanup();
     }
 
 

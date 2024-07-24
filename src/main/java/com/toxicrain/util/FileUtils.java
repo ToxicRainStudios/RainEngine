@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -88,4 +90,17 @@ public class FileUtils {
         }
     }
 
+    public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
+        Path path = Paths.get(resource);
+        if (!Files.isReadable(path)) {
+            throw new IllegalArgumentException("File not readable: " + resource);
+        }
+        ByteBuffer buffer;
+        try (SeekableByteChannel fc = Files.newByteChannel(path)) {
+            buffer = ByteBuffer.allocateDirect((int) fc.size() + 1);
+            while (fc.read(buffer) != -1);
+        }
+        buffer.flip();
+        return buffer;
+    }
 }
