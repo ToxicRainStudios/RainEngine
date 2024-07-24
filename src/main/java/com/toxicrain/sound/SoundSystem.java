@@ -6,6 +6,7 @@ import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -62,8 +63,12 @@ public class SoundSystem {
 
             long fileSize = FileUtils.getFileSize(filePath);
             Logger.printLOG(String.format("Loaded sound: %s (File Size: %d bytes)", filePath, fileSize));
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + filePath);
+            e.printStackTrace();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to load sound file.", e);
+            System.err.println("Error parsing JSON: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return bufferId;

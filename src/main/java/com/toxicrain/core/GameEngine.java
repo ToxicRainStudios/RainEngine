@@ -256,8 +256,6 @@ public class GameEngine {
 
             soundSystem.play(bufferId);
 
-            // Begin the batch
-            batchRenderer.beginBatch();
 
             // Convert mouse coordinates to OpenGL coordinates
             openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
