@@ -217,6 +217,7 @@ public class GameEngine {
         for(int engineFrames = 30; engineFrames >= 0; engineFrames--) { // Process input 30 times per frame
             Player.processInput(window);
         }
+        center = getCenter();
     }
 
     private static void render(BatchRenderer batchRenderer) {
@@ -232,8 +233,6 @@ public class GameEngine {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         glTranslatef(-Player.cameraX, -Player.cameraY, -Player.cameraZ);
-
-        center = getCenter();
 
         // Begin the batch
         batchRenderer.beginBatch();
@@ -251,8 +250,6 @@ public class GameEngine {
             // Get mouse position relative to window
             MouseUtils mouseInput = new MouseUtils(window);
             float[] mousePos = mouseInput.getMousePosition();
-
-
 
             soundSystem.play(bufferId);
 
