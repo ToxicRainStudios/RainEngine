@@ -90,5 +90,18 @@ public class FileUtils {
         }
     }
 
+    public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
+        Path path = Paths.get(resource);
+        if (!Files.isReadable(path)) {
+            throw new IllegalArgumentException("File not readable: " + resource);
+        }
+        ByteBuffer buffer;
+        try (SeekableByteChannel fc = Files.newByteChannel(path)) {
+            buffer = ByteBuffer.allocateDirect((int) fc.size() + 1);
+            while (fc.read(buffer) != -1);
+        }
+        buffer.flip();
+        return buffer;
+    }
 
 }

@@ -9,6 +9,7 @@ import com.toxicrain.core.json.PackInfoParser;
 import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.gui.ImguiHandler;
+import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.util.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -48,10 +49,14 @@ public class GameEngine {
     private static FPSUtils fpsUtils;
     private static ImguiHandler imguiApp;
     private static Vector3f center;
+    private static SoundSystem soundSystem = new SoundSystem();
+
 
     public GameEngine(){
         fpsUtils = new FPSUtils();
         imguiApp = new ImguiHandler(window);
+
+
     }
 
     public static void run(String windowTitle) {
@@ -189,6 +194,9 @@ public class GameEngine {
 
         // Enable depth testing
         glEnable(GL_DEPTH_TEST);
+      
+        soundSystem.init();
+
     }
 
     private static void drawMap(BatchRenderer batchRenderer){
@@ -209,9 +217,15 @@ public class GameEngine {
         }
     }
 
+
     private static void render(BatchRenderer batchRenderer) {
         // Clear the color and depth buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+        //DO NOT UNCOMMENT WILL NUKE PC
+        //soundSource.play(soundBuffer.getBufferId());
+
 
         // Set up the view matrix
         glMatrixMode(GL_MODELVIEW);
@@ -237,6 +251,13 @@ public class GameEngine {
             MouseUtils mouseInput = new MouseUtils(window);
             float[] mousePos = mouseInput.getMousePosition();
 
+
+            int bufferId = soundSystem.loadSound("C:\\Users\\hudso\\Downloads\\sample-3s.wav");
+            soundSystem.play(bufferId);
+
+            // Begin the batch
+            batchRenderer.beginBatch();
+
             // Convert mouse coordinates to OpenGL coordinates
             openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
         }
@@ -259,6 +280,7 @@ public class GameEngine {
             render(batchRenderer);
         }
         ImguiHandler.cleanup();
+        soundSystem.cleanup();
     }
 
 
