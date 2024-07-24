@@ -29,7 +29,6 @@ import java.nio.IntBuffer;
 
 import static com.toxicrain.util.TextureUtils.floorTexture;
 import static com.toxicrain.util.TextureUtils.playerTexture;
-import static de.damios.guacamole.gdx.StartOnFirstThreadHelper.startNewJvmIfRequired;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -58,7 +57,6 @@ public class GameEngine {
     public GameEngine(){
         fpsUtils = new FPSUtils();
         imguiApp = new ImguiHandler(window);
-
 
     }
 
@@ -115,11 +113,6 @@ public class GameEngine {
         glfwDefaultWindowHints(); // the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, 0); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, 1); // the window will be resizable
-
-        // Starts a new JVM if the application was started on macOS without the -XstartOnFirstThread argument.
-        if (startNewJvmIfRequired()) {
-            System.exit(0);
-        }
 
         Logger.printLOG("Creating Game Window");
         // Create the window

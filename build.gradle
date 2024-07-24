@@ -36,8 +36,6 @@ dependencies {
     implementation "org.joml:joml:$jomlVersion"
     implementation 'org.lwjgl:lwjgl-stb:$lwjglVersion'
 
-    implementation "com.github.crykn.guacamole:gdx-desktop:$guacamoleVersion"
-
     implementation 'org.json:json:20220320'
 
     implementation 'io.github.spair:imgui-java-binding:1.86.11'
