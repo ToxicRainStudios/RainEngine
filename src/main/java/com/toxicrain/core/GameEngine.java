@@ -8,6 +8,7 @@ import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.json.PackInfoParser;
 import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
+import com.toxicrain.core.render.Tile;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.util.*;
@@ -208,7 +209,7 @@ public class GameEngine {
         for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
             // Ensure that indices are valid
             if (k >= 0 && k < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
-                batchRenderer.addTexture(TextureUtils.getTexture(MapInfoParser.mapDataType.get(k)), MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
+                batchRenderer.addTexture(TextureUtils.getTexture(Tile.mapDataType.get(k)), MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
             } else {
                 Logger.printLOG("Index out of bounds: space=" + k);
             }

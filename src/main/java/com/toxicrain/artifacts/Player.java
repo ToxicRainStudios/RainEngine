@@ -2,6 +2,7 @@ package com.toxicrain.artifacts;
 
 import com.toxicrain.core.Logger;
 import com.toxicrain.core.TextureInfo;
+import com.toxicrain.core.render.Tile;
 import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
 
@@ -17,6 +18,7 @@ public class Player{
     public static float k;
     public static TextureInfo texture;
     public static boolean isSprinting;
+    private static int collisionType;
 
     public Player(float posX, float posY, float posZ, TextureInfo texture, boolean isSprinting) {
         this.posX = posX;
@@ -47,42 +49,131 @@ public class Player{
     }
 
 
-    private static void handleCollisions() {
+    private static void handleCollisions(){
         for (int j = 1; j > -2; j -= 1) {
             k = (float) j * GameInfoParser.playerSize;
-            for (int i = MapInfoParser.extentTop.size() - 1; i >= 0; i--) {
+            for (int i = Tile.extentTop.size() - 1; i >= 0; i--) {
 
-                if ((cameraY + k <= MapInfoParser.extentTop.get(i)) && (cameraY + k >= MapInfoParser.extentCenterY.get(i))) {
-                    if ((cameraX + k >= MapInfoParser.extentLeft.get(i)) && !(cameraX + k >= MapInfoParser.extentCenterX.get(i))) {
-                        cameraY += 0.02f;
-                    } else if ((cameraX + k <= MapInfoParser.extentRight.get(i)) && !(cameraX + k <= MapInfoParser.extentCenterX.get(i))) {
-                        cameraY += 0.02f;
+                if ((cameraY + k <= Tile.extentTop.get(i)) && (cameraY + k >= Tile.extentCenterY.get(i))) {
+                    if ((cameraX + k >= Tile.extentLeft.get(i)) && !(cameraX + k >= Tile.extentCenterX.get(i))) {
+                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
+                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
+                                cameraY += 0.02f;
+                                break;
+                            }
+                            if(Tile.mapDataType.get(i) == '1'){
+                                collisionType = 1;
+                                break;
+                            }
+                        }
+                    } else if ((cameraX + k <= Tile.extentRight.get(i)) && !(cameraX + k <= Tile.extentCenterX.get(i))) {
+                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
+                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
+                                cameraY += 0.02f;
+                                break;
+                            }
+                            if(Tile.mapDataType.get(i) == '1'){
+                                collisionType = 1;
+                                break;
+                            }
+                        }
                     }
                 }
-                if ((cameraY + k >= MapInfoParser.extentBottom.get(i)) && (cameraY + k <= MapInfoParser.extentCenterY.get(i))) {
-                    if ((cameraX + k >= MapInfoParser.extentLeft.get(i)) && !(cameraX + k >= MapInfoParser.extentCenterX.get(i))) {
-                        cameraY -= 0.02f;
-                    } else if ((cameraX + k <= MapInfoParser.extentRight.get(i)) && !(cameraX + k <= MapInfoParser.extentCenterX.get(i))) {
-                        cameraY -= 0.02f;
+                if ((cameraY + k >= Tile.extentBottom.get(i)) && (cameraY + k <= Tile.extentCenterY.get(i))) {
+                    if ((cameraX + k >= Tile.extentLeft.get(i)) && !(cameraX + k >= Tile.extentCenterX.get(i))) {
+                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
+                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
+                               cameraY -= 0.02f;
+                                break;
+                            }
+                            if(Tile.mapDataType.get(i) == '1'){
+                                collisionType = 1;
+                                break;
+                            }
+                        }
+                    } else if ((cameraX + k <= Tile.extentRight.get(i)) && !(cameraX + k <= Tile.extentCenterX.get(i))) {
+                        for (int p = MapInfoParser.doCollide.size()-1; p >= 0; p--) {
+                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
+                                cameraY -= 0.02f;
+                                break;
+                            }
+                            if(Tile.mapDataType.get(i) == '1'){
+                                collisionType = 1;
+                                break;
+                            }
+                        }
                     }
                 }
-                if ((cameraX + k <= MapInfoParser.extentRight.get(i)) && (cameraX + k >= MapInfoParser.extentCenterX.get(i))) {
-                    if ((cameraY + k >= MapInfoParser.extentBottom.get(i)) && !(cameraY + k > MapInfoParser.extentCenterY.get(i))) {
-                        cameraX += 0.02f;
-                    } else if ((cameraY + k <= MapInfoParser.extentTop.get(i)) && !(cameraY + k <= MapInfoParser.extentCenterY.get(i))) {
-                        cameraX += 0.02f;
+                if ((cameraX + k <= Tile.extentRight.get(i)) && (cameraX + k >= Tile.extentCenterX.get(i))) {
+                    if ((cameraY + k >= Tile.extentBottom.get(i)) && !(cameraY + k > Tile.extentCenterY.get(i))) {
+                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
+                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
+                                cameraX += 0.02f;
+                                break;
+                            }
+                            if(Tile.mapDataType.get(i) == '1'){
+                                collisionType = 1;
+                                break;
+                            }
+                        }
+                    } else if ((cameraY + k <= Tile.extentTop.get(i)) && !(cameraY + k <= Tile.extentCenterY.get(i))) {
+                        for (int p = MapInfoParser.doCollide.size()-1; p >= 0; p--) {
+                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
+                                cameraX += 0.02f;
+                                break;
+                            }
+                            if(Tile.mapDataType.get(i) == '1'){
+                                collisionType = 1;
+                                break;
+                            }
+                        }
                     }
                 }
-                if ((cameraX + k >= MapInfoParser.extentLeft.get(i)) && (cameraX + k <= MapInfoParser.extentCenterX.get(i))) {
-                    if ((cameraY + k >= MapInfoParser.extentBottom.get(i)) && !(cameraY + k >= MapInfoParser.extentCenterY.get(i))) {
-                        cameraX -= 0.02f;
-                    } else if ((cameraY + k <= MapInfoParser.extentTop.get(i)) && !(cameraY + k <= MapInfoParser.extentCenterY.get(i))) {
-                        cameraX -= 0.02f;
+              if ((cameraX + k >= Tile.extentLeft.get(i)) && (cameraX + k <= Tile.extentCenterX.get(i))) {
+                    if ((cameraY + k >= Tile.extentBottom.get(i)) && !(cameraY + k >= Tile.extentCenterY.get(i))) {
+                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
+                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
+                                cameraX -= 0.02f;
+                                break;
+                            }
+                            if(Tile.mapDataType.get(i) == '1'){
+                                collisionType = 1;
+                                break;
+                            }
+                        }
+                    } else if ((cameraY + k <= Tile.extentTop.get(i)) && !(cameraY + k <= Tile.extentCenterY.get(i))) {
+                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
+                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
+                                cameraX -= 0.02f;
+                                break;
+                            }
+                            if(Tile.mapDataType.get(i) == '1'){
+                                collisionType = 1;
+                                break;
+                            }
+
+                        }
                     }
                 }
             }
         }
+
+
+
+        switch (collisionType){
+            case 1:
+                cameraSpeed = 0.005f;
+                Logger.printLOG("HI!");
+            ;
+            default:
+
+        }
+        collisionType = 0;
+
+
     }
+
+
 
 
     private static void handleMovement(float opX, float opY){
@@ -96,10 +187,8 @@ public class Player{
             cameraSpeed = 0.1f;
             setIsSprinting(true);
         }
-        else {
-            cameraSpeed = 0.02f;
-        }
 
+        cameraSpeed = 0.01f;
         handleCollisions();
 
         // Handle left and right movement

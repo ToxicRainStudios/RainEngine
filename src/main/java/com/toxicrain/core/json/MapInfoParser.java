@@ -13,12 +13,7 @@ import java.util.ArrayList;
 
 
 public class MapInfoParser {
-    public static ArrayList<Float> extentTop = new ArrayList<>();
-    public static ArrayList<Float> extentBottom = new ArrayList<>();
-    public static ArrayList<Float> extentLeft = new ArrayList<>();
-    public static ArrayList<Float> extentRight = new ArrayList<>();
-    public static ArrayList<Float> extentCenterY = new ArrayList<>();
-    public static ArrayList<Float> extentCenterX = new ArrayList<>();
+
 
     public static final ArrayList<Character> doCollide = new ArrayList<>();
 
@@ -32,7 +27,6 @@ public class MapInfoParser {
     public static int tiles = 0;
     public static ArrayList<Integer> mapDataX = new ArrayList<>();
     public static ArrayList<Integer> mapDataY = new ArrayList<>();
-    public static ArrayList<Character> mapDataType = new ArrayList<>();
 
     public static void parseMapFile() throws IOException {
         // Read JSON file as String
@@ -85,8 +79,8 @@ public class MapInfoParser {
                             tiles++;
                             mapDataX.add(xCoordinate * 2);
                             mapDataY.add(yCoordinate * -2);
-                            mapDataType.add(row.charAt(l));
-                            Tile.addColision(row.charAt(l),yCoordinate,xCoordinate);
+                            Tile.mapDataType.add(row.charAt(l));
+                            Tile.addColision(yCoordinate,xCoordinate);
                         }
                     }
                 }
