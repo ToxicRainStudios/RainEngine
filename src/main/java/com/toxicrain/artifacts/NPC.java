@@ -36,11 +36,7 @@ public class NPC {
     }
 
     public void render(BatchRenderer batchRenderer) {
-        if (texture != null) {
-            batchRenderer.addTexturePos(texture, x, y, 1.1f, Player.cameraX, Player.cameraY, Color.toFloatArray(Color.RED));
-        } else {
-            System.out.println("Texture is null for NPC at position (" + x + ", " + y + ")");
-        }
+        batchRenderer.addTexturePos(texture, x, y, 1.1f, Player.cameraX, Player.cameraY, Color.toFloatArray(Color.RED));
     }
 
     public TextureInfo getTexture() {
