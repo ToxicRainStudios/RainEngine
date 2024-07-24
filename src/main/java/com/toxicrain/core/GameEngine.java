@@ -179,9 +179,10 @@ public class GameEngine {
 
         // This line is critical for LWJGL's interoperation with GLFW's OpenGL context, or any context that is managed externally.
         // LWJGL detects the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
+        Logger.printLOG("Creating OpenGL Capabilities");
         GL.createCapabilities();
 
-        // Set the clear color
+        // Set the "background" color
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
         // Set up the projection matrix with FOV of 90 degrees
@@ -195,9 +196,11 @@ public class GameEngine {
 
         // Enable depth testing
         glEnable(GL_DEPTH_TEST);
-      
+
+
+        Logger.printLOG("Initializing SoundSystem");
         soundSystem.init();
-        bufferId = soundSystem.loadSound("C:\\Users\\hudso\\Downloads\\sample-3s.wav");
+        bufferId = soundSystem.loadSound("C:/Users/hudso/Downloads/sample-3s.wav");
 
     }
 
