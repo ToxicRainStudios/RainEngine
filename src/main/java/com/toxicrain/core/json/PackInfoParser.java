@@ -45,32 +45,34 @@ public class PackInfoParser {
                     while (keys.hasNext()) {
                         String key = keys.next();
                         String value = valueObject.getString(key);
-                        if (key.equals("playerTexture")) {
-                            playerTexture = workingDirectory + "/" + value;
-                        }
-                        else if (key.equals("floorTexture")) {
-                            floorTexture = workingDirectory + "/" + value;
-                        }
-                        else if (key.equals("splatterTexture")) {
-                            splatterTexture = workingDirectory + "/" + value;
-                        }
-                        else if (key.equals("concreteTexture1")) {
-                            concreteTexture1 = workingDirectory + "/" + value;
-                        }
-                        else if (key.equals("concreteTexture2")) {
-                            concreteTexture2 = workingDirectory + "/" + value;
-                        }
-                        else if (key.equals("dirtTexture1")) {
-                            dirtTexture1 = workingDirectory + "/" + value;
-                        }
-                        else if (key.equals("grassTexture1")) {
-                            grassTexture1 = workingDirectory + "/" + value;
-                        }
-                        else if (key.equals("dirtTexture2")) {
-                            dirtTexture2 = workingDirectory + "/" + value;
-                        }
-                        else if (key.equals("missingTexture")) {
-                            missingTexture = workingDirectory + "/" + value;
+                        switch (key) {
+                            case "playerTexture":
+                                playerTexture = workingDirectory + "/" + value;
+                                break;
+                            case "floorTexture":
+                                floorTexture = workingDirectory + "/" + value;
+                                break;
+                            case "splatterTexture":
+                                splatterTexture = workingDirectory + "/" + value;
+                                break;
+                            case "concreteTexture1":
+                                concreteTexture1 = workingDirectory + "/" + value;
+                                break;
+                            case "concreteTexture2":
+                                concreteTexture2 = workingDirectory + "/" + value;
+                                break;
+                            case "dirtTexture1":
+                                dirtTexture1 = workingDirectory + "/" + value;
+                                break;
+                            case "grassTexture1":
+                                grassTexture1 = workingDirectory + "/" + value;
+                                break;
+                            case "dirtTexture2":
+                                dirtTexture2 = workingDirectory + "/" + value;
+                                break;
+                            case "missingTexture":
+                                missingTexture = workingDirectory + "/" + value;
+                                break;
                         }
                     }
                 }

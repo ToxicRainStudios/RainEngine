@@ -1,5 +1,6 @@
 package com.toxicrain.artifacts;
 
+import com.toxicrain.core.Logger;
 import com.toxicrain.core.TextureInfo;
 import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
@@ -10,11 +11,12 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Player{
 
-    public float posX;
-    public float posY;
-    public float posZ;
-    public TextureInfo texture;
-    public boolean isSprinting;
+    public static float posX;
+    public static float posY;
+    public static float posZ;
+    public static float k;
+    public static TextureInfo texture;
+    public static boolean isSprinting;
 
     public Player(float posX, float posY, float posZ, TextureInfo texture, boolean isSprinting) {
         this.posX = posX;
@@ -22,72 +24,81 @@ public class Player{
         this.posZ = posZ;
         this.texture = texture;
         this.isSprinting = isSprinting;
-    }public static float cameraX = 15.0f; // Camera X position
+    }
+    public static float cameraX = 15.0f; // Camera X position
     public static float cameraY = 15.0f; // Camera Y position
     public static float cameraZ = 5.0f; // Camera Z position
     public static float cameraSpeed = 0.02f; // Camera Speed
     public static final float scrollSpeed = 0.5f;  // The max scroll in/out speed
     public static float scrollOffset = 0.0f; // Track the scroll input
 
+    public static void updatePos(float posX, float posY, float posZ) {
+        Player.posX = posX;
+        Player.posY = posY;
+        Player.posZ = posZ;
+    }
+
+    public static void setIsSprinting(boolean sprinting) {
+        Player.isSprinting = sprinting;
+    }
+
+    public static TextureInfo getTexture() {
+        return Player.texture;
+    }
+
+
     private static void handleCollisions() {
+        for (int j = 1; j > -2; j -= 1) {
+            k = (float) j * GameInfoParser.playerSize;
+            for (int i = MapInfoParser.extentTop.size() - 1; i >= 0; i--) {
 
-        for (int i = MapInfoParser.extentTop.size()-1; i >= 0; i--) {
-
-            if((cameraY <= MapInfoParser.extentTop.get(i)) && (cameraY >= MapInfoParser.extentCenterY.get(i))) {
-                if ((cameraX >= MapInfoParser.extentLeft.get(i)) && !(cameraX >= MapInfoParser.extentCenterX.get(i))) {
-                    cameraY += 0.02f;
-                } else if ((cameraX <= MapInfoParser.extentRight.get(i)) &&!(cameraX <= MapInfoParser.extentCenterX.get(i))) {
-                    cameraY += 0.02f;
+                if ((cameraY + k <= MapInfoParser.extentTop.get(i)) && (cameraY + k >= MapInfoParser.extentCenterY.get(i))) {
+                    if ((cameraX + k >= MapInfoParser.extentLeft.get(i)) && !(cameraX + k >= MapInfoParser.extentCenterX.get(i))) {
+                        cameraY += 0.02f;
+                    } else if ((cameraX + k <= MapInfoParser.extentRight.get(i)) && !(cameraX + k <= MapInfoParser.extentCenterX.get(i))) {
+                        cameraY += 0.02f;
+                    }
                 }
-            }
-             if((cameraY >= MapInfoParser.extentBottom.get(i)) && (cameraY <= MapInfoParser.extentCenterY.get(i))) {
-               if ((cameraX >= MapInfoParser.extentLeft.get(i)) && !(cameraX >= MapInfoParser.extentCenterX.get(i))) {
-                    cameraY -= 0.02f;
-               } else if ((cameraX <= MapInfoParser.extentRight.get(i)) && !(cameraX <= MapInfoParser.extentCenterX.get(i))) {
-                   cameraY -= 0.02f;
-               }
-            }
-           if((cameraX <= MapInfoParser.extentRight.get(i)) && (cameraX >= MapInfoParser.extentCenterX.get(i))) {
-                if ((cameraY >= MapInfoParser.extentBottom.get(i)) && !(cameraY > MapInfoParser.extentCenterY.get(i))) {
-                    cameraX += 0.02f;
-                } else if ((cameraY <= MapInfoParser.extentTop.get(i)) && !(cameraY <= MapInfoParser.extentCenterY.get(i))) {
-                    cameraX += 0.02f;
+                if ((cameraY + k >= MapInfoParser.extentBottom.get(i)) && (cameraY + k <= MapInfoParser.extentCenterY.get(i))) {
+                    if ((cameraX + k >= MapInfoParser.extentLeft.get(i)) && !(cameraX + k >= MapInfoParser.extentCenterX.get(i))) {
+                        cameraY -= 0.02f;
+                    } else if ((cameraX + k <= MapInfoParser.extentRight.get(i)) && !(cameraX + k <= MapInfoParser.extentCenterX.get(i))) {
+                        cameraY -= 0.02f;
+                    }
                 }
-            }
-             if((cameraX >= MapInfoParser.extentLeft.get(i)) && (cameraX <= MapInfoParser.extentCenterX.get(i))) {
-                if ((cameraY >= MapInfoParser.extentBottom.get(i)) && !(cameraY >= MapInfoParser.extentCenterY.get(i))) {
-                    cameraX -= 0.02f;
-                } else if ((cameraY <= MapInfoParser.extentTop.get(i)) && !(cameraY <= MapInfoParser.extentCenterY.get(i))) {
-                    cameraX -= 0.02f;
+                if ((cameraX + k <= MapInfoParser.extentRight.get(i)) && (cameraX + k >= MapInfoParser.extentCenterX.get(i))) {
+                    if ((cameraY + k >= MapInfoParser.extentBottom.get(i)) && !(cameraY + k > MapInfoParser.extentCenterY.get(i))) {
+                        cameraX += 0.02f;
+                    } else if ((cameraY + k <= MapInfoParser.extentTop.get(i)) && !(cameraY + k <= MapInfoParser.extentCenterY.get(i))) {
+                        cameraX += 0.02f;
+                    }
                 }
-            }
-
-
-
-
-
-
-
+                if ((cameraX + k >= MapInfoParser.extentLeft.get(i)) && (cameraX + k <= MapInfoParser.extentCenterX.get(i))) {
+                    if ((cameraY + k >= MapInfoParser.extentBottom.get(i)) && !(cameraY + k >= MapInfoParser.extentCenterY.get(i))) {
+                        cameraX -= 0.02f;
+                    } else if ((cameraY + k <= MapInfoParser.extentTop.get(i)) && !(cameraY + k <= MapInfoParser.extentCenterY.get(i))) {
+                        cameraX -= 0.02f;
+                    }
+                }
             }
         }
+    }
 
 
     private static void handleMovement(float opX, float opY){
-
             cameraX = cameraX + ((cameraSpeed/ 2)*opX);
             cameraY = cameraY + ((cameraSpeed/ 2)*opY);
-        }
-
-
-
-
-
-
-
+    }
 
     public static void processInput(long window) {
         //Sprinting8
-        cameraSpeed = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ? 0.1f : cameraSpeed;
+        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+            cameraSpeed = 0.1f;
+            setIsSprinting(true);
+        }
+        else {
+            cameraSpeed = 0.02f;
+        }
 
         handleCollisions();
 

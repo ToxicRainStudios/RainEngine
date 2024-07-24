@@ -63,18 +63,6 @@ public enum Color {
         this.blue = blue;
     }
 
-    public static float getRed(Color color) {
-        return color.red;
-    }
-
-    public static float getGreen(Color color) {
-        return color.green;
-    }
-
-    public static float getBlue(Color color) {
-        return color.blue;
-    }
-
     public static float[] toFloatArray(float alpha, Color color) {
         return new float[]{color.red, color.green, color.blue, alpha};
     }

@@ -6,17 +6,25 @@ import com.toxicrain.util.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.toxicrain.core.render.Tile;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
 
 public class MapInfoParser {
-    public static ArrayList<Float> extentTop = new ArrayList<Float>();
-    public static ArrayList<Float> extentBottom = new ArrayList<Float>();
-    public static ArrayList<Float> extentLeft = new ArrayList<Float>();
-    public static ArrayList<Float> extentRight = new ArrayList<Float>();
-    public static ArrayList<Float> extentCenterY = new ArrayList<Float>();
-    public static ArrayList<Float> extentCenterX = new ArrayList<Float>();
+    public static ArrayList<Float> extentTop = new ArrayList<>();
+    public static ArrayList<Float> extentBottom = new ArrayList<>();
+    public static ArrayList<Float> extentLeft = new ArrayList<>();
+    public static ArrayList<Float> extentRight = new ArrayList<>();
+    public static ArrayList<Float> extentCenterY = new ArrayList<>();
+    public static ArrayList<Float> extentCenterX = new ArrayList<>();
+
+    public static final ArrayList<Character> doCollide = new ArrayList<>();
+
+
+
+
 
     public static boolean doExtraLogs = false;
     public static float xpos, ypos;
@@ -30,7 +38,8 @@ public class MapInfoParser {
         // Read JSON file as String
         String jsonString = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory("resources/json/map.json"));
 
-
+        doCollide.add(':');
+        //doCollide.add('1');
 
         // Parse JSON string
         JSONArray jsonArray = new JSONArray(jsonString);
@@ -77,16 +86,7 @@ public class MapInfoParser {
                             mapDataX.add(xCoordinate * 2);
                             mapDataY.add(yCoordinate * -2);
                             mapDataType.add(row.charAt(l));
-                            extentTop.add(((float)yCoordinate*-2)+1.1f);
-                            extentBottom.add(((float)yCoordinate*-2)-1.1f);
-                            extentLeft.add(((float)xCoordinate*2)-1.1f);
-                            extentRight.add(((float)xCoordinate*2)+1.1f);
-                            extentCenterY.add(((float)yCoordinate*-2));
-                            extentCenterX.add(((float)xCoordinate*2));
-
-
-
-
+                            Tile.addColision(row.charAt(l),yCoordinate,xCoordinate);
                         }
                     }
                 }

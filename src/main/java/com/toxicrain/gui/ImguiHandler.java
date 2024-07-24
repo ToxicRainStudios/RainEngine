@@ -4,35 +4,52 @@ import com.toxicrain.core.json.SettingsInfoParser;
 import imgui.ImGui;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
-import imgui.internal.flag.ImGuiItemFlags;
-import imgui.type.ImInt;
+import imgui.type.ImFloat;
 import org.lwjgl.glfw.GLFW;
 
+/**
+ * Handler class for integrating ImGui with GLFW and OpenGL.
+ * Provides initialization, input handling, and rendering functions for ImGui.
+ */
 public class ImguiHandler {
 
-    private ImGuiImplGlfw imguiGlfw;
     private ImGuiImplGl3 imguiGl3;
-    private long window;
+    ImFloat FOV = new ImFloat(SettingsInfoParser.fov);
+    private final long window;
 
+    /**
+     * Constructor for ImguiHandler.
+     *
+     * @param window the GLFW window handle.
+     */
     public ImguiHandler(long window) {
         this.window = window;
     }
 
+    /**
+     * Initializes ImGui and sets up OpenGL bindings.
+     */
     public void initialize() {
-        // Initialize ImGui and set up OpenGL bindings
         ImGui.createContext();
-        imguiGlfw = new ImGuiImplGlfw();
+        ImGuiImplGlfw imguiGlfw = new ImGuiImplGlfw();
         imguiGlfw.init(window, true);
         imguiGl3 = new ImGuiImplGl3();
         imguiGl3.init("#version 130"); // OpenGL version
     }
 
+    /**
+     * Starts a new ImGui frame.
+     */
     public void newFrame() {
-        // Start a new ImGui frame
         ImGui.getIO().setDisplaySize(SettingsInfoParser.windowWidth, SettingsInfoParser.windowHeight);
         ImGui.newFrame();
     }
 
+    /**
+     * Handles keyboard and mouse input.
+     *
+     * @param window the GLFW window handle.
+     */
     public void handleInput(long window) {
         // Handle keyboard input
         for (int key = GLFW.GLFW_KEY_SPACE; key <= GLFW.GLFW_KEY_LAST; key++) {
@@ -51,37 +68,44 @@ public class ImguiHandler {
         ImGui.getIO().setMousePos((float) mouseX[0], (float) mouseY[0]);
 
         // Handle scroll input
-        //ImGui.getIO().setMouseWheel((float) GLFW.glfwGetScrollY(window));
+        // ImGui.getIO().setMouseWheel((float) GLFW.glfwGetScrollY(window));
     }
 
+    /**
+     * Renders the ImGui frame.
+     */
     public void render() {
-        // Start a new ImGui frame
         ImGui.render();
         imguiGl3.renderDrawData(ImGui.getDrawData());
     }
 
-    public void cleanup() {
-        imguiGl3.dispose();
-        imguiGlfw.dispose();
+    /**
+     * Cleans up ImGui resources.
+     */
+    public static void cleanup() {
+        // imguiGl3.dispose();
+        // imguiGlfw.dispose();
         ImGui.destroyContext();
     }
 
+    /**
+     * Draws the settings UI using ImGui.
+     */
     public void drawSettingsUI() {
-        // Start a new ImGui window
         ImGui.begin("RainEngine Settings");
         ImGui.text("Here is where you can change settings");
 
         ImGui.setWindowSize(300, 300); // Width and Height in pixels
 
-        ImInt FOV = new ImInt((int) SettingsInfoParser.fov);
+        ImGui.sliderFloat("FOV", FOV.getData(), 0, 120);
 
         ImGui.beginDisabled(); // Disables all following widgets
         ImGui.checkbox("vSync", SettingsInfoParser.vSync);
-        ImGui.sliderInt("FOV", FOV.getData(), 0, 100);
 
         ImGui.endDisabled(); // Re-enables widgets
-
-
+        if(ImGui.button("Save")){
+            SettingsInfoParser.modifyKey("fov", String.valueOf(FOV));
+        }
 
         // End the ImGui window
         ImGui.end();

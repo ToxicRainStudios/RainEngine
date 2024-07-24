@@ -25,9 +25,9 @@ import org.lwjgl.system.MemoryStack;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.Random;
 
-import static com.toxicrain.util.TextureUtils.*;
+import static com.toxicrain.util.TextureUtils.floorTexture;
+import static com.toxicrain.util.TextureUtils.playerTexture;
 import static de.damios.guacamole.gdx.StartOnFirstThreadHelper.startNewJvmIfRequired;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -48,6 +48,7 @@ public class GameEngine {
 
     private static FPSUtils fpsUtils;
     private static ImguiHandler imguiApp;
+    private static Vector3f center;
     private static SoundSystem soundSystem = new SoundSystem();
 
 
@@ -186,75 +187,69 @@ public class GameEngine {
         glMatrixMode(GL_PROJECTION);
         glLoadMatrixf(createPerspectiveProjectionMatrix(90.0f, SettingsInfoParser.windowWidth / SettingsInfoParser.windowHeight, 1.0f, 100.0f));
 
+        Player player = new Player(Player.cameraX,Player.cameraY, Player.cameraZ, playerTexture, false);
+
+        // Set the viewport size
+        glViewport(0, 0, (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
+
+        // Enable depth testing
+        glEnable(GL_DEPTH_TEST);
+      
         soundSystem.init();
+
     }
 
     private static void drawMap(BatchRenderer batchRenderer){
         for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
             // Ensure that indices are valid
             if (k >= 0 && k < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
-                batchRenderer.addTexture(getTexture(MapInfoParser.mapDataType.get(k)), MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
+                batchRenderer.addTexture(TextureUtils.getTexture(MapInfoParser.mapDataType.get(k)), MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
             } else {
                 Logger.printLOG("Index out of bounds: space=" + k);
             }
         }
 
     }
-    private static final Random rand = new Random();
-    private static TextureInfo getTexture(char textureMapChar) {
-        switch (textureMapChar) {
-            case ':':
-                return floorTexture;
-            case '+':
-                return concreteTexture1;
-            case '-':
-                return concreteTexture2;
-            case '1':
-                return dirtTexture1;
-            case '2':
-                return dirtTexture2;
-            case '3':
-                return grassTexture1;
-            default:
-                return missingTexture;
+
+    private static void update() {
+        for(int engineFrames = 30; engineFrames >= 0; engineFrames--) { // Process input 30 times per frame
+            Player.processInput(window);
         }
     }
 
-    private static void loop(BatchRenderer batchRenderer) {
-        // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
-        while (!glfwWindowShouldClose(window)) {
-            for(int engineFrames = 3; engineFrames >= 0; engineFrames --) { //Put things that need to run 3 times a frame, ex: input
-                // Process input
-                Player.processInput( window);
 
-            }
+    private static void render(BatchRenderer batchRenderer) {
+        // Clear the color and depth buffers
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            //DO NOT UNCOMMENT WILL NUKE PC
-            //soundSource.play(soundBuffer.getBufferId());
 
-            // Check if the window has focus
-            boolean windowFocused = glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0;
+        //DO NOT UNCOMMENT WILL NUKE PC
+        //soundSource.play(soundBuffer.getBufferId());
 
-            // Set the viewport size
-            glViewport(0, 0, (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
 
-            // Clear the color and depth buffers
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // Set up the view matrix
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glTranslatef(-Player.cameraX, -Player.cameraY, -Player.cameraZ);
 
-            // Set up the view matrix
-            glMatrixMode(GL_MODELVIEW);
-            glLoadIdentity();
-            glTranslatef(-Player.cameraX, -Player.cameraY, -Player.cameraZ);
+        center = getCenter();
 
-            // Enable depth testing
-            glEnable(GL_DEPTH_TEST);
+        // Begin the batch
+        batchRenderer.beginBatch();
 
+        drawMap(batchRenderer);
+
+        float[] openglMousePos = new float[2];
+        // Check if the window has focus and only do certain things if so
+        if (glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0) {
             imguiApp.handleInput(window);
             imguiApp.newFrame();
             imguiApp.drawSettingsUI();
             imguiApp.render();
 
-            Vector3f center = getCenter();
+            // Get mouse position relative to window
+            MouseUtils mouseInput = new MouseUtils(window);
+            float[] mousePos = mouseInput.getMousePosition();
 
 
             int bufferId = soundSystem.loadSound("C:\\Users\\hudso\\Downloads\\sample-3s.wav");
@@ -263,39 +258,28 @@ public class GameEngine {
             // Begin the batch
             batchRenderer.beginBatch();
 
-            drawMap(batchRenderer);
-
-
-            // Add textures to the batch
-            /*batchRenderer.addTexture(floorTexture, 1, 1, 1, 0, Color.toFloatArray(Color.WHITE)); // Top-left corner
-
-            batchRenderer.addTexture(concreteTexture1, 1, 3, 1, 0, Color.toFloatArray(Color.WHITE)); // Bottom-left corner
-            batchRenderer.addTexture(concreteTexture2, 1, 6, 1, 0, Color.toFloatArray(Color.WHITE)); // Bottom-left corner
-            batchRenderer.addTexture(missingTexture, 4, 3, 1, 0, Color.toFloatArray(Color.WHITE)); // Bottom-right corner
-
-             */
-
-           // batchRenderer.addTexture(splatterTexture, 2, 1, 1.01f, 0, Color.toFloatArray(0.4f, Color.WHITE));
-
-            float[] openglMousePos = new float[2];
-            if (windowFocused) {
-                // Get mouse position relative to window
-                MouseUtils mouseInput = new MouseUtils(window);
-                float[] mousePos = mouseInput.getMousePosition();
-
-                // Convert mouse coordinates to OpenGL coordinates
-                openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
-
-            }
-            // This is the player!
-            batchRenderer.addTexturePos(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1], Color.toFloatArray(1.0f, Color.WHITE));
-            // Render the batch
-            batchRenderer.renderBatch();
-
-            // Swap buffers and poll events
-            glfwSwapBuffers(window);
-            glfwPollEvents();
+            // Convert mouse coordinates to OpenGL coordinates
+            openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
         }
+
+        // This is the player!
+        batchRenderer.addTexturePos(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1], Color.toFloatArray(1.0f, Color.WHITE));
+
+        // Render the batch
+        batchRenderer.renderBatch();
+
+        // Swap buffers and poll events
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    private static void loop(BatchRenderer batchRenderer) {
+        // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
+        while (!glfwWindowShouldClose(window)) {
+            update();
+            render(batchRenderer);
+        }
+        ImguiHandler.cleanup();
         soundSystem.cleanup();
     }
 
@@ -402,9 +386,5 @@ public class GameEngine {
 
     public static FloatBuffer getPerspectiveProjectionMatrixBuffer() {
         return buffer;
-    }
-    private static void enableBlending() {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 }

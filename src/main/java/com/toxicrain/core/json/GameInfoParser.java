@@ -19,6 +19,8 @@ public class GameInfoParser {
     public static String gameMakers = null;
     public static String gameVersion = null;
     public static String gameWebsite = null;
+    public static float playerSize= 0.0f;
+    public static boolean useIMGUI = true;
     public static int maxTexturesPerBatch = 100; //Safety, don't crash if we forget to add this to gameinfo.json
     public static int minZoom = 3;
     public static int maxZoom = 25;
@@ -49,32 +51,40 @@ public class GameInfoParser {
                     while (keys.hasNext()) {
                         String key = keys.next();
                         String value = valueObject.getString(key);
-                        if (key.equals("defaultWindowName")) {
-                            defaultWindowName = value;
-                        }
-                        else if (key.equals("engineVersion")) {
-                            engineVersion = value;
-                        }
-                        else if (key.equals("gameName")) {
-                            gameName = value;
-                        }
-                        else if (key.equals("gameMakers")) {
-                            gameMakers = value;
-                        }
-                        else if (key.equals("gameVersion")) {
-                            gameVersion = value;
-                        }
-                        else if (key.equals("gameWebsite")) {
-                            gameWebsite = value;
-                        }
-                        else if (key.equals("maxTexturesPerBatch")) {
-                            maxTexturesPerBatch = Integer.parseInt(value);
-                        }
-                        else if (key.equals("minZoom")) {
-                            minZoom = Integer.parseInt(value);
-                        }
-                        else if (key.equals("maxZoom")) {
-                            maxZoom = Integer.parseInt(value);
+                        switch (key) {
+                            case "defaultWindowName":
+                                defaultWindowName = value;
+                                break;
+                            case "engineVersion":
+                                engineVersion = value;
+                                break;
+                            case "gameName":
+                                gameName = value;
+                                break;
+                            case "gameMakers":
+                                gameMakers = value;
+                                break;
+                            case "gameVersion":
+                                gameVersion = value;
+                                break;
+                            case "gameWebsite":
+                                gameWebsite = value;
+                                break;
+                            case "useIMGUI":
+                                useIMGUI = Boolean.parseBoolean(value);
+                                break;
+                            case "playerSize":
+                                playerSize = ((float)Integer.parseInt(value))/10;
+                                break;
+                            case "maxTexturesPerBatch":
+                                maxTexturesPerBatch = Integer.parseInt(value);
+                                break;
+                            case "minZoom":
+                                minZoom = Integer.parseInt(value);
+                                break;
+                            case "maxZoom":
+                                maxZoom = Integer.parseInt(value);
+                                break;
                         }
                     }
                 }

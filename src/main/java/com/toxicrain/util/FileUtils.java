@@ -1,11 +1,6 @@
 package com.toxicrain.util;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.channels.SeekableByteChannel;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -68,8 +63,7 @@ public class FileUtils {
      * @return the absolute path as a String
      */
     public static String getCurrentWorkingDirectory(String relativePath) {
-        String fullPath = Paths.get(relativePath).toAbsolutePath().toString();
-        return fullPath;
+        return Paths.get(relativePath).toAbsolutePath().toString();
     }
 
     /**
@@ -90,6 +84,12 @@ public class FileUtils {
         }
     }
 
+    public static void writeFile(String filePath, String data) throws IOException {
+        try (FileWriter fileWriter = new FileWriter(filePath)) {
+            fileWriter.write(data);
+        }
+    }
+
     public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
         Path path = Paths.get(resource);
         if (!Files.isReadable(path)) {
@@ -103,4 +103,5 @@ public class FileUtils {
         buffer.flip();
         return buffer;
     }
+
 }
