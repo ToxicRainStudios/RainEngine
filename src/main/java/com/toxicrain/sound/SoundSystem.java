@@ -1,5 +1,6 @@
 package com.toxicrain.sound;
 
+import com.toxicrain.core.Logger;
 import com.toxicrain.util.FileUtils;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
@@ -58,6 +59,9 @@ public class SoundSystem {
             SoundInfo wavData = WAVDecoder.decode(wavBuffer);
             alBufferData(bufferId, wavData.format, wavData.data, wavData.samplerate);
             wavData.free();
+
+            long fileSize = FileUtils.getFileSize(filePath);
+            Logger.printLOG(String.format("Loaded sound: %s (File Size: %d bytes)", filePath, fileSize));
         } catch (Exception e) {
             throw new RuntimeException("Failed to load sound file.", e);
         }

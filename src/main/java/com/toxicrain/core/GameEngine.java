@@ -50,6 +50,7 @@ public class GameEngine {
     private static ImguiHandler imguiApp;
     private static Vector3f center;
     private static SoundSystem soundSystem = new SoundSystem();
+    private static int bufferId;
 
 
     public GameEngine(){
@@ -196,6 +197,7 @@ public class GameEngine {
         glEnable(GL_DEPTH_TEST);
       
         soundSystem.init();
+        bufferId = soundSystem.loadSound("C:\\Users\\hudso\\Downloads\\sample-3s.wav");
 
     }
 
@@ -216,7 +218,6 @@ public class GameEngine {
             Player.processInput(window);
         }
     }
-
 
     private static void render(BatchRenderer batchRenderer) {
         // Clear the color and depth buffers
@@ -252,7 +253,7 @@ public class GameEngine {
             float[] mousePos = mouseInput.getMousePosition();
 
 
-            int bufferId = soundSystem.loadSound("C:\\Users\\hudso\\Downloads\\sample-3s.wav");
+
             soundSystem.play(bufferId);
 
             // Begin the batch
