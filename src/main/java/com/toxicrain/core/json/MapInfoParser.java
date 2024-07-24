@@ -6,6 +6,8 @@ import com.toxicrain.util.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.toxicrain.core.render.Tile;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -18,7 +20,7 @@ public class MapInfoParser {
     public static ArrayList<Float> extentCenterY = new ArrayList<>();
     public static ArrayList<Float> extentCenterX = new ArrayList<>();
 
-    private static final ArrayList<Character> doCollide = new ArrayList<>();
+    public static final ArrayList<Character> doCollide = new ArrayList<>();
 
 
 
@@ -74,8 +76,7 @@ public class MapInfoParser {
                     // Check each character in the row
                     for (int l = 0; l < row.length(); l++) {
                         if (!(row.charAt(l) == ' ')) {
-                            // Calculate coordinates
-                            // TODO consider adjusting multiplier based on map scale)
+                            // Calculate coordinates (consider adjusting multiplier based on your actual map scale)
                             int xCoordinate = l;
                             int yCoordinate = k;
 
@@ -85,16 +86,7 @@ public class MapInfoParser {
                             mapDataX.add(xCoordinate * 2);
                             mapDataY.add(yCoordinate * -2);
                             mapDataType.add(row.charAt(l));
-                            for(int n = doCollide.size()-1; n>=0; n--) {
-                                if (row.charAt(l)==doCollide.get(n)) {
-                                    extentTop.add(((float) yCoordinate * -2) + 1.1f);
-                                    extentBottom.add(((float) yCoordinate * -2) - 1.1f);
-                                    extentLeft.add(((float) xCoordinate * 2) - 1.1f);
-                                    extentRight.add(((float) xCoordinate * 2) + 1.1f);
-                                    extentCenterY.add(((float) yCoordinate * -2));
-                                    extentCenterX.add(((float) xCoordinate * 2));
-                                }
-                            }
+                            Tile.addColision(row.charAt(l),yCoordinate,xCoordinate);
                         }
                     }
                 }
