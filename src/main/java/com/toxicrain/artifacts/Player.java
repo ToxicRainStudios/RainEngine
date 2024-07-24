@@ -2,15 +2,24 @@ package com.toxicrain.artifacts;
 
 import com.toxicrain.core.Logger;
 import com.toxicrain.core.TextureInfo;
+import com.toxicrain.core.interfaces.IArtifact;
+import com.toxicrain.core.json.SettingsInfoParser;
+import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.core.render.Tile;
 import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
+import com.toxicrain.util.Color;
+import com.toxicrain.util.MouseUtils;
+import com.toxicrain.util.WindowUtils;
+import org.joml.Vector3f;
 
+import static com.toxicrain.core.GameEngine.window;
+import static com.toxicrain.util.TextureUtils.playerTexture;
 import static org.lwjgl.glfw.GLFW.*;
 
 
 
-public class Player{
+public class Player implements IArtifact {
 
     public static float posX;
     public static float posY;
@@ -33,8 +42,10 @@ public class Player{
     public static float cameraSpeed = 0.02f; // Camera Speed
     public static final float scrollSpeed = 0.5f;  // The max scroll in/out speed
     public static float scrollOffset = 0.0f; // Track the scroll input
+    public static Vector3f center;
+    public static MouseUtils mouseInput = new MouseUtils(window);
 
-    public static void updatePos(float posX, float posY, float posZ) {
+    private static void updatePos(float posX, float posY, float posZ) {
         Player.posX = posX;
         Player.posY = posY;
         Player.posZ = posZ;
@@ -44,8 +55,21 @@ public class Player{
         Player.isSprinting = sprinting;
     }
 
-    public static TextureInfo getTexture() {
-        return Player.texture;
+    public static void update(){
+        processInput(window);
+        updatePos(cameraX,cameraY,cameraZ);
+        center = WindowUtils.getCenter();
+    }
+
+    private static float[] openglMousePos;
+    public static void render(BatchRenderer batchRenderer){
+        // Get mouse position relative to window
+        float[] mousePos = mouseInput.getMousePosition();
+
+        // Convert mouse coordinates to OpenGL coordinates
+        openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
+
+        batchRenderer.addTexturePos(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1], Color.toFloatArray(1.0f, Color.WHITE));
     }
 
 
@@ -163,8 +187,7 @@ public class Player{
         switch (collisionType){
             case 1:
                 cameraSpeed = 0.005f;
-                Logger.printLOG("HI!");
-            ;
+                Logger.printLOG("Colliding with a Tile");
             default:
 
         }
@@ -173,19 +196,19 @@ public class Player{
 
     }
 
-
-
-
     private static void handleMovement(float opX, float opY){
             cameraX = cameraX + ((cameraSpeed/ 2)*opX);
             cameraY = cameraY + ((cameraSpeed/ 2)*opY);
     }
 
-    public static void processInput(long window) {
+    private static void processInput(long window) {
         //Sprinting8
         if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
             cameraSpeed = 0.1f;
             setIsSprinting(true);
+        }
+        else{
+            setIsSprinting(false);
         }
 
         cameraSpeed = 0.01f;

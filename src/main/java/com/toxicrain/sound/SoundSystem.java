@@ -63,7 +63,7 @@ public class SoundSystem {
             wavData.free();
 
             long fileSize = FileUtils.getFileSize(filePath);
-            Logger.printLOG(String.format("Loaded sound: %s (File Size: %d bytes)", filePath, fileSize));
+            Logger.printLOG(String.format("Loaded sound: %s (File Size: %d bytes, Format: %d)", filePath, fileSize, wavData.format ));
         } catch (FileNotFoundException e) {
             Logger.printERROR("File not found: " + filePath);
             e.printStackTrace();

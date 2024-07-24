@@ -52,6 +52,7 @@ public class GameEngine {
     private static Vector3f center;
     private static SoundSystem soundSystem = new SoundSystem();
     private static int bufferId;
+    private static Player player;
 
 
     public GameEngine(){
@@ -190,7 +191,7 @@ public class GameEngine {
         glMatrixMode(GL_PROJECTION);
         glLoadMatrixf(createPerspectiveProjectionMatrix(SettingsInfoParser.fov, SettingsInfoParser.windowWidth / SettingsInfoParser.windowHeight, 1.0f, 100.0f));
 
-        Player player = new Player(Player.cameraX,Player.cameraY, Player.cameraZ, playerTexture, false);
+        player = new Player(Player.cameraX,Player.cameraY, Player.cameraZ, playerTexture, false);
 
         // Set the viewport size
         glViewport(0, 0, (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
@@ -219,9 +220,8 @@ public class GameEngine {
 
     private static void update() {
         for(int engineFrames = 30; engineFrames >= 0; engineFrames--) { // Process input 30 times per frame
-            Player.processInput(window);
+            player.update();
         }
-        center = getCenter();
     }
 
     private static void render(BatchRenderer batchRenderer) {
@@ -243,7 +243,6 @@ public class GameEngine {
 
         drawMap(batchRenderer);
 
-        float[] openglMousePos = new float[2];
         // Check if the window has focus and only do certain things if so
         if (glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0) {
             imguiApp.handleInput(window);
@@ -251,19 +250,12 @@ public class GameEngine {
             imguiApp.drawSettingsUI();
             imguiApp.render();
 
-            // Get mouse position relative to window
-            MouseUtils mouseInput = new MouseUtils(window);
-            float[] mousePos = mouseInput.getMousePosition();
-
             soundSystem.play(bufferId);
 
-
-            // Convert mouse coordinates to OpenGL coordinates
-            openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
         }
 
         // This is the player!
-        batchRenderer.addTexturePos(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1], Color.toFloatArray(1.0f, Color.WHITE));
+        Player.render(batchRenderer);
 
         // Render the batch
         batchRenderer.renderBatch();
@@ -317,32 +309,6 @@ public class GameEngine {
                     (vidmode.height() - (int) SettingsInfoParser.windowHeight) / 2, (int) SettingsInfoParser.windowWidth,
                     (int) SettingsInfoParser.windowHeight, GLFW_DONT_CARE);
         }
-    }
-
-    private static Vector3f getCenter() {
-        FloatBuffer projMatrixBuffer = getPerspectiveProjectionMatrixBuffer();
-        Matrix4f projectionMatrix = new Matrix4f();
-        projectionMatrix.set(projMatrixBuffer);
-
-        // Set up the view matrix
-        Matrix4f viewMatrix = new Matrix4f().identity().translate(-Player.cameraX, -Player.cameraY, -Player.cameraZ);
-
-        // Calculate the combined projection and view matrix
-        Matrix4f projectionViewMatrix = new Matrix4f(projectionMatrix).mul(viewMatrix);
-        Matrix4f invProjectionViewMatrix = new Matrix4f(projectionViewMatrix).invert();
-
-        // Get the center of the screen in window coordinates
-        float screenX = SettingsInfoParser.windowWidth / 2.0f;
-        float screenY = SettingsInfoParser.windowHeight / 2.0f;
-
-        // Convert window coordinates to NDC (Normalized Device Coordinates)
-        float ndcX = (2.0f * screenX) / SettingsInfoParser.windowWidth - 1.0f;
-        float ndcY = 1.0f - (2.0f * screenY) / SettingsInfoParser.windowHeight;
-
-        // Convert NDC to world coordinates
-        Vector4f ndcPos = new Vector4f(ndcX, ndcY, -1.0f, 1.0f).mul(invProjectionViewMatrix);
-
-        return new Vector3f(ndcPos.x, ndcPos.y, ndcPos.z).div(ndcPos.w);
     }
 
     private static final FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
