@@ -12,6 +12,8 @@ import com.toxicrain.util.MouseUtils;
 import com.toxicrain.util.WindowUtils;
 import org.joml.Vector3f;
 
+import java.util.Map;
+
 import static com.toxicrain.core.GameEngine.window;
 import static com.toxicrain.util.TextureUtils.playerTexture;
 import static org.lwjgl.glfw.GLFW.*;
@@ -27,7 +29,14 @@ public class Player implements IArtifact {
     public static TextureInfo texture;
     public static boolean isSprinting;
     private static int collisionType;
-
+    public static float cameraX = MapInfoParser.playerx; // Camera X position
+    public static float cameraY = MapInfoParser.playery; // Camera Y position
+    public static float cameraZ = 2; // Camera Z position
+    public static float cameraSpeed = 0.02f; // Camera Speed
+    public static final float scrollSpeed = 0.5f;  // The max scroll in/out speed
+    public static float scrollOffset = 0.0f; // Track the scroll input
+    public static Vector3f center;
+    public static MouseUtils mouseInput = new MouseUtils(window);
     public Player(float posX, float posY, float posZ, TextureInfo texture, boolean isSprinting) {
         this.posX = posX;
         this.posY = posY;
@@ -35,14 +44,6 @@ public class Player implements IArtifact {
         this.texture = texture;
         this.isSprinting = isSprinting;
     }
-    public static float cameraX = 15.0f; // Camera X position
-    public static float cameraY = 15.0f; // Camera Y position
-    public static float cameraZ = 5.0f; // Camera Z position
-    public static float cameraSpeed = 0.02f; // Camera Speed
-    public static final float scrollSpeed = 0.5f;  // The max scroll in/out speed
-    public static float scrollOffset = 0.0f; // Track the scroll input
-    public static Vector3f center;
-    public static MouseUtils mouseInput = new MouseUtils(window);
 
     private static void updatePos(float posX, float posY, float posZ) {
         Player.posX = posX;
@@ -56,7 +57,7 @@ public class Player implements IArtifact {
 
     public static void update(){
         processInput(window);
-        updatePos(cameraX,cameraY,cameraZ);
+        updatePos(cameraX, cameraY, cameraZ);
         center = WindowUtils.getCenter();
     }
 

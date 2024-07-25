@@ -69,15 +69,18 @@ public class GameEngine {
         Logger.printLOG("Loading User Settings");
         SettingsInfoParser.loadSettingsInfo();
 
-        init(windowTitle, SettingsInfoParser.vSync);
-        // Create the batch renderer
-        BatchRenderer batchRenderer = new BatchRenderer();
+        Logger.printLOG("Loading Map Data");
         MapInfoParser mapInfoParser = new MapInfoParser();
         try {
             mapInfoParser.parseMapFile();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        init(windowTitle, SettingsInfoParser.vSync);
+        // Create the batch renderer
+        BatchRenderer batchRenderer = new BatchRenderer();
+
 
 
             for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
@@ -184,7 +187,7 @@ public class GameEngine {
         glMatrixMode(GL_PROJECTION);
         glLoadMatrixf(createPerspectiveProjectionMatrix(SettingsInfoParser.fov, SettingsInfoParser.windowWidth / SettingsInfoParser.windowHeight, 1.0f, 100.0f));
 
-        player = new Player(Player.cameraX,Player.cameraY, Player.cameraZ, playerTexture, false);
+        player = new Player(Player.cameraX, Player.cameraY, Player.cameraZ, playerTexture, false);
 
         // Set the viewport size
         glViewport(0, 0, (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);

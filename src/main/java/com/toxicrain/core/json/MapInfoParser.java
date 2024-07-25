@@ -17,13 +17,11 @@ public class MapInfoParser {
 
     public static final ArrayList<Character> doCollide = new ArrayList<>();
 
-
-
-
-
     public static boolean doExtraLogs = false;
     public static int xpos, ypos;
     public static int xsize, ysize;
+    public static int playerx;
+    public static int playery;
     public static int tiles = 0;
     public static ArrayList<Integer> mapDataX = new ArrayList<>();
     public static ArrayList<Integer> mapDataY = new ArrayList<>();
@@ -48,6 +46,10 @@ public class MapInfoParser {
                 Logger.printERROR(part.toString(4)); // Print the JSON object with missing keys for debugging
                 continue;
             }
+
+            playerx = part.getInt("playerx");
+            playery = part.getInt("playery");
+
             if(doExtraLogs) {
                 String type = part.getString("type");
                 xsize = part.getInt("xsize");
@@ -84,16 +86,13 @@ public class MapInfoParser {
                         }
                     }
                 }
-                System.out.println("----");
             }
         }
 
-            // Log the final map data
-        if(doExtraLogs) {
-            System.out.println("mapDataX: " + mapDataX);
+        // Log the final map data
+        Logger.printLOGConditional("mapDataX: " + mapDataX, doExtraLogs);
 
-            System.out.println("mapDataY: " + mapDataY);
-        }
+        Logger.printLOGConditional("mapDataY: " + mapDataY, doExtraLogs);
         }
     }
 
