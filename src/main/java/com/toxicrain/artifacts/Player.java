@@ -1,13 +1,12 @@
 package com.toxicrain.artifacts;
 
-import com.toxicrain.core.Logger;
 import com.toxicrain.core.TextureInfo;
 import com.toxicrain.core.interfaces.IArtifact;
+import com.toxicrain.core.json.GameInfoParser;
+import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.core.render.Tile;
-import com.toxicrain.core.json.GameInfoParser;
-import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.util.Color;
 import com.toxicrain.util.MouseUtils;
 import com.toxicrain.util.WindowUtils;
@@ -187,7 +186,6 @@ public class Player implements IArtifact {
         switch (collisionType){
             case 1:
                 cameraSpeed = 0.005f;
-                Logger.printLOG("Colliding with a Tile");
             default:
 
         }

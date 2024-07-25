@@ -22,7 +22,7 @@ public class MapInfoParser {
 
 
     public static boolean doExtraLogs = false;
-    public static float xpos, ypos;
+    public static int xpos, ypos;
     public static int xsize, ysize;
     public static int tiles = 0;
     public static ArrayList<Integer> mapDataX = new ArrayList<>();
@@ -71,16 +71,16 @@ public class MapInfoParser {
                     for (int l = 0; l < row.length(); l++) {
                         if (!(row.charAt(l) == ' ')) {
                             // Calculate coordinates (consider adjusting multiplier based on your actual map scale)
-                            int xCoordinate = l;
-                            int yCoordinate = k;
+                            xpos = l;
+                            ypos = k;
 
                             // Log position and add to data
                             Logger.printLOGConditional("Found"+ row.charAt(l) +"at row " + k + ", column " + l, doExtraLogs);
                             tiles++;
-                            mapDataX.add(xCoordinate * 2);
-                            mapDataY.add(yCoordinate * -2);
+                            mapDataX.add(xpos * 2);
+                            mapDataY.add(ypos * -2);
                             Tile.mapDataType.add(row.charAt(l));
-                            Tile.addCollision(yCoordinate,xCoordinate);
+                            Tile.addCollision(ypos, xpos);
                         }
                     }
                 }
