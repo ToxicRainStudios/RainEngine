@@ -186,7 +186,7 @@ public class Player implements IArtifact {
 
         switch (collisionType){
             case 1:
-                cameraSpeed = 0.005f;
+                cameraSpeed = 0.010f;
             default:
 
         }

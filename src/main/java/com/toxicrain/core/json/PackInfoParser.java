@@ -1,9 +1,11 @@
 package com.toxicrain.core.json;
 
+import com.toxicrain.core.Logger;
 import com.toxicrain.util.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -77,6 +79,9 @@ public class PackInfoParser {
                     }
                 }
             }
+        } catch (FileNotFoundException e) {
+            Logger.printERROR("File not found: " + packLocation);
+            e.printStackTrace();
         } catch (IOException e) {
             System.err.println("Error reading file: " + packLocation);
             e.printStackTrace();
