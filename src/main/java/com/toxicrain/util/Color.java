@@ -85,6 +85,22 @@ public enum Color {
         this.blue = blue;
     }
 
+    /**
+     * Averages two colors together
+     *
+     * @param color1 the first color
+     * @param color2 the second color
+     * @return a float array representing the averaged color
+     */
+    public static float[] average(Color color1, Color color2) {
+        float avgRed = (color1.red + color2.red) / 2.0f;
+        float avgGreen = (color1.green + color2.green) / 2.0f;
+        float avgBlue = (color1.blue + color2.blue) / 2.0f;
+
+        return new float[]{avgRed, avgGreen, avgBlue};
+    }
+
+
     public static float[] toFloatArray(float alpha, Color color) {
         return new float[]{color.red, color.green, color.blue, alpha};
     }
