@@ -18,7 +18,7 @@ public class Tile {
 
 
 
-    public static void addColision(int yCoordinate, int xCoordinate){
+    public static void addCollision(int yCoordinate, int xCoordinate){
         for(int n = MapInfoParser.doCollide.size()-1; n>=0; n--) {
 
                 extentTop.add(((float) yCoordinate * -2) + 1.1f);

@@ -80,7 +80,7 @@ public class MapInfoParser {
                             mapDataX.add(xCoordinate * 2);
                             mapDataY.add(yCoordinate * -2);
                             Tile.mapDataType.add(row.charAt(l));
-                            Tile.addColision(yCoordinate,xCoordinate);
+                            Tile.addCollision(yCoordinate,xCoordinate);
                         }
                     }
                 }

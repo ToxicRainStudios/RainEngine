@@ -19,4 +19,5 @@ RainEngine is a WIP engine running on [LWJGL3](https://www.lwjgl.org/)
   * Settings Menu (Keybindings etc)
   * Pause Menu
 * NPCs
+* Lighting
 * Some sort of dialog system with JSON
