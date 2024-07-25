@@ -3,6 +3,7 @@ package com.toxicrain.core;
 //import com.toxicrain.core.json.MapInfoParser;
 
 import com.toxicrain.artifacts.Player;
+import com.toxicrain.artifacts.Projectile;
 import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.json.PackInfoParser;
@@ -52,6 +53,8 @@ public class GameEngine {
     private static SoundSystem soundSystem = new SoundSystem();
     private static int bufferId;
     private static Player player;
+    private static Projectile projectile;
+
 
 
     public GameEngine(){
@@ -187,7 +190,12 @@ public class GameEngine {
         glMatrixMode(GL_PROJECTION);
         glLoadMatrixf(createPerspectiveProjectionMatrix(SettingsInfoParser.fov, SettingsInfoParser.windowWidth / SettingsInfoParser.windowHeight, 1.0f, 100.0f));
 
+
+
+        //HERE!!!!
         player = new Player(Player.cameraX, Player.cameraY, Player.cameraZ, playerTexture, false);
+        projectile = new Projectile(1,1,0.01f,0);
+        //UP!!!
 
         // Set the viewport size
         glViewport(0, 0, (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
@@ -217,6 +225,7 @@ public class GameEngine {
     private static void update() {
         for(int engineFrames = 30; engineFrames >= 0; engineFrames--) { // Process input 30 times per frame
             player.update();
+            projectile.update();
         }
     }
 
@@ -250,7 +259,9 @@ public class GameEngine {
 
         }
 
+
         // This is the player!
+        Projectile.render(batchRenderer, projectile, playerTexture);
         Player.render(batchRenderer);
 
         // Render the batch
