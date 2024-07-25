@@ -41,7 +41,29 @@ public enum Color {
     PURPLE(0.502f, 0.000f, 0.502f),
     TEAL(0.000f, 0.502f, 0.502f),
     VIOLET(0.933f, 0.510f, 0.933f),
-    NAVY(0.000f, 0.000f, 0.502f);
+    NAVY(0.000f, 0.000f, 0.502f),
+
+    // Light levels 1-20
+    LIGHT_LEVEL_1(0.2f, 0.2f, 0.2f),
+    LIGHT_LEVEL_2(0.3f, 0.3f, 0.3f),
+    LIGHT_LEVEL_3(0.4f, 0.4f, 0.4f),
+    LIGHT_LEVEL_4(0.5f, 0.5f, 0.5f),
+    LIGHT_LEVEL_5(0.6f, 0.6f, 0.6f),
+    LIGHT_LEVEL_6(0.7f, 0.7f, 0.7f),
+    LIGHT_LEVEL_7(0.8f, 0.8f, 0.8f),
+    LIGHT_LEVEL_8(0.9f, 0.9f, 0.9f),
+    LIGHT_LEVEL_9(1.0f, 0.9f, 0.9f),
+    LIGHT_LEVEL_10(1.0f, 0.8f, 0.8f),
+    LIGHT_LEVEL_11(1.0f, 0.7f, 0.7f),
+    LIGHT_LEVEL_12(1.0f, 0.6f, 0.6f),
+    LIGHT_LEVEL_13(1.0f, 0.5f, 0.5f),
+    LIGHT_LEVEL_14(1.0f, 0.4f, 0.4f),
+    LIGHT_LEVEL_15(1.0f, 0.3f, 0.3f),
+    LIGHT_LEVEL_16(1.0f, 0.2f, 0.2f),
+    LIGHT_LEVEL_17(1.0f, 0.1f, 0.1f),
+    LIGHT_LEVEL_18(1.0f, 0.05f, 0.05f),
+    LIGHT_LEVEL_19(1.0f, 0.02f, 0.02f),
+    LIGHT_LEVEL_20(1.0f, 0.0f, 0.0f);
 
     private final float red;
     private final float green;
