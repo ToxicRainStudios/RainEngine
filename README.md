@@ -1,6 +1,6 @@
 # RainEngine
 
-RainEngine is a WIP software running on [LWJGL3](https://www.lwjgl.org/)
+RainEngine is a WIP engine running on [LWJGL3](https://www.lwjgl.org/)
 
 
 ## What's done:
@@ -14,6 +14,9 @@ RainEngine is a WIP software running on [LWJGL3](https://www.lwjgl.org/)
 * The ability to "layer" textures in maps for more detail
 * More control over the window title
 * Keybinding system
-* UI
+* UI with configurable
+  * Main Menu
+  * Settings Menu (Keybindings etc)
+  * Pause Menu
 * NPCs
 * Some sort of dialog system with JSON
