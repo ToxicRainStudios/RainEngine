@@ -47,7 +47,7 @@ public class Enemy implements IArtifact {
 
 
     public void render(BatchRenderer batchRenderer){
-        batchRenderer.addTexturePos(playerTexture, x, y, z, rotX, rotY, Color.toFloatArray(Color.RED));
+        batchRenderer.addTexturePos(playerTexture, x, y, z, rotX, rotY, 1, 1,Color.toFloatArray(Color.RED));
 
     }
 }

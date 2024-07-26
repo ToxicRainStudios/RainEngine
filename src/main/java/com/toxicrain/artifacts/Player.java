@@ -117,7 +117,7 @@ public class Player implements IArtifact {
         // Convert mouse coordinates to OpenGL coordinates
       getMouse();
 
-        batchRenderer.addTexturePos(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1], Color.toFloatArray(1.0f, Color.WHITE));
+        batchRenderer.addTexturePos(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1], 1,1, Color.toFloatArray(1.0f, Color.WHITE));
     }
 
 

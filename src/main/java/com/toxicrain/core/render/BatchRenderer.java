@@ -79,7 +79,7 @@ public class BatchRenderer {
     }
 
     /**
-     * Adds a texture with specified rotation and color to the current batch.
+     * Adds a texture with specified rotation, scaling, and color to the current batch.
      * If the batch exceeds the maximum texture count, it is rendered and a new batch is started.
      *
      * @param textureInfo the texture information
@@ -87,9 +87,11 @@ public class BatchRenderer {
      * @param y the y-coordinate of the texture
      * @param z the z-coordinate of the texture
      * @param angle the rotation angle in radians
+     * @param scaleX the scale factor along the x-axis
+     * @param scaleY the scale factor along the y-axis
      * @param color the color tint as a float array (RGBA)
      */
-    public void addTexture(TextureInfo textureInfo, float x, float y, float z, float angle, float[] color) {
+    public void addTexture(TextureInfo textureInfo, float x, float y, float z, float angle, float scaleX, float scaleY, float[] color) {
         if (textureVertexInfos.size() >= MAX_TEXTURES) {
             renderBatch();
             beginBatch();
@@ -98,10 +100,10 @@ public class BatchRenderer {
         // Calculate aspect ratio and create original vertices
         float aspectRatio = (float) textureInfo.width / textureInfo.height;
         float[] originalVertices = {
-                -aspectRatio, -1.0f, 0.0f,
-                aspectRatio, -1.0f, 0.0f,
-                aspectRatio,  1.0f, 0.0f,
-                -aspectRatio,  1.0f, 0.0f
+                -aspectRatio * scaleX, -1.0f * scaleY, 0.0f,
+                aspectRatio * scaleX, -1.0f * scaleY, 0.0f,
+                aspectRatio * scaleX,  1.0f * scaleY, 0.0f,
+                -aspectRatio * scaleX,  1.0f * scaleY, 0.0f
         };
 
         // Calculate rotation
@@ -158,7 +160,6 @@ public class BatchRenderer {
         textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, triangleVertices, triangleTexCoords, triangleColors));
     }
 
-
     /**
      * Adds a texture with specified rotation and color to the current batch.
      * If the batch exceeds the maximum texture count, it is rendered and a new batch is started.
@@ -171,7 +172,7 @@ public class BatchRenderer {
      * @param posY the y-coordinate of the mouse or reference point for rotation
      * @param color the color to apply to the texture (RGBA)
      */
-    public void addTexturePos(TextureInfo textureInfo, float x, float y, float z, float posX, float posY, float[] color) {
+    public void addTexturePos(TextureInfo textureInfo, float x, float y, float z, float posX, float posY, float scaleX, float scaleY, float[] color) {
         if (textureVertexInfos.size() >= MAX_TEXTURES) {
             renderBatch();
             beginBatch();
@@ -187,12 +188,12 @@ public class BatchRenderer {
         float cosTheta = (float) Math.cos(angle);
         float sinTheta = (float) Math.sin(angle);
 
-        // Original vertices of the texture (centered at origin)
+        // Calculate aspect ratio and create original vertices
         float[] originalVertices = {
-                -aspectRatio, -1.0f, 0.0f,
-                aspectRatio, -1.0f, 0.0f,
-                aspectRatio,  1.0f, 0.0f,
-                -aspectRatio,  1.0f, 0.0f
+                -aspectRatio * scaleX, -1.0f * scaleY, 0.0f,
+                aspectRatio * scaleX, -1.0f * scaleY, 0.0f,
+                aspectRatio * scaleX,  1.0f * scaleY, 0.0f,
+                -aspectRatio * scaleX,  1.0f * scaleY, 0.0f
         };
 
         // Rotate and translate vertices
@@ -258,7 +259,6 @@ public class BatchRenderer {
         // Add the texture information to the batch
         textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, triangleVertices, triangleTexCoords, triangleColors));
     }
-
 
     /**
      * Renders the current batch of textures. Uploads vertex, texture coordinate, and color data

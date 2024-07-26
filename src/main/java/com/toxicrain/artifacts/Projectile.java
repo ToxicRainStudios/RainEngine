@@ -23,6 +23,6 @@ public class Projectile implements IArtifact {
     }
 
     public static void render(BatchRenderer batchRenderer, Projectile projectile, TextureInfo textureInfo) {
-        batchRenderer.addTexture(textureInfo, projectile.x, projectile.y, 1.1f, 0, Color.toFloatArray(1.0f, Color.WHITE));
+        batchRenderer.addTexture(textureInfo, projectile.x, projectile.y, 1.1f, 0, 1,1, Color.toFloatArray(1.0f, Color.WHITE));
     }
 }

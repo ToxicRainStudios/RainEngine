@@ -41,7 +41,7 @@ int aiType = 0;
 
 
 
-        batchRenderer.addTexturePos(playerTexture, character.X, character.Y, 1.1f, character.directionX,character.directionY , Color.toFloatArray(1.0f, Color.WHITE));
+        batchRenderer.addTexturePos(playerTexture, character.X, character.Y, 1.1f, character.directionX,character.directionY , 1,1, Color.toFloatArray(1.0f, Color.WHITE));
     }
 }
 

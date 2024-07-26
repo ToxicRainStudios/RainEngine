@@ -2,7 +2,6 @@ package com.toxicrain.core;
 
 //import com.toxicrain.core.json.MapInfoParser;
 
-import com.toxicrain.artifacts.Enemy;
 import com.toxicrain.artifacts.NPC;
 import com.toxicrain.artifacts.Player;
 import com.toxicrain.artifacts.Projectile;
@@ -14,10 +13,11 @@ import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.core.render.Tile;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.sound.SoundSystem;
-import com.toxicrain.util.*;
-import org.joml.Matrix4f;
+import com.toxicrain.util.Color;
+import com.toxicrain.util.Constants;
+import com.toxicrain.util.FPSUtils;
+import com.toxicrain.util.TextureUtils;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -56,7 +56,6 @@ public class GameEngine {
     private static int bufferId;
     private static Player player;
     private static Projectile projectile;
-    private static Enemy enemy;
     private static NPC character;
 
 
@@ -93,7 +92,7 @@ public class GameEngine {
             for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
                 // Ensure that indices are valid
                 if (k >= 0 && k < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
-                    batchRenderer.addTexture(floorTexture, MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
+                    batchRenderer.addTexture(floorTexture, MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, 1,1, Color.toFloatArray(Color.WHITE)); // Top-right corner
                 } else {
                     Logger.printLOG("Index out of bounds: space=" + k);
                 }
@@ -200,7 +199,6 @@ public class GameEngine {
         player = new Player(Player.cameraX, Player.cameraY, Player.cameraZ, playerTexture, false);
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0);
         character = new NPC(12,12,1,2);
-        enemy = new Enemy(player.cameraSpeed, 1,20,1.11f);
         //UP!!!
 
         // Set the viewport size
@@ -220,7 +218,7 @@ public class GameEngine {
         for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
             // Ensure that indices are valid
             if (k >= 0 && k < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
-                batchRenderer.addTexture(TextureUtils.getTexture(Tile.mapDataType.get(k)), MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, Color.toFloatArray(Color.WHITE)); // Top-right corner
+                batchRenderer.addTexture(TextureUtils.getTexture(Tile.mapDataType.get(k)), MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, 1,1,Color.toFloatArray(Color.WHITE)); // Top-right corner
             } else {
                 Logger.printLOG("Index out of bounds: space=" + k);
             }
@@ -233,7 +231,6 @@ public class GameEngine {
             character.runAI(character);
             player.update();
             projectile.update();
-            enemy.update();
         }
     }
 
@@ -276,7 +273,6 @@ public class GameEngine {
         NPC.render(batchRenderer,character);
         Projectile.render(batchRenderer, projectile, playerTexture);
         Player.render(batchRenderer);
-        enemy.render(batchRenderer);
 
         // Render the batch
         batchRenderer.renderBatch();
