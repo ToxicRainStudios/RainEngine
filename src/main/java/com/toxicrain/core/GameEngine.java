@@ -194,7 +194,7 @@ public class GameEngine {
 
         //HERE!!!!
         player = new Player(Player.cameraX, Player.cameraY, Player.cameraZ, playerTexture, false);
-        projectile = new Projectile(1,1,0.01f,0);
+        projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0);
         //UP!!!
 
         // Set the viewport size
@@ -233,8 +233,12 @@ public class GameEngine {
         // Clear the color and depth buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
+        //BE WARY OF LIARS AHEAD
         //DO NOT UNCOMMENT WILL NUKE PC
+        //SECRET DOOR HERE /|\
+        //                  |
+        //MIMICS ARE NOT REAL
+
         //soundSource.play(soundBuffer.getBufferId());
 
 
@@ -263,6 +267,7 @@ public class GameEngine {
         // This is the player!
         Projectile.render(batchRenderer, projectile, playerTexture);
         Player.render(batchRenderer);
+
 
         // Render the batch
         batchRenderer.renderBatch();

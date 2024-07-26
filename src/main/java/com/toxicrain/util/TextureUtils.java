@@ -97,6 +97,8 @@ public class TextureUtils {
                 return dirtTexture2;
             case '3':
                 return grassTexture1;
+            case '`':
+                return playerTexture;
             default:
                 return missingTexture;
         }
