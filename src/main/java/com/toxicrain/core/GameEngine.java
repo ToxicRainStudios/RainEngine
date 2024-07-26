@@ -86,7 +86,7 @@ public class GameEngine {
         init(windowTitle, SettingsInfoParser.vSync);
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
-
+        batchRenderer.setBlendingEnabled(true);
 
 
             for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {

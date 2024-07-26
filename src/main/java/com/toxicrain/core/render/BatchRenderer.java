@@ -41,8 +41,6 @@ public class BatchRenderer {
         colorBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * 6 * 4); // 2 triangles per quad, 4 colors per vertex
         textureVertexInfos = new ArrayList<>(MAX_TEXTURES);
 
-        setBlendingEnabled(blendingEnabled);
-
         // Generate VBOs
         vertexVboId = glGenBuffers();
         texCoordVboId = glGenBuffers();

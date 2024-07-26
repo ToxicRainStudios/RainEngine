@@ -68,7 +68,7 @@ public class Player implements IArtifact {
     }
 
 //this is temp code  \|/
-    private static void forward(boolean true1,int direction){
+    private static void forward(boolean true1, int direction){
         getAngle();
         if(true1) {
             cameraX = cameraX + (openglMousePos[0]-posX) * 0.01f*direction;
@@ -111,11 +111,8 @@ public class Player implements IArtifact {
         openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
     }
     public static void render(BatchRenderer batchRenderer){
-        // Get mouse position relative to window
-
-
         // Convert mouse coordinates to OpenGL coordinates
-      getMouse();
+        getMouse();
 
         batchRenderer.addTexturePos(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1], 1,1, Color.toFloatArray(1.0f, Color.WHITE));
     }
@@ -260,8 +257,8 @@ public class Player implements IArtifact {
 
         // Handle left and right movement
 
-         if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)forward(false,1);
-         if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)forward(false,-1);
+        if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)forward(false,1);
+        if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)forward(false,-1);
         if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) forward(true,1);
         if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) forward(true,-1);
 
