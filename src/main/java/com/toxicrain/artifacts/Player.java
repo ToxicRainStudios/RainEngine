@@ -32,6 +32,10 @@ public class Player implements IArtifact {
     public static float cameraX = MapInfoParser.playerx; // Camera X position
     public static float cameraY = MapInfoParser.playery; // Camera Y position
     public static float cameraZ = 2; // Camera Z position
+    private static float prevCameraX;
+    private static float prevCameraY;
+    public static float velocityX;
+    public static float velocityY;
     public static float cameraSpeed = 0.02f; // Camera Speed
     public static final float scrollSpeed = 0.5f;  // The max scroll in/out speed
     public static float scrollOffset = 0.0f; // Track the scroll input
@@ -92,6 +96,13 @@ public class Player implements IArtifact {
         processInput(window);
         updatePos(cameraX, cameraY, cameraZ);
         center = WindowUtils.getCenter();
+
+        velocityX = (cameraX - prevCameraX);
+        velocityY = (cameraY - prevCameraY);
+
+        // Update previous position
+        prevCameraX = cameraX;
+        prevCameraY = cameraY;
     }
 
     private static float[] openglMousePos;
