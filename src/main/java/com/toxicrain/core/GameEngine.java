@@ -13,10 +13,7 @@ import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.core.render.Tile;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.sound.SoundSystem;
-import com.toxicrain.util.Color;
-import com.toxicrain.util.Constants;
-import com.toxicrain.util.FPSUtils;
-import com.toxicrain.util.TextureUtils;
+import com.toxicrain.util.*;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
@@ -57,6 +54,7 @@ public class GameEngine {
     private static Player player;
     private static Projectile projectile;
     private static NPC character;
+    private static TextEngine textEngine;
 
 
 
@@ -187,7 +185,7 @@ public class GameEngine {
         GL.createCapabilities();
 
         // Set the "background" color
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(255.0f, 255.0f, 255.0f, 0.0f);
 
         // Set up the projection matrix with FOV of 90 degrees
         glMatrixMode(GL_PROJECTION);
@@ -199,6 +197,7 @@ public class GameEngine {
         player = new Player(Player.cameraX, Player.cameraY, Player.cameraZ, playerTexture, false);
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0);
         character = new NPC(12,12,1,2);
+        textEngine = new TextEngine("I am the deep and dark dirty sigma");
         //UP!!!
 
         // Set the viewport size
@@ -273,6 +272,7 @@ public class GameEngine {
         NPC.render(batchRenderer,character);
         Projectile.render(batchRenderer, projectile, playerTexture);
         Player.render(batchRenderer);
+        textEngine.render(batchRenderer);
 
         // Render the batch
         batchRenderer.renderBatch();

@@ -22,6 +22,37 @@ public class TextureUtils {
     public static TextureInfo dirtTexture1;
     public static TextureInfo dirtTexture2;
     public static TextureInfo grassTexture1;
+    public static TextureInfo letterA;
+    public static TextureInfo letterB;
+    public static TextureInfo letterC;
+    public static TextureInfo letterD;
+    public static TextureInfo letterE;
+    public static TextureInfo letterF;
+    public static TextureInfo letterG;
+    public static TextureInfo letterH;
+    public static TextureInfo letterI;
+    public static TextureInfo letterJ;
+    public static TextureInfo letterK;
+    public static TextureInfo letterL;
+    public static TextureInfo letterM;
+    public static TextureInfo letterN;
+    public static TextureInfo letterO;
+    public static TextureInfo letterP;
+    public static TextureInfo letterQ;
+    public static TextureInfo letterR;
+    public static TextureInfo letterS;
+    public static TextureInfo letterT;
+    public static TextureInfo letterU;
+    public static TextureInfo letterV;
+    public static TextureInfo letterW;
+    public static TextureInfo letterX;
+    public static TextureInfo letterY;
+    public static TextureInfo letterZ;
+    public static TextureInfo letterSPACE;
+
+
+
+
 
 
     /**Init the textures used by the rest of the project*/
@@ -35,7 +66,33 @@ public class TextureUtils {
         dirtTexture1 = loadTexture((PackInfoParser.dirtTexture1));
         dirtTexture2 = loadTexture((PackInfoParser.dirtTexture2));
         grassTexture1 = loadTexture((PackInfoParser.grassTexture1));
-
+        letterA = loadTexture((PackInfoParser.letterA));
+        letterB = loadTexture(PackInfoParser.letterB);
+        letterC = loadTexture((PackInfoParser.letterC));
+        letterD = loadTexture(PackInfoParser.letterD);
+        letterE = loadTexture((PackInfoParser.letterE));
+        letterF = loadTexture(PackInfoParser.letterF);
+        letterG = loadTexture((PackInfoParser.letterG));
+        letterH = loadTexture(PackInfoParser.letterH);
+        letterI = loadTexture((PackInfoParser.letterI));
+        letterJ = loadTexture(PackInfoParser.letterJ);
+        letterK = loadTexture((PackInfoParser.letterK));
+        letterL = loadTexture(PackInfoParser.letterL);
+        letterM = loadTexture((PackInfoParser.letterM));
+        letterN = loadTexture(PackInfoParser.letterN);
+        letterO = loadTexture((PackInfoParser.letterO));
+        letterP = loadTexture(PackInfoParser.letterP);
+        letterQ = loadTexture((PackInfoParser.letterQ));
+        letterR = loadTexture(PackInfoParser.letterR);
+        letterS = loadTexture((PackInfoParser.letterS));
+        letterT = loadTexture(PackInfoParser.letterT);
+        letterU = loadTexture((PackInfoParser.letterU));
+        letterV = loadTexture(PackInfoParser.letterV);
+        letterW = loadTexture((PackInfoParser.letterW));
+        letterX = loadTexture(PackInfoParser.letterX);
+        letterY = loadTexture((PackInfoParser.letterY));
+        letterZ = loadTexture(PackInfoParser.letterZ);
+        letterSPACE = loadTexture(PackInfoParser.letterSPACE);
     }
 
     public static TextureInfo loadTexture(String filePath) {

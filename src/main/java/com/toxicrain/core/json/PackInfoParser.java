@@ -19,6 +19,38 @@ public class PackInfoParser {
     public static String dirtTexture1 = null;
     public static String grassTexture1 = null;
     public static String dirtTexture2 = null;
+    public static String letterA = null;
+    public static String letterB = null;
+    public static String letterC = null;
+    public static String letterD = null;
+    public static String letterE = null;
+    public static String letterF = null;
+    public static String letterG = null;
+    public static String letterH = null;
+    public static String letterI = null;
+    public static String letterJ = null;
+    public static String letterK = null;
+    public static String letterL = null;
+    public static String letterM = null;
+    public static String letterN = null;
+    public static String letterO = null;
+    public static String letterP = null;
+    public static String letterQ = null;
+    public static String letterR = null;
+    public static String letterS = null;
+    public static String letterT = null;
+    public static String letterU = null;
+    public static String letterV = null;
+    public static String letterW = null;
+    public static String letterX = null;
+    public static String letterY = null;
+    public static String letterZ = null;
+    public static String letterSPACE = null;
+
+
+
+
+
 
     /**
      * Loads the pack.json and parsers it into variables
@@ -75,6 +107,90 @@ public class PackInfoParser {
                             case "missingTexture":
                                 missingTexture = workingDirectory + "/" + value;
                                 break;
+                            case "letterA":
+                                letterA = workingDirectory + "/" + value;
+                                break;
+                            case "letterB":
+                                letterB = workingDirectory + "/" + value;
+                                break;
+                            case "letterC":
+                                letterC = workingDirectory + "/" + value;
+                                break;
+                            case "letterD":
+                                letterD = workingDirectory + "/" + value;
+                                break;
+                            case "letterE":
+                                letterE = workingDirectory + "/" + value;
+                                break;
+                            case "letterF":
+                                letterF = workingDirectory + "/" + value;
+                                break;
+                            case "letterG":
+                                letterG = workingDirectory + "/" + value;
+                                break;
+                            case "letterH":
+                                letterH = workingDirectory + "/" + value;
+                                break;
+                            case "letterI":
+                                letterI = workingDirectory + "/" + value;
+                                break;
+                            case "letterJ":
+                                letterJ = workingDirectory + "/" + value;
+                                break;
+                            case "letterK":
+                                letterK = workingDirectory + "/" + value;
+                                break;
+                            case "letterL":
+                                letterL = workingDirectory + "/" + value;
+                                break;
+                            case "letterM":
+                                letterM = workingDirectory + "/" + value;
+                                break;
+                            case "letterN":
+                                letterN = workingDirectory + "/" + value;
+                                break;
+                            case "letterO":
+                                letterO = workingDirectory + "/" + value;
+                                break;
+                            case "letterP":
+                                letterP = workingDirectory + "/" + value;
+                                break;
+                            case "letterQ":
+                                letterQ = workingDirectory + "/" + value;
+                                break;
+                            case "letterR":
+                                letterR = workingDirectory + "/" + value;
+                                break;
+                            case "letterS":
+                                letterS = workingDirectory + "/" + value;
+                                break;
+                            case "letterT":
+                                letterT = workingDirectory + "/" + value;
+                                break;
+                            case "letterU":
+                                letterU = workingDirectory + "/" + value;
+                                break;
+                            case "letterV":
+                                letterV = workingDirectory + "/" + value;
+                                break;
+                            case "letterW":
+                                letterW = workingDirectory + "/" + value;
+                                break;
+                            case "letterX":
+                                letterX = workingDirectory + "/" + value;
+                                break;
+                                case "letterY":
+                                letterY = workingDirectory + "/" + value;
+                                break;
+                            case "letterZ":
+                                letterZ = workingDirectory + "/" + value;
+                                break;
+                            case "letterSPACE":
+                                letterSPACE = workingDirectory + "/" + value;
+                                break;
+
+
+
                         }
                     }
                 }

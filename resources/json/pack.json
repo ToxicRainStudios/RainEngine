@@ -26,7 +26,64 @@
       {
         "grassTexture1": "grass1.png"
       },
-	  {
+      {
+        "letterA": "letterA.png"
+      },      {
+        "letterB": "letterB.png"
+      },      {
+        "letterC": "letterC.png"
+      },      {
+        "letterD": "letterD.png"
+      },      {
+        "letterE": "letterE.png"
+      },      {
+        "letterF": "letterF.png"
+      },      {
+        "letterG": "letterG.png"
+      },      {
+        "letterH": "letterH.png"
+      },      {
+        "letterI": "letterI.png"
+      },      {
+        "letterJ": "letterJ.png"
+      },      {
+        "letterK": "letterK.png"
+      },      {
+        "letterL": "letterL.png"
+      },      {
+        "letterM": "letterM.png"
+      },      {
+        "letterN": "letterN.png"
+      },      {
+        "letterO": "letterO.png"
+      },      {
+        "letterP": "letterP.png"
+      },      {
+        "letterQ": "letterQ.png"
+      },      {
+        "letterR": "letterR.png"
+      },      {
+        "letterS": "letterS.png"
+      },      {
+        "letterT": "letterT.png"
+      },      {
+        "letterU": "letterU.png"
+      },      {
+        "letterV": "letterV.png"
+      },      {
+        "letterW": "letterW.png"
+      },      {
+        "letterX": "letterX.png"
+      },      {
+        "letterY": "letterY.png"
+      },      {
+        "letterZ": "letterZ.png"
+      },      {
+        "letterSPACE": "letterSPACE.png"
+      },
+
+
+      {
         "missingTexture": "missing.png"
       }
     ]
