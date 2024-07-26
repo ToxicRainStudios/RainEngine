@@ -41,6 +41,20 @@ public class Player implements IArtifact {
     public static float angleY;
     public static float angleXS;
     public static float angleYS;
+
+
+
+    private static void getAngle(){
+        getMouse();
+        float dx = openglMousePos[0] - posX;
+        float dy = openglMousePos[1] - posY;
+        float angle = (float) Math.atan2(dy, dx);
+        angleX= (float)Math.cos(angle);
+        angleY = (float)Math.sin(angle);
+        angleXS= (float)Math.sin(angle)*-1;
+        angleYS = (float)Math.cos(angle);
+
+    }
     public Player(float posX, float posY, float posZ, TextureInfo texture, boolean isSprinting) {
         this.posX = posX;
         this.posY = posY;
@@ -51,6 +65,7 @@ public class Player implements IArtifact {
 
 //this is temp code
     private static void forward(boolean true1,int direction){
+        getAngle();
         if(true1) {
             cameraX = cameraX + angleX * 0.01f*direction;
             cameraY = cameraY + angleY * 0.01f*direction;
@@ -80,12 +95,16 @@ public class Player implements IArtifact {
     }
 
     private static float[] openglMousePos;
+    private static void getMouse(){
+        float[] mousePos = mouseInput.getMousePosition();
+        openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
+    }
     public static void render(BatchRenderer batchRenderer){
         // Get mouse position relative to window
-        float[] mousePos = mouseInput.getMousePosition();
+
 
         // Convert mouse coordinates to OpenGL coordinates
-        openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
+      getMouse();
 
         batchRenderer.addTexturePos(playerTexture, center.x, center.y, 1.1f, openglMousePos[0], openglMousePos[1], Color.toFloatArray(1.0f, Color.WHITE));
     }

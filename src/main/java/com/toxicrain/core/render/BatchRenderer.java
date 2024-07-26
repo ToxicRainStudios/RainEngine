@@ -186,10 +186,6 @@ public class BatchRenderer {
         float angle = (float) Math.atan2(dy, dx);
         float cosTheta = (float) Math.cos(angle);
         float sinTheta = (float) Math.sin(angle);
-        Player.angleX= (float)Math.cos(angle);
-        Player.angleY = (float)Math.sin(angle);
-        Player.angleXS= (float)Math.sin(angle)*-1;
-        Player.angleYS = (float)Math.cos(angle);
 
         // Original vertices of the texture (centered at origin)
         float[] originalVertices = {
