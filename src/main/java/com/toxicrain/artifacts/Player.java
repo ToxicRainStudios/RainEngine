@@ -67,12 +67,12 @@ public class Player implements IArtifact {
         this.isSprinting = isSprinting;
     }
 
-//this is temp code
+//this is temp code  \|/
     private static void forward(boolean true1,int direction){
         getAngle();
         if(true1) {
-            cameraX = cameraX + angleX * 0.01f*direction;
-            cameraY = cameraY + angleY * 0.01f*direction;
+            cameraX = cameraX + (openglMousePos[0]-posX) * 0.01f*direction;
+            cameraY = cameraY + (openglMousePos[1]-posY) * 0.01f*direction;
         }
         else{
             cameraX = cameraX + angleXS * 0.007f*direction;

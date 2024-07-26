@@ -3,6 +3,7 @@ package com.toxicrain.core;
 //import com.toxicrain.core.json.MapInfoParser;
 
 import com.toxicrain.artifacts.Enemy;
+import com.toxicrain.artifacts.NPC;
 import com.toxicrain.artifacts.Player;
 import com.toxicrain.artifacts.Projectile;
 import com.toxicrain.core.json.GameInfoParser;
@@ -56,6 +57,7 @@ public class GameEngine {
     private static Player player;
     private static Projectile projectile;
     private static Enemy enemy;
+    private static NPC character;
 
 
 
@@ -85,6 +87,7 @@ public class GameEngine {
         init(windowTitle, SettingsInfoParser.vSync);
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
+
 
 
             for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
@@ -196,6 +199,7 @@ public class GameEngine {
         //HERE!!!!
         player = new Player(Player.cameraX, Player.cameraY, Player.cameraZ, playerTexture, false);
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0);
+        character = new NPC(12,12,1,2);
         enemy = new Enemy(player.cameraSpeed, 1,20,1.11f);
         //UP!!!
 
@@ -226,6 +230,7 @@ public class GameEngine {
 
     private static void update() {
         for(int engineFrames = 30; engineFrames >= 0; engineFrames--) { // Process input 30 times per frame
+            character.runAI(character);
             player.update();
             projectile.update();
             enemy.update();
@@ -268,6 +273,7 @@ public class GameEngine {
 
 
         // This is the player!
+        NPC.render(batchRenderer,character);
         Projectile.render(batchRenderer, projectile, playerTexture);
         Player.render(batchRenderer);
         enemy.render(batchRenderer);
