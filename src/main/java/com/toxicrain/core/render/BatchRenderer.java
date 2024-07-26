@@ -1,5 +1,6 @@
 package com.toxicrain.core.render;
 
+import com.toxicrain.artifacts.Player;
 import com.toxicrain.core.TextureInfo;
 import com.toxicrain.core.json.GameInfoParser;
 import org.lwjgl.BufferUtils;
@@ -185,6 +186,10 @@ public class BatchRenderer {
         float angle = (float) Math.atan2(dy, dx);
         float cosTheta = (float) Math.cos(angle);
         float sinTheta = (float) Math.sin(angle);
+        Player.angleX= (float)Math.cos(angle);
+        Player.angleY = (float)Math.sin(angle);
+        Player.angleXS= (float)Math.sin(angle)*-1;
+        Player.angleYS = (float)Math.cos(angle);
 
         // Original vertices of the texture (centered at origin)
         float[] originalVertices = {
@@ -203,6 +208,7 @@ public class BatchRenderer {
             rotatedVertices[index]     = x + (vx * cosTheta - vy * sinTheta);
             rotatedVertices[index + 1] = y + (vx * sinTheta + vy * cosTheta);
             rotatedVertices[index + 2] = z;
+
         }
 
         // Texture coordinates (assuming no scaling)

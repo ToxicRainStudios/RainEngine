@@ -37,12 +37,30 @@ public class Player implements IArtifact {
     public static float scrollOffset = 0.0f; // Track the scroll input
     public static Vector3f center;
     public static MouseUtils mouseInput = new MouseUtils(window);
+    public static float angleX;
+    public static float angleY;
+    public static float angleXS;
+    public static float angleYS;
     public Player(float posX, float posY, float posZ, TextureInfo texture, boolean isSprinting) {
         this.posX = posX;
         this.posY = posY;
         this.posZ = posZ;
         this.texture = texture;
         this.isSprinting = isSprinting;
+    }
+
+//this is temp code
+    private static void forward(boolean true1,int direction){
+        if(true1) {
+            cameraX = cameraX + angleX * 0.01f*direction;
+            cameraY = cameraY + angleY * 0.01f*direction;
+        }
+        else{
+            cameraX = cameraX + angleXS * 0.007f*direction;
+            cameraY = cameraY + angleYS * 0.007f*direction;
+        }
+
+
     }
 
     private static void updatePos(float posX, float posY, float posZ) {
@@ -195,10 +213,7 @@ public class Player implements IArtifact {
 
     }
 
-    private static void handleMovement(float opX, float opY){
-            cameraX = cameraX + ((cameraSpeed/ 2)*opX);
-            cameraY = cameraY + ((cameraSpeed/ 2)*opY);
-    }
+
 
     private static void processInput(long window) {
         //Sprinting8
@@ -214,22 +229,12 @@ public class Player implements IArtifact {
         handleCollisions();
 
         // Handle left and right movement
-        if ((glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) && (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)) {
-        handleMovement(-1,1);
-        }
-        else if ((glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) && (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)) {
-            handleMovement(-1,-1);
-        }
-        else if ((glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) && (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)) {
-            handleMovement(1,1);
-        }
-        else if ((glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) && (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)) {
-            handleMovement(1,-1);
-        }
-        else if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)handleMovement(-1,0);
-        else if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)handleMovement(1,0);
-        else if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) handleMovement(0,1);
-        else if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) handleMovement(0,-1);
+
+         if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)forward(false,1);
+         if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)forward(false,-1);
+        if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) forward(true,1);
+        if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) forward(true,-1);
+
 
 
         // Update cameraZ based on the scroll input
