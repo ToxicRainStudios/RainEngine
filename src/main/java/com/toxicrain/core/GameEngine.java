@@ -12,6 +12,7 @@ import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.core.render.Tile;
 import com.toxicrain.gui.ImguiHandler;
+import com.toxicrain.gui.Menu;
 import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.util.*;
 import org.joml.Vector3f;
@@ -54,7 +55,7 @@ public class GameEngine {
     private static Player player;
     private static Projectile projectile;
     private static NPC character;
-    private static TextEngine textEngine;
+    private static boolean menu = false;
 
 
 
@@ -197,7 +198,7 @@ public class GameEngine {
         player = new Player(Player.cameraX, Player.cameraY, Player.cameraZ, playerTexture, false);
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0);
         character = new NPC(12,12,1,2);
-        textEngine = new TextEngine("I am the deep and dark dirty sigma");
+        Menu.initalizeMenu();
         //UP!!!
 
         // Set the viewport size
@@ -227,9 +228,16 @@ public class GameEngine {
 
     private static void update() {
         for(int engineFrames = 30; engineFrames >= 0; engineFrames--) { // Process input 30 times per frame
-            character.runAI(character);
-            player.update();
-            projectile.update();
+            if(menu){
+                Player.cameraZ = 25;
+
+
+            }
+            else {
+                character.runAI(character);
+                player.update();
+                projectile.update();
+            }
         }
     }
 
@@ -254,7 +262,7 @@ public class GameEngine {
         // Begin the batch
         batchRenderer.beginBatch();
 
-        drawMap(batchRenderer);
+
 
         // Check if the window has focus and only do certain things if so
         if (glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0) {
@@ -269,10 +277,18 @@ public class GameEngine {
 
 
         // This is the player!
-        NPC.render(batchRenderer,character);
-        Projectile.render(batchRenderer, projectile, playerTexture);
-        Player.render(batchRenderer);
-        textEngine.render(batchRenderer);
+        if(menu){
+        Menu.render(batchRenderer);
+
+
+
+        }
+        else {
+            drawMap(batchRenderer);
+            NPC.render(batchRenderer, character);
+            Projectile.render(batchRenderer, projectile, playerTexture);
+            Player.render(batchRenderer);
+        }
 
         // Render the batch
         batchRenderer.renderBatch();

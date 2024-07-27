@@ -2,38 +2,48 @@ package com.toxicrain.util;
 
 import com.toxicrain.artifacts.Player;
 import com.toxicrain.core.TextureInfo;
-import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
-import com.toxicrain.core.render.Tile;
-import com.toxicrain.util.TextureUtils;
 
-import static com.toxicrain.util.TextureUtils.playerTexture;
+
+import static com.toxicrain.core.GameEngine.window;
 
 /**
  * The TextEngine class provides a way to render "text" on the screen
  *
- * @author Gabefry
+ * @author Gabefry (the darkened sigma)
  */
 public class TextEngine {
     String toWrite = "hello";
+    int yOffset;
+    int xOffset;
+    public static MouseUtils mouseInput = new MouseUtils(window);
 
-    public TextEngine(String input){
+    public TextEngine(String input, int x, int y) {
         toWrite = input;
-
+        xOffset = x;
+        yOffset = y;
 
 
     }
-    public void render(BatchRenderer batchRenderer){
-        float scale = Player.cameraZ/30;
-        for(int i =toWrite.length()-1; i >= 0; i--){
 
-            batchRenderer.addTexture(letterToTexture(toWrite.charAt(i)), Player.cameraX+i*2*scale-((float)toWrite.length()*scale), Player.cameraY-6*scale, 1.03f, 0, scale,scale, Color.toFloatArray(1.0f, Color.WHITE));
+    public void render(BatchRenderer batchRenderer) {
+        float scale = Player.cameraZ / 30;
+        for (int i = toWrite.length() - 1; i >= 0; i--) {
+
+            batchRenderer.addTexture(letterToTexture(toWrite.charAt(i)), Player.cameraX + (i + xOffset) * 2 * scale - ((float) toWrite.length() * scale), Player.cameraY - yOffset * scale, 1.2f, 0, scale, scale, Color.toFloatArray(1.0f, Color.WHITE));
 
         }
 
 
-
     }
+
+
+
+
+
+
+
+
     public static TextureInfo letterToTexture(char toProcess){
         switch (Character.toLowerCase(toProcess)){
             case ('a'):
