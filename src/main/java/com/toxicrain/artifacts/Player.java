@@ -7,6 +7,7 @@ import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.core.render.Tile;
+import com.toxicrain.util.CollisionUtils;
 import com.toxicrain.util.Color;
 import com.toxicrain.util.MouseUtils;
 import com.toxicrain.util.WindowUtils;
@@ -45,6 +46,7 @@ public class Player implements IArtifact {
     public static float angleY;
     public static float angleXS;
     public static float angleYS;
+    private static CollisionUtils col;
 
 
 
@@ -119,116 +121,17 @@ public class Player implements IArtifact {
 
 
     private static void handleCollisions(){
+        if(col == null) {
+            col = new CollisionUtils();
+        }
         for (int j = 1; j > -2; j -= 1) {
             k = (float) j * GameInfoParser.playerSize;
             for (int i = Tile.extentTop.size() - 1; i >= 0; i--) {
-
-                if ((cameraY + k <= Tile.extentTop.get(i)) && (cameraY + k >= Tile.extentCenterY.get(i))) {
-                    if ((cameraX + k >= Tile.extentLeft.get(i)) && !(cameraX + k >= Tile.extentCenterX.get(i))) {
-                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
-                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
-                                cameraY += 0.02f;
-                                break;
-                            }
-                            if(Tile.mapDataType.get(i) == '1'){
-                                collisionType = 1;
-                                break;
-                            }
-                        }
-                    } else if ((cameraX + k <= Tile.extentRight.get(i)) && !(cameraX + k <= Tile.extentCenterX.get(i))) {
-                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
-                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
-                                cameraY += 0.02f;
-                                break;
-                            }
-                            if(Tile.mapDataType.get(i) == '1'){
-                                collisionType = 1;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if ((cameraY + k >= Tile.extentBottom.get(i)) && (cameraY + k <= Tile.extentCenterY.get(i))) {
-                    if ((cameraX + k >= Tile.extentLeft.get(i)) && !(cameraX + k >= Tile.extentCenterX.get(i))) {
-                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
-                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
-                               cameraY -= 0.02f;
-                                break;
-                            }
-                            if(Tile.mapDataType.get(i) == '1'){
-                                collisionType = 1;
-                                break;
-                            }
-                        }
-                    } else if ((cameraX + k <= Tile.extentRight.get(i)) && !(cameraX + k <= Tile.extentCenterX.get(i))) {
-                        for (int p = MapInfoParser.doCollide.size()-1; p >= 0; p--) {
-                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
-                                cameraY -= 0.02f;
-                                break;
-                            }
-                            if(Tile.mapDataType.get(i) == '1'){
-                                collisionType = 1;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if ((cameraX + k <= Tile.extentRight.get(i)) && (cameraX + k >= Tile.extentCenterX.get(i))) {
-                    if ((cameraY + k >= Tile.extentBottom.get(i)) && !(cameraY + k > Tile.extentCenterY.get(i))) {
-                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
-                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
-                                cameraX += 0.02f;
-                                break;
-                            }
-                            if(Tile.mapDataType.get(i) == '1'){
-                                collisionType = 1;
-                                break;
-                            }
-                        }
-                    } else if ((cameraY + k <= Tile.extentTop.get(i)) && !(cameraY + k <= Tile.extentCenterY.get(i))) {
-                        for (int p = MapInfoParser.doCollide.size()-1; p >= 0; p--) {
-                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
-                                cameraX += 0.02f;
-                                break;
-                            }
-                            if(Tile.mapDataType.get(i) == '1'){
-                                collisionType = 1;
-                                break;
-                            }
-                        }
-                    }
-                }
-              if ((cameraX + k >= Tile.extentLeft.get(i)) && (cameraX + k <= Tile.extentCenterX.get(i))) {
-                    if ((cameraY + k >= Tile.extentBottom.get(i)) && !(cameraY + k >= Tile.extentCenterY.get(i))) {
-                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
-                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
-                                cameraX -= 0.02f;
-                                break;
-                            }
-                            if(Tile.mapDataType.get(i) == '1'){
-                                collisionType = 1;
-                                break;
-                            }
-                        }
-                    } else if ((cameraY + k <= Tile.extentTop.get(i)) && !(cameraY + k <= Tile.extentCenterY.get(i))) {
-                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
-                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
-                                cameraX -= 0.02f;
-                                break;
-                            }
-                            if(Tile.mapDataType.get(i) == '1'){
-                                collisionType = 1;
-                                break;
-                            }
-
-                        }
-                    }
-                }
+                col.handleCollisions(j,col,cameraX,cameraY,1f,Tile.extentCenterX.get(i),Tile.extentCenterY.get(i),Tile.mapDataType.get(i));
+                cameraX += col.changePosX;
+                cameraY += col.changePosY;
             }
         }
-
-
-
         switch (collisionType){
             case 1:
                 cameraSpeed = 0.010f;
@@ -252,15 +155,30 @@ public class Player implements IArtifact {
             setIsSprinting(false);
         }
 
-        cameraSpeed = 0.01f;
+        cameraSpeed = 0.005f;
         handleCollisions();
 
         // Handle left and right movement
-
-        if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)forward(false,1);
-        if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)forward(false,-1);
-        if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) forward(true,1);
-        if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) forward(true,-1);
+        if((glfwGetKey(window, GLFW_KEY_A ) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)){
+            cameraX -= cameraSpeed/2;
+            cameraY += cameraSpeed/2;
+        }
+        else if((glfwGetKey(window, GLFW_KEY_D ) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)){
+            cameraX += cameraSpeed/2;
+            cameraY += cameraSpeed/2;
+        }
+       else if((glfwGetKey(window, GLFW_KEY_A ) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)){
+            cameraX -= cameraSpeed/2;
+            cameraY -= cameraSpeed/2;
+        }
+        else if((glfwGetKey(window, GLFW_KEY_D ) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)){
+            cameraX += cameraSpeed/2;
+            cameraY -= cameraSpeed/2;
+        }
+       else if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)cameraX -= cameraSpeed;
+       else if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)cameraX += cameraSpeed;
+       else if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)cameraY += cameraSpeed;
+       else if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)cameraY -= cameraSpeed;
 
 
 

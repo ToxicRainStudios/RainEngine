@@ -6,7 +6,7 @@ import com.toxicrain.core.render.Tile;
 
 public class CollisionUtils {
 
-    boolean isColliding;
+    public boolean isColliding;
     public float changePosY = 0;
     public float changePosX = 0;
     public float collisionType;
@@ -17,18 +17,18 @@ public class CollisionUtils {
     }
 
 
-    public void handleCollisions(CollisionUtils instance, float positionX, float positionY, float size, float posX2, float posY2, char player_LeaveQIfNo) {
+    public void handleCollisions(float k,CollisionUtils instance, float positionX, float positionY, float size, float posX2, float posY2, char player_LeaveQIfNo) {
 
         instance.changePosY = 0;
         instance.changePosX = 0;
+        instance.isColliding = false;
         float extentTop = posY2 + size;
         float extentBottom = posY2 - size;
         float extentRight = posX2 + size;
         float extentLeft = posX2 - size;
 
 
-        for (int j = 1; j > -2; j -= 1) {
-            float k = (float) j * size;
+
 
 
             if (positionY + k <= extentTop && (positionY + k >= posY2)) {
@@ -36,7 +36,8 @@ public class CollisionUtils {
                     if (player_LeaveQIfNo != 'Q') {
                         for (int p = MapInfoParser.doCollide.size() - 1; p >= 0; p--) {
                             if (player_LeaveQIfNo == MapInfoParser.doCollide.get(p)) {
-                                instance.changePosY = -0.02f;
+                                instance.changePosY = 0.02f;
+                                instance.isColliding = true;
                                 break;
                             }
                             if (player_LeaveQIfNo == '1') {
@@ -71,6 +72,7 @@ public class CollisionUtils {
                         for (int p = MapInfoParser.doCollide.size() - 1; p >= 0; p--) {
                             if (player_LeaveQIfNo == MapInfoParser.doCollide.get(p)) {
                                 instance.changePosY = -0.02f;
+                                instance.isColliding = true;
                                 break;
                             }
                             if (player_LeaveQIfNo == '1') {
@@ -85,7 +87,8 @@ public class CollisionUtils {
                     if (player_LeaveQIfNo != 'Q') {
                         for (int p = MapInfoParser.doCollide.size() - 1; p >= 0; p--) {
                             if (player_LeaveQIfNo == MapInfoParser.doCollide.get(p)) {
-                                instance.changePosY -= 0.02f;
+                                instance.changePosY = -0.02f;
+                                instance.isColliding = true;
                                 break;
                             }
                             if (player_LeaveQIfNo == '1') {
@@ -105,6 +108,7 @@ public class CollisionUtils {
                         for (int p = MapInfoParser.doCollide.size() - 1; p >= 0; p--) {
                             if (player_LeaveQIfNo == MapInfoParser.doCollide.get(p)) {
                                 instance.changePosX = 0.02f;
+                                instance.isColliding = true;
                                 break;
                             }
                             if (player_LeaveQIfNo == '1') {
@@ -120,6 +124,7 @@ public class CollisionUtils {
                         for (int p = MapInfoParser.doCollide.size() - 1; p >= 0; p--) {
                             if (player_LeaveQIfNo == MapInfoParser.doCollide.get(p)) {
                                 instance.changePosX = 0.02f;
+                                instance.isColliding = true;
                                 break;
                             }
                             if (player_LeaveQIfNo == '1') {
@@ -139,6 +144,7 @@ public class CollisionUtils {
                         for (int p = MapInfoParser.doCollide.size() - 1; p >= 0; p--) {
                             if (player_LeaveQIfNo == MapInfoParser.doCollide.get(p)) {
                                 instance.changePosX = -0.02f;
+                                instance.isColliding = true;
                                 break;
                             }
                             if (player_LeaveQIfNo == '1') {
@@ -154,6 +160,7 @@ public class CollisionUtils {
                         for (int p = MapInfoParser.doCollide.size() - 1; p >= 0; p--) {
                             if (player_LeaveQIfNo == MapInfoParser.doCollide.get(p)) {
                                 instance.changePosX -= 0.02f;
+                                instance.isColliding = true;
                                 break;
                             }
                             if (player_LeaveQIfNo == '1') {
@@ -171,5 +178,5 @@ public class CollisionUtils {
 
         }
     }
-}
+
 
