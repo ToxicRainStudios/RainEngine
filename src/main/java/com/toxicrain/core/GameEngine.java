@@ -5,10 +5,7 @@ package com.toxicrain.core;
 import com.toxicrain.artifacts.NPC;
 import com.toxicrain.artifacts.Player;
 import com.toxicrain.artifacts.Projectile;
-import com.toxicrain.core.json.GameInfoParser;
-import com.toxicrain.core.json.MapInfoParser;
-import com.toxicrain.core.json.PackInfoParser;
-import com.toxicrain.core.json.SettingsInfoParser;
+import com.toxicrain.core.json.*;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.core.render.Tile;
 import com.toxicrain.gui.ImguiHandler;
@@ -47,10 +44,9 @@ public class GameEngine {
 
     private static boolean fullscreen = true;
 
-    private static FPSUtils fpsUtils;
     private static ImguiHandler imguiApp;
     private static Vector3f center;
-    private static SoundSystem soundSystem = new SoundSystem();
+    private static final SoundSystem soundSystem = new SoundSystem();
     private static int bufferId;
     private static Player player;
     private static Projectile projectile;
@@ -60,7 +56,6 @@ public class GameEngine {
 
 
     public GameEngine(){
-        fpsUtils = new FPSUtils();
         imguiApp = new ImguiHandler(window);
 
     }
@@ -75,9 +70,8 @@ public class GameEngine {
         SettingsInfoParser.loadSettingsInfo();
 
         Logger.printLOG("Loading Map Data");
-        MapInfoParser mapInfoParser = new MapInfoParser();
         try {
-            mapInfoParser.parseMapFile();
+            MapInfoParser.parseMapFile();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -184,6 +178,9 @@ public class GameEngine {
         // LWJGL detects the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
         Logger.printLOG("Creating OpenGL Capabilities");
         GL.createCapabilities();
+
+        Logger.printLOG("Loading Keybinds");
+        KeyInfoParser.loadKeyInfo();
 
         // Set the "background" color
         glClearColor(255.0f, 255.0f, 255.0f, 0.0f);

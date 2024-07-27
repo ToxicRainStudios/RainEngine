@@ -168,6 +168,8 @@ public class BatchRenderer {
      * @param z the z-coordinate of the texture
      * @param posX the x-coordinate of the mouse or reference point for rotation
      * @param posY the y-coordinate of the mouse or reference point for rotation
+     * @param scaleX a scale modifier for the x-axis
+     * @param scaleY a scale modifier for the y-axis
      * @param color the color to apply to the texture (RGBA)
      */
     public void addTexturePos(TextureInfo textureInfo, float x, float y, float z, float posX, float posY, float scaleX, float scaleY, float[] color) {

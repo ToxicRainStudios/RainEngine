@@ -1,0 +1,22 @@
+[
+  {
+    "type": "keybinds",
+    "values": [
+	  {
+        "keySprint": "key_left_shift"
+      },
+      {
+        "keyWalkForward": "key_w"
+      },
+	  {
+        "keyWalkBackward": "key_s"
+      },
+	  {
+        "keyWalkLeft": "key_a"
+      },
+	  {
+        "keyWalkRight": "key_d"
+      }
+    ]
+  }
+]

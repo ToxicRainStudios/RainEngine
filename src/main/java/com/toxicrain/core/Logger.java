@@ -14,9 +14,11 @@ public class Logger {
         System.out.println("[LOG]: " + input);
     }
     /**
-     * Prints a log message to the console.
+     * Prints a log message to the console if a condition
+     * is true
      *
      * @param input The message to be logged.
+     * @param bool The condition to print
      */
     public static void printLOGConditional(String input, boolean bool){
         if(bool)System.out.println("[LOG]: " + input);

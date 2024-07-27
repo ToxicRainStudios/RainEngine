@@ -1,8 +1,10 @@
 package com.toxicrain.artifacts;
 
+import com.toxicrain.core.Logger;
 import com.toxicrain.core.TextureInfo;
 import com.toxicrain.core.interfaces.IArtifact;
 import com.toxicrain.core.json.GameInfoParser;
+import com.toxicrain.core.json.KeyInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
@@ -147,7 +149,7 @@ public class Player implements IArtifact {
 
     private static void processInput(long window) {
         //Sprinting8
-        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+        if (glfwGetKey(window, KeyInfoParser.convertToGLFWBind(KeyInfoParser.keySprint)) == GLFW_PRESS) {
             cameraSpeed = 0.1f;
             setIsSprinting(true);
         }
@@ -159,26 +161,11 @@ public class Player implements IArtifact {
         handleCollisions();
 
         // Handle left and right movement
-        if((glfwGetKey(window, GLFW_KEY_A ) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)){
-            cameraX -= cameraSpeed/2;
-            cameraY += cameraSpeed/2;
-        }
-        else if((glfwGetKey(window, GLFW_KEY_D ) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)){
-            cameraX += cameraSpeed/2;
-            cameraY += cameraSpeed/2;
-        }
-       else if((glfwGetKey(window, GLFW_KEY_A ) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)){
-            cameraX -= cameraSpeed/2;
-            cameraY -= cameraSpeed/2;
-        }
-        else if((glfwGetKey(window, GLFW_KEY_D ) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)){
-            cameraX += cameraSpeed/2;
-            cameraY -= cameraSpeed/2;
-        }
-       else if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)cameraX -= cameraSpeed;
-       else if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)cameraX += cameraSpeed;
-       else if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)cameraY += cameraSpeed;
-       else if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)cameraY -= cameraSpeed;
+
+        if(glfwGetKey(window, KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkLeft)) == GLFW_PRESS)cameraX -=  cameraSpeed;
+        if(glfwGetKey(window, KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkRight)) == GLFW_PRESS)cameraX +=  cameraSpeed;;
+        if(glfwGetKey(window, KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkForward)) == GLFW_PRESS) cameraY +=  cameraSpeed;;
+        if(glfwGetKey(window, KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkBackward)) == GLFW_PRESS) cameraY += cameraSpeed;
 
 
 
