@@ -37,13 +37,6 @@ public class TextEngine {
 
     }
 
-
-
-
-
-
-
-
     public static TextureInfo letterToTexture(char toProcess){
         switch (Character.toLowerCase(toProcess)){
             case ('a'):
@@ -102,18 +95,8 @@ public class TextEngine {
                 return TextureUtils.letterSPACE;
             default:
                 return TextureUtils.missingTexture;
-
-
-
-
-
         }
 
-
-
     }
-
-
-
 
 }
