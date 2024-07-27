@@ -47,9 +47,6 @@ public class BatchRenderer {
         colorVboId = glGenBuffers();
     }
 
-    public void addTexture(TextureInfo textureInfo, float v, float v1, float v2, int i, float[] floatArray) {
-    }
-
     private static class TextureVertexInfo {
         int textureId;
         float[] vertices;
