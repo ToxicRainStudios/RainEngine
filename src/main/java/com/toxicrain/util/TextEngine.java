@@ -16,8 +16,6 @@ public class TextEngine {
     String toWrite = "hello";
     int yOffset;
     int xOffset;
-    public static MouseUtils mouseInput = new MouseUtils(window);
-
     public TextEngine(String input, int x, int y) {
         toWrite = input;
         xOffset = x;

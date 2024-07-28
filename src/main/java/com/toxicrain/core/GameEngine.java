@@ -51,7 +51,7 @@ public class GameEngine {
     private static Player player;
     private static Projectile projectile;
     private static NPC character;
-    private static boolean menu = false;
+    private static boolean menu = true;
 
 
 
@@ -226,8 +226,10 @@ public class GameEngine {
     private static void update() {
         for(int engineFrames = 30; engineFrames >= 0; engineFrames--) { // Process input 30 times per frame
             if(menu){
+                Player.cameraX = 0;
+                Player.cameraY = 0;
                 Player.cameraZ = 25;
-
+                Menu.updateMenu();
 
             }
             else {
@@ -275,7 +277,8 @@ public class GameEngine {
 
         // This is the player!
         if(menu){
-        Menu.render(batchRenderer);
+        Menu.render(batchRenderer,window);
+
 
 
 

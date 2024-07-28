@@ -46,6 +46,7 @@ public class PackInfoParser {
     public static String letterY = null;
     public static String letterZ = null;
     public static String letterSPACE = null;
+    public static String playButton = null;
 
 
 
@@ -187,6 +188,9 @@ public class PackInfoParser {
                                 break;
                             case "letterSPACE":
                                 letterSPACE = workingDirectory + "/" + value;
+                                break;
+                            case "playButton":
+                                playButton = workingDirectory + "/" + value;
                                 break;
 
 

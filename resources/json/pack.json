@@ -80,6 +80,8 @@
         "letterZ": "letterZ.png"
       },      {
         "letterSPACE": "letterSPACE.png"
+      },{
+        "playButton": "playButton.png"
       },
 
 

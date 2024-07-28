@@ -49,6 +49,7 @@ public class TextureUtils {
     public static TextureInfo letterY;
     public static TextureInfo letterZ;
     public static TextureInfo letterSPACE;
+    public static TextureInfo playButton;
 
 
 
@@ -93,6 +94,7 @@ public class TextureUtils {
         letterY = loadTexture((PackInfoParser.letterY));
         letterZ = loadTexture(PackInfoParser.letterZ);
         letterSPACE = loadTexture(PackInfoParser.letterSPACE);
+        playButton = loadTexture(PackInfoParser.playButton);
     }
 
     public static TextureInfo loadTexture(String filePath) {

@@ -129,7 +129,7 @@ public class Player implements IArtifact {
         for (int j = 1; j > -2; j -= 1) {
             k = (float) j * GameInfoParser.playerSize;
             for (int i = Tile.extentTop.size() - 1; i >= 0; i--) {
-                col.handleCollisions(j,col,cameraX,cameraY,1f,Tile.extentCenterX.get(i),Tile.extentCenterY.get(i),Tile.mapDataType.get(i));
+                col.handleCollisions(j,col,cameraX,cameraY,1f,1f,Tile.extentCenterX.get(i),Tile.extentCenterY.get(i),Tile.mapDataType.get(i));
                 cameraX += col.changePosX;
                 cameraY += col.changePosY;
             }

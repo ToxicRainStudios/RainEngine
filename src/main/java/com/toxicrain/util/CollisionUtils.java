@@ -17,22 +17,22 @@ public class CollisionUtils {
     }
 
 
-    public void handleCollisions(float k,CollisionUtils instance, float positionX, float positionY, float size, float posX2, float posY2, char player_LeaveQIfNo) {
+    public void handleCollisions(float sizeOfObject1,CollisionUtils instance, float positionX, float positionY, float sizeX, float sizeY, float posX2, float posY2, char player_LeaveQIfNo) {
 
         instance.changePosY = 0;
         instance.changePosX = 0;
         instance.isColliding = false;
-        float extentTop = posY2 + size;
-        float extentBottom = posY2 - size;
-        float extentRight = posX2 + size;
-        float extentLeft = posX2 - size;
+        float extentTop = posY2 + sizeY;
+        float extentBottom = posY2 - sizeY;
+        float extentRight = posX2 + sizeX;
+        float extentLeft = posX2 - sizeX;
 
 
 
 
 
-            if (positionY + k <= extentTop && (positionY + k >= posY2)) {
-                if (positionX + k >= extentLeft && !(positionX + k >= posX2)) {
+            if (positionY + sizeOfObject1<= extentTop && (positionY + sizeOfObject1>= posY2)) {
+                if (positionX + sizeOfObject1>= extentLeft && !(positionX + sizeOfObject1>= posX2)) {
                     if (player_LeaveQIfNo != 'Q') {
                         for (int p = MapInfoParser.doCollide.size() - 1; p >= 0; p--) {
                             if (player_LeaveQIfNo == MapInfoParser.doCollide.get(p)) {
@@ -49,7 +49,7 @@ public class CollisionUtils {
                         instance.isColliding = true;
 
                     }
-                } else if ((positionX + k <= extentRight) && !(positionX + k <= posX2)) {
+                } else if ((positionX + sizeOfObject1<= extentRight) && !(positionX + sizeOfObject1<= posX2)) {
                     if (player_LeaveQIfNo != 'Q') {
                         for (int p = MapInfoParser.doCollide.size() - 1; p >= 0; p--) {
                             if (player_LeaveQIfNo == MapInfoParser.doCollide.get(p)) {
@@ -66,8 +66,8 @@ public class CollisionUtils {
                     }
                 }
             }
-            if (positionY + k >= extentBottom && (positionY + k <= posY2)) {
-                if (positionX + k >= extentLeft && !(positionX + k >= posX2)) {
+            if (positionY + sizeOfObject1>= extentBottom && (positionY + sizeOfObject1<= posY2)) {
+                if (positionX + sizeOfObject1>= extentLeft && !(positionX + sizeOfObject1>= posX2)) {
                     if (player_LeaveQIfNo != 'Q') {
                         for (int p = MapInfoParser.doCollide.size() - 1; p >= 0; p--) {
                             if (player_LeaveQIfNo == MapInfoParser.doCollide.get(p)) {
@@ -83,7 +83,7 @@ public class CollisionUtils {
                     } else {
                         instance.isColliding = true;
                     }
-                } else if ((positionX + k <= extentRight) && !(positionX + k <= posX2)) {
+                } else if ((positionX + sizeOfObject1<= extentRight) && !(positionX + sizeOfObject1<= posX2)) {
                     if (player_LeaveQIfNo != 'Q') {
                         for (int p = MapInfoParser.doCollide.size() - 1; p >= 0; p--) {
                             if (player_LeaveQIfNo == MapInfoParser.doCollide.get(p)) {
@@ -102,8 +102,8 @@ public class CollisionUtils {
                 }
             }
             //yay half way done! (ive been doing this for 3 hours :sob:
-            if ((positionX + k <= extentRight) && (positionX + k >= posX2)) {
-                if ((positionY + k >= extentBottom && !(positionY + k > posY2))) {
+            if ((positionX + sizeOfObject1<= extentRight) && (positionX + sizeOfObject1>= posX2)) {
+                if ((positionY + sizeOfObject1>= extentBottom && !(positionY + sizeOfObject1> posY2))) {
                     if (player_LeaveQIfNo != 'Q') {
                         for (int p = MapInfoParser.doCollide.size() - 1; p >= 0; p--) {
                             if (player_LeaveQIfNo == MapInfoParser.doCollide.get(p)) {
@@ -119,7 +119,7 @@ public class CollisionUtils {
                     } else {
                         instance.isColliding = true;
                     }
-                } else if ((positionY + k <= extentTop) && !(positionY + k <= posY2)) {
+                } else if ((positionY + sizeOfObject1<= extentTop) && !(positionY + sizeOfObject1<= posY2)) {
                     if (player_LeaveQIfNo != 'Q') {
                         for (int p = MapInfoParser.doCollide.size() - 1; p >= 0; p--) {
                             if (player_LeaveQIfNo == MapInfoParser.doCollide.get(p)) {
@@ -138,8 +138,8 @@ public class CollisionUtils {
                 }
 
             }
-            if ((positionX + k >= extentLeft) && (positionX + k <= posX2)) {
-                if ((positionY + k >= extentBottom) && !(positionY + k >= posY2)) {
+            if ((positionX + sizeOfObject1>= extentLeft) && (positionX + sizeOfObject1<= posX2)) {
+                if ((positionY + sizeOfObject1>= extentBottom) && !(positionY + sizeOfObject1>= posY2)) {
                     if (player_LeaveQIfNo != 'Q') {
                         for (int p = MapInfoParser.doCollide.size() - 1; p >= 0; p--) {
                             if (player_LeaveQIfNo == MapInfoParser.doCollide.get(p)) {
@@ -155,7 +155,7 @@ public class CollisionUtils {
                     } else {
                         instance.isColliding = true;
                     }
-                } else if ((positionY + k <= extentTop) && !(positionY + k <= posY2)) {
+                } else if ((positionY + sizeOfObject1<= extentTop) && !(positionY + sizeOfObject1<= posY2)) {
                     if (player_LeaveQIfNo != 'Q') {
                         for (int p = MapInfoParser.doCollide.size() - 1; p >= 0; p--) {
                             if (player_LeaveQIfNo == MapInfoParser.doCollide.get(p)) {
