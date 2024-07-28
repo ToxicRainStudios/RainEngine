@@ -54,6 +54,10 @@ public class FileUtils {
             throw new RuntimeException("Failed to get file size: " + filePath, e);
         }
     }
+
+    /**
+     * Returns the {@link System#getProperty} user.home
+     */
     public static String getUserHome() {
         return System.getProperty("user.home");
     }

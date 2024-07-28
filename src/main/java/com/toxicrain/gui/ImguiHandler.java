@@ -46,7 +46,7 @@ public class ImguiHandler {
     }
 
     /**
-     * Handles keyboard and mouse input.
+     * Handles the keyboard and mouse input for IMGUI
      *
      * @param window the GLFW window handle.
      */
