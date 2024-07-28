@@ -43,7 +43,6 @@ public class GameEngine {
 
     private static boolean fullscreen = true;
 
-    private static ImguiHandler imguiApp;
     private static int bufferId;
     private static boolean menu = false;
 
@@ -157,8 +156,8 @@ public class GameEngine {
         GL.createCapabilities();
 
         // Create and initialize ImguiHandler
-        imguiApp = new ImguiHandler(window);
-        imguiApp.initialize();
+        GameFactory.imguiApp = new ImguiHandler(window);
+        GameFactory.imguiApp.initialize();
 
         Logger.printLOG("Loading pack.json"); //MUST be called before TextureUtils.initTextures()
         PackInfoParser.loadPackInfo();
@@ -251,10 +250,10 @@ public class GameEngine {
 
         // Check if the window has focus and only do certain things if so
         if (glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0) {
-            imguiApp.handleInput(window);
-            imguiApp.newFrame();
-            imguiApp.drawSettingsUI();
-            imguiApp.render();
+            GameFactory.imguiApp.handleInput(window);
+            GameFactory.imguiApp.newFrame();
+            GameFactory.imguiApp.drawSettingsUI();
+            GameFactory.imguiApp.render();
 
             //soundSystem.play(bufferId);
 

@@ -12,7 +12,7 @@ import static com.toxicrain.util.TextureUtils.playerTexture;
 
 public class GameFactory {
 
-    private static ImguiHandler imguiApp;
+    public static ImguiHandler imguiApp;
     public static SoundSystem soundSystem;
 
     public static Player player;
