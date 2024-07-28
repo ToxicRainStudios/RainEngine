@@ -13,3 +13,11 @@ build
 .DS_Store
 *.log
 imgui.ini
+.vs/game/FileContentIndex/77caf781-dad7-41b8-8c4e-97475684b9a1.vsidx
+.vs/ProjectSettings.json
+.vs/slnx.sqlite
+.vs/game/FileContentIndex/dc0430d0-ea1b-4459-9919-1d38640eb390.vsidx
+.vs/game/FileContentIndex/f85eb248-d1ca-4d1a-8b94-bbc5f6c2f907.vsidx
+.vs/game/FileContentIndex/99b2fbfe-9060-4fff-8fa9-f0b818e8dbea.vsidx
+.vs/game/FileContentIndex/32e590ec-3060-4b90-86c8-50887fc6ff31.vsidx
+/.vs
