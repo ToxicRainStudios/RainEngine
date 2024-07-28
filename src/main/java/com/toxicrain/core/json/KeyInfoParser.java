@@ -12,7 +12,7 @@ import java.util.Iterator;
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
- * GameInfoParser parsers the keybinds.json file
+ * KeyInfoParser parsers the keybinds.json file
  * needed for game functionality
  */
 public class KeyInfoParser {

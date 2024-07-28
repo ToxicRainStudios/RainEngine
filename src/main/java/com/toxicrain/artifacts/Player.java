@@ -1,6 +1,5 @@
 package com.toxicrain.artifacts;
 
-import com.toxicrain.core.Logger;
 import com.toxicrain.core.TextureInfo;
 import com.toxicrain.core.interfaces.IArtifact;
 import com.toxicrain.core.json.GameInfoParser;
@@ -14,14 +13,17 @@ import com.toxicrain.util.MouseUtils;
 import com.toxicrain.util.WindowUtils;
 import org.joml.Vector3f;
 
-import java.util.Map;
 
 import static com.toxicrain.core.GameEngine.window;
 import static com.toxicrain.util.TextureUtils.playerTexture;
 import static org.lwjgl.glfw.GLFW.*;
 
 
-
+/**
+ * The Player class provides information about the player
+ *
+ * @author Gabefry, strubium
+ */
 public class Player implements IArtifact {
 
     public static float posX;

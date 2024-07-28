@@ -8,11 +8,12 @@ import com.toxicrain.artifacts.Projectile;
 import com.toxicrain.core.json.*;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.core.render.Tile;
+import com.toxicrain.factorys.GameFactory;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.gui.Menu;
-import com.toxicrain.sound.SoundSystem;
-import com.toxicrain.util.*;
-import org.joml.Vector3f;
+import com.toxicrain.util.Color;
+import com.toxicrain.util.Constants;
+import com.toxicrain.util.TextureUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -25,8 +26,7 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import static com.toxicrain.util.TextureUtils.floorTexture;
-import static com.toxicrain.util.TextureUtils.playerTexture;
+import static com.toxicrain.util.TextureUtils.*;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -41,22 +41,14 @@ public class GameEngine {
     // The window handle
     public static long window;
 
-
     private static boolean fullscreen = true;
 
     private static ImguiHandler imguiApp;
-    private static Vector3f center;
-    private static final SoundSystem soundSystem = new SoundSystem();
     private static int bufferId;
-    private static Player player;
-    private static Projectile projectile;
-    private static NPC character;
     private static boolean menu = false;
 
-
-
     public GameEngine(){
-        imguiApp = new ImguiHandler(window);
+
 
     }
 
@@ -190,13 +182,9 @@ public class GameEngine {
         glLoadMatrixf(createPerspectiveProjectionMatrix(SettingsInfoParser.fov, SettingsInfoParser.windowWidth / SettingsInfoParser.windowHeight, 1.0f, 100.0f));
 
 
+        GameFactory.load();
 
-        //HERE!!!!
-        player = new Player(Player.cameraX, Player.cameraY, Player.cameraZ, playerTexture, false);
-        projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0);
-        character = new NPC(12,12,1,2);
         Menu.initalizeMenu();
-        //UP!!!
 
         // Set the viewport size
         glViewport(0, 0, (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
@@ -206,8 +194,8 @@ public class GameEngine {
 
 
         Logger.printLOG("Initializing SoundSystem");
-        soundSystem.init();
-        bufferId = soundSystem.loadSound("C:/Users/hudso/Downloads/sample-3s.wav");
+        GameFactory.soundSystem.init();
+        bufferId = GameFactory.soundSystem.loadSound("C:/Users/hudso/Downloads/sample-3s.wav");
 
     }
 
@@ -231,9 +219,9 @@ public class GameEngine {
 
             }
             else {
-                character.runAI(character);
-                player.update();
-                projectile.update();
+                GameFactory.character.runAI(GameFactory.character);
+                GameFactory.player.update();
+                GameFactory.projectile.update();
             }
         }
     }
@@ -282,8 +270,8 @@ public class GameEngine {
         }
         else {
             drawMap(batchRenderer);
-            NPC.render(batchRenderer, character);
-            Projectile.render(batchRenderer, projectile, playerTexture);
+            NPC.render(batchRenderer, GameFactory.character);
+            Projectile.render(batchRenderer, GameFactory.projectile, playerTexture);
             Player.render(batchRenderer);
         }
 
@@ -302,7 +290,7 @@ public class GameEngine {
             render(batchRenderer);
         }
         ImguiHandler.cleanup();
-        soundSystem.cleanup();
+        GameFactory.soundSystem.cleanup();
     }
 
 

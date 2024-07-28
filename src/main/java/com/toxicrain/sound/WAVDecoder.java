@@ -1,11 +1,19 @@
 package com.toxicrain.sound;
 
+import com.toxicrain.util.TextureUtils;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import static org.lwjgl.openal.AL10.*;
 
+
+/**
+ * Decodes a wav and converts it into a {@link SoundInfo}
+ *
+ * @author strubium
+ */
 public class WAVDecoder {
     public static SoundInfo decode(ByteBuffer buffer) throws IOException {
         buffer.order(ByteOrder.LITTLE_ENDIAN);

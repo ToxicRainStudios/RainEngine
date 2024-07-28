@@ -1,6 +1,5 @@
 package com.toxicrain.core.render;
 
-import com.toxicrain.artifacts.Player;
 import com.toxicrain.core.TextureInfo;
 import com.toxicrain.core.json.GameInfoParser;
 import org.lwjgl.BufferUtils;
