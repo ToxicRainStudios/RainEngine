@@ -21,6 +21,7 @@ public class GameFactory {
 
     public static void load(){
         imguiApp = new ImguiHandler(GameEngine.window);
+        imguiApp.initialize();
         soundSystem = new SoundSystem();
 
         player = new Player(Player.cameraX, Player.cameraY, Player.cameraZ, playerTexture, false);
