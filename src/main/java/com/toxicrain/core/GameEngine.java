@@ -8,7 +8,7 @@ import com.toxicrain.artifacts.Projectile;
 import com.toxicrain.core.json.*;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.core.render.Tile;
-import com.toxicrain.factorys.GameFactory;
+import com.toxicrain.factories.GameFactory;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.gui.Menu;
 import com.toxicrain.util.Color;

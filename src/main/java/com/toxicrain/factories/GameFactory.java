@@ -1,4 +1,4 @@
-package com.toxicrain.factorys;
+package com.toxicrain.factories;
 
 import com.toxicrain.artifacts.NPC;
 import com.toxicrain.artifacts.Player;
