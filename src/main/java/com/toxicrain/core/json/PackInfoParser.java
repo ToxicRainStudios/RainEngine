@@ -199,10 +199,10 @@ public class PackInfoParser {
             Logger.printERROR("File not found: " + packLocation);
             e.printStackTrace();
         } catch (IOException e) {
-            System.err.println("Error reading file: " + packLocation);
+            Logger.printERROR("Error reading file: " + packLocation);
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("Error parsing JSON: " + e.getMessage());
+            Logger.printERROR("Error parsing JSON: " + e.getMessage());
             e.printStackTrace();
         }
     }

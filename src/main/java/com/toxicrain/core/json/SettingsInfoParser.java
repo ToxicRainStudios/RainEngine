@@ -70,17 +70,17 @@ public class SettingsInfoParser {
             Logger.printERROR("File not found: " + filePath);
             e.printStackTrace();
         } catch (IOException e) {
-            System.err.println("Error reading file: " + filePath);
+            Logger.printERROR("Error reading file: " + filePath);
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("Error parsing JSON: " + e.getMessage());
+            Logger.printERROR("Error parsing JSON: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     public static void modifyKey(String key, String newValue) {
         if (valueObject == null) {
-            System.err.println("Error: valueObject is null");
+            Logger.printERROR("Error: valueObject is null");
             return;
         }
 
