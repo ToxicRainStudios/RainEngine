@@ -271,14 +271,9 @@ public class Player implements IArtifact {
         // Update cameraZ based on the scroll input
         cameraZ += scrollOffset * scrollSpeed;
 
-        // Cap cameraZ at max 25 and min 3
-        if (cameraZ > GameInfoParser.maxZoom) {
-            cameraZ = GameInfoParser.maxZoom;
+        // Clamp cameraZ at max 25 and min 3
+        cameraZ = Math.max(GameInfoParser.minZoom, Math.min(cameraZ, GameInfoParser.maxZoom));
 
-        }
-        if (cameraZ < 3) {
-            cameraZ = 3;
-        }
 
         scrollOffset = 0.0f; // Reset the scroll offset after applying it
     }
