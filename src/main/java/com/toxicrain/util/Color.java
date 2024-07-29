@@ -44,26 +44,26 @@ public enum Color {
     NAVY(0.000f, 0.000f, 0.502f),
 
     // Light levels 1-20
-    LIGHT_LEVEL_1(0.2f, 0.2f, 0.2f),
-    LIGHT_LEVEL_2(0.3f, 0.3f, 0.3f),
-    LIGHT_LEVEL_3(0.4f, 0.4f, 0.4f),
-    LIGHT_LEVEL_4(0.5f, 0.5f, 0.5f),
-    LIGHT_LEVEL_5(0.6f, 0.6f, 0.6f),
-    LIGHT_LEVEL_6(0.7f, 0.7f, 0.7f),
-    LIGHT_LEVEL_7(0.8f, 0.8f, 0.8f),
-    LIGHT_LEVEL_8(0.9f, 0.9f, 0.9f),
-    LIGHT_LEVEL_9(1.0f, 0.9f, 0.9f),
-    LIGHT_LEVEL_10(1.0f, 0.8f, 0.8f),
-    LIGHT_LEVEL_11(1.0f, 0.7f, 0.7f),
-    LIGHT_LEVEL_12(1.0f, 0.6f, 0.6f),
-    LIGHT_LEVEL_13(1.0f, 0.5f, 0.5f),
-    LIGHT_LEVEL_14(1.0f, 0.4f, 0.4f),
-    LIGHT_LEVEL_15(1.0f, 0.3f, 0.3f),
-    LIGHT_LEVEL_16(1.0f, 0.2f, 0.2f),
-    LIGHT_LEVEL_17(1.0f, 0.1f, 0.1f),
-    LIGHT_LEVEL_18(1.0f, 0.05f, 0.05f),
-    LIGHT_LEVEL_19(1.0f, 0.02f, 0.02f),
-    LIGHT_LEVEL_20(1.0f, 0.0f, 0.0f);
+    LIGHT_LEVEL_1(0.1f, 0.1f, 0.1f),    // Very dark grey
+    LIGHT_LEVEL_2(0.15f, 0.15f, 0.15f), // Dark grey
+    LIGHT_LEVEL_3(0.2f, 0.2f, 0.2f),    // Grey
+    LIGHT_LEVEL_4(0.25f, 0.25f, 0.25f), // Light grey
+    LIGHT_LEVEL_5(0.3f, 0.3f, 0.3f),    // Slightly lighter grey
+    LIGHT_LEVEL_6(0.35f, 0.35f, 0.35f), // Medium grey
+    LIGHT_LEVEL_7(0.4f, 0.4f, 0.4f),    // Light grey
+    LIGHT_LEVEL_8(0.45f, 0.45f, 0.45f), // Very light grey
+    LIGHT_LEVEL_9(0.5f, 0.5f, 0.5f),    // Medium light grey
+    LIGHT_LEVEL_10(0.55f, 0.55f, 0.55f),// Light gray
+    LIGHT_LEVEL_11(0.6f, 0.6f, 0.6f),   // Slightly lighter light gray
+    LIGHT_LEVEL_12(0.65f, 0.65f, 0.65f),// Very light gray
+    LIGHT_LEVEL_13(0.7f, 0.7f, 0.7f),   // Almost white
+    LIGHT_LEVEL_14(0.75f, 0.75f, 0.75f),// Near white
+    LIGHT_LEVEL_15(0.8f, 0.8f, 0.8f),   // Lightest gray
+    LIGHT_LEVEL_16(0.85f, 0.85f, 0.85f),// Very light gray
+    LIGHT_LEVEL_17(0.9f, 0.9f, 0.9f),   // Almost white
+    LIGHT_LEVEL_18(0.95f, 0.95f, 0.95f),// Very near white
+    LIGHT_LEVEL_19(1.0f, 1.0f, 1.0f),   // White
+    LIGHT_LEVEL_20(1.0f, 1.0f, 1.0f);   // White
 
     private final float red;
     private final float green;
@@ -98,6 +98,16 @@ public enum Color {
         float avgBlue = (color1.blue + color2.blue) / 2.0f;
 
         return new float[]{avgRed, avgGreen, avgBlue};
+    }
+
+
+    public static Color findByRGB(float red, float green, float blue) {
+        for (Color color : Color.values()) {
+            if (color.red == red && color.green == green && color.blue == blue) {
+                return color;
+            }
+        }
+        return null;
     }
 
 

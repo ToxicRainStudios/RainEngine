@@ -25,6 +25,9 @@ import org.lwjgl.system.MemoryStack;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static com.toxicrain.util.TextureUtils.*;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -174,7 +177,7 @@ public class GameEngine {
         KeyInfoParser.loadKeyInfo();
 
         // Set the "background" color
-        glClearColor(255.0f, 255.0f, 255.0f, 0.0f);
+        glClearColor(0, 0, 0, 0);
 
         // Set up the projection matrix with FOV of 90 degrees
         glMatrixMode(GL_PROJECTION);
@@ -198,11 +201,26 @@ public class GameEngine {
 
     }
 
+    public static List<float[]> createLightSources() {
+        List<float[]> lightSources = new ArrayList<>();
+
+        // Add light sources to the list
+        lightSources.add(new float[] { 16, -16, 10f }); // { x, y, maxDistance }
+        lightSources.add(new float[] { 300.0f, 250.0f, 70.0f });
+        lightSources.add(new float[] { 500.0f, 350.0f, 40.0f });
+        lightSources.add(new float[] { 700.0f, 450.0f, 100.0f });
+        lightSources.add(new float[] { 400.0f, 100.0f, 20.0f });
+
+        return lightSources;
+}
+
+
     private static void drawMap(BatchRenderer batchRenderer){
         for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
             // Ensure that indices are valid
             if (k >= 0 && k < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
-                batchRenderer.addTexture(TextureUtils.getTexture(Tile.mapDataType.get(k)), MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, 1,1,Color.toFloatArray(Color.WHITE)); // Top-right corner
+
+                batchRenderer.addTextureLit(TextureUtils.getTexture(Tile.mapDataType.get(k)), MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, 1,1, createLightSources()); // Top-right corner
             } else {
                 Logger.printLOG("Index out of bounds: space=" + k);
             }

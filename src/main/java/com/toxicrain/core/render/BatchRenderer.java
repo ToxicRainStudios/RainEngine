@@ -2,6 +2,7 @@ package com.toxicrain.core.render;
 
 import com.toxicrain.core.TextureInfo;
 import com.toxicrain.core.json.GameInfoParser;
+import com.toxicrain.util.Color;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
@@ -26,8 +27,6 @@ public class BatchRenderer {
     private final int vertexVboId;
     private final int texCoordVboId;
     private final int colorVboId;
-
-    private boolean blendingEnabled = true;
 
 
     /**
@@ -99,8 +98,8 @@ public class BatchRenderer {
         float[] originalVertices = {
                 -aspectRatio * scaleX, -1.0f * scaleY, 0.0f,
                 aspectRatio * scaleX, -1.0f * scaleY, 0.0f,
-                aspectRatio * scaleX,  1.0f * scaleY, 0.0f,
-                -aspectRatio * scaleX,  1.0f * scaleY, 0.0f
+                aspectRatio * scaleX, scaleY, 0.0f,
+                -aspectRatio * scaleX, scaleY, 0.0f
         };
 
         // Calculate rotation
@@ -158,6 +157,125 @@ public class BatchRenderer {
     }
 
     /**
+     * Adds a lit texture with specified rotation and scaling to the current batch.
+     * If the batch exceeds the maximum texture count, it is rendered and a new batch is started.
+     *
+     * @param textureInfo the texture information
+     * @param x the x-coordinate of the texture
+     * @param y the y-coordinate of the texture
+     * @param z the z-coordinate of the texture
+     * @param angle the rotation angle in radians
+     * @param scaleX the scale factor along the x-axis
+     * @param scaleY the scale factor along the y-axis
+     * @param lightPositions the list of light positions
+     */
+    public void addTextureLit(TextureInfo textureInfo, float x, float y, float z, float angle, float scaleX, float scaleY, List<float[]> lightPositions) {
+        if (textureVertexInfos.size() >= MAX_TEXTURES) {
+            renderBatch();
+            beginBatch();
+        }
+
+        // Calculate aspect ratio and create original vertices
+        float aspectRatio = (float) textureInfo.width / textureInfo.height;
+        float[] originalVertices = {
+                -aspectRatio * scaleX, -1.0f * scaleY, 0.0f,
+                aspectRatio * scaleX, -1.0f * scaleY, 0.0f,
+                aspectRatio * scaleX, scaleY, 0.0f,
+                -aspectRatio * scaleX, scaleY, 0.0f
+        };
+
+        // Calculate rotation
+        float cosTheta = (float) Math.cos(angle);
+        float sinTheta = (float) Math.sin(angle);
+
+        // Rotate vertices
+        float[] rotatedVertices = new float[12];
+        for (int i = 0; i < 4; i++) {
+            int index = i * 3;
+            float vx = originalVertices[index];
+            float vy = originalVertices[index + 1];
+            rotatedVertices[index]     = x + (vx * cosTheta - vy * sinTheta);
+            rotatedVertices[index + 1] = y + (vx * sinTheta + vy * cosTheta);
+            rotatedVertices[index + 2] = z;
+        }
+
+        // Texture coordinates for the two triangles
+        float[] texCoords = {
+                0.0f, 0.0f,
+                1.0f, 0.0f,
+                1.0f, 1.0f,
+                0.0f, 1.0f
+        };
+
+        // Calculate light level
+        float lightLevel = calculateLightLevel(lightPositions, rotatedVertices);
+
+        // Generate color based on light level
+        float[] color = Color.toFloatArray(Color.LIGHT_LEVEL_1); // Default to the lowest light level
+        if (lightLevel >= 1.0f) {
+            color = Color.toFloatArray(Color.LIGHT_LEVEL_20); // Highest light level
+        } else if (lightLevel > 0) {
+            int level = (int) (lightLevel * 19) + 1;
+            color = Color.toFloatArray(Color.values()[level + Color.LIGHT_LEVEL_1.ordinal()]);
+        }
+
+        // Generate vertex, texture coordinate, and color data
+        float[] triangleVertices = {
+                rotatedVertices[0], rotatedVertices[1], rotatedVertices[2],
+                rotatedVertices[3], rotatedVertices[4], rotatedVertices[5],
+                rotatedVertices[6], rotatedVertices[7], rotatedVertices[8],
+
+                rotatedVertices[0], rotatedVertices[1], rotatedVertices[2],
+                rotatedVertices[6], rotatedVertices[7], rotatedVertices[8],
+                rotatedVertices[9], rotatedVertices[10], rotatedVertices[11]
+        };
+
+        float[] triangleTexCoords = {
+                texCoords[0], texCoords[1],
+                texCoords[2], texCoords[3],
+                texCoords[4], texCoords[5],
+
+                texCoords[0], texCoords[1],
+                texCoords[4], texCoords[5],
+                texCoords[6], texCoords[7]
+        };
+
+        float[] triangleColors = new float[24];
+        for (int i = 0; i < 6; i++) {
+            int baseIndex = i * 4;
+            System.arraycopy(color, 0, triangleColors, baseIndex, 4);
+        }
+
+        // Add the texture vertex info
+        textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, triangleVertices, triangleTexCoords, triangleColors));
+    }
+
+    private float calculateLightLevel(List<float[]> lightPositions, float[] vertices) {
+        float totalLightLevel = 0.0f;
+        for (float[] lightPos : lightPositions) {
+            float lightX = lightPos[0];
+            float lightY = lightPos[1];
+            float maxDistance = lightPos[2]; // Max distance for this light
+
+            // Calculate the light intensity for each vertex
+            for (int i = 0; i < vertices.length; i += 3) {
+                float vertexX = vertices[i];
+                float vertexY = vertices[i + 1];
+                float dx = lightX - vertexX;
+                float dy = lightY - vertexY;
+                float distance = (float) Math.sqrt(dx * dx + dy * dy);
+                float intensity = Math.max(0, 1 - distance / maxDistance);
+                totalLightLevel += intensity;
+            }
+        }
+
+        // Normalize the total light level
+        int vertexCount = vertices.length / 3;
+        return Math.min(1.0f, totalLightLevel / vertexCount);
+    }
+
+
+    /**
      * Adds a texture with specified rotation and color to the current batch.
      * If the batch exceeds the maximum texture count, it is rendered and a new batch is started.
      *
@@ -191,8 +309,8 @@ public class BatchRenderer {
         float[] originalVertices = {
                 -aspectRatio * scaleX, -1.0f * scaleY, 0.0f,
                 aspectRatio * scaleX, -1.0f * scaleY, 0.0f,
-                aspectRatio * scaleX,  1.0f * scaleY, 0.0f,
-                -aspectRatio * scaleX,  1.0f * scaleY, 0.0f
+                aspectRatio * scaleX, scaleY, 0.0f,
+                -aspectRatio * scaleX, scaleY, 0.0f
         };
 
         // Rotate and translate vertices
@@ -340,7 +458,6 @@ public class BatchRenderer {
      * @param enabled true to enable blending, false to disable
      */
     public void setBlendingEnabled(boolean enabled) {
-        this.blendingEnabled = enabled;
         if (enabled) {
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
