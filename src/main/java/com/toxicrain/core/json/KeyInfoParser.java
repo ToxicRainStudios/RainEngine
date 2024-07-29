@@ -322,8 +322,34 @@ public class KeyInfoParser {
                 return GLFW.GLFW_KEY_RIGHT_SUPER;
             case "key_menu":
                 return GLFW.GLFW_KEY_MENU;
-            case "key_unknown":
-                return GLFW.GLFW_KEY_UNKNOWN;
+            case "gamepad_a":
+                return GLFW.GLFW_GAMEPAD_BUTTON_A;
+            case "gamepad_b":
+                return GLFW.GLFW_GAMEPAD_BUTTON_B;
+            case "gamepad_x":
+                return GLFW.GLFW_GAMEPAD_BUTTON_X;
+            case "gamepad_y":
+                return GLFW.GLFW_GAMEPAD_BUTTON_Y;
+            case "gamepad_left_bumper":
+                return GLFW.GLFW_GAMEPAD_BUTTON_LEFT_BUMPER;
+            case "gamepad_right_bumper":
+                return GLFW.GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER;
+            case "gamepad_back":
+                return GLFW.GLFW_GAMEPAD_BUTTON_BACK;
+            case "gamepad_start":
+                return GLFW.GLFW_GAMEPAD_BUTTON_START;
+            case "gamepad_left_thumb":
+                return GLFW.GLFW_GAMEPAD_BUTTON_LEFT_THUMB;
+            case "gamepad_right_thumb":
+                return GLFW.GLFW_GAMEPAD_BUTTON_RIGHT_THUMB;
+            case "gamepad_dpad_up":
+                return GLFW.GLFW_GAMEPAD_BUTTON_DPAD_UP;
+            case "gamepad_dpad_right":
+                return GLFW.GLFW_GAMEPAD_BUTTON_DPAD_RIGHT;
+            case "gamepad_dpad_down":
+                return GLFW.GLFW_GAMEPAD_BUTTON_DPAD_DOWN;
+            case "gamepad_dpad_left":
+                return GLFW.GLFW_GAMEPAD_BUTTON_DPAD_LEFT;
             default:
                 return GLFW.GLFW_KEY_UNKNOWN;
         }
