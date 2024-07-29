@@ -200,8 +200,6 @@ public class GameEngine {
         GameFactory.soundSystem.init();
         bufferId = GameFactory.soundSystem.loadSound("C:/Users/hudso/Downloads/sample-3s.wav");
 
-        LightUtils.addLightSource(16, -16, 15);
-
     }
 
 
