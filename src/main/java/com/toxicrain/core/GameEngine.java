@@ -26,11 +26,9 @@ import org.lwjgl.system.MemoryStack;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-import static com.toxicrain.util.TextureUtils.*;
+import static com.toxicrain.util.TextureUtils.floorTexture;
+import static com.toxicrain.util.TextureUtils.playerTexture;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -47,7 +45,6 @@ public class GameEngine {
 
     private static boolean fullscreen = true;
 
-    private static int bufferId;
     private static boolean menu = false;
 
     public GameEngine(){
@@ -198,7 +195,6 @@ public class GameEngine {
 
         Logger.printLOG("Initializing SoundSystem");
         GameFactory.soundSystem.init();
-        bufferId = GameFactory.soundSystem.loadSound("C:/Users/hudso/Downloads/sample-3s.wav");
 
     }
 
