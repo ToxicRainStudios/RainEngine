@@ -16,6 +16,11 @@ public class LightUtils {
         lightSources.add(new float[] { x, y, strength });
     }
 
+
+    /**
+     * Get the list of light sources and their positions
+     * @return {@link LightUtils#lightSources}
+     */
     public static List<float[]> getLightSources() {
 
         return lightSources;
