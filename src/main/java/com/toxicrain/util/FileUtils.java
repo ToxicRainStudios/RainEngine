@@ -57,6 +57,8 @@ public class FileUtils {
 
     /**
      * Returns the {@link System#getProperty} user.home
+     *
+     * @return System.getProperty("user.home")
      */
     public static String getUserHome() {
         return System.getProperty("user.home");
