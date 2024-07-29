@@ -24,7 +24,6 @@ public class MapInfoParser {
     public static int tiles = 0;
     public static ArrayList<Integer> mapDataX = new ArrayList<>();
     public static ArrayList<Integer> mapDataY = new ArrayList<>();
-    public static List<float[]> lightingData = new ArrayList<>();
 
     public static void parseMapFile() throws IOException {
         // Read JSON file as String
