@@ -7,13 +7,13 @@ RainEngine is a WIP engine running on [LWJGL3](https://www.lwjgl.org/)
 * Parsing general game information from gameinfo.json files
 * Really basic texture rendering
 * Basic Map Loading
+  * Now with the ability to "layer" textures in maps for more detail
 * A basic "player"
 * Keybinding system
 * Lighting
 
 
 ## What's not done:
-* The ability to "layer" textures in maps for more detail
 * More control over the window title
 * UI with configurable
   * Main Menu

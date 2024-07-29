@@ -72,10 +72,10 @@ public class MapInfoParser {
                 }
 
                 // Process slices
-                for (int j = 0; j < slices.length(); j++) {
-                    JSONArray slice = slices.getJSONArray(j);
-                    for (int k = 0; k < slice.length(); k++) {
-                        String row = slice.getString(k);
+                for (int layer = 0; layer < slices.length(); layer++) {
+                    JSONArray sliceLayer = slices.getJSONArray(layer);
+                    for (int k = 0; k < sliceLayer.length(); k++) {
+                        String row = sliceLayer.getString(k);
                         for (int l = 0; l < row.length(); l++) {
                             if (row.charAt(l) != ' ') {
                                 xpos = l;
