@@ -13,6 +13,7 @@ import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.gui.Menu;
 import com.toxicrain.util.Color;
 import com.toxicrain.util.Constants;
+import com.toxicrain.util.LightUtils;
 import com.toxicrain.util.TextureUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
@@ -199,20 +200,11 @@ public class GameEngine {
         GameFactory.soundSystem.init();
         bufferId = GameFactory.soundSystem.loadSound("C:/Users/hudso/Downloads/sample-3s.wav");
 
+        LightUtils.addLightSource(16, -16, 15);
+
     }
 
-    public static List<float[]> createLightSources() {
-        List<float[]> lightSources = new ArrayList<>();
 
-        // Add light sources to the list
-        lightSources.add(new float[] { 16, -16, 10f }); // { x, y, maxDistance }
-        lightSources.add(new float[] { 300.0f, 250.0f, 70.0f });
-        lightSources.add(new float[] { 500.0f, 350.0f, 40.0f });
-        lightSources.add(new float[] { 700.0f, 450.0f, 100.0f });
-        lightSources.add(new float[] { 400.0f, 100.0f, 20.0f });
-
-        return lightSources;
-}
 
 
     private static void drawMap(BatchRenderer batchRenderer){
@@ -220,7 +212,7 @@ public class GameEngine {
             // Ensure that indices are valid
             if (k >= 0 && k < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
 
-                batchRenderer.addTextureLit(TextureUtils.getTexture(Tile.mapDataType.get(k)), MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, 1,1, createLightSources()); // Top-right corner
+                batchRenderer.addTextureLit(TextureUtils.getTexture(Tile.mapDataType.get(k)), MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, 1,1, LightUtils.getLightSources()); // Top-right corner
             } else {
                 Logger.printLOG("Index out of bounds: space=" + k);
             }
