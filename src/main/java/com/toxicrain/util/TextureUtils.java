@@ -140,27 +140,4 @@ public class TextureUtils {
         return new TextureInfo(textureId, width, height);
     }
 
-    public static TextureInfo getTexture(char textureMapChar) {
-        switch (textureMapChar) {
-            case ':':
-                return floorTexture;
-            case '+':
-                return concreteTexture1;
-            case '-':
-                return concreteTexture2;
-            case '1':
-                return dirtTexture1;
-            case '2':
-                return dirtTexture2;
-            case '3':
-                return grassTexture1;
-            case '`':
-                return playerTexture;
-            case '~':
-                return splatterTexture;
-            default:
-                return missingTexture;
-        }
-    }
-
 }
