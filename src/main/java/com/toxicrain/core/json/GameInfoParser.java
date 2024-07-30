@@ -76,7 +76,7 @@ public class GameInfoParser {
                                 useIMGUI = Boolean.parseBoolean(value);
                                 break;
                             case "playerSize":
-                                playerSize = ((float)Integer.parseInt(value))/10;
+                                playerSize = Float.parseFloat(value) / 10;
                                 break;
                             case "maxTexturesPerBatch":
                                 maxTexturesPerBatch = Integer.parseInt(value);

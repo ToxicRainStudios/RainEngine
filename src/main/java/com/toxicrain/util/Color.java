@@ -54,7 +54,7 @@ public enum Color {
     LIGHT_LEVEL_8(0.45f, 0.45f, 0.45f), // Very light grey
     LIGHT_LEVEL_9(0.5f, 0.5f, 0.5f),    // Medium light grey
     LIGHT_LEVEL_10(0.55f, 0.55f, 0.55f),// Light gray
-    LIGHT_LEVEL_11(0.6f, 0.6f, 0.6f),   // Slightly lighter light gray
+    LIGHT_LEVEL_11(0.6f, 0.6f, 0.6f),   // Slightly lighter gray
     LIGHT_LEVEL_12(0.65f, 0.65f, 0.65f),// Very light gray
     LIGHT_LEVEL_13(0.7f, 0.7f, 0.7f),   // Almost white
     LIGHT_LEVEL_14(0.75f, 0.75f, 0.75f),// Near white

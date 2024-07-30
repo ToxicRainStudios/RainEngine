@@ -9,7 +9,9 @@ import org.lwjgl.glfw.GLFW;
 
 /**
  * Handler class for integrating ImGui with GLFW and OpenGL.
- * Provides initialization, input handling, and rendering functions for ImGui.
+ * Provides initialization, input handling, and rendering for ImGui.
+ *
+ * @author strubium
  */
 public class ImguiHandler {
 

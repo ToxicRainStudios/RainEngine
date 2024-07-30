@@ -15,6 +15,8 @@ import static org.lwjgl.opengl.GL15.*;
 /**
  * The BatchRenderer class handles rendering multiple textures in a batch
  * to improve performance by reducing the number of draw calls.
+ *
+ * @author strubium
  */
 public class BatchRenderer {
 
