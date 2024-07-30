@@ -112,7 +112,7 @@ public class Player implements IArtifact {
     private static float[] openglMousePos;
     private static void getMouse(){
         float[] mousePos = mouseInput.getMousePosition();
-        openglMousePos = MouseUtils.convertToOpenGLCoordinates(mousePos[0], mousePos[1], (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
+        openglMousePos = MouseUtils.convertToOpenGLCoordinatesOffset(mousePos[0], mousePos[1], (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight, Player.cameraX, Player.cameraY);
     }
     public static void render(BatchRenderer batchRenderer){
         // Convert mouse coordinates to OpenGL coordinates

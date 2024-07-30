@@ -37,6 +37,22 @@ public class MouseUtils {
     }
 
     /**
+     * Converts mouse coordinates to OpenGL coordinates with a offset
+     *
+     * @param mouseX The x-coordinate of the mouse
+     * @param mouseY The y-coordinate of the mouse
+     * @param screenWidth The width of the screen or window
+     * @param screenHeight The height of the screen or window
+     * @return A float array containing [openglMouseX, openglMouseY] coordinates
+     */
+    public static float[] convertToOpenGLCoordinatesOffset(float mouseX, float mouseY, int screenWidth, int screenHeight, float offsetX, float offsetY) {
+        float openglMouseX = mouseX / screenWidth * 2 - 1;
+        float openglMouseY = 1 - mouseY / screenHeight * 2;
+
+        return new float[]{openglMouseX + offsetX, openglMouseY + offsetY};
+    }
+
+    /**
      * Converts mouse coordinates to OpenGL coordinates.
      *
      * @param mouseX The x-coordinate of the mouse
