@@ -70,6 +70,12 @@ public class BatchRenderer {
     }
 
     public void beginBatch() {
+        // Enable necessary OpenGL states
+        glEnable(GL_TEXTURE_2D);
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glEnableClientState(GL_COLOR_ARRAY);
+
         textureVertexInfos.clear();
         vertexBuffer.clear();
         texCoordBuffer.clear();
@@ -380,30 +386,32 @@ public class BatchRenderer {
     }
 
     /**
-     * Renders the current batch of textures. Uploads vertex, texture coordinate, and color data
-     * to the GPU and issues draw calls.
+     * Renders the current batch of textures by uploading vertex, texture coordinate, and color data
+     * to the GPU and issuing draw calls.
      */
     public void renderBatch() {
+        // Early exit if there are no textures to render
         if (textureVertexInfos.isEmpty()) return;
 
-        glEnable(GL_TEXTURE_2D);
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glEnableClientState(GL_COLOR_ARRAY);
-
         int currentTextureId = -1;
+
+        // Clear buffers to start fresh
         vertexBuffer.clear();
         texCoordBuffer.clear();
         colorBuffer.clear();
 
         for (TextureVertexInfo info : textureVertexInfos) {
+            // Check if we need to switch to a new texture
             if (info.textureId != currentTextureId) {
                 // Render the current batch if it exists
                 if (currentTextureId != -1) {
+                    // Prepare buffers for rendering
                     vertexBuffer.flip();
                     texCoordBuffer.flip();
                     colorBuffer.flip();
-                    renderCurrentBatch();
+                    renderCurrentBatch(); // Render the batch
+
+                    // Clear buffers for the next batch
                     vertexBuffer.clear();
                     texCoordBuffer.clear();
                     colorBuffer.clear();
@@ -413,6 +421,7 @@ public class BatchRenderer {
                 currentTextureId = info.textureId;
             }
 
+            // Add current texture data to buffers
             vertexBuffer.put(info.vertices);
             texCoordBuffer.put(info.texCoords);
             colorBuffer.put(info.colors);
@@ -426,12 +435,13 @@ public class BatchRenderer {
             renderCurrentBatch();
         }
 
+        // Disable OpenGL states and clean up
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         glDisableClientState(GL_COLOR_ARRAY);
         glDisable(GL_TEXTURE_2D);
 
-        // Unbind VBOs
+        // Unbind any buffers
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 

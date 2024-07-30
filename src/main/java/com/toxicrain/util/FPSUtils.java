@@ -23,7 +23,7 @@ public class FPSUtils {
 
             // Reset for next second
             frameCount = 0;
-            elapsedTime -= 1.0;
+            elapsedTime = 0;
         }
     }
 }
