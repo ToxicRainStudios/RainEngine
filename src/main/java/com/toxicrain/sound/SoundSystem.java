@@ -53,7 +53,7 @@ public class SoundSystem {
     public int loadSound(String filePath) {
         int bufferId = alGenBuffers();
         if (bufferId == 0) {
-            throw new IllegalStateException("Failed to generate OpenAL buffer.");
+            throw new IllegalStateException("Failed to generate a OpenAL buffer.");
         }
 
         try {
@@ -63,7 +63,7 @@ public class SoundSystem {
             wavData.free();
 
             long fileSize = FileUtils.getFileSize(filePath);
-            Logger.printLOG(String.format("Loaded sound: %s (File Size: %d bytes, Format: %d)", filePath, fileSize, wavData.format ));
+            Logger.printLOG(String.format("Loaded sound: %s (File Size: %d bytes, Format: %d)", filePath, fileSize, wavData.format));
         } catch (FileNotFoundException e) {
             Logger.printERROR("File not found: " + filePath);
             e.printStackTrace();
@@ -71,7 +71,7 @@ public class SoundSystem {
             Logger.printERROR("Error reading file: " + filePath);
             e.printStackTrace();
         } catch (Exception e) {
-            Logger.printERROR("Error parsing JSON: " + e.getMessage());
+            Logger.printERROR("Error processing sound file: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -111,8 +111,14 @@ public class SoundSystem {
     }
 
     public void cleanup() {
-        alcDestroyContext(context);
-        alcCloseDevice(device);
+        // Clean up OpenAL resources
+        if (context != NULL) {
+            alcDestroyContext(context);
+            context = NULL;
+        }
+        if (device != NULL) {
+            alcCloseDevice(device);
+            device = NULL;
+        }
     }
-
 }
