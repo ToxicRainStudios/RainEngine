@@ -11,10 +11,7 @@ import com.toxicrain.core.render.Tile;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.gui.Menu;
-import com.toxicrain.util.Color;
-import com.toxicrain.util.Constants;
-import com.toxicrain.util.LightUtils;
-import com.toxicrain.util.TextureUtils;
+import com.toxicrain.util.*;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -45,7 +42,7 @@ public class GameEngine {
 
     private static boolean fullscreen = true;
 
-    private static final boolean menu = false;
+    private static final boolean menu = true;
 
     public GameEngine(){
 
@@ -176,7 +173,7 @@ public class GameEngine {
         KeyInfoParser.loadKeyInfo();
 
         // Set the "background" color
-        glClearColor(0, 0, 0, 0);
+        glClearColor(255, 0, 0, 0);
 
         // Set up the projection matrix with FOV of 90 degrees
         glMatrixMode(GL_PROJECTION);
@@ -186,7 +183,7 @@ public class GameEngine {
         GameFactory.load();
 
         Logger.printLOG("Loading Menu");
-        Menu.initalizeMenu();
+        Menu.initializeMenu();
 
         Logger.printLOG("Loading Map Palette");
         PaletteInfoParser.loadTextureMappings();
@@ -232,17 +229,19 @@ public class GameEngine {
     }
 
     private static void update() {
-        for(int engineFrames = 30; engineFrames >= 0; engineFrames--) { // Process input 30 times per frame
-            if(menu){
-                Player.cameraZ = 25;
+        MouseUtils mouseUtils = new MouseUtils(window);
 
+        // Check mouse position and button press
+        float[] mousePos = mouseUtils.getMousePosition();
+        boolean mouseClick = mouseUtils.isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT);
 
-            }
-            else {
-                GameFactory.character.runAI(GameFactory.character);
-                GameFactory.player.update();
-                GameFactory.projectile.update();
-            }
+        if (menu) {
+            Player.cameraZ = 25;
+            Menu.updateMenu(mousePos[0], mousePos[1], mouseClick);
+        } else {
+            GameFactory.character.runAI(GameFactory.character);
+            GameFactory.player.update();
+            GameFactory.projectile.update();
         }
     }
 
@@ -275,6 +274,8 @@ public class GameEngine {
             GameFactory.imguiApp.newFrame();
             GameFactory.imguiApp.drawSettingsUI();
             GameFactory.imguiApp.render();
+
+            Menu.render(batchRenderer);
 
             //soundSystem.play(bufferId);
 
