@@ -184,7 +184,11 @@ public class GameEngine {
 
         GameFactory.load();
 
+        Logger.printLOG("Loading Menu");
         Menu.initalizeMenu();
+
+        Logger.printLOG("Loading Map Palette");
+        PaletteInfoParser.loadTextureMappings();
 
         // Set the viewport size
         glViewport(0, 0, (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
@@ -198,20 +202,32 @@ public class GameEngine {
 
     }
 
+    private static void drawMap(BatchRenderer batchRenderer) {
+        // Ensure the texture mappings have been loaded
+        if (PaletteInfoParser.textureMappings == null) {
+            throw new IllegalStateException("Texture mappings not loaded. Call PaletteInfoParser.loadTextureMappings() first.");
+        }
 
-
-
-    private static void drawMap(BatchRenderer batchRenderer){
         for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
             // Ensure that indices are valid
             if (k >= 0 && k < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
+                char textureChar = Tile.mapDataType.get(k);  // Get the character representing the texture
+                TextureInfo textureInfo = PaletteInfoParser.getTexture(textureChar);  // Get the TextureInfo from TextureLoader
 
-                batchRenderer.addTextureLit(TextureUtils.getTexture(Tile.mapDataType.get(k)), MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, 1,1, LightUtils.getLightSources()); // Top-right corner
+                batchRenderer.addTextureLit(
+                        textureInfo,
+                        MapInfoParser.mapDataX.get(k),
+                        MapInfoParser.mapDataY.get(k),
+                        1,
+                        0,
+                        1,
+                        1,
+                        LightUtils.getLightSources()
+                ); // Top-right corner
             } else {
                 Logger.printLOG("Index out of bounds: space=" + k);
             }
         }
-
     }
 
     private static void update() {

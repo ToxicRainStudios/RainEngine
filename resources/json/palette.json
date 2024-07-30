@@ -1,0 +1,12 @@
+{
+  "textures": {
+    ":": "floorTexture",
+    "+": "concreteTexture1",
+    "-": "concreteTexture2",
+    "1": "dirtTexture1",
+    "2": "dirtTexture2",
+    "3": "grassTexture1",
+    "`": "playerTexture",
+    "~": "splatterTexture"
+  }
+}
