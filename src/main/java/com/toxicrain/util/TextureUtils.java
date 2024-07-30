@@ -156,6 +156,8 @@ public class TextureUtils {
                 return grassTexture1;
             case '`':
                 return playerTexture;
+            case '~':
+                return splatterTexture;
             default:
                 return missingTexture;
         }
