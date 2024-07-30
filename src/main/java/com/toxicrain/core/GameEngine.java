@@ -45,7 +45,7 @@ public class GameEngine {
 
     private static boolean fullscreen = true;
 
-    private static boolean menu = false;
+    private static final boolean menu = false;
 
     public GameEngine(){
 
@@ -156,6 +156,7 @@ public class GameEngine {
 
         GL.createCapabilities();
 
+        Logger.printLOG("Loading IMGUI");
         // Create and initialize ImguiHandler
         GameFactory.imguiApp = new ImguiHandler(window);
         GameFactory.imguiApp.initialize();
@@ -312,9 +313,6 @@ public class GameEngine {
         GameFactory.soundSystem.cleanup();
     }
 
-
-
-
     /**
      * Checks the internal engine version with what gameinfo.json is asking for
      */
@@ -387,6 +385,11 @@ public class GameEngine {
         return buffer;
     }
 
+
+    /**
+     * Gets the perspective projection matrix.
+     * @return The FloatBuffer containing the perspective projection matrix
+     */
     public static FloatBuffer getPerspectiveProjectionMatrixBuffer() {
         return buffer;
     }
