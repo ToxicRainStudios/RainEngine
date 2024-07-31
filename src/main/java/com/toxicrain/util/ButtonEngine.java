@@ -18,7 +18,7 @@ public class ButtonEngine {
     private boolean clicked;
 
     public ButtonEngine(String label, float x, float y) {
-        this.textEngine = new TextEngine(label, (int) x, (int) y);
+        this.textEngine = new TextEngine(label, (int) x, (int) y, 1);
         this.x = x;
         this.y = y;
         this.width = 300;  // Set an appropriate width for the button

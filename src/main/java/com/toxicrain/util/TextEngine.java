@@ -52,11 +52,13 @@ public class TextEngine {
     private String toWrite;
     private int xOffset;
     private int yOffset;
+    private float transparency;
 
-    public TextEngine(String input, int x, int y) {
+    public TextEngine(String input, int x, int y, float transparency) {
         this.toWrite = input;
         this.xOffset = x;
         this.yOffset = y;
+        this.transparency = transparency;
     }
 
     public void render(BatchRenderer batchRenderer) {
@@ -68,7 +70,7 @@ public class TextEngine {
             char letter = toWrite.charAt(i);
             TextureInfo texture = textureMap.getOrDefault(Character.toLowerCase(letter), TextureUtils.missingTexture);
             float x = baseX + (i + xOffset) * SCALE_FACTOR * scale;
-            batchRenderer.addTexture(texture, x, baseY, TEXT_SCALE, 0, scale, scale, Color.toFloatArray(1.0f, Color.WHITE));
+            batchRenderer.addTexture(texture, x, baseY, TEXT_SCALE, 0, scale, scale, Color.toFloatArray(transparency, Color.WHITE));
         }
     }
 }

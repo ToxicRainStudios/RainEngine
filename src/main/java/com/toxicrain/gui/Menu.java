@@ -16,10 +16,10 @@ public class Menu {
     private static ButtonEngine button;
 
     public static void initializeMenu() {
-        textEngine = new TextEngine("sigma tropism", 0, -23);
-        textPart1 = new TextEngine("sigma", 10, -23);
-        textPart2 = new TextEngine("theta", -10, -23);
-        textPart3 = new TextEngine("the sigma begins", 0, -18);
+        textEngine = new TextEngine("sigma tropism", 0, -23,1);
+        textPart1 = new TextEngine("sigma", 10, -23, 1);
+        textPart2 = new TextEngine("theta", -10, -23, 1);
+        textPart3 = new TextEngine("the sigma begins", 0, -18, 1);
 
         // Initialize the button with a default texture type, position (x, y)
         button = new ButtonEngine("Click Me", -20, -23);
