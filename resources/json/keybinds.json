@@ -19,6 +19,9 @@
       },
       {
         "keyAttack": "key_tab"
+      },
+      {
+        "keyWeaponOne": "key_1"
       }
     ]
   }

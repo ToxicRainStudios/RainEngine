@@ -21,7 +21,7 @@ public class KeyInfoParser {
     public static String keyWalkLeft = null;
     public static String keyWalkRight = null;
     public static String keyAttack = null;
-    public static String keyWeaponOne = "key_1";
+    public static String keyWeaponOne = null;
 
     /**
      * Loads the keybinds.json and parsers it into variables
@@ -67,6 +67,9 @@ public class KeyInfoParser {
                                 break;
                             case "keyAttack":
                                 keyAttack = value;
+                                break;
+                            case "keyWeaponOne":
+                                keyWeaponOne = value;
                                 break;
                         }
                     }
