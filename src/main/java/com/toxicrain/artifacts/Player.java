@@ -262,10 +262,10 @@ public class Player implements IArtifact {
 
         // Handle left and right movement
 
-        if(glfwGetKey(window, KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkLeft)) == GLFW_PRESS)forward(false,1);
-        if(glfwGetKey(window, KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkRight)) == GLFW_PRESS)forward(false,-1);
-        if(glfwGetKey(window, KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkForward)) == GLFW_PRESS) forward(true,1);
-        if(glfwGetKey(window, KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkBackward)) == GLFW_PRESS) forward(true,-1);
+        if(GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkLeft)))forward(false,1);
+        if(GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkRight)))forward(false,-1);
+        if(GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkForward))) forward(true,1);
+        if(GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkBackward))) forward(true,-1);
 
 
 
