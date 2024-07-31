@@ -14,10 +14,8 @@ import com.toxicrain.util.MouseUtils;
 import com.toxicrain.util.WindowUtils;
 import org.joml.Vector3f;
 
-
 import static com.toxicrain.core.GameEngine.window;
 import static com.toxicrain.util.TextureUtils.playerTexture;
-import static org.lwjgl.glfw.GLFW.*;
 
 
 /**
@@ -45,7 +43,6 @@ public class Player implements IArtifact {
     public static final float scrollSpeed = 0.5f;  // The max scroll in/out speed
     public static float scrollOffset = 0.0f; // Track the scroll input
     public static Vector3f center;
-    public static MouseUtils mouseInput = new MouseUtils(window);
     public static float angleX;
     public static float angleY;
     public static float angleXS;
@@ -112,7 +109,7 @@ public class Player implements IArtifact {
 
     private static float[] openglMousePos;
     private static void getMouse(){
-        float[] mousePos = mouseInput.getMousePosition();
+        float[] mousePos = GameFactory.mouseUtils.getMousePosition();
         openglMousePos = MouseUtils.convertToOpenGLCoordinatesOffset(mousePos[0], mousePos[1], (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight, Player.cameraX, Player.cameraY);
     }
     public static void render(BatchRenderer batchRenderer){
