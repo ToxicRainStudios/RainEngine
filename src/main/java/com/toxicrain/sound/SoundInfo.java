@@ -2,6 +2,13 @@ package com.toxicrain.sound;
 
 import java.nio.ByteBuffer;
 
+
+/**
+ * The SoundInfo class provides information about the given sound
+ * such as the format and samplerate
+ *
+ * @author strubium
+ */
 public class SoundInfo {
     public final ByteBuffer data;
     public final int format;

@@ -80,6 +80,10 @@ public class KeyInfoParser {
         }
     }
 
+
+    /**
+     * Converts a string found in keybinds.json into a GLFW key
+     */
     public static int convertToGLFWBind(String bind) {
         switch (bind) {
             case "key_space":

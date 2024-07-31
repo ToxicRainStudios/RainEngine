@@ -2,6 +2,8 @@ package com.toxicrain.core;
 
 /**
  * Utility class for logging messages to the console.
+ *
+ * @author strubium
  */
 public class Logger {
 

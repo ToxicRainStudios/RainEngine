@@ -11,13 +11,13 @@ public interface IArtifact {
     /**
      * Updates the state of the artifact.
      * This method is intended to be overridden by implementing classes.
-     * By default, it does nothing.
      */
     static void update() {
     }
 
     /**
      * Renders the artifact using the provided batch renderer.
+     * This method is intended to be overridden by implementing classes.
      *
      * @param batchRenderer The renderer used to draw the artifact.
      */

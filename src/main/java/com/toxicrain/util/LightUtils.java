@@ -19,6 +19,7 @@ public class LightUtils {
 
     /**
      * Get the list of light sources and their positions
+     *
      * @return {@link LightUtils#lightSources}
      */
     public static List<float[]> getLightSources() {

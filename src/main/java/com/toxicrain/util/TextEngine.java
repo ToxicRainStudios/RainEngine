@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * The TextEngine class provides a way to render "text" on the screen
  *
- * @author Gabefry (the darkened sigma)
+ * @author Gabefry
  */
 public class TextEngine {
     private static final float SCALE_FACTOR = 2.0f;
