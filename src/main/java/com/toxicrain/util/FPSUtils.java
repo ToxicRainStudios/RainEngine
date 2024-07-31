@@ -5,7 +5,6 @@ import org.lwjgl.glfw.GLFW;
 
 
 public class FPSUtils {
-    private static final long NANOS_IN_SECOND = 1_000_000_000;
     private int frameCount = 0;
     private double lastTime = GLFW.glfwGetTime();
     private double elapsedTime = 0;

@@ -173,7 +173,7 @@ public class GameEngine {
         KeyInfoParser.loadKeyInfo();
 
         // Set the "background" color
-        glClearColor(255, 0, 0, 0);
+        glClearColor(0, 0, 0, 0);
 
         // Set up the projection matrix with FOV of 90 degrees
         glMatrixMode(GL_PROJECTION);

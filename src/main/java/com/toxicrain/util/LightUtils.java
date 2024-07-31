@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LightUtils {
-    private static List<float[]> lightSources = new ArrayList<>();
+    private static final List<float[]> lightSources = new ArrayList<>();
 
     /**
      * Adds a light source to a position with a strength

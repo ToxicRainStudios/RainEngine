@@ -1,5 +1,6 @@
 package com.toxicrain.artifacts;
 
+import com.toxicrain.core.Logger;
 import com.toxicrain.core.TextureInfo;
 import com.toxicrain.core.interfaces.IArtifact;
 import com.toxicrain.core.json.GameInfoParser;
@@ -77,9 +78,9 @@ public class Player implements IArtifact {
                 }
                 equippedWeapon = weapon;
                 equippedWeapon.equip();
-                System.out.println("Equipped weapon: " + weapon.getName());
+                Logger.printLOG("Equipped weapon: " + weapon.getName());
             } else {
-                System.out.println("Weapon not found in inventory.");
+                Logger.printLOG("Weapon not found in inventory.");
             }
         }
     }
@@ -88,7 +89,7 @@ public class Player implements IArtifact {
         if (equippedWeapon != null) {
             equippedWeapon.attack();
         } else {
-            System.out.println("No weapon equipped.");
+            Logger.printLOG("No weapon equipped.");
         }
     }
 
