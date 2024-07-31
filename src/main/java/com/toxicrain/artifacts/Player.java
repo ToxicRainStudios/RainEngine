@@ -14,6 +14,9 @@ import com.toxicrain.util.MouseUtils;
 import com.toxicrain.util.WindowUtils;
 import org.joml.Vector3f;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.toxicrain.core.GameEngine.window;
 import static com.toxicrain.util.TextureUtils.playerTexture;
 
@@ -25,10 +28,10 @@ import static com.toxicrain.util.TextureUtils.playerTexture;
  */
 public class Player implements IArtifact {
 
+    // Existing attributes
     public static float posX;
     public static float posY;
     public static float posZ;
-    public static float k;
     public static TextureInfo texture;
     public static boolean isSprinting;
     private static int collisionType;
@@ -48,6 +51,47 @@ public class Player implements IArtifact {
     public static float angleXS;
     public static float angleYS;
 
+    // Weapon-related attributes
+    private List<Weapon> weapons;
+    private static Weapon equippedWeapon;
+
+    public Player(float posX, float posY, float posZ, TextureInfo texture, boolean isSprinting) {
+        this.posX = posX;
+        this.posY = posY;
+        this.posZ = posZ;
+        this.texture = texture;
+        this.isSprinting = isSprinting;
+        this.weapons = new ArrayList<>();
+        this.equippedWeapon = null;
+    }
+
+    public void addWeapon(Weapon weapon) {
+        weapons.add(weapon);
+    }
+
+    public void equipWeapon(Weapon weapon) {
+        if (weapon != null) {
+            if (weapons.contains(weapon)) {
+                if (equippedWeapon != null) {
+                    equippedWeapon.unequip();
+                }
+                equippedWeapon = weapon;
+                equippedWeapon.equip();
+                System.out.println("Equipped weapon: " + weapon.getName());
+            } else {
+                System.out.println("Weapon not found in inventory.");
+            }
+        }
+    }
+
+    public static void attack() {
+        if (equippedWeapon != null) {
+            equippedWeapon.attack();
+        } else {
+            System.out.println("No weapon equipped.");
+        }
+    }
+
 
 
     private static void getAngle(){
@@ -60,13 +104,6 @@ public class Player implements IArtifact {
         angleXS= (float)Math.sin(angle)*-1;
         angleYS = (float)Math.cos(angle);
 
-    }
-    public Player(float posX, float posY, float posZ, TextureInfo texture, boolean isSprinting) {
-        this.posX = posX;
-        this.posY = posY;
-        this.posZ = posZ;
-        this.texture = texture;
-        this.isSprinting = isSprinting;
     }
 
 //this is temp code  \|/
@@ -122,7 +159,7 @@ public class Player implements IArtifact {
 
     private static void handleCollisions(){
         for (int j = 1; j > -2; j -= 1) {
-            k = (float) j * GameInfoParser.playerSize;
+            float k = (float) j * GameInfoParser.playerSize;
             for (int i = Tile.extentTop.size() - 1; i >= 0; i--) {
 
                 if ((cameraY + k <= Tile.extentTop.get(i)) && (cameraY + k >= Tile.extentCenterY.get(i))) {
@@ -245,33 +282,39 @@ public class Player implements IArtifact {
 
 
     private static void processInput(long window) {
-        //Sprinting8
+        // Sprinting
         if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keySprint))) {
             cameraSpeed = 0.1f;
             setIsSprinting(true);
-        }
-        else{
+        } else {
             setIsSprinting(false);
         }
 
         cameraSpeed = 0.01f;
         handleCollisions();
 
+
+        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWeaponOne))) {
+            GameFactory.player.equipWeapon(GameFactory.pistol);
+        }
+
+
         // Handle left and right movement
+        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkLeft))) forward(false, 1);
+        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkRight))) forward(false, -1);
+        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkForward))) forward(true, 1);
+        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkBackward))) forward(true, -1);
 
-        if(GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkLeft)))forward(false,1);
-        if(GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkRight)))forward(false,-1);
-        if(GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkForward))) forward(true,1);
-        if(GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkBackward))) forward(true,-1);
-
-
+        // Handle weapon attack
+        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyAttack))) {
+            attack();
+        }
 
         // Update cameraZ based on the scroll input
         cameraZ += scrollOffset * scrollSpeed;
 
         // Clamp cameraZ at max 25 and min 3
         cameraZ = Math.max(GameInfoParser.minZoom, Math.min(cameraZ, GameInfoParser.maxZoom));
-
 
         scrollOffset = 0.0f; // Reset the scroll offset after applying it
     }

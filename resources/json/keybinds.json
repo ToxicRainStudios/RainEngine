@@ -16,6 +16,9 @@
       },
 	  {
         "keyWalkRight": "key_d"
+      },
+      {
+        "keyAttack": "key_tab"
       }
     ]
   }

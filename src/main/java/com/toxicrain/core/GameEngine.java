@@ -200,6 +200,8 @@ public class GameEngine {
         Logger.printLOG("Initializing SoundSystem");
         GameFactory.soundSystem.init();
 
+        GameFactory.player.addWeapon(GameFactory.pistol);
+
     }
 
     private static void drawMap(BatchRenderer batchRenderer) {
