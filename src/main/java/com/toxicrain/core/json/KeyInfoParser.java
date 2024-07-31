@@ -83,6 +83,8 @@ public class KeyInfoParser {
 
     /**
      * Converts a string found in keybinds.json into a GLFW key
+     *
+     * @param bind The string to convert
      */
     public static int convertToGLFWBind(String bind) {
         switch (bind) {
