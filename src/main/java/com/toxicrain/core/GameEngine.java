@@ -42,7 +42,7 @@ public class GameEngine {
 
     private static boolean fullscreen = true;
 
-    private static final boolean menu = true;
+    private static final boolean menu = false;
 
     public GameEngine(){
 
@@ -183,7 +183,9 @@ public class GameEngine {
         GameFactory.load();
 
         Logger.printLOG("Loading Menu");
-        Menu.initializeMenu();
+        if(menu){
+            Menu.initializeMenu();
+        }
 
         Logger.printLOG("Loading Map Palette");
         PaletteInfoParser.loadTextureMappings();
@@ -229,34 +231,24 @@ public class GameEngine {
     }
 
     private static void update() {
-        MouseUtils mouseUtils = new MouseUtils(window);
-
-        // Check mouse position and button press
-        float[] mousePos = mouseUtils.getMousePosition();
-        boolean mouseClick = mouseUtils.isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT);
+        for(int engineFrames = 30; engineFrames >= 0; engineFrames--) { // Process input 30 times per frame
+            GameFactory.player.update();
+            GameFactory.character.runAI(GameFactory.character);
+            GameFactory.projectile.update();
+        }
 
         if (menu) {
+            // Check mouse position and button press
+            float[] mousePos = GameFactory.mouseUtils.getMousePosition();
+            boolean mouseClick = GameFactory.mouseUtils.isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT);
             Player.cameraZ = 25;
             Menu.updateMenu(mousePos[0], mousePos[1], mouseClick);
-        } else {
-            GameFactory.character.runAI(GameFactory.character);
-            GameFactory.player.update();
-            GameFactory.projectile.update();
         }
     }
 
     private static void render(BatchRenderer batchRenderer) {
         // Clear the color and depth buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        //BE WARY OF LIARS AHEAD
-        //DO NOT UNCOMMENT WILL NUKE PC
-        //SECRET DOOR HERE /|\
-        //                  |
-        //MIMICS ARE NOT REAL
-
-        //soundSource.play(soundBuffer.getBufferId());
-
 
         // Set up the view matrix
         glMatrixMode(GL_MODELVIEW);
@@ -275,7 +267,6 @@ public class GameEngine {
             GameFactory.imguiApp.drawSettingsUI();
             GameFactory.imguiApp.render();
 
-            Menu.render(batchRenderer);
 
             //soundSystem.play(bufferId);
 

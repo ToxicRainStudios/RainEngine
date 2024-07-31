@@ -7,6 +7,7 @@ import com.toxicrain.core.GameEngine;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.sound.SoundSystem;
+import com.toxicrain.util.MouseUtils;
 
 import static com.toxicrain.util.TextureUtils.playerTexture;
 
@@ -18,6 +19,7 @@ public class GameFactory {
     public static Player player;
     public static Projectile projectile;
     public static NPC character;
+    public static MouseUtils mouseUtils;
 
     public static void load(){
         imguiApp = new ImguiHandler(GameEngine.window);
@@ -27,6 +29,7 @@ public class GameFactory {
         player = new Player(Player.cameraX, Player.cameraY, Player.cameraZ, playerTexture, false);
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0);
         character = new NPC(12,12,1,2);
+        mouseUtils = new MouseUtils(GameEngine.window);
 
     }
 }

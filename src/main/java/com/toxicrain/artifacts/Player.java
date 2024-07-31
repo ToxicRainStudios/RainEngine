@@ -8,6 +8,7 @@ import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.core.render.Tile;
+import com.toxicrain.factories.GameFactory;
 import com.toxicrain.util.Color;
 import com.toxicrain.util.MouseUtils;
 import com.toxicrain.util.WindowUtils;
@@ -248,7 +249,7 @@ public class Player implements IArtifact {
 
     private static void processInput(long window) {
         //Sprinting8
-        if (glfwGetKey(window, KeyInfoParser.convertToGLFWBind(KeyInfoParser.keySprint)) == GLFW_PRESS) {
+        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keySprint))) {
             cameraSpeed = 0.1f;
             setIsSprinting(true);
         }
