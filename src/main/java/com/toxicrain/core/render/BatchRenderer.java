@@ -258,6 +258,23 @@ public class BatchRenderer {
         textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, triangleVertices, triangleTexCoords, triangleColors));
     }
 
+
+    /**
+     * Calculates the total light level at vertices based on the positions of lights and their maximum distances.
+     *
+     * <p>This method computes the light intensity at each vertex from multiple light sources. Each light source is
+     * defined by its position (x, y) and a maximum distance that determines how far its light can reach. The intensity
+     * of light at a vertex is calculated using the inverse of the distance between the vertex and the light source, with
+     * the maximum value determined by the light's range. The total light level is then averaged across all vertices and
+     * normalized to ensure it falls within the range [0.0, 1.0].</p>
+     *
+     * @param lightPositions A list of light sources, where each light source is represented by a float array
+     *                       with three elements: x position, y position, and maximum distance of the light.
+     * @param vertices An array of vertex coordinates, where each vertex is represented by three consecutive floats
+     *                 (x, y, z). Only the x and y coordinates are used for light intensity calculation.
+     *
+     * @return The normalized light level at the vertices, within the range [0.0, 1.0].
+     */
     private float calculateLightLevel(List<float[]> lightPositions, float[] vertices) {
         float totalLightLevel = 0.0f;
         for (float[] lightPos : lightPositions) {
