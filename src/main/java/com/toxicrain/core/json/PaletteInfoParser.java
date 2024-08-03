@@ -30,7 +30,6 @@ public class PaletteInfoParser {
         String textureKey = String.valueOf(textureMapChar);
         String textureName = textureMappings.optString(textureKey, "missingTexture");
 
-        // Replace this with actual logic to retrieve TextureInfo based on textureName
         return getTextureInfoByName(textureName);
     }
 

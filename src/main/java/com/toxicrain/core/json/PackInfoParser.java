@@ -54,6 +54,7 @@ public class PackInfoParser {
 
     /**
      * Loads the pack.json and parsers it into variables
+     *
      */
     public static void loadPackInfo() {
         String packLocation = FileUtils.getCurrentWorkingDirectory("resources/custom/pack.json", "resources/json/pack.json");

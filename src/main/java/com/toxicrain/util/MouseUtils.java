@@ -37,7 +37,7 @@ public class MouseUtils {
     }
 
     /**
-     * Converts mouse coordinates to OpenGL coordinates with a offset
+     * Converts mouse coordinates to OpenGL coordinates with an offset
      *
      * @param mouseX The x-coordinate of the mouse
      * @param mouseY The y-coordinate of the mouse
