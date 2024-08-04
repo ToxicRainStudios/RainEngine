@@ -285,7 +285,7 @@ public class GameEngine {
         else {
             drawMap(batchRenderer);
             NPC.render(batchRenderer, GameFactory.character);
-            Projectile.render(batchRenderer, GameFactory.projectile, playerTexture);
+            Projectile.render(batchRenderer, GameFactory.projectile);
             Player.render(batchRenderer);
         }
 

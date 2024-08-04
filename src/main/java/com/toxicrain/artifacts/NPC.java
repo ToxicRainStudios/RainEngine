@@ -13,7 +13,7 @@ float directionY;
 int aiType = 0;
 
 
-    public NPC(float XPOS, float YPOS, float rotation, int ai) {
+    public NPC(float startingXpos, float startingYpos, float rotation, int ai) {
         directionX = (float) Math.cos(rotation);
         directionY = (float) Math.sin(rotation);
         aiType = ai;

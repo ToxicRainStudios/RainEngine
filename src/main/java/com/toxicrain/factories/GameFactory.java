@@ -32,7 +32,7 @@ public class GameFactory {
         soundSystem = new SoundSystem();
 
         player = new Player(Player.cameraX, Player.cameraY, Player.cameraZ, playerTexture, false);
-        projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0);
+        projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0, playerTexture);
         character = new NPC(12,12,1,2);
         mouseUtils = new MouseUtils(GameEngine.window);
 
