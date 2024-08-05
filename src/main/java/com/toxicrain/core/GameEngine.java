@@ -232,9 +232,11 @@ public class GameEngine {
         }
     }
 
-    private static void update() {
-        for(int engineFrames = 30; engineFrames >= 0; engineFrames--) { // Process input 30 times per frame
-            GameFactory.player.update();
+    private static long lastFrameTime = System.nanoTime();
+
+    private static void update(float deltaTime) {
+        for (int engineFrames = 30; engineFrames >= 0; engineFrames--) {
+            GameFactory.player.update(deltaTime);
             GameFactory.character.runAI(GameFactory.character);
             GameFactory.projectile.update();
         }
@@ -260,29 +262,16 @@ public class GameEngine {
         // Begin the batch
         batchRenderer.beginBatch();
 
-
-
-        // Check if the window has focus and only do certain things if so
         if (glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0) {
             GameFactory.imguiApp.handleInput(window);
             GameFactory.imguiApp.newFrame();
             GameFactory.imguiApp.drawSettingsUI();
             GameFactory.imguiApp.render();
-
-
-            //soundSystem.play(bufferId);
-
         }
 
-
-        // This is the player!
-        if(menu){
-        Menu.render(batchRenderer);
-
-
-
-        }
-        else {
+        if (menu) {
+            Menu.render(batchRenderer);
+        } else {
             drawMap(batchRenderer);
             NPC.render(batchRenderer, GameFactory.character);
             Projectile.render(batchRenderer, GameFactory.projectile);
@@ -291,7 +280,6 @@ public class GameEngine {
 
         // Render the batch
         batchRenderer.renderBatch();
-
         // Swap buffers and poll events
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -300,7 +288,12 @@ public class GameEngine {
     private static void loop(BatchRenderer batchRenderer) {
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
-            update();
+            long currentTime = System.nanoTime();
+            float deltaTime = (currentTime - lastFrameTime) / 1_000_000_000.0f; // Convert nanoseconds to seconds
+            lastFrameTime = currentTime;
+
+
+            update(deltaTime);
             render(batchRenderer);
         }
         ImguiHandler.cleanup();

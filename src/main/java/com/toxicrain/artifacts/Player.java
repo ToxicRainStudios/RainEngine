@@ -132,13 +132,14 @@ public class Player implements IArtifact {
         Player.isSprinting = sprinting;
     }
 
-    public static void update(){
+    public static void update(float deltaTime) {
         processInput(window);
         updatePos(cameraX, cameraY, cameraZ);
         center = WindowUtils.getCenter();
 
-        velocityX = (cameraX - prevCameraX);
-        velocityY = (cameraY - prevCameraY);
+        // Calculate velocity based on deltaTime
+        float velocityX = (cameraX - prevCameraX) / deltaTime;
+        float velocityY = (cameraY - prevCameraY) / deltaTime;
 
         // Update previous position
         prevCameraX = cameraX;
