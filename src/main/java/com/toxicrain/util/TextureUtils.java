@@ -66,7 +66,7 @@ public class TextureUtils {
         dirtTexture1 = loadTexture((PackInfoParser.dirtTexture1));
         dirtTexture2 = loadTexture((PackInfoParser.dirtTexture2));
         grassTexture1 = loadTexture((PackInfoParser.grassTexture1));
-        letterA = loadTexture((PackInfoParser.letterA));
+        letterA = loadTexture((PackInfoParser.letterA)); //TODO letters should all be in one file
         letterB = loadTexture(PackInfoParser.letterB);
         letterC = loadTexture((PackInfoParser.letterC));
         letterD = loadTexture(PackInfoParser.letterD);

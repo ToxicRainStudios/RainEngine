@@ -219,12 +219,15 @@ public class BatchRenderer {
         float lightLevel = calculateLightLevel(lightPositions, rotatedVertices);
 
         // Generate color based on light level
-        float[] color = Color.toFloatArray(Color.LIGHT_LEVEL_1); // Default to the lowest light level
+        float[] color;
         if (lightLevel >= 1.0f) {
             color = Color.toFloatArray(Color.LIGHT_LEVEL_20); // Highest light level
         } else if (lightLevel > 0) {
-            int level = (int) (lightLevel * 19) + 1;
+            // Map the lightLevel to the range of 1 to 19
+            int level = (int) (lightLevel * 19);
             color = Color.toFloatArray(Color.values()[level + Color.LIGHT_LEVEL_1.ordinal()]);
+        } else {
+            color = Color.toFloatArray(Color.LIGHT_LEVEL_1); // Default to the lowest light level
         }
 
         // Generate vertex, texture coordinate, and color data
