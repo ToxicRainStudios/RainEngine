@@ -62,7 +62,7 @@ public enum Color {
     LIGHT_LEVEL_16(0.85f, 0.85f, 0.85f),// Very light gray
     LIGHT_LEVEL_17(0.9f, 0.9f, 0.9f),   // Almost white
     LIGHT_LEVEL_18(0.95f, 0.95f, 0.95f),// Very near white
-    LIGHT_LEVEL_19(1.0f, 1.0f, 1.0f),   // White
+    LIGHT_LEVEL_19(0.99f, 0.99f, 0.99f),   // Basically White
     LIGHT_LEVEL_20(1.0f, 1.0f, 1.0f);   // White
 
     private final float red;
