@@ -16,6 +16,7 @@ RainEngine is a WIP engine running on [LWJGL3](https://www.lwjgl.org/)
 
 ## What's not done:
 * More control over the window title
+  * Dynamically changing the title
 * UI with configurable
   * Main Menu
   * Settings Menu (Edit Keybindings etc)
