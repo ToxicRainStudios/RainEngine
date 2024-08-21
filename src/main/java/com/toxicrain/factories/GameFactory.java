@@ -36,9 +36,9 @@ public class GameFactory {
         character = new NPC(12,12,1,2);
         mouseUtils = new MouseUtils(GameEngine.window);
 
-        pistol = new Weapon("Pistol", 3, 20);
-        rifle = new Weapon("Rifle", 3, 20);
-        shotgun = new Weapon("Shotgun", 30, 20);
+        pistol = new Weapon("Pistol", 3, 20,1,1);
+        rifle = new Weapon("Rifle", 3, 20,1,1);
+        shotgun = new Weapon("Shotgun", 30, 20,4,5);
 
     }
 }

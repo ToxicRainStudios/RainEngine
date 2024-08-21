@@ -6,7 +6,7 @@ public class Weapon {
     private float range;
     private boolean isEquipped;
 
-    public Weapon(String name, int damage, float range) {
+    public Weapon(String name, int damage, float range, int maxShot, int minShot) {
         this.name = name;
         this.damage = damage;
         this.range = range;
