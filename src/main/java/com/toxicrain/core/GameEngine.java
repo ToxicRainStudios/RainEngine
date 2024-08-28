@@ -60,7 +60,7 @@ public class GameEngine {
 
         Logger.printLOG("Loading Map Data");
         try {
-            MapInfoParser.parseMapFile();
+            MapInfoParser.parseMapFile("map");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -25,9 +25,9 @@ public class MapInfoParser {
     public static ArrayList<Integer> mapDataX = new ArrayList<>();
     public static ArrayList<Integer> mapDataY = new ArrayList<>();
 
-    public static void parseMapFile() throws IOException {
+    public static void parseMapFile(String mapName) throws IOException {
         // Read JSON file as String
-        String jsonString = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory("resources/json/map.json"));
+        String jsonString = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory("resources/json/" + mapName + ".json"));
 
         doCollide.add(':');
 
