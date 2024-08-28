@@ -11,6 +11,7 @@ import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.core.render.Tile;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.util.Color;
+import com.toxicrain.util.MathUtils;
 import com.toxicrain.util.MouseUtils;
 import com.toxicrain.util.WindowUtils;
 import org.joml.Vector3f;
@@ -315,7 +316,7 @@ public class Player implements IArtifact {
         cameraZ += scrollOffset * scrollSpeed;
 
         // Clamp cameraZ at max 25 and min 3
-        cameraZ = Math.max(GameInfoParser.minZoom, Math.min(cameraZ, GameInfoParser.maxZoom));
+        cameraZ = MathUtils.clamp(cameraZ, GameInfoParser.minZoom, GameInfoParser.maxZoom);
 
         scrollOffset = 0.0f; // Reset the scroll offset after applying it
     }
