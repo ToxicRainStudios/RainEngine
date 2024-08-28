@@ -199,6 +199,7 @@ public class GameEngine {
 
         Logger.printLOG("Initializing SoundSystem");
         GameFactory.soundSystem.init();
+        GameFactory.soundSystem.loadSound("resources/sound/Sample.wav");
 
         GameFactory.player.addWeapon(GameFactory.pistol);
 

@@ -53,7 +53,7 @@ public class Player implements IArtifact {
     public static float angleYS;
 
     // Weapon-related attributes
-    private List<Weapon> weapons;
+    private final List<Weapon> weapons;
     private static Weapon equippedWeapon;
 
     public Player(float posX, float posY, float posZ, TextureInfo texture, boolean isSprinting) {
@@ -142,15 +142,17 @@ public class Player implements IArtifact {
         float velocityY = (cameraY - prevCameraY) / deltaTime;
 
         // Update previous position
-        prevCameraX = cameraX;
-        prevCameraY = cameraY;
+        prevCameraX = cameraX * velocityX;
+        prevCameraY = cameraY * velocityY;
     }
 
     private static float[] openglMousePos;
+
     private static void getMouse(){
         float[] mousePos = GameFactory.mouseUtils.getMousePosition();
         openglMousePos = MouseUtils.convertToOpenGLCoordinatesOffset(mousePos[0], mousePos[1], (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight, Player.cameraX, Player.cameraY);
     }
+
     public static void render(BatchRenderer batchRenderer){
         // Convert mouse coordinates to OpenGL coordinates
         getMouse();
@@ -269,12 +271,8 @@ public class Player implements IArtifact {
         }
 
 
-
-        switch (collisionType){
-            case 1:
-                cameraSpeed = 0.010f;
-            default:
-
+        if (collisionType == 1) {
+            cameraSpeed = 0.010f;
         }
         collisionType = 0;
 
@@ -309,6 +307,7 @@ public class Player implements IArtifact {
 
         // Handle weapon attack
         if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyAttack))) {
+            GameFactory.soundSystem.play(GameFactory.sampleSound);
             attack();
         }
 

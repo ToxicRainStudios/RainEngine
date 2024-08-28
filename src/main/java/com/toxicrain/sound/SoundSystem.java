@@ -23,7 +23,6 @@ public class SoundSystem {
 
     public void init() {
         initOpenAL();
-        isPlaying = false;
         sourceId = createSoundSource();
     }
 
@@ -57,7 +56,7 @@ public class SoundSystem {
         }
 
         try {
-            ByteBuffer wavBuffer = FileUtils.ioResourceToByteBuffer(filePath);
+            ByteBuffer wavBuffer = FileUtils.ioResourceToByteBuffer(FileUtils.getCurrentWorkingDirectory(filePath));
             SoundInfo wavData = WAVDecoder.decode(wavBuffer);
             alBufferData(bufferId, wavData.format, wavData.data, wavData.samplerate);
             wavData.free();
@@ -89,10 +88,10 @@ public class SoundSystem {
 
     public void play(int bufferId) {
         int state = alGetSourcei(sourceId, AL_SOURCE_STATE);
-        if (state != AL_PLAYING && !isPlaying) {
+        if (state != AL_PLAYING) {
+            Logger.printLOG("Playing sound");
             alSourcei(sourceId, AL_BUFFER, bufferId);
             alSourcePlay(sourceId);
-            isPlaying = true;
         }
     }
 
@@ -100,7 +99,6 @@ public class SoundSystem {
         int state = alGetSourcei(sourceId, AL_SOURCE_STATE);
         if (state == AL_PLAYING) {
             alSourceStop(sourceId);
-            isPlaying = false;
         }
     }
 

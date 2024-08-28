@@ -24,6 +24,7 @@ public class GameFactory {
     public static Weapon pistol;
     public static Weapon rifle;
     public static Weapon shotgun;
+    public static int sampleSound;
 
 
     public static void load(){
@@ -40,5 +41,8 @@ public class GameFactory {
         rifle = new Weapon("Rifle", 3, 20,1,1);
         shotgun = new Weapon("Shotgun", 30, 20,4,5);
 
+    }
+    public static void loadSounds(){
+        sampleSound= soundSystem.loadSound("resources/sound/Sample.wav");
     }
 }

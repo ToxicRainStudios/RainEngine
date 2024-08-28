@@ -189,9 +189,6 @@ public class PackInfoParser {
                             case "letterSPACE":
                                 letterSPACE = workingDirectory + "/" + value;
                                 break;
-
-
-
                         }
                     }
                 }
