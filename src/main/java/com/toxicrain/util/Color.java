@@ -3,7 +3,7 @@ package com.toxicrain.util;
 import static java.util.Arrays.stream;
 
 /**
- * The Color class/enum provides basic color tools
+ * The Color enum provides basic color tools
  *
  * @author strubium
  */
@@ -43,7 +43,8 @@ public enum Color {
     VIOLET(0.933f, 0.510f, 0.933f),
     NAVY(0.000f, 0.000f, 0.502f),
 
-    // Light levels 1-20
+    // Light levels 0-20
+    LIGHT_LEVEL_0(0.08f, 0.08f, 0.08f),    // Dark
     LIGHT_LEVEL_1(0.1f, 0.1f, 0.1f),    // Very dark grey
     LIGHT_LEVEL_2(0.15f, 0.15f, 0.15f), // Dark grey
     LIGHT_LEVEL_3(0.2f, 0.2f, 0.2f),    // Grey

@@ -51,10 +51,6 @@ public class TextureUtils {
     public static TextureInfo letterSPACE;
 
 
-
-
-
-
     /**Init the textures used by the rest of the project*/
     public static void initTextures(){
         concreteTexture1 = loadTexture(PackInfoParser.concreteTexture1);
