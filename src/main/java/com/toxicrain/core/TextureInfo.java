@@ -12,8 +12,7 @@ public class TextureInfo {
     public final int textureId;
     public final int width;
     public final int height;
-
-
+    
     /**
      * Create a new TextureInfo
      * @param textureId the id of the texture, used by OpenGL from rendering
@@ -26,4 +25,8 @@ public class TextureInfo {
         this.height = height;
     }
 
+    @Override
+    public String toString() {
+        return "Texture ID: " + textureId + " Width: "+ width +" Height: " + height;
+    }
 }

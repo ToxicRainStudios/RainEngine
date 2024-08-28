@@ -18,7 +18,6 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class SoundSystem {
     private long device;
     private long context;
-    private boolean isPlaying;
     private int sourceId;
 
     public void init() {
