@@ -39,7 +39,7 @@ public class ImguiHandler {
     private String currentDirectory = System.getProperty("user.dir"); // Start in the current directory
     private List<String> filesInDirectory;
     private String selectedFile = null;
-    private ImString fileContent = new ImString(1024 * 18); // 18KB initial buffer size
+    private final ImString fileContent = new ImString(1024 * 18); // 18KB initial buffer size
     private Clip audioClip;
 
     /**
