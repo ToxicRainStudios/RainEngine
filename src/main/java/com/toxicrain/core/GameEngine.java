@@ -267,6 +267,7 @@ public class GameEngine {
             GameFactory.imguiApp.handleInput(window);
             GameFactory.imguiApp.newFrame();
             GameFactory.imguiApp.drawSettingsUI();
+            GameFactory.imguiApp.drawFileEditorUI();
             GameFactory.imguiApp.render();
         }
 
