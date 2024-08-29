@@ -201,6 +201,9 @@ public class GameEngine {
         GameFactory.soundSystem.init();
         GameFactory.loadSounds();
 
+        Logger.printLOG("Loading Shaders");
+        GameFactory.loadShaders();
+
         GameFactory.player.addWeapon(GameFactory.pistol);
 
     }

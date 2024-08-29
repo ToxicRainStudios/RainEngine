@@ -65,6 +65,13 @@ public class FileUtils {
     }
 
     /**
+     * Returns the {@link System#getProperty} user.dir
+     */
+    public static String getUserDir() {
+        return System.getProperty("user.dir");
+
+    }
+    /**
      * Converts a relative path to an absolute path based on the current working directory.
      *
      * @param relativePath the relative path to convert

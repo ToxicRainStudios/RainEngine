@@ -1,5 +1,6 @@
 package com.toxicrain.util;
 
+import com.toxicrain.core.Logger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
@@ -27,4 +28,33 @@ public class ShaderUtils {
 
         return shader;
     }
+
+    public static int createShaderProgram(String vertexShaderPath, String fragmentShaderPath) {
+        Logger.printLOG("Loading Vertex Shader: " + vertexShaderPath);
+        Logger.printLOG("Loading Fragment Shader: " + fragmentShaderPath);
+
+        int vertexShader = loadShader(GL20.GL_VERTEX_SHADER, vertexShaderPath);
+        int fragmentShader = loadShader(GL20.GL_FRAGMENT_SHADER, fragmentShaderPath);
+
+        int shaderProgram = GL20.glCreateProgram();
+        GL20.glAttachShader(shaderProgram, vertexShader);
+        GL20.glAttachShader(shaderProgram, fragmentShader);
+        GL20.glLinkProgram(shaderProgram);
+
+        // Check for linking errors
+        if (GL20.glGetProgrami(shaderProgram, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
+            String errorLog = GL20.glGetProgramInfoLog(shaderProgram);
+            GL20.glDeleteProgram(shaderProgram);
+            throw new RuntimeException("Failed to link shader program: " + errorLog);
+        }
+
+        // Optionally detach and delete shaders after linking
+        GL20.glDetachShader(shaderProgram, vertexShader);
+        GL20.glDetachShader(shaderProgram, fragmentShader);
+        GL20.glDeleteShader(vertexShader);
+        GL20.glDeleteShader(fragmentShader);
+
+        return shaderProgram;
+    }
+
 }

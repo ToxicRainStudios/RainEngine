@@ -84,6 +84,7 @@ public class MapInfoParser {
                                 // Add tile data
                                 mapDataX.add(xpos * 2);
                                 mapDataY.add(ypos * -2);
+                                tiles++;
                                 Tile.mapDataType.add(row.charAt(l));
                                 Tile.addCollision(ypos, xpos);
                             }

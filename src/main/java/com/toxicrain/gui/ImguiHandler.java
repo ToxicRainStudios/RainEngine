@@ -1,6 +1,7 @@
 package com.toxicrain.gui;
 
 import com.toxicrain.core.json.SettingsInfoParser;
+import com.toxicrain.util.FileUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiInputTextFlags;
 import imgui.gl3.ImGuiImplGl3;
@@ -36,7 +37,7 @@ public class ImguiHandler {
     private int textureID = -1;
     private BufferedImage bufferedImage;
 
-    private String currentDirectory = System.getProperty("user.dir"); // Start in the current directory
+    private String currentDirectory = FileUtils.getUserDir(); // Start in the current directory
     private List<String> filesInDirectory;
     private String selectedFile = null;
     private final ImString fileContent = new ImString(1024 * 18); // 18KB initial buffer size
