@@ -14,6 +14,7 @@ RainEngine is a WIP engine running on [LWJGL3](https://www.lwjgl.org/)
 * "Palette" system for controlling what's what in a map file
 * Texture pack system 
   * Loads from resources/custom/pack.json 
+* File Editor
 
 
 ## What's not done:
