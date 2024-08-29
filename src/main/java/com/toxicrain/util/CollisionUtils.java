@@ -4,6 +4,7 @@ import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.render.Tile;
 
+@Deprecated
 public class CollisionUtils {
 
     boolean isColliding;
