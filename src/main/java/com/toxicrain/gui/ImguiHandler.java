@@ -9,11 +9,13 @@ import imgui.type.ImFloat;
 import imgui.type.ImString;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import javax.sound.sampled.*;
 
 /**
  * Handler class for integrating ImGui with GLFW and OpenGL.
@@ -31,6 +33,7 @@ public class ImguiHandler {
     private List<String> filesInDirectory;
     private String selectedFile = null;
     private ImString fileContent = new ImString(1024 * 18); // 18KB initial buffer size
+    private Clip audioClip;
 
     /**
      * Constructor for ImguiHandler.
@@ -156,7 +159,11 @@ public class ImguiHandler {
             } else {
                 if (ImGui.selectable(fileName, fileName.equals(selectedFile))) {
                     selectedFile = fileName;
-                    loadFileContent(filePath.toString());
+                    if (fileName.endsWith(".wav")) {
+                        playWavFile(filePath.toString());
+                    } else {
+                        loadFileContent(filePath.toString());
+                    }
                 }
             }
         }
@@ -165,15 +172,48 @@ public class ImguiHandler {
         // File Content Editor
         ImGui.sameLine();
         ImGui.beginChild("File Content", windowWidth, windowHeight, true);
-        if (selectedFile != null) {
+        if (selectedFile != null && !selectedFile.endsWith(".wav")) {
             ImGui.inputTextMultiline("##source", fileContent, ImGuiInputTextFlags.AllowTabInput | ImGuiInputTextFlags.AutoSelectAll);
             if (ImGui.button("Save")) {
                 saveFileContent(Paths.get(currentDirectory, selectedFile).toString());
+            }
+        } else if (selectedFile != null && selectedFile.endsWith(".wav")) {
+            if (ImGui.button("Stop Audio")) {
+                stopWavFile();
             }
         }
         ImGui.endChild();
 
         ImGui.end();
+    }
+
+    /**
+     * Plays the given .wav file.
+     *
+     * @param filePath the path to the .wav file
+     */
+    private void playWavFile(String filePath) {
+        try {
+            stopWavFile();  // Stop any previously playing audio
+            File audioFile = new File(filePath);
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+            audioClip = AudioSystem.getClip();
+            audioClip.open(audioStream);
+            audioClip.start();
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Stops the currently playing .wav file.
+     */
+    private void stopWavFile() {
+        if (audioClip != null && audioClip.isRunning()) {
+            audioClip.stop();
+            audioClip.close();
+            audioClip = null;
+        }
     }
 
 
