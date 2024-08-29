@@ -1,6 +1,5 @@
 package com.toxicrain.gui;
 
-import com.toxicrain.core.Logger;
 import com.toxicrain.core.json.SettingsInfoParser;
 import imgui.ImGui;
 import imgui.flag.ImGuiInputTextFlags;
@@ -134,12 +133,16 @@ public class ImguiHandler {
     public void drawFileEditorUI() {
         ImGui.begin("File Editor");
 
+        // Get the available space in the File Editor window
+        float windowWidth = ImGui.getContentRegionAvailX();
+        float windowHeight = ImGui.getContentRegionAvailY();
+
         // File Browser
-        ImGui.beginChild("File Browser", 200, 400, true);
+        ImGui.beginChild("File Browser", windowWidth * 0.3f, windowHeight, true); // 30% width for File Browser
 
         // Button to go to parent directory
         if (!currentDirectory.equals(Paths.get(currentDirectory).getRoot().toString())) {
-            if (ImGui.selectable("..")) {
+            if (ImGui.selectable("^")) {
                 navigateToParentDirectory();
             }
         }
@@ -147,7 +150,7 @@ public class ImguiHandler {
         for (String fileName : filesInDirectory) {
             Path filePath = Paths.get(currentDirectory, fileName);
             if (Files.isDirectory(filePath)) {
-                if (ImGui.selectable("[DIR] " + fileName)) {
+                if (ImGui.selectable("[FOLDER] " + fileName)) {
                     navigateToDirectory(filePath.toString());
                 }
             } else {
@@ -161,7 +164,7 @@ public class ImguiHandler {
 
         // File Content Editor
         ImGui.sameLine();
-        ImGui.beginChild("File Content", 500, 400, true);
+        ImGui.beginChild("File Content", windowWidth, windowHeight, true);
         if (selectedFile != null) {
             ImGui.inputTextMultiline("##source", fileContent, ImGuiInputTextFlags.AllowTabInput | ImGuiInputTextFlags.AutoSelectAll);
             if (ImGui.button("Save")) {
@@ -172,6 +175,7 @@ public class ImguiHandler {
 
         ImGui.end();
     }
+
 
     /**
      * Loads the files in the specified directory.
