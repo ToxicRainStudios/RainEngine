@@ -8,13 +8,17 @@ import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImFloat;
 import imgui.type.ImString;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 
 /**
@@ -25,9 +29,12 @@ import javax.sound.sampled.*;
  */
 public class ImguiHandler {
 
+    public static boolean imguiWindowOpen = true;
     private ImGuiImplGl3 imguiGl3;
     ImFloat FOV = new ImFloat(SettingsInfoParser.fov);
     private final long window;
+    private int textureID = -1;
+    private BufferedImage bufferedImage;
 
     private String currentDirectory = System.getProperty("user.dir"); // Start in the current directory
     private List<String> filesInDirectory;
@@ -140,6 +147,13 @@ public class ImguiHandler {
         float windowWidth = ImGui.getContentRegionAvailX();
         float windowHeight = ImGui.getContentRegionAvailY();
 
+        if (ImGui.isWindowFocused()) {
+            imguiWindowOpen = true;
+        }
+        else {
+            imguiWindowOpen = false;
+        }
+
         // File Browser
         ImGui.beginChild("File Browser", windowWidth * 0.3f, windowHeight, true); // 30% width for File Browser
 
@@ -159,7 +173,9 @@ public class ImguiHandler {
             } else {
                 if (ImGui.selectable(fileName, fileName.equals(selectedFile))) {
                     selectedFile = fileName;
-                    if (fileName.endsWith(".wav")) {
+                    if (fileName.endsWith(".png")) {
+                        loadPngFile(filePath.toString());
+                    } else if (fileName.endsWith(".wav")) {
                         playWavFile(filePath.toString());
                     } else {
                         loadFileContent(filePath.toString());
@@ -172,19 +188,86 @@ public class ImguiHandler {
         // File Content Editor
         ImGui.sameLine();
         ImGui.beginChild("File Content", windowWidth, windowHeight, true);
-        if (selectedFile != null && !selectedFile.endsWith(".wav")) {
-            ImGui.inputTextMultiline("##source", fileContent, ImGuiInputTextFlags.AllowTabInput | ImGuiInputTextFlags.AutoSelectAll);
-            if (ImGui.button("Save")) {
-                saveFileContent(Paths.get(currentDirectory, selectedFile).toString());
+        if (selectedFile != null && selectedFile.endsWith(".png") && textureID != -1) {
+            ImGui.image(textureID, windowWidth * 0.7f, windowHeight * 0.7f);
+            if (ImGui.button("Refresh Image")) {
+                clearImage();
             }
-        } else if (selectedFile != null && selectedFile.endsWith(".wav")) {
+        }else if (selectedFile != null && selectedFile.endsWith(".wav")) {
             if (ImGui.button("Stop Audio")) {
                 stopWavFile();
             }
         }
+        else if (selectedFile != null && !selectedFile.endsWith(".png")) {
+            ImGui.inputTextMultiline("##source", fileContent, ImGuiInputTextFlags.AllowTabInput | ImGuiInputTextFlags.AutoSelectAll);
+            if (ImGui.button("Save")) {
+                saveFileContent(Paths.get(currentDirectory, selectedFile).toString());
+            }
+        }
         ImGui.endChild();
-
         ImGui.end();
+    }
+
+    /**
+     * Loads a .png file and creates an OpenGL texture.
+     *
+     * @param filePath the path to the .png file
+     */
+    private void loadPngFile(String filePath) {
+        try {
+            bufferedImage = ImageIO.read(new File(filePath));
+            textureID = createTextureFromImage(bufferedImage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Clears the currently loaded image and deletes the texture.
+     */
+    private void clearImage() {
+        if (textureID != -1) {
+            GL11.glDeleteTextures(textureID);
+            textureID = -1;
+            bufferedImage = null;
+        }
+    }
+
+    /**
+     * Creates an OpenGL texture from a BufferedImage.
+     *
+     * @param image the BufferedImage to convert
+     * @return the OpenGL texture ID
+     */
+    private int createTextureFromImage(BufferedImage image) {
+        int[] pixels = new int[image.getWidth() * image.getHeight()];
+        image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
+
+        ByteBuffer buffer = ByteBuffer.allocateDirect(image.getWidth() * image.getHeight() * 4);
+
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                int pixel = pixels[y * image.getWidth() + x];
+                buffer.put((byte) ((pixel >> 16) & 0xFF)); // Red
+                buffer.put((byte) ((pixel >> 8) & 0xFF));  // Green
+                buffer.put((byte) (pixel & 0xFF));         // Blue
+                buffer.put((byte) ((pixel >> 24) & 0xFF)); // Alpha
+            }
+        }
+
+        buffer.flip();
+
+        int textureID = GL11.glGenTextures();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, image.getWidth(), image.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+
+        return textureID;
     }
 
     /**

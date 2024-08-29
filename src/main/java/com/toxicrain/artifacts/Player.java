@@ -10,6 +10,7 @@ import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.core.render.Tile;
 import com.toxicrain.factories.GameFactory;
+import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.util.Color;
 import com.toxicrain.util.MathUtils;
 import com.toxicrain.util.MouseUtils;
@@ -283,41 +284,47 @@ public class Player implements IArtifact {
 
 
     private static void processInput(long window) {
-        // Sprinting
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keySprint))) {
-            cameraSpeed = 0.1f;
-            setIsSprinting(true);
-        } else {
-            setIsSprinting(false);
+        if (!ImguiHandler.imguiWindowOpen) {
+            // Sprinting
+            if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keySprint))) {
+                cameraSpeed = 0.1f;
+                setIsSprinting(true);
+            } else {
+                setIsSprinting(false);
+            }
+
+            cameraSpeed = 0.01f;
+            handleCollisions();
+
+
+            if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWeaponOne))) {
+                GameFactory.player.equipWeapon(GameFactory.pistol);
+            }
+
+
+            // Handle left and right movement
+            if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkLeft)))
+                forward(false, 1);
+            if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkRight)))
+                forward(false, -1);
+            if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkForward)))
+                forward(true, 1);
+            if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkBackward)))
+                forward(true, -1);
+
+            // Handle weapon attack
+            if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyAttack))) {
+                GameFactory.soundSystem.play(GameFactory.sampleSound);
+                attack();
+            }
+
+            // Update cameraZ based on the scroll input
+            cameraZ += scrollOffset * scrollSpeed;
+
+            // Clamp cameraZ at max 25 and min 3
+            cameraZ = MathUtils.clamp(cameraZ, GameInfoParser.minZoom, GameInfoParser.maxZoom);
+
+            scrollOffset = 0.0f; // Reset the scroll offset after applying it
         }
-
-        cameraSpeed = 0.01f;
-        handleCollisions();
-
-
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWeaponOne))) {
-            GameFactory.player.equipWeapon(GameFactory.pistol);
-        }
-
-
-        // Handle left and right movement
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkLeft))) forward(false, 1);
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkRight))) forward(false, -1);
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkForward))) forward(true, 1);
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWalkBackward))) forward(true, -1);
-
-        // Handle weapon attack
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyAttack))) {
-            GameFactory.soundSystem.play(GameFactory.sampleSound);
-            attack();
-        }
-
-        // Update cameraZ based on the scroll input
-        cameraZ += scrollOffset * scrollSpeed;
-
-        // Clamp cameraZ at max 25 and min 3
-        cameraZ = MathUtils.clamp(cameraZ, GameInfoParser.minZoom, GameInfoParser.maxZoom);
-
-        scrollOffset = 0.0f; // Reset the scroll offset after applying it
     }
 }
