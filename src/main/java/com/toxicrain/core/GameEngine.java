@@ -6,6 +6,7 @@ import com.toxicrain.artifacts.NPC;
 import com.toxicrain.artifacts.Player;
 import com.toxicrain.artifacts.Projectile;
 import com.toxicrain.core.json.*;
+import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.core.render.Tile;
 import com.toxicrain.factories.GameFactory;
@@ -25,7 +26,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import static com.toxicrain.util.TextureUtils.floorTexture;
-import static com.toxicrain.util.TextureUtils.playerTexture;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;

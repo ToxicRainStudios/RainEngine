@@ -1,5 +1,6 @@
-package com.toxicrain.core;
+package com.toxicrain.core.lua;
 
+import com.toxicrain.core.Logger;
 import com.toxicrain.util.FileUtils;
 import org.luaj.vm2.*;
 
@@ -112,6 +113,14 @@ public class LuaManager {
             }
         });
 
+        globals.set("runScriptCustomDir", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue script, LuaValue relativePath) {
+                loadScript(String.valueOf(script), String.valueOf(relativePath));
+                return LuaValue.valueOf(String.valueOf(script));
+            }
+        });
+
         // Add more functions as needed
     }
 
@@ -121,9 +130,13 @@ public class LuaManager {
      * @param scriptPath the relative path to the Lua script file within the "resources/scripts/" directory
      */
     public static void loadScript(String scriptPath) {
+        loadScript(scriptPath,"resources/scripts/");
+    }
+
+    public static void loadScript(String scriptPath, String relativePath) {
         try {
             Globals globals = luaEngine.getGlobals();
-            String script = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory("resources/scripts/" + scriptPath));  // Read the script content
+            String script = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory(relativePath + scriptPath));  // Read the script content
             LuaValue chunk = globals.load(script, scriptPath);  // Load the script from content
             chunk.call();  // Execute the script
         } catch (FileNotFoundException e) {

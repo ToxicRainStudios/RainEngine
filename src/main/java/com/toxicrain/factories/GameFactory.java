@@ -5,7 +5,7 @@ import com.toxicrain.artifacts.Player;
 import com.toxicrain.artifacts.Projectile;
 import com.toxicrain.artifacts.Weapon;
 import com.toxicrain.core.GameEngine;
-import com.toxicrain.core.LuaManager;
+import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.lua.LuaEngine;
 import com.toxicrain.gui.ImguiHandler;
@@ -13,7 +13,6 @@ import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.util.FileUtils;
 import com.toxicrain.util.MouseUtils;
 import com.toxicrain.util.ShaderUtils;
-import org.luaj.vm2.*;
 
 import static com.toxicrain.util.TextureUtils.playerTexture;
 

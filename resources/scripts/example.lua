@@ -11,5 +11,5 @@ log("The number 2 to the power of 3 result is: " .. multi)
 
 log("The current time in mills is: " .. currentTimeMillis())
 
-
+runScriptCustomDir("extra.lua", "resources/scripts/")
 runScript("extra.lua") -- Never ever ever call example.lua here. It will loop then crash
