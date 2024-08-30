@@ -2,6 +2,8 @@ package com.toxicrain.artifacts;
 
 import com.toxicrain.core.Logger;
 import com.toxicrain.core.TextureInfo;
+import com.toxicrain.core.gamestate.GameState;
+import com.toxicrain.core.gamestate.GameStateManager;
 import com.toxicrain.core.interfaces.IArtifact;
 import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.KeyInfoParser;
@@ -299,6 +301,28 @@ public class Player implements IArtifact {
 
             if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.keyWeaponOne))) {
                 GameFactory.player.equipWeapon(GameFactory.pistol);
+            }
+
+            if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind("key_h"))) {
+                GameState gameState = new GameState("Player1", (int) Player.cameraX, (int) Player.cameraY, 75.0f);
+                GameStateManager.saveGameState(gameState, "resources/json/gamestate.json");
+
+                GameState loadedGameState = GameStateManager.loadGameState("resources/json/gamestate.json");
+                System.out.println("Saved Player Name: " + loadedGameState.playerName);
+                System.out.println("Saved Player X: " + loadedGameState.playerX);
+                System.out.println("Saved Player Y: " + loadedGameState.playerY);
+                System.out.println("Saved Player Health: " + loadedGameState.playerHealth);
+            }
+
+            if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind("key_j"))) {
+
+                GameState loadedGameState = GameStateManager.loadGameState("resources/json/gamestate.json");
+                Player.cameraX = loadedGameState.playerX;
+                Player.cameraY = loadedGameState.playerY;
+                System.out.println("Loaded Player Name: " + loadedGameState.playerName);
+                System.out.println("Loaded Player X: " + loadedGameState.playerX);
+                System.out.println("Loaded Player Y: " + loadedGameState.playerY);
+                System.out.println("Loaded Player Health: " + loadedGameState.playerHealth);
             }
 
 
