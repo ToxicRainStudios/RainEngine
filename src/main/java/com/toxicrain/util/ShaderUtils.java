@@ -49,8 +49,6 @@ public class ShaderUtils {
         }
 
         // Optionally detach and delete shaders after linking
-        GL20.glDetachShader(shaderProgram, vertexShader);
-        GL20.glDetachShader(shaderProgram, fragmentShader);
         GL20.glDeleteShader(vertexShader);
         GL20.glDeleteShader(fragmentShader);
 
