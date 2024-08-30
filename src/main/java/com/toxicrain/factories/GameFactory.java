@@ -5,6 +5,7 @@ import com.toxicrain.artifacts.Player;
 import com.toxicrain.artifacts.Projectile;
 import com.toxicrain.artifacts.Weapon;
 import com.toxicrain.core.GameEngine;
+import com.toxicrain.core.gamestate.GameState;
 import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.lua.LuaEngine;
@@ -30,6 +31,7 @@ public class GameFactory {
     public static int fogShaderProgram;
     public static LuaEngine luaEngine;
     public static LuaManager functionManager;
+    public static GameState gameState;
 
 
     public static void load(){
@@ -41,6 +43,8 @@ public class GameFactory {
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0, playerTexture);
         character = new NPC(12,12,1,2);
         mouseUtils = new MouseUtils(GameEngine.window);
+
+        gameState = new GameState("Player1", (int) Player.cameraX, (int) Player.cameraY, 75.0f);
 
         pistol = new Weapon("Pistol", 3, 20,1,1);
         rifle = new Weapon("Rifle", 3, 20,1,1);

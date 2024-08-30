@@ -304,8 +304,7 @@ public class Player implements IArtifact {
             }
 
             if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind("key_h"))) {
-                GameState gameState = new GameState("Player1", (int) Player.cameraX, (int) Player.cameraY, 75.0f);
-                GameStateManager.saveGameState(gameState, "resources/json/gamestate.json");
+                GameStateManager.saveGameState(GameFactory.gameState, "resources/json/gamestate.json");
 
                 GameState loadedGameState = GameStateManager.loadGameState("resources/json/gamestate.json");
                 Logger.printLOG("Saved Player Name: " + loadedGameState.playerName);
@@ -315,7 +314,6 @@ public class Player implements IArtifact {
             }
 
             if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind("key_j"))) {
-
                 GameState loadedGameState = GameStateManager.loadGameState("resources/json/gamestate.json");
                 Player.cameraX = loadedGameState.playerX;
                 Player.cameraY = loadedGameState.playerY;
