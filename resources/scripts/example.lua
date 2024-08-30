@@ -6,3 +6,5 @@ log("The result is: " .. result)
 
 local random = random(2, 200)
 log("The random result is: " .. random)
+
+runScript("extra.lua")

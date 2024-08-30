@@ -57,13 +57,26 @@ public class LuaManager {
             }
         });
 
+        globals.set("runScript", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue script) {
+                loadScript(String.valueOf(script));
+                return LuaValue.valueOf(String.valueOf(script));
+            }
+        });
+
         // Add more functions as needed
     }
 
+    /**
+     * Loads and executes a Lua script from the specified path.
+     *
+     * @param scriptPath the relative path to the Lua script file within the "resources/scripts/" directory
+     */
     public static void loadScript(String scriptPath) {
         try {
             Globals globals = luaEngine.getGlobals();
-            String script = FileUtils.readFile(scriptPath);  // Read the script content
+            String script = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory("resources/scripts/" + scriptPath));  // Read the script content
             LuaValue chunk = globals.load(script, scriptPath);  // Load the script from content
             chunk.call();  // Execute the script
         } catch (Exception e) {

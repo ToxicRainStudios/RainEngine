@@ -206,7 +206,7 @@ public class GameEngine {
 
         Logger.printLOG("Loading Lua");
         GameFactory.loadlua();
-        LuaManager.loadScript(FileUtils.getCurrentWorkingDirectory("resources/scripts/example.lua"));
+        LuaManager.loadScript("example.lua");
 
 
         GameFactory.player.addWeapon(GameFactory.pistol);
