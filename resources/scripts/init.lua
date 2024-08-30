@@ -1,3 +1,5 @@
+-- Called when the game loads
+
 loadMap("map")
 
 log("Hello from Lua!")
