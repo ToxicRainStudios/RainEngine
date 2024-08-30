@@ -1,10 +1,12 @@
 package com.toxicrain.core.lua;
 
 import com.toxicrain.core.Logger;
+import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.util.FileUtils;
 import org.luaj.vm2.*;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import static com.toxicrain.factories.GameFactory.luaEngine;
 
@@ -102,6 +104,19 @@ public class LuaManager {
                     e.printStackTrace();
                     return LuaValue.FALSE;
                 }
+            }
+        });
+
+        globals.set("loadMap", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue arg) {
+                try {
+                    Logger.printLOG("Loading Map Data");
+                    MapInfoParser.parseMapFile(String.valueOf(arg));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                return arg;
             }
         });
 

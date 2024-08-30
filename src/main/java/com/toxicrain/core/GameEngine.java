@@ -58,12 +58,9 @@ public class GameEngine {
         Logger.printLOG("Loading User Settings");
         SettingsInfoParser.loadSettingsInfo();
 
-        Logger.printLOG("Loading Map Data");
-        try {
-            MapInfoParser.parseMapFile("map");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Logger.printLOG("Loading Lua");
+        GameFactory.loadlua();
+        LuaManager.loadScript("example.lua");
 
         init(windowTitle, SettingsInfoParser.vSync);
         // Create the batch renderer
@@ -203,10 +200,6 @@ public class GameEngine {
 
         Logger.printLOG("Loading Shaders");
         GameFactory.loadShaders();
-
-        Logger.printLOG("Loading Lua");
-        GameFactory.loadlua();
-        LuaManager.loadScript("example.lua");
 
 
         GameFactory.player.addWeapon(GameFactory.pistol);

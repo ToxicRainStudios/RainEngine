@@ -1,3 +1,5 @@
+loadMap("map")
+
 log("Hello from Lua!")
 
 local result = add(10, 20)
