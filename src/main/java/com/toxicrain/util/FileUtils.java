@@ -113,7 +113,6 @@ public class FileUtils {
         ByteBuffer buffer;
         try (SeekableByteChannel fc = Files.newByteChannel(path)) {
             buffer = ByteBuffer.allocateDirect((int) fc.size() + 1);
-            while (fc.read(buffer) != -1);
         }
         buffer.flip();
         return buffer;

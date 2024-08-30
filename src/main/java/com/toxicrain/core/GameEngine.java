@@ -176,7 +176,6 @@ public class GameEngine {
         glMatrixMode(GL_PROJECTION);
         glLoadMatrixf(createPerspectiveProjectionMatrix(SettingsInfoParser.fov, SettingsInfoParser.windowWidth / SettingsInfoParser.windowHeight, 1.0f, 100.0f));
 
-
         GameFactory.load();
 
         Logger.printLOG("Loading Menu");
