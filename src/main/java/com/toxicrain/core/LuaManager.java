@@ -42,6 +42,21 @@ public class LuaManager {
             }
         });
 
+        globals.set("random", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue min, LuaValue max) {
+                int result = (int) (Math.random() * (max.toint() - min.toint() + 1)) + min.toint();
+                return LuaValue.valueOf(result);
+            }
+        });
+
+        globals.set("format", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue format, LuaValue arg) {
+                return LuaValue.valueOf(String.format(format.tojstring(), arg.tojstring()));
+            }
+        });
+
         // Add more functions as needed
     }
 
