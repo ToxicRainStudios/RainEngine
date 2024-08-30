@@ -1,7 +1,9 @@
 package com.toxicrain.core.lua;
 
 import com.toxicrain.core.Logger;
+import com.toxicrain.core.json.KeyInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
+import com.toxicrain.factories.GameFactory;
 import com.toxicrain.util.FileUtils;
 import org.luaj.vm2.*;
 
@@ -117,6 +119,16 @@ public class LuaManager {
                     throw new RuntimeException(e);
                 }
                 return arg;
+            }
+        });
+
+        globals.set("isKeyPressed", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue arg) {
+                if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(arg.toString()))) {
+                    return LuaValue.TRUE;
+                }
+                return LuaValue.FALSE;
             }
         });
 
