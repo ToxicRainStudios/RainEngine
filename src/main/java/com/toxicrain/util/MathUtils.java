@@ -19,4 +19,20 @@ public class MathUtils {
     public static float clamp(float value, int min, int max) {
         return Math.max(min, Math.min(value, max));
     }
+    /**
+     * Calculates the angle in degrees between the positive x-axis and the point (x, y).
+     *
+     * @param x The x-coordinate.
+     * @param y The y-coordinate.
+     * @return The angle in degrees.
+     */
+    public static float calculateAngle(double x, double y) {
+        // Calculate the angle in radians using Math.atan2
+        double angleInRadians = Math.atan2(y, x);
+
+        // Convert radians to degrees
+        double angleInDegrees = Math.toDegrees(angleInRadians);
+
+        return (float) angleInDegrees;
+    }
 }
