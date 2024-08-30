@@ -5,12 +5,15 @@ import com.toxicrain.artifacts.Player;
 import com.toxicrain.artifacts.Projectile;
 import com.toxicrain.artifacts.Weapon;
 import com.toxicrain.core.GameEngine;
+import com.toxicrain.core.LuaManager;
 import com.toxicrain.core.json.MapInfoParser;
+import com.toxicrain.core.lua.LuaEngine;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.util.FileUtils;
 import com.toxicrain.util.MouseUtils;
 import com.toxicrain.util.ShaderUtils;
+import org.luaj.vm2.*;
 
 import static com.toxicrain.util.TextureUtils.playerTexture;
 
@@ -28,6 +31,8 @@ public class GameFactory {
     public static Weapon shotgun;
     public static int sampleSound;
     public static int fogShaderProgram;
+    public static LuaEngine luaEngine;
+    public static LuaManager functionManager;
 
 
     public static void load(){
@@ -51,5 +56,11 @@ public class GameFactory {
 
     public static void loadShaders(){
         fogShaderProgram = ShaderUtils.createShaderProgram(FileUtils.getCurrentWorkingDirectory("resources/shaders/fog/fog_vertex.glsl"), FileUtils.getCurrentWorkingDirectory("resources/shaders/fog/fog_fragment.glsl"));
+    }
+
+    public static void loadlua(){
+        luaEngine = new LuaEngine();
+        functionManager = new LuaManager(luaEngine.getGlobals());
+
     }
 }
