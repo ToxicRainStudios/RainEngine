@@ -308,10 +308,10 @@ public class Player implements IArtifact {
                 GameStateManager.saveGameState(gameState, "resources/json/gamestate.json");
 
                 GameState loadedGameState = GameStateManager.loadGameState("resources/json/gamestate.json");
-                System.out.println("Saved Player Name: " + loadedGameState.playerName);
-                System.out.println("Saved Player X: " + loadedGameState.playerX);
-                System.out.println("Saved Player Y: " + loadedGameState.playerY);
-                System.out.println("Saved Player Health: " + loadedGameState.playerHealth);
+                Logger.printLOG("Saved Player Name: " + loadedGameState.playerName);
+                Logger.printLOG("Saved Player X: " + loadedGameState.playerX);
+                Logger.printLOG("Saved Player Y: " + loadedGameState.playerY);
+                Logger.printLOG("Saved Player Health: " + loadedGameState.playerHealth);
             }
 
             if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind("key_j"))) {
@@ -319,10 +319,10 @@ public class Player implements IArtifact {
                 GameState loadedGameState = GameStateManager.loadGameState("resources/json/gamestate.json");
                 Player.cameraX = loadedGameState.playerX;
                 Player.cameraY = loadedGameState.playerY;
-                System.out.println("Loaded Player Name: " + loadedGameState.playerName);
-                System.out.println("Loaded Player X: " + loadedGameState.playerX);
-                System.out.println("Loaded Player Y: " + loadedGameState.playerY);
-                System.out.println("Loaded Player Health: " + loadedGameState.playerHealth);
+                Logger.printLOG("Loaded Player Name: " + loadedGameState.playerName);
+                Logger.printLOG("Loaded Player X: " + loadedGameState.playerX);
+                Logger.printLOG("Loaded Player Y: " + loadedGameState.playerY);
+                Logger.printLOG("Loaded Player Health: " + loadedGameState.playerHealth);
             }
 
 

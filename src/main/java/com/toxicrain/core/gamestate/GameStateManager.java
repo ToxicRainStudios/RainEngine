@@ -69,10 +69,10 @@ public class GameStateManager {
             // Add more fields as needed
 
         } catch (IOException e) {
-            System.err.println("Error loading game state: " + e.getMessage());
+            Logger.printLOG("Error loading game state: " + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("Error parsing JSON: " + e.getMessage());
+            Logger.printLOG("Error parsing JSON: " + e.getMessage());
             e.printStackTrace();
         }
         return gameState;
