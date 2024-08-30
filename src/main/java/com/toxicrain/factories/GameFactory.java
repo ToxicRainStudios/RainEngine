@@ -10,9 +10,7 @@ import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.lua.LuaEngine;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.sound.SoundSystem;
-import com.toxicrain.util.FileUtils;
 import com.toxicrain.util.MouseUtils;
-import com.toxicrain.util.ShaderUtils;
 
 import static com.toxicrain.util.TextureUtils.playerTexture;
 
