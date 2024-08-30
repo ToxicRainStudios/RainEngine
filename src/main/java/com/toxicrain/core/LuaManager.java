@@ -3,6 +3,8 @@ package com.toxicrain.core;
 import com.toxicrain.util.FileUtils;
 import org.luaj.vm2.*;
 
+import java.io.FileNotFoundException;
+
 import static com.toxicrain.factories.GameFactory.luaEngine;
 
 public class LuaManager {
@@ -124,6 +126,8 @@ public class LuaManager {
             String script = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory("resources/scripts/" + scriptPath));  // Read the script content
             LuaValue chunk = globals.load(script, scriptPath);  // Load the script from content
             chunk.call();  // Execute the script
+        } catch (FileNotFoundException e) {
+            Logger.printERROR("Error loading Script! FileNotFound");
         } catch (Exception e) {
             e.printStackTrace();
         }
