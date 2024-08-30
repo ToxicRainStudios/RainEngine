@@ -216,7 +216,7 @@ public class GameEngine {
     private static void drawMap(BatchRenderer batchRenderer) {
         // Ensure the texture mappings have been loaded
         if (PaletteInfoParser.textureMappings == null) {
-            throw new IllegalStateException("Texture mappings not loaded. Call PaletteInfoParser.loadTextureMappings() first.");
+            throw new IllegalStateException("Texture mappings not loaded! Call PaletteInfoParser.loadTextureMappings() first.");
         }
 
         for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {

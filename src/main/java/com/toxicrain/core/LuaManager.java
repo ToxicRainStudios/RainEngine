@@ -13,6 +13,9 @@ public class LuaManager {
         registerFunctions();
     }
 
+    /**
+     * Registers all the functions that can be used in a Lua file
+     */
     private void registerFunctions() {
         globals.set("log", new LuaFunction() {
             @Override
@@ -42,6 +45,28 @@ public class LuaManager {
             }
         });
 
+        globals.set("power", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue base, LuaValue exp) {
+                if (base.isnumber() && exp.isnumber()) {
+                    return LuaValue.valueOf(Math.pow(base.todouble(), exp.todouble()));
+                } else {
+                    return LuaValue.NIL;
+                }
+            }
+        });
+
+        globals.set("modulus", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue a, LuaValue b) {
+                if (a.isnumber() && b.isnumber()) {
+                    return LuaValue.valueOf(a.toint() % b.toint());
+                } else {
+                    return LuaValue.NIL;
+                }
+            }
+        });
+
         globals.set("random", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue min, LuaValue max) {
@@ -54,6 +79,26 @@ public class LuaManager {
             @Override
             public LuaValue call(LuaValue format, LuaValue arg) {
                 return LuaValue.valueOf(String.format(format.tojstring(), arg.tojstring()));
+            }
+        });
+
+        globals.set("currentTimeMillis", new LuaFunction() {
+            @Override
+            public LuaValue call() {
+                return LuaValue.valueOf(System.currentTimeMillis());
+            }
+        });
+
+        globals.set("sleep", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue millis) {
+                try {
+                    Thread.sleep(millis.tolong());
+                    return LuaValue.TRUE;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    return LuaValue.FALSE;
+                }
             }
         });
 
