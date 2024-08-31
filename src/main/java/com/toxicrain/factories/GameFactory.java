@@ -31,7 +31,6 @@ public class GameFactory {
     public static int fogShaderProgram;
     public static LuaEngine luaEngine;
     public static LuaManager functionManager;
-    public static GameState gameState;
 
 
     public static void load(){
@@ -43,8 +42,6 @@ public class GameFactory {
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0, playerTexture);
         character = new NPC(12,12,1,2);
         mouseUtils = new MouseUtils(GameEngine.window);
-
-        gameState = new GameState("Player1", (int) Player.cameraX, (int) Player.cameraY, 75.0f);
 
         pistol = new Weapon("Pistol", 3, 20,1,1);
         rifle = new Weapon("Rifle", 3, 20,1,1);
