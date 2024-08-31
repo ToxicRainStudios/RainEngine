@@ -17,6 +17,9 @@ public class GameState {
 
     // Default constructor
     public GameState() {
-        // Initialize with default values if needed
+        this.playerName = "Player1";
+        this.playerX = 1;
+        this.playerY = 1;
+        this.playerHealth = 100;
     }
 }
