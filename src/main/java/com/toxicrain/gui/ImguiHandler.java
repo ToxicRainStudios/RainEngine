@@ -76,8 +76,8 @@ public class ImguiHandler {
         ImGui.text(text);
     }
 
-    public void luaRender() {
-        render();
+    public void luaSetWindowSize(int width, int height) {
+        ImGui.setWindowSize(width, height);
     }
 
     /**

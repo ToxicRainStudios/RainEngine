@@ -156,6 +156,14 @@ public class LuaManager {
             }
         });
 
+        globals.set("setWindowSize", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue width, LuaValue height) {
+                GameFactory.imguiApp.luaSetWindowSize(width.toint(), height.toint());
+                return LuaValue.TRUE;
+            }
+        });
+
         globals.set("createLabel", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue text) {
