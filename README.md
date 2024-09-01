@@ -1,6 +1,6 @@
 # RainEngine
 
-RainEngine is a WIP engine running on [LWJGL3](https://www.lwjgl.org/)
+RainEngine is a WIP engine made with [LWJGL3](https://www.lwjgl.org/)
 
 
 ## What's done:
@@ -14,7 +14,14 @@ RainEngine is a WIP engine running on [LWJGL3](https://www.lwjgl.org/)
 * "Palette" system for controlling what's what in a map file
 * Texture pack system 
   * Loads from resources/custom/pack.json 
-* File Editor
+* A File Editor
+* [Lua](https://www.lua.org/) scripting
+  * Check if a key is pressed
+  * Load maps
+  * Make Imgui windows
+  * Work with files
+  * Merge scripts
+  * Run more scripts
 
 
 ## What's not done:

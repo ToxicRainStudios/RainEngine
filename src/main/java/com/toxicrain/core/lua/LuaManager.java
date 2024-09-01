@@ -223,6 +223,39 @@ public class LuaManager {
             }
         });
 
+        globals.set("mergeFiles", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue file1, LuaValue file2, LuaValue outputFile) {
+                String localDir = FileUtils.getCurrentWorkingDirectory("resources/scripts");
+                File fileA = new File(localDir.concat( "/" + file1.tojstring()));
+                File fileB = new File(localDir.concat("/" +file2.tojstring()));
+                File outFile = new File(localDir.concat("/" + outputFile.tojstring()));
+
+                if (!fileA.exists() || !fileB.exists()) {
+                    return LuaValue.error("One or both input files do not exist.");
+                }
+
+                try {
+                    // Read the contents of the first and second files
+                    String contentA = FileUtils.readFile(fileA.getPath());
+                    String contentB = FileUtils.readFile(fileB.getPath());
+
+                    // Merge the contents
+                    String mergedContent = contentA + contentB;
+
+                    // Write the merged content back to the output file
+                    FileUtils.writeFile(outFile.getPath(), mergedContent);
+
+                    return LuaValue.TRUE;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return LuaValue.FALSE;
+                }
+            }
+        });
+
+
+
         // Add more functions as needed
     }
 
