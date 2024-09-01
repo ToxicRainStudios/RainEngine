@@ -7,6 +7,7 @@ import com.toxicrain.factories.GameFactory;
 import com.toxicrain.util.FileUtils;
 import org.luaj.vm2.*;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -103,7 +104,6 @@ public class LuaManager {
             }
         });
 
-
         globals.set("sleep", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue millis) {
@@ -140,6 +140,49 @@ public class LuaManager {
             }
         });
 
+        globals.set("fileExists", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue path) {
+                File file = new File(path.tojstring());
+                return file.exists() ? LuaValue.TRUE : LuaValue.FALSE;
+            }
+        });
+
+        globals.set("deleteFile", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue path) {
+                File file = new File(path.tojstring());
+                return file.delete() ? LuaValue.TRUE : LuaValue.FALSE;
+            }
+        });
+
+        globals.set("renameFile", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue oldPath, LuaValue newPath) {
+                File oldFile = new File(oldPath.tojstring());
+                File newFile = new File(newPath.tojstring());
+                return oldFile.renameTo(newFile) ? LuaValue.TRUE : LuaValue.FALSE;
+            }
+        });
+
+        globals.set("getFileSize", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue path) {
+                File file = new File(path.tojstring());
+                return file.exists() ? LuaValue.valueOf(file.length()) : LuaValue.NIL;
+            }
+        });
+
+        globals.set("getFileExtension", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue path) {
+                File file = new File(path.tojstring());
+                String fileName = file.getName();
+                int dotIndex = fileName.lastIndexOf('.');
+                return dotIndex >= 0 ? LuaValue.valueOf(fileName.substring(dotIndex + 1)) : LuaValue.NIL;
+            }
+        });
+
         globals.set("runScript", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue script) {
@@ -168,6 +211,12 @@ public class LuaManager {
         loadScript(scriptPath,"resources/scripts/");
     }
 
+    /**
+     * Loads and executes a Lua script from the specified path.
+     *
+     * @param scriptPath the path to the Lua script file
+     * @param relativePath the relative path to the script  Ex: "resources/scripts/"
+     */
     public static void loadScript(String scriptPath, String relativePath) {
         try {
             Globals globals = luaEngine.getGlobals();
