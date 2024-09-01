@@ -140,6 +140,30 @@ public class LuaManager {
             }
         });
 
+        globals.set("beginWindow", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue title) {
+                GameFactory.imguiApp.luaBeginWindow(title.tojstring());
+                return LuaValue.TRUE;
+            }
+        });
+
+        globals.set("endWindow", new LuaFunction() {
+            @Override
+            public LuaValue call() {
+                GameFactory.imguiApp.luaEndWindow();
+                return LuaValue.TRUE;
+            }
+        });
+
+        globals.set("createLabel", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue text) {
+                GameFactory.imguiApp.luaCreateLabel(text.tojstring());
+                return LuaValue.TRUE;
+            }
+        });
+
         globals.set("fileExists", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue path) {

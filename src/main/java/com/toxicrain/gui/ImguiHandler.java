@@ -64,6 +64,22 @@ public class ImguiHandler {
         imguiGl3.init("#version 130"); // OpenGL version
     }
 
+    public void luaBeginWindow(String title) {
+        ImGui.begin(title);
+    }
+
+    public void luaEndWindow() {
+        ImGui.end();
+    }
+
+    public void luaCreateLabel(String text) {
+        ImGui.text(text);
+    }
+
+    public void luaRender() {
+        render();
+    }
+
     /**
      * Starts a new ImGui frame.
      */

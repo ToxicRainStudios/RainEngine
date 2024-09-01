@@ -279,6 +279,7 @@ public class GameEngine {
             GameFactory.imguiApp.newFrame();
             GameFactory.imguiApp.drawSettingsUI();
             GameFactory.imguiApp.drawFileEditorUI();
+            LuaManager.loadScript("imgui.lua");
             GameFactory.imguiApp.render();
         }
 
