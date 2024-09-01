@@ -283,7 +283,6 @@ public class GameEngine {
             GameFactory.imguiApp.newFrame();
             GameFactory.imguiApp.drawSettingsUI();
             GameFactory.imguiApp.drawFileEditorUI();
-            GameFactory.imguiApp.drawImGuiConsole();
             GameFactory.imguiApp.render();
         }
 
