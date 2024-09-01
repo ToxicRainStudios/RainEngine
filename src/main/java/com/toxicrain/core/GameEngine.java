@@ -1,7 +1,5 @@
 package com.toxicrain.core;
 
-//import com.toxicrain.core.json.MapInfoParser;
-
 import com.toxicrain.artifacts.NPC;
 import com.toxicrain.artifacts.Player;
 import com.toxicrain.artifacts.Projectile;
@@ -21,7 +19,6 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
-import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -70,7 +67,7 @@ public class GameEngine {
 
             for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
                 // Ensure that indices are valid
-                if (k >= 0 && k < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
+                if (k >= 0 && k < MapInfoParser.mapDataY.size() && k < MapInfoParser.mapDataX.size()) {
                     batchRenderer.addTexture(floorTexture, MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, 1,1, Color.toFloatArray(Color.WHITE)); // Top-right corner
                 } else {
                     Logger.printLOG("Index out of bounds: space=" + k);
@@ -200,7 +197,6 @@ public class GameEngine {
 
         Logger.printLOG("Loading Shaders");
         GameFactory.loadShaders();
-
 
         GameFactory.player.addWeapon(GameFactory.pistol);
 

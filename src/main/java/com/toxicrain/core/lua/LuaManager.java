@@ -96,6 +96,14 @@ public class LuaManager {
             }
         });
 
+        globals.set("getCurrentDateTime", new LuaFunction() {
+            @Override
+            public LuaValue call() {
+                return LuaValue.valueOf(java.time.LocalDateTime.now().toString());
+            }
+        });
+
+
         globals.set("sleep", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue millis) {
