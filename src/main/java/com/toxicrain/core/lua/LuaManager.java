@@ -14,7 +14,7 @@ import java.io.IOException;
 import static com.toxicrain.factories.GameFactory.luaEngine;
 
 public class LuaManager {
-    private Globals globals;
+    private final Globals globals;
 
     public LuaManager(Globals globals) {
         this.globals = globals;
