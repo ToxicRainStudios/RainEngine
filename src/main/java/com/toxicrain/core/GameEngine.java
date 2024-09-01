@@ -266,14 +266,6 @@ public class GameEngine {
         // Begin the batch
         batchRenderer.beginBatch();
 
-        if (glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0) {
-            GameFactory.imguiApp.handleInput(window);
-            GameFactory.imguiApp.newFrame();
-            GameFactory.imguiApp.drawSettingsUI();
-            GameFactory.imguiApp.drawFileEditorUI();
-            GameFactory.imguiApp.render();
-        }
-
         if (menu) {
             Menu.render(batchRenderer);
         } else {
@@ -285,6 +277,16 @@ public class GameEngine {
 
         // Render the batch
         batchRenderer.renderBatch();
+
+        if (glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0) {
+            GameFactory.imguiApp.handleInput(window);
+            GameFactory.imguiApp.newFrame();
+            GameFactory.imguiApp.drawSettingsUI();
+            GameFactory.imguiApp.drawFileEditorUI();
+            GameFactory.imguiApp.drawImGuiConsole();
+            GameFactory.imguiApp.render();
+        }
+
         // Swap buffers and poll events
         glfwSwapBuffers(window);
         glfwPollEvents();
