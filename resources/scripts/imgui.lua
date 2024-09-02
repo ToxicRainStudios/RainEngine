@@ -1,4 +1,11 @@
-beginWindow("Custom Lua Window")
-setWindowSize("300", "300")
-createLabel("This is a custom window in lua!")
+beginWindow("Test Window")
+createLabel("Hello, world!")
+buttonPressed = createButton("WOW")
 endWindow()
+
+
+if buttonPressed then
+    print("Button was pressed")
+else
+    print("Button state:", tostring(buttonPressed))
+end

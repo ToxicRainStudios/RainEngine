@@ -80,6 +80,10 @@ public class ImguiHandler {
         ImGui.setWindowSize(width, height);
     }
 
+    public boolean luaCreateButton(String label) {
+        return ImGui.button(label);
+    }
+
     /**
      * Starts a new ImGui frame.
      */
@@ -126,8 +130,6 @@ public class ImguiHandler {
      * Cleans up ImGui resources.
      */
     public static void cleanup() {
-        // imguiGl3.dispose();
-        // imguiGlfw.dispose();
         ImGui.destroyContext();
     }
 

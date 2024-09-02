@@ -172,6 +172,16 @@ public class LuaManager {
             }
         });
 
+        globals.set("createButton", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue label) {
+                // Call the Java method and return the result as a Lua boolean
+                boolean isPushed = GameFactory.imguiApp.luaCreateButton(label.tojstring());
+                return LuaValue.valueOf(isPushed);
+            }
+        });
+
+
         globals.set("fileExists", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue path) {
