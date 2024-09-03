@@ -1,7 +1,7 @@
 beginWindow("Test Window")
 createLabel("Hello, world!")
-setDisabled()
 buttonPressed = createButton("WOW")
+setDisabled()
 checkboxChecked = createCheckbox("Example Checkbox", "true")
 setEnabled()
 endWindow()

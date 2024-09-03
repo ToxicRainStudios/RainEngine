@@ -62,17 +62,6 @@ public class GameEngine {
         init(windowTitle, SettingsInfoParser.vSync);
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
-        batchRenderer.setBlendingEnabled(true);
-
-
-            for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
-                // Ensure that indices are valid
-                if (k >= 0 && k < MapInfoParser.mapDataY.size() && k < MapInfoParser.mapDataX.size()) {
-                    batchRenderer.addTexture(floorTexture, MapInfoParser.mapDataX.get(k), MapInfoParser.mapDataY.get(k), 1, 0, 1,1, Color.toFloatArray(Color.WHITE)); // Top-right corner
-                } else {
-                    Logger.printLOG("Index out of bounds: space=" + k);
-                }
-            }
 
         loop(batchRenderer);
 
@@ -218,7 +207,7 @@ public class GameEngine {
                         textureInfo,
                         MapInfoParser.mapDataX.get(k),
                         MapInfoParser.mapDataY.get(k),
-                        1,
+                        MapInfoParser.mapDataZ.get(k).floatValue(),
                         0,
                         1,
                         1,
@@ -271,8 +260,12 @@ public class GameEngine {
             Player.render(batchRenderer);
         }
 
+
+        batchRenderer.setBlendingEnabled(true);
         // Render the batch
         batchRenderer.renderBatch();
+
+        batchRenderer.setBlendingEnabled(false);
 
         if (glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0) {
             GameFactory.imguiApp.handleInput(window);

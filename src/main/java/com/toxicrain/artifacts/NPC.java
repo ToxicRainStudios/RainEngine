@@ -24,7 +24,6 @@ int aiType = 0;
                 character.X = Player.posX - 3;
                 character.Y = Player.posY - 1;
 
-
             case(2):
                 character.directionX = Player.posX;
                 character.directionY = Player.posY;

@@ -23,6 +23,7 @@ public class MapInfoParser {
     public static int tiles = 0;
     public static ArrayList<Integer> mapDataX = new ArrayList<>();
     public static ArrayList<Integer> mapDataY = new ArrayList<>();
+    public static ArrayList<Double> mapDataZ = new ArrayList<>();
 
     public static void parseMapFile(String mapName) throws IOException {
         // Read JSON file as String
@@ -83,6 +84,7 @@ public class MapInfoParser {
                                 // Add tile data
                                 mapDataX.add(xpos * 2);
                                 mapDataY.add(ypos * -2);
+                                mapDataZ.add(layer * 0.01);
                                 tiles++;
                                 Tile.mapDataType.add(row.charAt(l));
                                 Tile.addCollision(ypos, xpos);
