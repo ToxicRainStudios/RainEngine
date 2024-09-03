@@ -80,8 +80,19 @@ public class ImguiHandler {
         ImGui.setWindowSize(width, height);
     }
 
+    public void luaSetDisabled() {
+        ImGui.beginDisabled();
+    }
+
+    public void luaSetEnabled() {
+        ImGui.endDisabled();
+    }
+
     public boolean luaCreateButton(String label) {
         return ImGui.button(label);
+    }
+    public boolean luaCreateCheckbox(String label, boolean toboolean) {
+        return ImGui.checkbox(label, toboolean);
     }
 
     /**

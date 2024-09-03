@@ -147,6 +147,20 @@ public class LuaManager {
                 return LuaValue.TRUE;
             }
         });
+        globals.set("setDisabled", new LuaFunction() {
+            @Override
+            public LuaValue call() {
+                GameFactory.imguiApp.luaSetDisabled();
+                return LuaValue.TRUE;
+            }
+        });
+        globals.set("setEnabled", new LuaFunction() {
+            @Override
+            public LuaValue call() {
+                GameFactory.imguiApp.luaSetEnabled();
+                return LuaValue.TRUE;
+            }
+        });
 
         globals.set("endWindow", new LuaFunction() {
             @Override
@@ -181,6 +195,13 @@ public class LuaManager {
             }
         });
 
+        globals.set("createCheckbox", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue label, LuaValue initialValue) {
+                boolean isChecked = GameFactory.imguiApp.luaCreateCheckbox(label.tojstring(), initialValue.toboolean());
+                return LuaValue.valueOf(isChecked);
+            }
+        });
 
         globals.set("fileExists", new LuaFunction() {
             @Override
