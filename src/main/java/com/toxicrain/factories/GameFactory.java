@@ -28,7 +28,6 @@ public class GameFactory {
     public static Weapon rifle;
     public static Weapon shotgun;
     public static int sampleSound;
-    public static int fogShaderProgram;
     public static LuaEngine luaEngine;
     public static LuaManager functionManager;
 

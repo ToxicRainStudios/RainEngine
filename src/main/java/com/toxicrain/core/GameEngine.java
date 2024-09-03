@@ -189,6 +189,9 @@ public class GameEngine {
 
         GameFactory.player.addWeapon(GameFactory.pistol);
 
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK); // Cull back faces
+
     }
 
     private static void drawMap(BatchRenderer batchRenderer) {
