@@ -47,6 +47,7 @@ public class GameEngine {
     }
 
     public static void run(String windowTitle) {
+        Thread.setDefaultUncaughtExceptionHandler(new CrashReporter());
         Logger.printLOG("Hello LWJGL " + Version.getVersion() + "!");
         Logger.printLOG("Hello RainEngine " + Constants.engineVersion + "!");
         Logger.printLOG("Running: " + GameInfoParser.gameName + " by " + GameInfoParser.gameMakers);

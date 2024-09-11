@@ -1,0 +1,36 @@
+package com.toxicrain.core;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+public class CrashReporter implements Thread.UncaughtExceptionHandler {
+
+    @Override
+    public void uncaughtException(Thread t, Throwable e) {
+        // Handle uncaught exception from any thread
+        generateCrashReport(e);
+    }
+
+    public static void generateCrashReport(Throwable t) {
+        Logger.printLOG("A crash occurred: " + t.getMessage());
+
+        // Log the crash to a file
+        try (FileWriter fw = new FileWriter("crash_report.txt", true);
+             PrintWriter pw = new PrintWriter(fw)) {
+
+            pw.println("=== Crash Report ===");
+            pw.println("Thread: " + Thread.currentThread().getName());
+            pw.println("Exception: " + t.getClass().getName() + ": " + t.getMessage());
+            t.printStackTrace(pw); // Logs the stack trace
+            pw.println("=====================");
+            pw.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Optionally exit the program
+        System.exit(1); // Exits with error code
+    }
+}
