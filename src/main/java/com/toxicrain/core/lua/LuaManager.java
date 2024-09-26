@@ -10,11 +10,16 @@ import org.luaj.vm2.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.toxicrain.factories.GameFactory.luaEngine;
 
 public class LuaManager {
     private final Globals globals;
+    private static final List<String> initScripts = new ArrayList<>();
+    private static final List<String> tickScripts = new ArrayList<>();
+    private static final List<String> imguiScripts = new ArrayList<>();
 
     public LuaManager(Globals globals) {
         this.globals = globals;
@@ -299,6 +304,82 @@ public class LuaManager {
     }
 
     /**
+     * Determines if the given file name indicates that it is an "init" script.
+     *
+     * @param fileName the name of the Lua file
+     * @return true if the file is an "init" script, false otherwise
+     */
+    public static boolean isInitFile(String fileName) {
+        return fileName.startsWith("init_"); // Example: Files starting with "init_"
+    }
+
+    /**
+     * Determines if the given file name indicates that it is an "imgui" script.
+     *
+     * @param fileName the name of the Lua file
+     * @return true if the file is an "imgui" script, false otherwise
+     */
+    public static boolean isImguiFile(String fileName) {
+        return fileName.startsWith("imgui_"); // Example: imgui_MyCustomUI.lua
+    }
+
+    /**
+     * Determines if the given file name indicates that it is a "tick" script.
+     *
+     * @param fileName the name of the Lua file
+     * @return true if the file is a "tick" script, false otherwise
+     */
+    public static boolean isTickFile(String fileName) {
+        return fileName.startsWith("tick_"); // Example: Files starting with "tick_"
+    }
+
+
+
+    public static void categorizeScripts(String directoryPath) {
+        File directory = new File(FileUtils.getCurrentWorkingDirectory(directoryPath));
+        File[] files = directory.listFiles((dir, name) -> name.endsWith(".lua"));
+        if (files != null) {
+            for (File file : files) {
+                if (isInitFile(file.getName())) {
+                    initScripts.add(file.getName());
+                } else if (isTickFile(file.getName())) {
+                    tickScripts.add(file.getName());
+                } else if (isImguiFile(file.getName())) {
+                    imguiScripts.add(file.getName());
+                }
+            }
+        }
+    }
+
+    /**
+     * Executes all init scripts.
+     */
+    public static void executeInitScripts() {
+        for (String script : initScripts) {
+            Logger.printLOG("Executing init script: " + script);
+            loadScript(script, "resources/scripts/");  // Assuming scripts are in this directory
+        }
+    }
+
+    /**
+     * Executes all tick scripts.
+     */
+    public static void executeTickScripts() {
+        for (String script : tickScripts) {
+            loadScript(script, "resources/scripts/");  // Assuming scripts are in this directory
+        }
+    }
+
+    /**
+     * Executes all Lua scripts.
+     */
+    public static void executeAllImguiScripts() {
+        for (String script : imguiScripts) {
+            loadScript(script, "resources/scripts/");  // Assuming scripts are in this directory
+        }
+    }
+
+    /**
      * Loads and executes a Lua script from the specified path.
      *
      * @param scriptPath the relative path to the Lua script file within the "resources/scripts/" directory
@@ -321,6 +402,7 @@ public class LuaManager {
             chunk.call();  // Execute the script
         } catch (FileNotFoundException e) {
             Logger.printERROR("Error loading Script! FileNotFound");
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

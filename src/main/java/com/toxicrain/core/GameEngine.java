@@ -58,7 +58,8 @@ public class GameEngine {
 
         Logger.printLOG("Loading Lua");
         GameFactory.loadlua();
-        LuaManager.loadScript("init.lua");
+        LuaManager.categorizeScripts("resources/scripts/");
+        LuaManager.executeInitScripts();
 
         init(windowTitle, SettingsInfoParser.vSync);
         // Create the batch renderer
@@ -232,7 +233,7 @@ public class GameEngine {
             GameFactory.projectile.update();
         }
 
-        LuaManager.loadScript("tick.lua");
+        LuaManager.executeTickScripts();
 
         if (menu) {
             // Check mouse position and button press
@@ -276,7 +277,7 @@ public class GameEngine {
             GameFactory.imguiApp.newFrame();
             GameFactory.imguiApp.drawSettingsUI();
             GameFactory.imguiApp.drawFileEditorUI();
-            LuaManager.loadScript("imgui.lua");
+            LuaManager.executeAllImguiScripts();
             GameFactory.imguiApp.render();
         }
 
