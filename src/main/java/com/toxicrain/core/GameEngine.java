@@ -209,7 +209,7 @@ public class GameEngine {
 
         for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
             // Ensure that indices are valid
-            if (k >= 0 && k < MapInfoParser.mapDataY.size() && k >= 0 && k < MapInfoParser.mapDataX.size()) {
+            if (k >= 0 && k < MapInfoParser.mapDataY.size() && k < MapInfoParser.mapDataX.size()) {
                 char textureChar = Tile.mapDataType.get(k);  // Get the character representing the texture
                 TextureInfo textureInfo = PaletteInfoParser.getTexture(textureChar);  // Get the TextureInfo from TextureLoader
 
