@@ -261,7 +261,7 @@ public class GameEngine {
         } else {
             drawMap(batchRenderer);
             GameFactory.character.render(batchRenderer);
-            Projectile.render(batchRenderer, GameFactory.projectile);
+            GameFactory.projectile.render(batchRenderer);
             Player.render(batchRenderer);
         }
 

@@ -8,8 +8,8 @@ import com.toxicrain.util.Color;
 
 public class Projectile implements IArtifact {
     private float x, y;
-    private float velocityX, velocityY;
-    private TextureInfo texture;
+    private final float velocityX, velocityY;
+    private final TextureInfo texture;
 
 
     public Projectile(float xpos, float ypos, float veloX, float veloY, TextureInfo texture) {
@@ -25,7 +25,7 @@ public class Projectile implements IArtifact {
         this.y += this.velocityY;
     }
 
-    public static void render(BatchRenderer batchRenderer, Projectile projectile) {
-        batchRenderer.addTexture(projectile.texture, projectile.x, projectile.y, 1.01f, 0, 1,1, Color.toFloatArray(Color.WHITE));
+    public void render(BatchRenderer batchRenderer) {
+        batchRenderer.addTexture(this.texture, this.x, this.y, 1.01f, 0, 1,1, Color.toFloatArray(Color.WHITE));
     }
 }
