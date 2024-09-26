@@ -208,6 +208,18 @@ public class LuaManager {
             }
         });
 
+        globals.set("createColorPicker", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue label) {
+                // Call the Java method to create the color picker
+                GameFactory.imguiApp.luaCreateColorPicker(label.tojstring());
+
+                // After the color picker is used, retrieve the current color (if needed)
+                // Update Lua state if necessary
+                return LuaValue.TRUE; // Indicate success
+            }
+        });
+
         globals.set("fileExists", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue path) {

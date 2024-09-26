@@ -4,6 +4,8 @@ buttonPressed = createButton("WOW")
 setDisabled()
 checkboxChecked = createCheckbox("Example Checkbox", "true")
 setEnabled()
+createColorPicker("Select Color")
+
 endWindow()
 
 
