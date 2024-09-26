@@ -21,6 +21,10 @@ public class TextEngine {
     private final Font font;
     private final float transparency;
 
+    // Cache fields for text and texture
+    private String cachedText = null;
+    private TextureInfo cachedTextureInfo = null;
+
     public TextEngine(Font font, float transparency) {
         this.font = font;
         this.transparency = transparency;
@@ -31,11 +35,22 @@ public class TextEngine {
         float baseX = Player.cameraX - (toWrite.length() * scale) / SCALE_FACTOR;
         float baseY = Player.cameraY - yOffset * scale;
 
-        // Create a BufferedImage to render the text
-        BufferedImage textImage = createTextImage(toWrite);
+        // Check if the text has changed
+        TextureInfo textureInfo;
+        if (toWrite.equals(cachedText) && cachedTextureInfo != null) {
+            // Reuse cached texture if the text hasn't changed
+            textureInfo = cachedTextureInfo;
+        } else {
+            // Create a BufferedImage to render the new text
+            BufferedImage textImage = createTextImage(toWrite);
 
-        // Convert the BufferedImage to a TextureInfo
-        TextureInfo textureInfo = convertToTextureInfo(textImage);
+            // Convert the BufferedImage to a TextureInfo
+            textureInfo = convertToTextureInfo(textImage);
+
+            // Update the cache with new text and texture
+            cachedText = toWrite;
+            cachedTextureInfo = textureInfo;
+        }
 
         // Render the texture using BatchRenderer
         batchRenderer.addTexture(
@@ -69,7 +84,6 @@ public class TextEngine {
         g2d.dispose();
 
         return flipImageVertically(image);
-
     }
 
     private TextureInfo convertToTextureInfo(BufferedImage image) {
