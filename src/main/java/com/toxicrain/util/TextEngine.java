@@ -68,7 +68,8 @@ public class TextEngine {
         g2d.drawString(text, 0, metrics.getAscent()); // Draw the text
         g2d.dispose();
 
-        return image;
+        return flipImageVertically(image);
+
     }
 
     private TextureInfo convertToTextureInfo(BufferedImage image) {
@@ -87,5 +88,13 @@ public class TextEngine {
         } catch (IOException e) {
             throw new RuntimeException("Failed to convert BufferedImage to TextureInfo", e);
         }
+    }
+
+    private BufferedImage flipImageVertically(BufferedImage image) {
+        BufferedImage flipped = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = flipped.createGraphics();
+        g.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), 0, image.getHeight(), image.getWidth(), 0, null);
+        g.dispose();
+        return flipped;
     }
 }
