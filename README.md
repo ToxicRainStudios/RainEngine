@@ -22,6 +22,7 @@ RainEngine is a WIP engine made with [LWJGL3](https://www.lwjgl.org/)
   * Work with files
   * Merge scripts
   * Run more scripts
+  * Script prefixes to de-hardcore scripting 
 
 
 ## What's not done:

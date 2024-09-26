@@ -229,7 +229,7 @@ public class GameEngine {
     private static void update(float deltaTime) {
         for (int engineFrames = 30; engineFrames >= 0; engineFrames--) {
             GameFactory.player.update(deltaTime);
-            GameFactory.character.runAI(GameFactory.character);
+            GameFactory.character.runAI();
             GameFactory.projectile.update();
         }
 
@@ -260,7 +260,7 @@ public class GameEngine {
             Menu.render(batchRenderer);
         } else {
             drawMap(batchRenderer);
-            NPC.render(batchRenderer, GameFactory.character);
+            GameFactory.character.render(batchRenderer);
             Projectile.render(batchRenderer, GameFactory.projectile);
             Player.render(batchRenderer);
         }

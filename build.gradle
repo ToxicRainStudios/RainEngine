@@ -45,6 +45,10 @@ dependencies {
     implementation "io.github.spair:imgui-java-app:$imguiVersion"
 
     implementation "org.luaj:luaj-jse:$luajVersion"
+
+    // Add Lombok dependency
+    compileOnly 'org.projectlombok:lombok:1.18.28' // Use the latest version available
+    annotationProcessor 'org.projectlombok:lombok:1.18.28' // Necessary for annotation processing
 }
 
 application {
