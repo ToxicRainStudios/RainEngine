@@ -12,18 +12,22 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.toxicrain.gui.Menu.font;
+
 public class ButtonEngine {
     private TextEngine textEngine;
     private float x, y, width, height;
     private boolean clicked;
+    private String label;
 
     public ButtonEngine(String label, float x, float y) {
-        this.textEngine = new TextEngine(label, (int) x, (int) y, 1);
+        this.textEngine = new TextEngine(font, 1);
         this.x = x;
         this.y = y;
         this.width = 300;  // Set an appropriate width for the button
         this.height = 300;  // Set an appropriate height for the button
         this.clicked = false;
+        this.label = label;
     }
 
     public void update(float mouseX, float mouseY, boolean mouseClick) {
@@ -46,7 +50,7 @@ public class ButtonEngine {
         batchRenderer.addTexture(buttonTexture, x, y, width, height, scale, scale, Color.toFloatArray(Color.LIGHT_GRAY));
 
         // Render button text
-        textEngine.render(batchRenderer);
+        textEngine.render(batchRenderer, this.label, (int) this.x, (int) this.y);
     }
 
     private boolean isMouseOver(float mouseX, float mouseY) {

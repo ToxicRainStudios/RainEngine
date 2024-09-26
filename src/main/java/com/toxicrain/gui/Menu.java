@@ -4,22 +4,21 @@ import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.util.ButtonEngine;
 import com.toxicrain.util.TextEngine;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 
 public class Menu {
 
     private static TextEngine textEngine;
-    private static TextEngine textPart1;
-    private static TextEngine textPart2;
-    private static TextEngine textPart3;
-
+    public static Font font;
     private static ButtonEngine button;
 
-    public static void initializeMenu() {
-        textEngine = new TextEngine("sigma tropism", 0, -23,1);
-        textPart1 = new TextEngine("sigma", 10, -23, 1);
-        textPart2 = new TextEngine("theta", -10, -23, 1);
-        textPart3 = new TextEngine("the sigma begins", 0, -18, 1);
+    public static void initializeMenu() throws IOException, FontFormatException {
+        font = Font.createFont(Font.TRUETYPE_FONT, new File("C:\\Users\\hudso\\Downloads\\perfect_dos_vga_437/Perfect DOS VGA 437.ttf")).deriveFont(24f);
+        textEngine = new TextEngine(font, 1);
+
 
         // Initialize the button with a default texture type, position (x, y)
         button = new ButtonEngine("Click Me", -20, -23);
@@ -38,10 +37,8 @@ public class Menu {
 
     public static void render(BatchRenderer batchRenderer) {
         // Render text
-        textEngine.render(batchRenderer);
-        textPart1.render(batchRenderer);
-        textPart2.render(batchRenderer);
-        textPart3.render(batchRenderer);
+        textEngine.render(batchRenderer, "Amongus", 1,2);
+
 
         // Render button
         button.render(batchRenderer);

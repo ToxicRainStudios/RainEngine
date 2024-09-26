@@ -19,6 +19,8 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
+import java.awt.*;
+import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -169,7 +171,13 @@ public class GameEngine {
 
         Logger.printLOG("Loading Menu");
         if(menu){
-            Menu.initializeMenu();
+            try {
+                Menu.initializeMenu();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (FontFormatException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         Logger.printLOG("Loading Map Palette");
