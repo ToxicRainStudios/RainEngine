@@ -19,6 +19,9 @@ public class NPC {
     @Getter @Setter
     private int aiType;
 
+    private float x; // X coordinate
+    private float y; // Y coordinate
+
     // Constructor to initialize NPC
     public NPC(float startingXpos, float startingYpos, float rotation, int ai) {
         this.X = startingXpos;
@@ -53,6 +56,21 @@ public class NPC {
     private void followPlayer(float offsetX, float offsetY) {
         this.X = Player.posX - offsetX;
         this.Y = Player.posY - offsetY;
+    }
+
+    public void moveTowards(float targetX, float targetY) {
+        // Logic to move NPC towards target
+        float speed = 1.0f; // Define NPC speed
+        float deltaX = targetX - x;
+        float deltaY = targetY - y;
+        float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+        // Normalize the direction
+        if (distance > 0) {
+            // Update NPC position based on speed
+            x += (deltaX / distance) * speed;
+            y += (deltaY / distance) * speed;
+        }
     }
 
     // Method to move towards the player gradually
