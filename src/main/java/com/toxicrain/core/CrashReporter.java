@@ -13,7 +13,7 @@ public class CrashReporter implements Thread.UncaughtExceptionHandler {
     }
 
     public static void generateCrashReport(Throwable t) {
-        Logger.printLOG("A crash occurred: " + t.getMessage());
+        Logger.printERROR("A crash occurred: " + t.getMessage());
 
         // Log the crash to a file
         try (FileWriter fw = new FileWriter("crash_report.txt", true);

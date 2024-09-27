@@ -5,7 +5,6 @@ import com.toxicrain.artifacts.Player;
 import com.toxicrain.artifacts.Projectile;
 import com.toxicrain.artifacts.Weapon;
 import com.toxicrain.core.GameEngine;
-import com.toxicrain.core.gamestate.GameState;
 import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.lua.LuaEngine;

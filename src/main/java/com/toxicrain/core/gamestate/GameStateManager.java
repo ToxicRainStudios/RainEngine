@@ -1,7 +1,6 @@
 package com.toxicrain.core.gamestate;
 
 import com.toxicrain.core.Logger;
-import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
 import org.json.JSONObject;
 import java.io.BufferedReader;

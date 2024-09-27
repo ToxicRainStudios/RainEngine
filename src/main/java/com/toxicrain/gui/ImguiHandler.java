@@ -94,7 +94,8 @@ public class ImguiHandler {
     public boolean luaCreateCheckbox(String label, boolean toboolean) {
         return ImGui.checkbox(label, toboolean);
     }
-    private float[] currentColor = {1.0f, 0.5f, 0.0f, 1.0f}; // Initial color
+
+    private final float[] currentColor = {1.0f, 0.5f, 0.0f, 1.0f}; // Initial color
 
     // Method to create a color picker
     public void luaCreateColorPicker(String label) {
