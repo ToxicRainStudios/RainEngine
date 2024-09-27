@@ -19,6 +19,8 @@ public class SoundSystem {
     private long device;
     private long context;
     private int sourceId;
+    private float currentVolume = 1.0f;  // Default volume (full)
+    private boolean isFading = false;
 
     public void init() {
         initOpenAL();
@@ -51,7 +53,7 @@ public class SoundSystem {
     public int loadSound(String filePath) {
         int bufferId = alGenBuffers();
         if (bufferId == 0) {
-            throw new IllegalStateException("Failed to generate a OpenAL buffer.");
+            throw new IllegalStateException("Failed to generate an OpenAL buffer.");
         }
 
         try {
@@ -94,10 +96,26 @@ public class SoundSystem {
         }
     }
 
+    public void play(int bufferId, boolean fadeIn, float fadeDuration) {
+        if (fadeIn) {
+            fadeIn(bufferId, fadeDuration);
+        } else {
+            play(bufferId);
+        }
+    }
+
     public void stop() {
         int state = alGetSourcei(sourceId, AL_SOURCE_STATE);
         if (state == AL_PLAYING) {
             alSourceStop(sourceId);
+        }
+    }
+
+    public void stop(boolean fadeOut, float fadeDuration) {
+        if (fadeOut) {
+            fadeOut(fadeDuration);
+        } else {
+            stop();
         }
     }
 
@@ -108,7 +126,6 @@ public class SoundSystem {
     }
 
     public void cleanup() {
-        // Clean up OpenAL resources
         if (context != NULL) {
             alcDestroyContext(context);
             context = NULL;
@@ -117,5 +134,57 @@ public class SoundSystem {
             alcCloseDevice(device);
             device = NULL;
         }
+    }
+
+    private void fadeIn(int bufferId, float duration) {
+        new Thread(() -> {
+            try {
+                alSourcei(sourceId, AL_BUFFER, bufferId);
+                setVolume(0.0f);  // Start at zero volume
+                alSourcePlay(sourceId);
+                isFading = true;
+
+                float increment = 1.0f / (duration * 1000 / 10);  // Every 10ms, increase volume
+
+                while (currentVolume < 1.0f && isFading) {
+                    currentVolume = Math.min(1.0f, currentVolume + increment);
+                    setVolume(currentVolume);
+                    Thread.sleep(10);  // Update volume every 10ms
+                }
+
+                isFading = false;
+            } catch (InterruptedException e) {
+                Logger.printERROR("Fade-in interrupted.");
+            }
+        }).start();
+    }
+
+    private void fadeOut(float duration) {
+        new Thread(() -> {
+            try {
+                isFading = true;
+                float decrement = currentVolume / (duration * 1000 / 10);  // Every 10ms, decrease volume
+
+                while (currentVolume > 0.0f && isFading) {
+                    currentVolume = Math.max(0.0f, currentVolume - decrement);
+                    setVolume(currentVolume);
+                    Thread.sleep(10);  // Update volume every 10ms
+                }
+
+                alSourceStop(sourceId);
+                isFading = false;
+            } catch (InterruptedException e) {
+                Logger.printERROR("Fade-out interrupted.");
+            }
+        }).start();
+    }
+
+    public void setVolume(float volume) {
+        currentVolume = volume;
+        alSourcef(sourceId, AL_GAIN, volume);
+    }
+
+    public float getVolume() {
+        return currentVolume;
     }
 }
