@@ -6,6 +6,8 @@ import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FileUtils {
 
@@ -71,14 +73,21 @@ public class FileUtils {
         return System.getProperty("user.dir");
 
     }
+
+    private static final Map<String, String> cachedAbsolutePaths = new ConcurrentHashMap<>();
+
     /**
      * Converts a relative path to an absolute path based on the current working directory.
+     * If the path has been converted before, it returns the cached value.
      *
      * @param relativePath the relative path to convert
      * @return the absolute path as a String
      */
     public static String getCurrentWorkingDirectory(String relativePath) {
-        return Paths.get(relativePath).toAbsolutePath().toString();
+        // Check if the absolute path for this relative path is already cached
+        return cachedAbsolutePaths.computeIfAbsent(relativePath, key ->
+                Paths.get(key).toAbsolutePath().toString()
+        );
     }
 
     /**
