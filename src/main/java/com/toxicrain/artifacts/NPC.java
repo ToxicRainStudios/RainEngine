@@ -9,18 +9,16 @@ import static com.toxicrain.util.TextureUtils.playerTexture;
 
 public class NPC {
     @Getter @Setter
-    private float X;
+    private float X; // Current X position
     @Getter @Setter
-    private float Y;
+    private float Y; // Current Y position
     @Getter @Setter
-    private float directionX;
+    private float directionX; // Direction vector X
     @Getter @Setter
-    private float directionY;
+    private float directionY; // Direction vector Y
     @Getter @Setter
-    private int aiType;
-
-    private float x; // X coordinate
-    private float y; // Y coordinate
+    private int aiType; // AI type
+    private float rotation; // Rotation angle in radians
 
     // Constructor to initialize NPC
     public NPC(float startingXpos, float startingYpos, float rotation, int ai) {
@@ -29,52 +27,22 @@ public class NPC {
         this.directionX = (float) Math.cos(rotation);
         this.directionY = (float) Math.sin(rotation);
         this.aiType = ai;
+        this.rotation = rotation; // Set initial rotation
     }
 
-    // Method to run AI behavior based on aiType
-    public void runAI() {
-        switch (this.aiType) {
-            case 1:
-                // Basic following behavior
-                followPlayer(3, 1); // Adjusted offsets for desired behavior
-                updateDirection(); // Update direction to look at the player
-                break;
-
-            case 2:
-                // Smooth approach to player
-                moveTowardsPlayer(0.002f);
-                updateDirection(); // Update direction to look at the player
-                break;
-
-            default:
-                // Default behavior (could be idle, patrol, etc.)
-                break;
-        }
+    // Method to set the NPC's rotation
+    public void lookAt(float angle) {
+        this.rotation = angle; // Update rotation
     }
 
     // Method to follow the player with a specified offset
-    private void followPlayer(float offsetX, float offsetY) {
+    public void followPlayer(float offsetX, float offsetY) {
         this.X = Player.posX - offsetX;
         this.Y = Player.posY - offsetY;
     }
 
-    public void moveTowards(float targetX, float targetY) {
-        // Logic to move NPC towards target
-        float speed = 1.0f; // Define NPC speed
-        float deltaX = targetX - x;
-        float deltaY = targetY - y;
-        float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-
-        // Normalize the direction
-        if (distance > 0) {
-            // Update NPC position based on speed
-            x += (deltaX / distance) * speed;
-            y += (deltaY / distance) * speed;
-        }
-    }
-
     // Method to move towards the player gradually
-    private void moveTowardsPlayer(float speed) {
+    public void moveTowardsPlayer(float speed) {
         float deltaX = Player.posX - this.X;
         float deltaY = Player.posY - this.Y;
 
@@ -87,7 +55,7 @@ public class NPC {
     }
 
     // Method to update the direction of the NPC to look at the player
-    private void updateDirection() {
+    public void updateDirection() {
         float deltaX = Player.posX - this.X;
         float deltaY = Player.posY - this.Y;
 
@@ -98,7 +66,7 @@ public class NPC {
 
     // Render the NPC using BatchRenderer
     public void render(BatchRenderer batchRenderer) {
-        batchRenderer.addTexturePos(playerTexture, this.X, this.Y, 1.01f,
-                this.directionX, this.directionY, 1, 1, Color.toFloatArray(Color.WHITE));
+        batchRenderer.addTexture(playerTexture, this.X, this.Y, 1.01f,
+                this.rotation, 1, 1, Color.toFloatArray(Color.WHITE));
     }
 }

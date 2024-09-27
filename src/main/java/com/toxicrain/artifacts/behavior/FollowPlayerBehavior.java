@@ -10,22 +10,17 @@ public class FollowPlayerBehavior extends Behavior {
         this.followDistance = followDistance;
     }
 
+
     @Override
     public boolean execute(NPC npc) {
         // Get the current position of the NPC and the Player
-        float npcX = npc.getX();
-        float npcY = npc.getY();
-        float playerX = Player.posX;
-        float playerY = Player.posY;
-
-        // Calculate the distance between the NPC and the Player
-        float deltaX = playerX - npcX;
-        float deltaY = playerY - npcY;
+        float deltaX = Player.posX - npc.getX();
+        float deltaY = Player.posY - npc.getY();
         float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
         // If the NPC is too far from the Player, move towards them
         if (distance > followDistance) {
-            npc.moveTowards(playerX, playerY);
+            npc.moveTowardsPlayer(0.002f);
             return true; // Indicates that the behavior executed successfully
         }
 

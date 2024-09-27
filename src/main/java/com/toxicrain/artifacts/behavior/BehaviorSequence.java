@@ -14,9 +14,9 @@ public class BehaviorSequence extends Behavior {
     public boolean execute(NPC npc) {
         for (Behavior behavior : behaviors) {
             if (!behavior.execute(npc)) {
-                return false;
+                return false; // If any behavior fails, stop execution
             }
         }
-        return true;
+        return true; // All behaviors executed successfully
     }
 }

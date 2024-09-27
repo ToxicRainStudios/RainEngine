@@ -234,19 +234,15 @@ public class GameEngine {
     private static long lastFrameTime = System.nanoTime();
 
     private static void update(float deltaTime) {
-        float followDistance = 5.0f; // Set the desired follow distance
-        FollowPlayerBehavior followPlayerBehavior = new FollowPlayerBehavior(followDistance);
+        FollowPlayerBehavior followPlayerBehavior = new FollowPlayerBehavior(5.0f);
 
-// Assuming you have a behavior sequence that includes the follow behavior
         BehaviorSequence behaviorSequence = new BehaviorSequence(followPlayerBehavior);
-
-// In your game loop, execute the behavior
-        behaviorSequence.execute(GameFactory.character);
 
 
         for (int engineFrames = 30; engineFrames >= 0; engineFrames--) {
             GameFactory.player.update(deltaTime);
-            GameFactory.character.runAI();
+            behaviorSequence.execute(GameFactory.character);
+
             GameFactory.projectile.update();
         }
 
