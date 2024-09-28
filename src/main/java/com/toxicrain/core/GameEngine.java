@@ -3,6 +3,7 @@ package com.toxicrain.core;
 import com.toxicrain.artifacts.Player;
 import com.toxicrain.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.artifacts.behavior.FollowPlayerBehavior;
+import com.toxicrain.artifacts.behavior.LookAtPlayerBehavior;
 import com.toxicrain.core.json.*;
 import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.core.render.BatchRenderer;
@@ -235,10 +236,11 @@ public class GameEngine {
 
     private static void update(float deltaTime) {
         FollowPlayerBehavior followPlayerBehavior = new FollowPlayerBehavior(5.0f);
+        LookAtPlayerBehavior lookAtPlayerBehavior = new LookAtPlayerBehavior(GameFactory.player);
 
-        BehaviorSequence behaviorSequence = new BehaviorSequence(followPlayerBehavior);
 
-
+        BehaviorSequence behaviorSequence = new BehaviorSequence(followPlayerBehavior, lookAtPlayerBehavior);
+        
         for (int engineFrames = 30; engineFrames >= 0; engineFrames--) {
             GameFactory.player.update(deltaTime);
             behaviorSequence.execute(GameFactory.character);

@@ -16,29 +16,50 @@ public class NPC {
     private float directionX; // Direction vector X
     @Getter @Setter
     private float directionY; // Direction vector Y
-    @Getter @Setter
-    private int aiType; // AI type
     private float rotation; // Rotation angle in radians
 
-    // Constructor to initialize NPC
-    public NPC(float startingXpos, float startingYpos, float rotation, int ai) {
+    private float fieldOfViewAngle; // Vision cone angle in degrees
+    private float visionDistance;   // Max distance NPC can see
+    private boolean playerInSight;  // If the player is within the vision cone
+
+    public NPC(float startingXpos, float startingYpos, float rotation) {
         this.X = startingXpos;
         this.Y = startingYpos;
         this.directionX = (float) Math.cos(rotation);
         this.directionY = (float) Math.sin(rotation);
-        this.aiType = ai;
         this.rotation = rotation; // Set initial rotation
+        this.fieldOfViewAngle = 90f;  // Example 90-degree FOV
+        this.visionDistance = 300f;   // Max distance the NPC can see
+    }
+
+    public boolean canSeePlayer() {
+        // Calculate the direction to the player
+        float deltaX = Player.posX - this.X;
+        float deltaY = Player.posY - this.Y;
+
+        // Distance to the player
+        float distanceToPlayer = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        if (distanceToPlayer > visionDistance) {
+            return false;  // Player is too far away to be seen
+        }
+
+        // Normalize direction
+        float directionToPlayerX = deltaX / distanceToPlayer;
+        float directionToPlayerY = deltaY / distanceToPlayer;
+
+        // Dot product between the NPC's current direction and the direction to the player
+        float dotProduct = directionX * directionToPlayerX + directionY * directionToPlayerY;
+
+        // Calculate the angle between the two directions
+        float angle = (float) Math.acos(dotProduct) * (180f / (float) Math.PI);
+
+        // Check if the angle is within the field of view
+        return angle <= fieldOfViewAngle / 2;
     }
 
     // Method to set the NPC's rotation
     public void lookAt(float angle) {
         this.rotation = angle; // Update rotation
-    }
-
-    // Method to follow the player with a specified offset
-    public void followPlayer(float offsetX, float offsetY) {
-        this.X = Player.posX - offsetX;
-        this.Y = Player.posY - offsetY;
     }
 
     // Method to move towards the player gradually
@@ -52,16 +73,6 @@ public class NPC {
             this.X += (deltaX / distance) * speed; // Update position smoothly
             this.Y += (deltaY / distance) * speed;
         }
-    }
-
-    // Method to update the direction of the NPC to look at the player
-    public void updateDirection() {
-        float deltaX = Player.posX - this.X;
-        float deltaY = Player.posY - this.Y;
-
-        float angle = (float) Math.atan2(deltaY, deltaX); // Calculate angle to the player
-        this.directionX = (float) Math.cos(angle); // Update directionX
-        this.directionY = (float) Math.sin(angle); // Update directionY
     }
 
     // Render the NPC using BatchRenderer
