@@ -240,7 +240,7 @@ public class GameEngine {
 
 
         BehaviorSequence behaviorSequence = new BehaviorSequence(followPlayerBehavior, lookAtPlayerBehavior);
-        
+
         for (int engineFrames = 30; engineFrames >= 0; engineFrames--) {
             GameFactory.player.update(deltaTime);
             behaviorSequence.execute(GameFactory.character);

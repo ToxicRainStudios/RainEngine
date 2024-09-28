@@ -43,18 +43,23 @@ public class NPC {
             return false;  // Player is too far away to be seen
         }
 
-        // Normalize direction
+        // Normalize direction to the player
         float directionToPlayerX = deltaX / distanceToPlayer;
         float directionToPlayerY = deltaY / distanceToPlayer;
 
+        // Calculate NPC's current direction based on its rotation
+        float npcDirectionX = (float) Math.cos(this.rotation);
+        float npcDirectionY = (float) Math.sin(this.rotation);
+
         // Dot product between the NPC's current direction and the direction to the player
-        float dotProduct = directionX * directionToPlayerX + directionY * directionToPlayerY;
+        float dotProduct = npcDirectionX * directionToPlayerX + npcDirectionY * directionToPlayerY;
 
         // Calculate the angle between the two directions
-        float angle = (float) Math.acos(dotProduct) * (180f / (float) Math.PI);
+        float angle = (float) Math.acos(dotProduct);
+        float angleInDegrees = angle * (180f / (float) Math.PI);
 
         // Check if the angle is within the field of view
-        return angle <= fieldOfViewAngle / 2;
+        return angleInDegrees <= fieldOfViewAngle / 2;
     }
 
     // Method to set the NPC's rotation
