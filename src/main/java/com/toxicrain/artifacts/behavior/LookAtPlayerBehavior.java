@@ -4,10 +4,8 @@ import com.toxicrain.artifacts.NPC;
 import com.toxicrain.artifacts.Player;
 
 public class LookAtPlayerBehavior extends Behavior {
-    private final Player player;
 
-    public LookAtPlayerBehavior(Player player) {
-        this.player = player;
+    public LookAtPlayerBehavior() {
     }
 
     @Override

@@ -3,10 +3,10 @@ package com.toxicrain.artifacts.behavior;
 import com.toxicrain.artifacts.NPC;
 import com.toxicrain.artifacts.Player;
 
-public class BehaviorFollowPlayerSeeing extends Behavior {
+public class FollowPlayerSeeingBehavior extends Behavior {
     private final float followDistance;
 
-    public BehaviorFollowPlayerSeeing(float followDistance) {
+    public FollowPlayerSeeingBehavior(float followDistance) {
         this.followDistance = followDistance;
     }
 
