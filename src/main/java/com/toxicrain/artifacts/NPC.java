@@ -54,12 +54,17 @@ public class NPC {
         // Dot product between the NPC's current direction and the direction to the player
         float dotProduct = npcDirectionX * directionToPlayerX + npcDirectionY * directionToPlayerY;
 
+        // Clamp dot product to the range [-1, 1] to avoid NaN in acos
+        dotProduct = Math.max(-1, Math.min(1, dotProduct));
+
         // Calculate the angle between the two directions
         float angle = (float) Math.acos(dotProduct);
-        float angleInDegrees = angle * (180f / (float) Math.PI);
+
+        // Convert field of view angle from degrees to radians for comparison
+        float fovInRadians = (float) Math.toRadians(fieldOfViewAngle / 2);
 
         // Check if the angle is within the field of view
-        return angleInDegrees <= fieldOfViewAngle / 2;
+        return angle <= fovInRadians;
     }
 
     // Method to set the NPC's rotation

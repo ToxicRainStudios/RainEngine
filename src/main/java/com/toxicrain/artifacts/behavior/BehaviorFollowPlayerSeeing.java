@@ -4,34 +4,27 @@ import com.toxicrain.artifacts.NPC;
 import com.toxicrain.artifacts.Player;
 
 public class BehaviorFollowPlayerSeeing extends Behavior {
-    private final Player player;
+    private final float followDistance;
 
-    public BehaviorFollowPlayerSeeing(Player player) {
-        this.player = player;
+    public BehaviorFollowPlayerSeeing(float followDistance) {
+        this.followDistance = followDistance;
     }
 
     @Override
     public boolean execute(NPC npc) {
         if (npc.canSeePlayer()) {
             // Get the current position of the NPC and the Player
-            float npcX = npc.getX();
-            float npcY = npc.getY();
-            float playerX = Player.posX;
-            float playerY = Player.posY;
+            float deltaX = Player.posX - npc.getX();
+            float deltaY = Player.posY - npc.getY();
+            float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-            // Calculate the direction to the player
-            float deltaX = playerX - npcX;
-            float deltaY = playerY - npcY;
+            // If the NPC is too far from the Player, move towards them
+            if (distance > followDistance) {
+                npc.moveTowardsPlayer(0.002f);
+                return true; // Indicates that the behavior executed successfully
+            }
 
-            // Calculate the angle (in radians) to rotate towards the player
-            float angle = (float) Math.atan2(deltaY, deltaX);
-
-            // Set the NPC's rotation or facing direction
-            npc.lookAt(angle); // Implement lookAt method in NPC class
-
-            return true; // Indicates that the behavior executed successfully
-        } else {
-            return false;
         }
+        return false; // Indicates no movement required
     }
 }

@@ -1,6 +1,7 @@
 package com.toxicrain.core;
 
 import com.toxicrain.artifacts.Player;
+import com.toxicrain.artifacts.behavior.BehaviorFollowPlayerSeeing;
 import com.toxicrain.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.artifacts.behavior.FollowPlayerBehavior;
 import com.toxicrain.artifacts.behavior.LookAtPlayerBehavior;
@@ -238,12 +239,12 @@ public class GameEngine {
         FollowPlayerBehavior followPlayerBehavior = new FollowPlayerBehavior(5.0f);
         LookAtPlayerBehavior lookAtPlayerBehavior = new LookAtPlayerBehavior(GameFactory.player);
 
-
+        BehaviorSequence behaviorSequence2 = new BehaviorSequence(new BehaviorFollowPlayerSeeing(00.1f), lookAtPlayerBehavior);
         BehaviorSequence behaviorSequence = new BehaviorSequence(followPlayerBehavior, lookAtPlayerBehavior);
 
         for (int engineFrames = 30; engineFrames >= 0; engineFrames--) {
             GameFactory.player.update(deltaTime);
-            behaviorSequence.execute(GameFactory.character);
+            behaviorSequence2.execute(GameFactory.character);
 
             GameFactory.projectile.update();
         }
