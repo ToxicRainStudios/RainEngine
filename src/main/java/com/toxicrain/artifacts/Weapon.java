@@ -1,11 +1,16 @@
 package com.toxicrain.artifacts;
 
 import com.toxicrain.util.MathUtils;
+import lombok.Getter;
 
 public class Weapon {
+    @Getter
     private String name;
+    @Getter
     private int damage;
+    @Getter
     private float range;
+    @Getter
     private boolean isEquipped;
     private int maxShot;
     private int minShot;
@@ -17,22 +22,6 @@ public class Weapon {
         this.isEquipped = false;
         this.maxShot = maxShot;
         this.minShot = minShot;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getDamage() {
-        return damage;
-    }
-
-    public float getRange() {
-        return range;
-    }
-
-    public boolean isEquipped() {
-        return isEquipped;
     }
 
     public void equip() {
