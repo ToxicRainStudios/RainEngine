@@ -12,7 +12,9 @@ public class TextureInfo {
     public final int textureId;
     public final int width;
     public final int height;
-    
+    public final boolean isTransparent;
+
+
     /**
      * Create a new TextureInfo
      * @param textureId the id of the texture, used by OpenGL from rendering
@@ -23,6 +25,20 @@ public class TextureInfo {
         this.textureId = textureId;
         this.width = width;
         this.height = height;
+        this.isTransparent = false;
+    }
+
+    /**
+     * Create a new TextureInfo
+     * @param textureId the id of the texture, used by OpenGL from rendering
+     * @param width the width of the texture
+     * @param height the height of the texture
+     */
+    public TextureInfo(int textureId, int width, int height, boolean isTransparent) {
+        this.textureId = textureId;
+        this.width = width;
+        this.height = height;
+        this.isTransparent = isTransparent;
     }
 
     @Override

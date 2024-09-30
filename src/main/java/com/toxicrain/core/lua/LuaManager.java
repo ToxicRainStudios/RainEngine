@@ -46,18 +46,6 @@ public class LuaManager {
             }
         });
 
-        globals.set("add", new LuaFunction() {
-            @Override
-            public LuaValue call(LuaValue a, LuaValue b) {
-                if (a.isnumber() && b.isnumber()) {
-                    double sum = a.todouble() + b.todouble();
-                    return LuaValue.valueOf(sum);
-                } else {
-                    return LuaValue.NIL;
-                }
-            }
-        });
-
         globals.set("power", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue base, LuaValue exp) {

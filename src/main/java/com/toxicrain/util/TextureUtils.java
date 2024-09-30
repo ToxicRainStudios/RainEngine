@@ -100,7 +100,7 @@ public class TextureUtils {
             IntBuffer heightBuffer = stack.mallocInt(1);
             IntBuffer channelsBuffer = stack.mallocInt(1);
 
-            // Load the image with RGBA channels
+            // Load the image with RGBA channels (4 channels)
             image = stbi_load(filePath, widthBuffer, heightBuffer, channelsBuffer, 4);
             if (image == null) {
                 throw new RuntimeException("Failed to load texture file: " + filePath + " - " + stbi_failure_reason());
@@ -113,6 +113,9 @@ public class TextureUtils {
         } catch (Exception e) {
             throw new RuntimeException("Error loading texture: " + filePath, e);
         }
+
+        // Detect transparency in the texture
+        boolean hasTransparency = checkTransparency(image, width, height);
 
         // Generate and configure the texture
         int textureId = glGenTextures();
@@ -133,7 +136,35 @@ public class TextureUtils {
             stbi_image_free(image);
         }
 
-        return new TextureInfo(textureId, width, height);
+        // Return the TextureInfo with the transparency information
+        return new TextureInfo(textureId, width, height, hasTransparency);
     }
+
+    /**
+     * Check if the texture contains transparency by scanning its alpha channel.
+     * Assumes the image data is in RGBA format (4 bytes per pixel).
+     *
+     * @param image ByteBuffer containing the image data in RGBA format.
+     * @param width The width of the image.
+     * @param height The height of the image.
+     * @return true if the texture contains transparent pixels, false otherwise.
+     */
+    private static boolean checkTransparency(ByteBuffer image, int width, int height) {
+        int pixelCount = width * height;
+
+        for (int i = 0; i < pixelCount; i++) {
+            // The pixel data is stored in RGBA format, so we access the 4th byte for each pixel.
+            // We use & 0xFF to convert signed byte to unsigned int (0-255).
+            int alpha = image.get(i * 4 + 3) & 0xFF;  // 4th byte of each pixel (alpha channel)
+
+            if (alpha < 255) {  // Check if alpha is less than fully opaque
+                Logger.printLOG("Found a transparent texture!");
+                return true;  // Texture contains transparency
+            }
+        }
+
+        return false;  // No transparency detected
+    }
+
 
 }
