@@ -4,6 +4,7 @@ import com.toxicrain.artifacts.Player;
 import com.toxicrain.core.Logger;
 import com.toxicrain.core.TextureInfo;
 import com.toxicrain.core.render.BatchRenderer;
+import com.toxicrain.factories.GameFactory;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
@@ -43,7 +44,7 @@ public class ButtonEngine {
     }
 
     public void render(BatchRenderer batchRenderer) {
-        float scale = Player.cameraZ / 30;
+        float scale = GameFactory.player.cameraZ / 30;
         // Render button background (e.g., using a solid color or texture)
         // Assuming a texture for the button background
         TextureInfo buttonTexture = TextureUtils.playerTexture;

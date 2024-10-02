@@ -3,6 +3,7 @@ package com.toxicrain.util;
 import com.toxicrain.artifacts.Player;
 import com.toxicrain.core.TextureInfo;
 import com.toxicrain.core.render.BatchRenderer;
+import com.toxicrain.factories.GameFactory;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -31,9 +32,9 @@ public class TextEngine {
     }
 
     public void render(BatchRenderer batchRenderer, String toWrite, int xOffset, int yOffset) {
-        float scale = Player.cameraZ / 30;
-        float baseX = Player.cameraX - (toWrite.length() * scale) / SCALE_FACTOR;
-        float baseY = Player.cameraY - yOffset * scale;
+        float scale = GameFactory.player.cameraZ / 30;
+        float baseX = GameFactory.player.cameraX - (toWrite.length() * scale) / SCALE_FACTOR;
+        float baseY = GameFactory.player.cameraY - yOffset * scale;
 
         // Check if the text has changed
         TextureInfo textureInfo;

@@ -35,11 +35,11 @@ public class GameFactory {
 
 
     public static void load(){
+        player = new Player(5, 5, 5, playerTexture, false);
         imguiApp = new ImguiHandler(GameEngine.window);
         imguiApp.initialize();
         soundSystem = new SoundSystem();
 
-        player = new Player(Player.cameraX, Player.cameraY, Player.cameraZ, playerTexture, false);
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0, playerTexture);
         character = new NPC(12,-4,1);
         mouseUtils = new MouseUtils(GameEngine.window);

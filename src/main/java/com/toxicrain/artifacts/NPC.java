@@ -1,6 +1,7 @@
 package com.toxicrain.artifacts;
 
 import com.toxicrain.core.render.BatchRenderer;
+import com.toxicrain.factories.GameFactory;
 import com.toxicrain.util.Color;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,8 +35,8 @@ public class NPC {
 
     public boolean canSeePlayer() {
         // Calculate the direction to the player
-        float deltaX = Player.posX - this.X;
-        float deltaY = Player.posY - this.Y;
+        float deltaX = GameFactory.player.getPosX() - this.X;
+        float deltaY = GameFactory.player.getPosY() - this.Y;
 
         // Distance to the player
         float distanceToPlayer = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -74,8 +75,8 @@ public class NPC {
 
     // Method to move towards the player gradually
     public void moveTowardsPlayer(float speed) {
-        float deltaX = Player.posX - this.X;
-        float deltaY = Player.posY - this.Y;
+        float deltaX = GameFactory.player.getPosX() - this.X;
+        float deltaY = GameFactory.player.getPosY() - this.Y;
 
         // Normalize direction
         float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);

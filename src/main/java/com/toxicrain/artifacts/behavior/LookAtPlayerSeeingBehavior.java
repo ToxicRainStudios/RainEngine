@@ -2,6 +2,7 @@ package com.toxicrain.artifacts.behavior;
 
 import com.toxicrain.artifacts.NPC;
 import com.toxicrain.artifacts.Player;
+import com.toxicrain.factories.GameFactory;
 
 public class LookAtPlayerSeeingBehavior extends Behavior {
 
@@ -14,8 +15,8 @@ public class LookAtPlayerSeeingBehavior extends Behavior {
             // Get the current position of the NPC and the Player
             float npcX = npc.getX();
             float npcY = npc.getY();
-            float playerX = Player.posX;
-            float playerY = Player.posY;
+            float playerX = GameFactory.player.getPosX();
+            float playerY = GameFactory.player.getPosY();
 
             // Calculate the direction to the player
             float deltaX = playerX - npcX;

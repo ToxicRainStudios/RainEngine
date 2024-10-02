@@ -110,7 +110,7 @@ public class GameEngine {
         glfwSetScrollCallback(window, new GLFWScrollCallback() {
             @Override
             public void invoke(long window, double xoffset, double yoffset) {
-                Player.scrollOffset = (float) yoffset;
+                GameFactory.player.scrollOffset = (float) yoffset;
             }
         });
 
@@ -254,7 +254,7 @@ public class GameEngine {
             // Check mouse position and button press
             float[] mousePos = GameFactory.mouseUtils.getMousePosition();
             boolean mouseClick = GameFactory.mouseUtils.isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT);
-            Player.cameraZ = 25;
+            GameFactory.player.cameraZ = 25;
             Menu.updateMenu(mousePos[0], mousePos[1], mouseClick);
         }
     }
@@ -266,7 +266,7 @@ public class GameEngine {
         // Set up the view matrix
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        glTranslatef(-Player.cameraX, -Player.cameraY, -Player.cameraZ);
+        glTranslatef(-GameFactory.player.cameraX, -GameFactory.player.cameraY, -GameFactory.player.cameraZ);
 
         // Begin the batch
         batchRenderer.beginBatch();
@@ -277,7 +277,7 @@ public class GameEngine {
             drawMap(batchRenderer);
             GameFactory.character.render(batchRenderer);
             GameFactory.projectile.render(batchRenderer);
-            Player.render(batchRenderer);
+            GameFactory.player.render(batchRenderer);
         }
 
 

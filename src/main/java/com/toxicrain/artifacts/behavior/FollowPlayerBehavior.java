@@ -2,6 +2,7 @@ package com.toxicrain.artifacts.behavior;
 
 import com.toxicrain.artifacts.NPC;
 import com.toxicrain.artifacts.Player;
+import com.toxicrain.factories.GameFactory;
 
 public class FollowPlayerBehavior extends Behavior {
     private final float followDistance; // Distance to maintain while following
@@ -14,8 +15,8 @@ public class FollowPlayerBehavior extends Behavior {
     @Override
     public boolean execute(NPC npc) {
         // Get the current position of the NPC and the Player
-        float deltaX = Player.posX - npc.getX();
-        float deltaY = Player.posY - npc.getY();
+        float deltaX = GameFactory.player.getPosX() - npc.getX();
+        float deltaY = GameFactory.player.getPosY() - npc.getY();
         float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
         // If the NPC is too far from the Player, move towards them

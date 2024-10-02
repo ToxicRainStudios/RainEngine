@@ -3,6 +3,7 @@ package com.toxicrain.util;
 import com.toxicrain.artifacts.Player;
 import com.toxicrain.core.GameEngine;
 import com.toxicrain.core.json.SettingsInfoParser;
+import com.toxicrain.factories.GameFactory;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -17,7 +18,7 @@ public class WindowUtils{
         projectionMatrix.set(projMatrixBuffer);
 
         // Set up the view matrix
-        Matrix4f viewMatrix = new Matrix4f().identity().translate(-Player.cameraX, -Player.cameraY, -Player.cameraZ);
+        Matrix4f viewMatrix = new Matrix4f().identity().translate(-GameFactory.player.cameraX, -GameFactory.player.cameraY, -GameFactory.player.cameraZ);
 
         // Calculate the combined projection and view matrix
         Matrix4f projectionViewMatrix = new Matrix4f(projectionMatrix).mul(viewMatrix);
