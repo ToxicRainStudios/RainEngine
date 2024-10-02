@@ -136,21 +136,21 @@ public class LuaManager {
         globals.set("beginWindow", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue title) {
-                GameFactory.imguiApp.luaBeginWindow(title.tojstring());
+                GameFactory.guiLuaWrapper.luaBeginWindow(title.tojstring());
                 return LuaValue.TRUE;
             }
         });
         globals.set("setDisabled", new LuaFunction() {
             @Override
             public LuaValue call() {
-                GameFactory.imguiApp.luaSetDisabled();
+                GameFactory.guiLuaWrapper.luaSetDisabled();
                 return LuaValue.TRUE;
             }
         });
         globals.set("setEnabled", new LuaFunction() {
             @Override
             public LuaValue call() {
-                GameFactory.imguiApp.luaSetEnabled();
+                GameFactory.guiLuaWrapper.luaSetEnabled();
                 return LuaValue.TRUE;
             }
         });
@@ -158,7 +158,7 @@ public class LuaManager {
         globals.set("endWindow", new LuaFunction() {
             @Override
             public LuaValue call() {
-                GameFactory.imguiApp.luaEndWindow();
+                GameFactory.guiLuaWrapper.luaEndWindow();
                 return LuaValue.TRUE;
             }
         });
@@ -166,7 +166,7 @@ public class LuaManager {
         globals.set("setWindowSize", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue width, LuaValue height) {
-                GameFactory.imguiApp.luaSetWindowSize(width.toint(), height.toint());
+                GameFactory.guiLuaWrapper.luaSetWindowSize(width.toint(), height.toint());
                 return LuaValue.TRUE;
             }
         });
@@ -174,7 +174,7 @@ public class LuaManager {
         globals.set("createLabel", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue text) {
-                GameFactory.imguiApp.luaCreateLabel(text.tojstring());
+                GameFactory.guiLuaWrapper.luaCreateLabel(text.tojstring());
                 return LuaValue.TRUE;
             }
         });
@@ -183,7 +183,7 @@ public class LuaManager {
             @Override
             public LuaValue call(LuaValue label) {
                 // Call the Java method and return the result as a Lua boolean
-                boolean isPushed = GameFactory.imguiApp.luaCreateButton(label.tojstring());
+                boolean isPushed = GameFactory.guiLuaWrapper.luaCreateButton(label.tojstring());
                 return LuaValue.valueOf(isPushed);
             }
         });
@@ -191,7 +191,7 @@ public class LuaManager {
         globals.set("createCheckbox", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue label, LuaValue initialValue) {
-                boolean isChecked = GameFactory.imguiApp.luaCreateCheckbox(label.tojstring(), initialValue.toboolean());
+                boolean isChecked = GameFactory.guiLuaWrapper.luaCreateCheckbox(label.tojstring(), initialValue.toboolean());
                 return LuaValue.valueOf(isChecked);
             }
         });
@@ -200,7 +200,7 @@ public class LuaManager {
             @Override
             public LuaValue call(LuaValue label) {
                 // Call the Java method to create the color picker
-                GameFactory.imguiApp.luaCreateColorPicker(label.tojstring());
+                GameFactory.guiLuaWrapper.luaCreateColorPicker(label.tojstring());
 
                 // After the color picker is used, retrieve the current color (if needed)
                 // Update Lua state if necessary

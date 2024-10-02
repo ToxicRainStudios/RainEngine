@@ -9,6 +9,7 @@ import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.lua.LuaEngine;
 import com.toxicrain.gui.ImguiHandler;
+import com.toxicrain.gui.GuiLuaWrapper;
 import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.util.MouseUtils;
 
@@ -28,6 +29,7 @@ public class GameFactory {
     public static Weapon shotgun;
     public static int sampleSound;
     public static LuaEngine luaEngine;
+    public static GuiLuaWrapper guiLuaWrapper;
     public static LuaManager functionManager;
 
 
@@ -56,6 +58,7 @@ public class GameFactory {
 
     public static void loadlua(){
         luaEngine = new LuaEngine();
+        guiLuaWrapper = new GuiLuaWrapper();
         functionManager = new LuaManager(luaEngine.getGlobals());
 
     }
