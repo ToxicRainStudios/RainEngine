@@ -356,6 +356,8 @@ public class LuaManager {
                     tickScripts.add(file.getName());
                 } else if (isImguiFile(file.getName())) {
                     imguiScripts.add(file.getName());
+                }else if (isMapAutorunFile(file.getName())) {
+                    mapAutorunScripts.add(file.getName());
                 }
             }
         }
@@ -384,8 +386,9 @@ public class LuaManager {
      * Executes a map script
      */
     public static void executeMapScript(String mapName) {
-        for (String script : imguiScripts) {
-            if(script.endsWith(mapName)){
+        for (String script : mapAutorunScripts) {
+            if(script.endsWith(mapName + ".lua")){
+                Logger.printLOG("Loading: " + script);
                 loadScript(script, "resources/scripts/");
             }
 

@@ -2,6 +2,7 @@ package com.toxicrain.core.json;
 
 
 import com.toxicrain.core.Logger;
+import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.core.render.Tile;
 import com.toxicrain.util.FileUtils;
 import com.toxicrain.util.LightUtils;
@@ -26,6 +27,7 @@ public class MapInfoParser {
     public static ArrayList<Double> mapDataZ = new ArrayList<>();
 
     public static void parseMapFile(String mapName) throws IOException {
+        LuaManager.executeMapScript(mapName);
         // Read JSON file as String
         String jsonString = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory("resources/json/" + mapName + ".json"));
 
