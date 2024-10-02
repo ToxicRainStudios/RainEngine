@@ -8,12 +8,12 @@ import static org.lwjgl.openal.AL10.*;
 
 
 /**
- * Decodes a wav and converts it into a {@link SoundInfo}
+ * Decodes a wav and converts it into a {@link WavInfo}
  *
  * @author strubium
  */
 public class WAVDecoder {
-    public static SoundInfo decode(ByteBuffer buffer) throws IOException {
+    public static WavInfo decode(ByteBuffer buffer) throws IOException {
         buffer.order(ByteOrder.LITTLE_ENDIAN);
 
         if (buffer.getInt() != 0x46464952) // "RIFF" in little-endian
@@ -102,6 +102,6 @@ public class WAVDecoder {
                 throw new IOException("Unsupported WAV format: " + numChannels + " channels");
         }
 
-        return new SoundInfo(data, format, sampleRate);
+        return new WavInfo(data, format, sampleRate);
     }
 }

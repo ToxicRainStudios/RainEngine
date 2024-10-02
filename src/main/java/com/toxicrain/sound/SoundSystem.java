@@ -50,17 +50,17 @@ public class SoundSystem {
         AL.createCapabilities(alcCapabilities);
     }
 
-    public int loadSound(String filePath) {
+    public SoundInfo loadSound(String filePath) {
         int bufferId = alGenBuffers();
         if (bufferId == 0) {
             throw new IllegalStateException("Failed to generate an OpenAL buffer.");
         }
 
+        WavInfo wavData = null;
         try {
             ByteBuffer wavBuffer = FileUtils.ioResourceToByteBuffer(FileUtils.getCurrentWorkingDirectory(filePath));
-            SoundInfo wavData = WAVDecoder.decode(wavBuffer);
+            wavData = WAVDecoder.decode(wavBuffer);
             alBufferData(bufferId, wavData.format, wavData.data, wavData.samplerate);
-            wavData.free();
 
             long fileSize = FileUtils.getFileSize(filePath);
             Logger.printLOG(String.format("Loaded sound: %s (File Size: %d bytes, Format: %d)", filePath, fileSize, wavData.format));
@@ -75,8 +75,10 @@ public class SoundSystem {
             e.printStackTrace();
         }
 
-        return bufferId;
+        // Return the SoundInfo containing the WavInfo and bufferId
+        return new SoundInfo(wavData, bufferId);
     }
+
 
     public int createSoundSource() {
         int sourceId = alGenSources();
@@ -87,20 +89,20 @@ public class SoundSystem {
         return sourceId;
     }
 
-    public void play(int bufferId) {
+    public void play(SoundInfo soundInfo) {
         int state = alGetSourcei(sourceId, AL_SOURCE_STATE);
         if (state != AL_PLAYING) {
             Logger.printLOG("Playing sound");
-            alSourcei(sourceId, AL_BUFFER, bufferId);
+            alSourcei(sourceId, AL_BUFFER, soundInfo.bufferId);
             alSourcePlay(sourceId);
         }
     }
 
-    public void play(int bufferId, boolean fadeIn, float fadeDuration) {
+    public void play(SoundInfo soundInfo, boolean fadeIn, float fadeDuration) {
         if (fadeIn) {
-            fadeIn(bufferId, fadeDuration);
+            fadeIn(soundInfo.bufferId, fadeDuration);
         } else {
-            play(bufferId);
+            play(soundInfo);
         }
     }
 
@@ -119,10 +121,10 @@ public class SoundSystem {
         }
     }
 
-    public void cleanup(int bufferId) {
+    public void cleanup(SoundInfo soundInfo) {
         stop();
         alDeleteSources(sourceId);
-        alDeleteBuffers(bufferId);
+        alDeleteBuffers(soundInfo.bufferId);
     }
 
     public void cleanup() {
