@@ -19,6 +19,7 @@ public class LuaManager {
     private final Globals globals;
     private static final List<String> initScripts = new ArrayList<>();
     private static final List<String> tickScripts = new ArrayList<>();
+    private static final List<String> mapAutorunScripts = new ArrayList<>();
     private static final List<String> imguiScripts = new ArrayList<>();
 
     public LuaManager(Globals globals) {
@@ -310,7 +311,7 @@ public class LuaManager {
      * @return true if the file is an "init" script, false otherwise
      */
     public static boolean isInitFile(String fileName) {
-        return fileName.startsWith("init_"); // Example: Files starting with "init_"
+        return fileName.startsWith("init_");
     }
 
     /**
@@ -330,9 +331,18 @@ public class LuaManager {
      * @return true if the file is a "tick" script, false otherwise
      */
     public static boolean isTickFile(String fileName) {
-        return fileName.startsWith("tick_"); // Example: Files starting with "tick_"
+        return fileName.startsWith("tick_");
     }
 
+    /**
+     * Determines if the given file name indicates that it is a "tick" script.
+     *
+     * @param fileName the name of the Lua file
+     * @return true if the file is a "autorun" script, false otherwise
+     */
+    public static boolean isMapAutorunFile(String fileName) {
+        return fileName.startsWith("autorun_");
+    }
 
 
     public static void categorizeScripts(String directoryPath) {
@@ -357,7 +367,7 @@ public class LuaManager {
     public static void executeInitScripts() {
         for (String script : initScripts) {
             Logger.printLOG("Executing init script: " + script);
-            loadScript(script, "resources/scripts/");  // Assuming scripts are in this directory
+            loadScript(script, "resources/scripts/");
         }
     }
 
@@ -366,16 +376,28 @@ public class LuaManager {
      */
     public static void executeTickScripts() {
         for (String script : tickScripts) {
-            loadScript(script, "resources/scripts/");  // Assuming scripts are in this directory
+            loadScript(script, "resources/scripts/");
         }
     }
 
+    /**
+     * Executes a map script
+     */
+    public static void executeMapScript(String mapName) {
+        for (String script : imguiScripts) {
+            if(script.endsWith(mapName)){
+                loadScript(script, "resources/scripts/");
+            }
+
+        }
+    }
+    
     /**
      * Executes all Lua scripts.
      */
     public static void executeAllImguiScripts() {
         for (String script : imguiScripts) {
-            loadScript(script, "resources/scripts/");  // Assuming scripts are in this directory
+            loadScript(script, "resources/scripts/");
         }
     }
 
