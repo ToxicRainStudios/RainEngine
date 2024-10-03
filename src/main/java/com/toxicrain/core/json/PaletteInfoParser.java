@@ -1,6 +1,6 @@
 package com.toxicrain.core.json;
 
-import com.toxicrain.core.TextureInfo;
+import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.util.FileUtils;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -8,7 +8,7 @@ import org.json.JSONTokener;
 import java.io.FileReader;
 import java.io.IOException;
 
-import static com.toxicrain.util.TextureUtils.*;
+import static com.toxicrain.texture.TextureSystem.*;
 
 public class PaletteInfoParser {
 

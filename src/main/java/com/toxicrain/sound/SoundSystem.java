@@ -100,7 +100,7 @@ public class SoundSystem {
 
     public void play(SoundInfo soundInfo, boolean fadeIn, float fadeDuration) {
         if (fadeIn) {
-            fadeIn(soundInfo.bufferId, fadeDuration);
+            fadeIn(soundInfo, fadeDuration);
         } else {
             play(soundInfo);
         }
@@ -138,10 +138,10 @@ public class SoundSystem {
         }
     }
 
-    private void fadeIn(int bufferId, float duration) {
+    private void fadeIn(SoundInfo soundInfo, float duration) {
         new Thread(() -> {
             try {
-                alSourcei(sourceId, AL_BUFFER, bufferId);
+                alSourcei(sourceId, AL_BUFFER, soundInfo.bufferId);
                 setVolume(0.0f);  // Start at zero volume
                 alSourcePlay(sourceId);
                 isFading = true;

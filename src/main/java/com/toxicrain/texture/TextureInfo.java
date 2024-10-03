@@ -1,10 +1,8 @@
-package com.toxicrain.core;
-
-import com.toxicrain.util.TextureUtils;
+package com.toxicrain.texture;
 
 /**
  * The TextureInfo class provides information about the given texture
- * Textures are created in {@link TextureUtils}
+ * Textures are created in {@link TextureSystem}
  *
  * @author strubium
  */

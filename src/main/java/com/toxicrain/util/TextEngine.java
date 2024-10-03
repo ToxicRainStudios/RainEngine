@@ -1,9 +1,10 @@
 package com.toxicrain.util;
 
-import com.toxicrain.artifacts.Player;
-import com.toxicrain.core.TextureInfo;
+import com.toxicrain.core.Color;
+import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.factories.GameFactory;
+import com.toxicrain.texture.TextureSystem;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -62,7 +63,7 @@ public class TextEngine {
                 0,
                 scale,
                 scale,
-                Color.toFloatArray(transparency, Color.WHITE)
+                com.toxicrain.core.Color.toFloatArray(transparency, Color.WHITE)
         );
     }
 
@@ -94,7 +95,7 @@ public class TextEngine {
             ImageIO.write(image, "png", tempFile);
 
             // Load the texture using your existing loadTexture method
-            TextureInfo textureInfo = TextureUtils.loadTexture(tempFile.getAbsolutePath());
+            TextureInfo textureInfo = TextureSystem.loadTexture(tempFile.getAbsolutePath());
 
             // Optionally delete the temporary file
             tempFile.deleteOnExit(); // Mark for deletion when the JVM exits

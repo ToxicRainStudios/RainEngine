@@ -2,11 +2,11 @@ package com.toxicrain.artifacts;
 
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.factories.GameFactory;
-import com.toxicrain.util.Color;
+import com.toxicrain.core.Color;
 import lombok.Getter;
 import lombok.Setter;
 
-import static com.toxicrain.util.TextureUtils.playerTexture;
+import static com.toxicrain.texture.TextureSystem.playerTexture;
 
 public class NPC {
     @Getter @Setter

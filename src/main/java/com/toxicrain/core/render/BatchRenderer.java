@@ -1,8 +1,8 @@
 package com.toxicrain.core.render;
 
-import com.toxicrain.core.TextureInfo;
+import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.core.json.GameInfoParser;
-import com.toxicrain.util.Color;
+import com.toxicrain.core.Color;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;

@@ -1,10 +1,9 @@
 package com.toxicrain.artifacts;
 
-import com.toxicrain.core.Logger;
-import com.toxicrain.core.TextureInfo;
+import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.core.interfaces.IArtifact;
 import com.toxicrain.core.render.BatchRenderer;
-import com.toxicrain.util.Color;
+import com.toxicrain.core.Color;
 
 public class Projectile implements IArtifact {
     private float x, y;

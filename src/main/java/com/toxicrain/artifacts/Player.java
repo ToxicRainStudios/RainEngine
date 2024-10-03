@@ -1,7 +1,7 @@
 package com.toxicrain.artifacts;
 
 import com.toxicrain.core.Logger;
-import com.toxicrain.core.TextureInfo;
+import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.core.interfaces.IArtifact;
 import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.KeyInfoParser;
@@ -11,7 +11,7 @@ import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.core.render.Tile;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.gui.ImguiHandler;
-import com.toxicrain.util.Color;
+import com.toxicrain.core.Color;
 import com.toxicrain.util.MathUtils;
 import com.toxicrain.util.MouseUtils;
 import com.toxicrain.util.WindowUtils;
@@ -22,7 +22,7 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.toxicrain.util.TextureUtils.playerTexture;
+import static com.toxicrain.texture.TextureSystem.playerTexture;
 
 /**
  * The Player class provides information about the player

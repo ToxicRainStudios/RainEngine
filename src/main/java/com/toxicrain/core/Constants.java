@@ -1,4 +1,4 @@
-package com.toxicrain.util;
+package com.toxicrain.core;
 
 /**
  * The Constants class provides a convenient place to hold constants.

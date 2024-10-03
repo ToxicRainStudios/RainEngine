@@ -1,8 +1,8 @@
-package com.toxicrain.util;
+package com.toxicrain.texture;
 
 import com.toxicrain.core.Logger;
-import com.toxicrain.core.TextureInfo;
 import com.toxicrain.core.json.PackInfoParser;
+import com.toxicrain.util.FileUtils;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 import static org.lwjgl.stb.STBImage.*;
 
-public class TextureUtils {
+public class TextureSystem {
     public static TextureInfo floorTexture;
     public static TextureInfo playerTexture;
     public static TextureInfo splatterTexture;
@@ -22,34 +22,6 @@ public class TextureUtils {
     public static TextureInfo dirtTexture1;
     public static TextureInfo dirtTexture2;
     public static TextureInfo grassTexture1;
-    public static TextureInfo letterA;
-    public static TextureInfo letterB;
-    public static TextureInfo letterC;
-    public static TextureInfo letterD;
-    public static TextureInfo letterE;
-    public static TextureInfo letterF;
-    public static TextureInfo letterG;
-    public static TextureInfo letterH;
-    public static TextureInfo letterI;
-    public static TextureInfo letterJ;
-    public static TextureInfo letterK;
-    public static TextureInfo letterL;
-    public static TextureInfo letterM;
-    public static TextureInfo letterN;
-    public static TextureInfo letterO;
-    public static TextureInfo letterP;
-    public static TextureInfo letterQ;
-    public static TextureInfo letterR;
-    public static TextureInfo letterS;
-    public static TextureInfo letterT;
-    public static TextureInfo letterU;
-    public static TextureInfo letterV;
-    public static TextureInfo letterW;
-    public static TextureInfo letterX;
-    public static TextureInfo letterY;
-    public static TextureInfo letterZ;
-    public static TextureInfo letterSPACE;
-
 
     /**Init the textures used by the rest of the project*/
     public static void initTextures(){
@@ -131,7 +103,6 @@ public class TextureUtils {
             int alpha = image.get(i * 4 + 3) & 0xFF;  // 4th byte of each pixel (alpha channel)
 
             if (alpha < 255) {  // Check if alpha is less than fully opaque
-                Logger.printLOG("Found a transparent texture!");
                 return true;  // Texture contains transparency
             }
         }

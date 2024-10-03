@@ -67,9 +67,11 @@ public class MouseUtils {
 
         return new float[]{openglMouseX, openglMouseY};
     }
+
     public boolean isMouseButtonPressed(int button) {
         return GLFW.glfwGetMouseButton(window, button) == GLFW.GLFW_PRESS;
     }
+
     public boolean isKeyPressed(int button) {
         return GLFW.glfwGetKey(window, button) == GLFW.GLFW_PRESS;
     }

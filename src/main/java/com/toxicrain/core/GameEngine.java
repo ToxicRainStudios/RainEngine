@@ -1,6 +1,5 @@
 package com.toxicrain.core;
 
-import com.toxicrain.artifacts.Player;
 import com.toxicrain.artifacts.behavior.*;
 import com.toxicrain.core.json.*;
 import com.toxicrain.core.lua.LuaManager;
@@ -9,6 +8,8 @@ import com.toxicrain.core.render.Tile;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.gui.Menu;
+import com.toxicrain.texture.TextureInfo;
+import com.toxicrain.texture.TextureSystem;
 import com.toxicrain.util.*;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
@@ -143,11 +144,11 @@ public class GameEngine {
         GameFactory.imguiApp = new ImguiHandler(window);
         GameFactory.imguiApp.initialize();
 
-        Logger.printLOG("Loading pack.json"); //MUST be called before TextureUtils.initTextures()
+        Logger.printLOG("Loading pack.json"); //MUST be called before TextureSystem.initTextures()
         PackInfoParser.loadPackInfo();
 
         Logger.printLOG("Creating Textures");
-        TextureUtils.initTextures();
+        TextureSystem.initTextures();
 
         // This line is critical for LWJGL's interoperation with GLFW's OpenGL context, or any context that is managed externally.
         // LWJGL detects the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.

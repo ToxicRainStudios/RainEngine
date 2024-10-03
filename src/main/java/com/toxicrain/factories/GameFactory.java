@@ -14,7 +14,7 @@ import com.toxicrain.sound.SoundInfo;
 import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.util.MouseUtils;
 
-import static com.toxicrain.util.TextureUtils.playerTexture;
+import static com.toxicrain.texture.TextureSystem.playerTexture;
 
 public class GameFactory {
 
