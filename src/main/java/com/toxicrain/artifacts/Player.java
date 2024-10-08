@@ -242,7 +242,6 @@ public class Player implements IArtifact {
         if (collisionType == 1) {
             cameraSpeed = 0.010f;
         }
-        collisionType = 0;
     }
 
 
