@@ -1,6 +1,7 @@
 package com.toxicrain.core.json;
 
 import com.toxicrain.texture.TextureInfo;
+import com.toxicrain.texture.TextureSystem;
 import com.toxicrain.util.FileUtils;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -30,29 +31,6 @@ public class PaletteInfoParser {
         String textureKey = String.valueOf(textureMapChar);
         String textureName = textureMappings.optString(textureKey, "missingTexture");
 
-        return getTextureInfoByName(textureName);
-    }
-
-    private static TextureInfo getTextureInfoByName(String textureName) {
-        switch (textureName) {
-            case "floorTexture":
-                return floorTexture;
-            case "concreteTexture1":
-                return concreteTexture1;
-            case "concreteTexture2":
-                return concreteTexture2;
-            case "dirtTexture1":
-                return dirtTexture1;
-            case "dirtTexture2":
-                return dirtTexture2;
-            case "grassTexture1":
-                return grassTexture1;
-            case "playerTexture":
-                return playerTexture;
-            case "splatterTexture":
-                return splatterTexture;
-            default:
-                return missingTexture;
-        }
+        return TextureSystem.getTexture(textureName);
     }
 }

@@ -40,7 +40,7 @@ public class ButtonEngine {
         float scale = GameFactory.player.cameraZ / 30;
         // Render button background (e.g., using a solid color or texture)
         // Assuming a texture for the button background
-        TextureInfo buttonTexture = TextureSystem.playerTexture;
+        TextureInfo buttonTexture = TextureSystem.getTexture("playerTexture");
         batchRenderer.addTexture(buttonTexture, x, y, width, height, scale, scale, Color.toFloatArray(Color.LIGHT_GRAY));
 
         // Render button text

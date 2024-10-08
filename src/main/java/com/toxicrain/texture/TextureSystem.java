@@ -1,41 +1,80 @@
 package com.toxicrain.texture;
 
 import com.toxicrain.core.Logger;
-import com.toxicrain.core.json.PackInfoParser;
 import com.toxicrain.util.FileUtils;
 import org.lwjgl.system.MemoryStack;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.nio.file.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 import static org.lwjgl.stb.STBImage.*;
 
 public class TextureSystem {
-    public static TextureInfo floorTexture;
-    public static TextureInfo playerTexture;
-    public static TextureInfo splatterTexture;
-    public static TextureInfo concreteTexture1;
-    public static TextureInfo concreteTexture2;
-    public static TextureInfo missingTexture;
-    public static TextureInfo dirtTexture1;
-    public static TextureInfo dirtTexture2;
-    public static TextureInfo grassTexture1;
 
-    /**Init the textures used by the rest of the project*/
-    public static void initTextures(){
-        concreteTexture1 = loadTexture(PackInfoParser.concreteTexture1);
-        missingTexture = loadTexture(PackInfoParser.missingTexture);
-        floorTexture = loadTexture(PackInfoParser.floorTexture);
-        playerTexture = loadTexture(PackInfoParser.playerTexture);
-        splatterTexture = loadTexture(PackInfoParser.splatterTexture);
-        concreteTexture2 = loadTexture(PackInfoParser.concreteTexture2);
-        dirtTexture1 = loadTexture((PackInfoParser.dirtTexture1));
-        dirtTexture2 = loadTexture((PackInfoParser.dirtTexture2));
-        grassTexture1 = loadTexture((PackInfoParser.grassTexture1));
+    // Map to store all loaded textures with file names
+    private static Map<String, TextureInfo> textures = new HashMap<>();
+
+    /**
+     * Init the textures by dynamically loading all images from the /images folder
+     */
+    public static void initTextures() {
+        String textureDirectory = FileUtils.getCurrentWorkingDirectory("resources/images"); // Directory containing textures
+
+        try {
+            // Get all files in the images directory
+            Files.walk(Paths.get(textureDirectory))
+                    .filter(Files::isRegularFile) // Only regular files, not directories
+                    .filter(path -> {
+                        // Filter out files that are images (png, jpg, jpeg)
+                        String fileName = path.getFileName().toString().toLowerCase();
+                        return fileName.endsWith(".png") || fileName.endsWith(".jpg") || fileName.endsWith(".jpeg");
+                    })
+                    .forEach(path -> {
+                        // Load each texture
+                        String filePath = path.toString();
+                        TextureInfo texture = loadTexture(filePath);
+                        if (texture != null) {
+                            // Store the texture with its file name (without extension) as the key
+                            String textureName = path.getFileName().toString().replaceFirst("[.][^.]+$", ""); // remove extension
+                            textures.put(textureName, texture);
+                            Logger.printLOG("Loaded texture: " + textureName);
+                        } else {
+                            Logger.printLOG("Failed to load texture: " + path.getFileName());
+                        }
+                    });
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load textures from directory: " + textureDirectory, e);
+        }
+
+        Logger.printLOG(String.format("Loaded %d textures.", textures.size()));
     }
 
+    /**
+     * Retrieve a texture by its name (without extension)
+     *
+     * @param textureName Name of the texture file (without extension)
+     * @return TextureInfo object for the corresponding texture, or null if not found
+     */
+    public static TextureInfo getTexture(String textureName) {
+        if (!textures.containsKey(textureName)) {
+            Logger.printLOG("Texture not found: " + textureName);
+            return null;  // Return null or throw an exception if texture is not found
+        }
+        return textures.get(textureName);
+    }
+
+    /**
+     * Load a texture from a file path
+     *
+     * @param filePath Path to the image file
+     * @return TextureInfo containing texture data
+     */
     public static TextureInfo loadTexture(String filePath) {
         int width, height;
         ByteBuffer image;
@@ -109,6 +148,4 @@ public class TextureSystem {
 
         return false;  // No transparency detected
     }
-
-
 }

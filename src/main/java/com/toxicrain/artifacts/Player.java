@@ -12,6 +12,7 @@ import com.toxicrain.core.render.Tile;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.core.Color;
+import com.toxicrain.texture.TextureSystem;
 import com.toxicrain.util.MathUtils;
 import com.toxicrain.util.MouseUtils;
 import com.toxicrain.util.WindowUtils;
@@ -21,8 +22,6 @@ import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.toxicrain.texture.TextureSystem.playerTexture;
 
 /**
  * The Player class provides information about the player
@@ -129,39 +128,123 @@ public class Player implements IArtifact {
     public void render(BatchRenderer batchRenderer) {
         getMouse();
         Vector3f center = WindowUtils.getCenter();
-        batchRenderer.addTexturePos(playerTexture, center.x, center.y, 1.1f, openglMousePos[0],
+        batchRenderer.addTexturePos(TextureSystem.getTexture("playerTexture"), center.x, center.y, 1.1f, openglMousePos[0],
                 openglMousePos[1], 1, 1, Color.toFloatArray(Color.WHITE));
     }
 
     private void handleCollisions() {
+        int collisionType = 0;
         for (int j = 1; j > -2; j--) {
             float k = (float) j * GameInfoParser.playerSize;
             for (int i = Tile.extentTop.size() - 1; i >= 0; i--) {
-                handleCollisionOnTile(i, k);
-            }
-        }
-    }
-
-    private void handleCollisionOnTile(int i, float k) {
-        if ((cameraY + k <= Tile.extentTop.get(i)) && (cameraY + k >= Tile.extentCenterY.get(i))) {
-            if ((cameraX + k >= Tile.extentLeft.get(i)) && !(cameraX + k >= Tile.extentCenterX.get(i))) {
-                resolveCollision(i, 0.02f, true);
-            }
-        }
-    }
-
-    private void resolveCollision(int i, float adjustment, boolean isVertical) {
-        for (int p = MapInfoParser.doCollide.size() - 1; p >= 0; p--) {
-            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
-                if (isVertical) {
-                    cameraY += adjustment;
-                } else {
-                    cameraX += adjustment;
+                if ((cameraY + k <= Tile.extentTop.get(i)) && (cameraY + k >= Tile.extentCenterY.get(i))) {
+                    if ((cameraX + k >= Tile.extentLeft.get(i)) && !(cameraX + k >= Tile.extentCenterX.get(i))) {
+                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
+                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
+                                cameraY += 0.02f;
+                                break;
+                            }
+                            if(Tile.mapDataType.get(i) == '1'){
+                                collisionType = 1;
+                                break;
+                            }
+                        }
+                    } else if ((cameraX + k <= Tile.extentRight.get(i)) && !(cameraX + k <= Tile.extentCenterX.get(i))) {
+                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
+                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
+                                cameraY += 0.02f;
+                                break;
+                            }
+                            if(Tile.mapDataType.get(i) == '1'){
+                                collisionType = 1;
+                                break;
+                            }
+                        }
+                    }
                 }
-                break;
+                if ((cameraY + k >= Tile.extentBottom.get(i)) && (cameraY + k <= Tile.extentCenterY.get(i))) {
+                    if ((cameraX + k >= Tile.extentLeft.get(i)) && !(cameraX + k >= Tile.extentCenterX.get(i))) {
+                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
+                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
+                                cameraY -= 0.02f;
+                                break;
+                            }
+                            if(Tile.mapDataType.get(i) == '1'){
+                                collisionType = 1;
+                                break;
+                            }
+                        }
+                    } else if ((cameraX + k <= Tile.extentRight.get(i)) && !(cameraX + k <= Tile.extentCenterX.get(i))) {
+                        for (int p = MapInfoParser.doCollide.size()-1; p >= 0; p--) {
+                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
+                                cameraY -= 0.02f;
+                                break;
+                            }
+                            if(Tile.mapDataType.get(i) == '1'){
+                                collisionType = 1;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if ((cameraX + k <= Tile.extentRight.get(i)) && (cameraX + k >= Tile.extentCenterX.get(i))) {
+                    if ((cameraY + k >= Tile.extentBottom.get(i)) && !(cameraY + k > Tile.extentCenterY.get(i))) {
+                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
+                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
+                                cameraX += 0.02f;
+                                break;
+                            }
+                            if(Tile.mapDataType.get(i) == '1'){
+                                collisionType = 1;
+                                break;
+                            }
+                        }
+                    } else if ((cameraY + k <= Tile.extentTop.get(i)) && !(cameraY + k <= Tile.extentCenterY.get(i))) {
+                        for (int p = MapInfoParser.doCollide.size()-1; p >= 0; p--) {
+                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
+                                cameraX += 0.02f;
+                                break;
+                            }
+                            if(Tile.mapDataType.get(i) == '1'){
+                                collisionType = 1;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if ((cameraX + k >= Tile.extentLeft.get(i)) && (cameraX + k <= Tile.extentCenterX.get(i))) {
+                    if ((cameraY + k >= Tile.extentBottom.get(i)) && !(cameraY + k >= Tile.extentCenterY.get(i))) {
+                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
+                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
+                                cameraX -= 0.02f;
+                                break;
+                            }
+                            if(Tile.mapDataType.get(i) == '1'){
+                                collisionType = 1;
+                                break;
+                            }
+                        }
+                    } else if ((cameraY + k <= Tile.extentTop.get(i)) && !(cameraY + k <= Tile.extentCenterY.get(i))) {
+                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
+                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
+                                cameraX -= 0.02f;
+                                break;
+                            }
+                            if(Tile.mapDataType.get(i) == '1'){
+                                collisionType = 1;
+                                break;
+                            }
+                        }
+                    }
+                }
             }
         }
+        if (collisionType == 1) {
+            cameraSpeed = 0.010f;
+        }
+        collisionType = 0;
     }
+
 
     private void processInput() {
         handleSprinting();

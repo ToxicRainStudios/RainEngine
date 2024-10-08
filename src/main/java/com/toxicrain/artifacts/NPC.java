@@ -3,10 +3,10 @@ package com.toxicrain.artifacts;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.core.Color;
+import com.toxicrain.texture.TextureSystem;
 import lombok.Getter;
 import lombok.Setter;
 
-import static com.toxicrain.texture.TextureSystem.playerTexture;
 
 public class NPC {
     @Getter @Setter
@@ -88,7 +88,7 @@ public class NPC {
 
     // Render the NPC using BatchRenderer
     public void render(BatchRenderer batchRenderer) {
-        batchRenderer.addTexture(playerTexture, this.X, this.Y, 1.01f,
+        batchRenderer.addTexture(TextureSystem.getTexture("playerTexture"), this.X, this.Y, 1.01f,
                 this.rotation, 1, 1, Color.toFloatArray(Color.WHITE));
     }
 }
