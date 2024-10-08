@@ -147,9 +147,6 @@ public class GameEngine {
         Logger.printLOG("Creating Textures");
         TextureSystem.initTextures();
 
-        Logger.printLOG("Loading pack.json"); //MUST be called before TextureSystem.initTextures()
-        PackInfoParser.loadPackInfo();
-
         // This line is critical for LWJGL's interoperation with GLFW's OpenGL context, or any context that is managed externally.
         // LWJGL detects the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
         Logger.printLOG("Creating OpenGL Capabilities");
