@@ -1,11 +1,12 @@
-package com.toxicrain.util;
+package com.toxicrain.light;
 
 import lombok.Getter;
+import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LightUtils {
+public class LightSystem {
     @Getter
     private static final List<float[]> lightSources = new ArrayList<>();
 

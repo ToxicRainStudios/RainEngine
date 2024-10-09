@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 
 public class ShaderUtils {
 
-    public static int loadShader(int type, String filePath) {
+    public int loadShader(int type, String filePath) {
         String shaderSource;
         try {
             shaderSource = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -29,7 +29,7 @@ public class ShaderUtils {
         return shader;
     }
 
-    public static int createShaderProgram(String vertexShaderPath, String fragmentShaderPath) {
+    public int createShaderProgram(String vertexShaderPath, String fragmentShaderPath) {
         Logger.printLOG("Loading Vertex Shader: " + vertexShaderPath);
         Logger.printLOG("Loading Fragment Shader: " + fragmentShaderPath);
 

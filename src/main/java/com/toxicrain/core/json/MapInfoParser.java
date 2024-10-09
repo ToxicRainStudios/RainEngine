@@ -3,9 +3,9 @@ package com.toxicrain.core.json;
 
 import com.toxicrain.core.Logger;
 import com.toxicrain.core.lua.LuaManager;
-import com.toxicrain.core.render.Tile;
+import com.toxicrain.artifacts.Tile;
 import com.toxicrain.util.FileUtils;
-import com.toxicrain.util.LightUtils;
+import com.toxicrain.light.LightSystem;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,7 +62,7 @@ public class MapInfoParser {
                 JSONArray lighting = part.getJSONArray("lighting");
 
                 // Clear existing lighting data
-                LightUtils.getLightSources().clear();
+                LightSystem.getLightSources().clear();
 
                 // Process lighting data
                 for (int j = 0; j < lighting.length(); j++) {
@@ -70,7 +70,7 @@ public class MapInfoParser {
                     float x = (float) lightSource.getDouble("x");
                     float y = (float) lightSource.getDouble("y");
                     float strength = (float) lightSource.getDouble("strength");
-                    LightUtils.addLightSource(x, y, strength);
+                    LightSystem.addLightSource(x, y, strength);
                 }
 
                 // Process slices
@@ -103,6 +103,6 @@ public class MapInfoParser {
         // Log the final map data
         Logger.printLOGConditional("mapDataX: " + mapDataX, doExtraLogs);
         Logger.printLOGConditional("mapDataY: " + mapDataY, doExtraLogs);
-        Logger.printLOGConditional("Lighting sources: " + LightUtils.getLightSources(), doExtraLogs);
+        Logger.printLOGConditional("Lighting sources: " + LightSystem.getLightSources(), doExtraLogs);
     }
 }

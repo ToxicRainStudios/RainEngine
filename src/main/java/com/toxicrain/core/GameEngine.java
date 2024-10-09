@@ -4,10 +4,11 @@ import com.toxicrain.artifacts.behavior.*;
 import com.toxicrain.core.json.*;
 import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.core.render.BatchRenderer;
-import com.toxicrain.core.render.Tile;
+import com.toxicrain.artifacts.Tile;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.gui.Menu;
+import com.toxicrain.light.LightSystem;
 import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.texture.TextureSystem;
 import com.toxicrain.util.*;
@@ -218,7 +219,7 @@ public class GameEngine {
                         0,
                         1,
                         1,
-                        LightUtils.getLightSources()
+                        LightSystem.getLightSources()
                 ); // Top-right corner
             } else {
                 Logger.printLOG("Index out of bounds: space=" + k);

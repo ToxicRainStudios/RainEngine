@@ -101,10 +101,9 @@ public class FileUtils {
     public static String getCurrentWorkingDirectory(String primaryPath, String fallbackPath) {
         Path path = Paths.get(primaryPath);
         if (Files.exists(path)) {
-            return path.toAbsolutePath().toString();
+            return getCurrentWorkingDirectory(primaryPath);
         } else {
-            Path fallback = Paths.get(fallbackPath);
-            return fallback.toAbsolutePath().toString();
+            return getCurrentWorkingDirectory(fallbackPath);
         }
     }
 

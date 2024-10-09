@@ -1,4 +1,4 @@
-package com.toxicrain.core.render;
+package com.toxicrain.artifacts;
 
 import com.toxicrain.core.json.MapInfoParser;
 

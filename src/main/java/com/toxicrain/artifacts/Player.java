@@ -8,7 +8,6 @@ import com.toxicrain.core.json.KeyInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
-import com.toxicrain.core.render.Tile;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.core.Color;
