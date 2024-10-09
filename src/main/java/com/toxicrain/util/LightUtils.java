@@ -1,9 +1,12 @@
 package com.toxicrain.util;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class LightUtils {
+    @Getter
     private static final List<float[]> lightSources = new ArrayList<>();
 
     /**
@@ -32,16 +35,6 @@ public class LightUtils {
             }
         }
         return false;
-    }
-
-    /**
-     * Get the list of light sources and their positions
-     *
-     * @return {@link LightUtils#lightSources}
-     */
-    public static List<float[]> getLightSources() {
-
-        return lightSources;
     }
 
 }

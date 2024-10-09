@@ -12,9 +12,9 @@ RainEngine is a WIP engine made with [LWJGL3](https://www.lwjgl.org/)
 * Keybinding system
 * Lighting
 * "Palette" system for controlling what's what in a map file
-* Texture pack system 
-  * Loads from resources/custom/pack.json 
 * A File Editor
+* Dynamic Texture loading
+  * Simply place the image in the images folder, then use it 
 * [Lua](https://www.lua.org/) scripting
   * Check if a key is pressed
   * Load maps

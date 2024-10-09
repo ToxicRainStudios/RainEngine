@@ -4,7 +4,7 @@ import org.luaj.vm2.*;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
 public class LuaEngine {
-    private Globals globals;
+    private final Globals globals;
 
     public LuaEngine() {
         globals = JsePlatform.standardGlobals();  // Use Globals to manage Lua environment
