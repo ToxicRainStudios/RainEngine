@@ -31,6 +31,7 @@ public class TextureInfo {
      * @param textureId the id of the texture, used by OpenGL from rendering
      * @param width the width of the texture
      * @param height the height of the texture
+     * @param isTransparent If the texture has transparency
      */
     public TextureInfo(int textureId, int width, int height, boolean isTransparent) {
         this.textureId = textureId;

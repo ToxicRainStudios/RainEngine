@@ -12,4 +12,5 @@ public class Constants {
     public static final String engineVersion = "1.0.0";
     public static final String engineMakers = "Toxic Rain Studios";
     public static final String credits = "Stavj and notdeadpool456: Making the textures";
+    public static final float npcZLevel = 1.01f;
 }

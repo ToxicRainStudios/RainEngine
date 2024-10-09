@@ -1,5 +1,6 @@
 package com.toxicrain.artifacts;
 
+import com.toxicrain.core.Constants;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.core.Color;
@@ -88,7 +89,7 @@ public class NPC {
 
     // Render the NPC using BatchRenderer
     public void render(BatchRenderer batchRenderer) {
-        batchRenderer.addTexture(TextureSystem.getTexture("playerTexture"), this.X, this.Y, 1.01f,
+        batchRenderer.addTexture(TextureSystem.getTexture("playerTexture"), this.X, this.Y, Constants.npcZLevel,
                 this.rotation, 1, 1, Color.toFloatArray(Color.WHITE));
     }
 }

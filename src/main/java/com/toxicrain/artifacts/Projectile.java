@@ -1,5 +1,6 @@
 package com.toxicrain.artifacts;
 
+import com.toxicrain.core.Constants;
 import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.core.interfaces.IArtifact;
 import com.toxicrain.core.render.BatchRenderer;
@@ -25,6 +26,6 @@ public class Projectile implements IArtifact {
     }
 
     public void render(BatchRenderer batchRenderer) {
-        batchRenderer.addTexture(this.texture, this.x, this.y, 1.01f, 0, 1,1, Color.toFloatArray(Color.WHITE));
+        batchRenderer.addTexture(this.texture, this.x, this.y, Constants.npcZLevel, 0, 1,1, Color.toFloatArray(Color.WHITE));
     }
 }
