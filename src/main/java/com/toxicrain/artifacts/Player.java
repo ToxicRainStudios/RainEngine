@@ -279,10 +279,6 @@ public class Player implements IArtifact {
         }
     }
 
-    public void onMouseScroll(float offset) {
-        scrollOffset += offset;
-    }
-
     // Method to update position of the player
     private void updatePos(float x, float y, float z) {
         this.posX = x;

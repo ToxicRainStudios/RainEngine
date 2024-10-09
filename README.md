@@ -23,6 +23,7 @@ RainEngine is a WIP engine made with [LWJGL3](https://www.lwjgl.org/)
   * Merge scripts
   * Run more scripts
   * Script prefixes to de-hardcore scripting 
+* NPCs with BehaviorSequence's
 
 
 ## What's not done:
@@ -32,6 +33,5 @@ RainEngine is a WIP engine made with [LWJGL3](https://www.lwjgl.org/)
   * Main Menu
   * Settings Menu (Edit Keybindings etc)
   * Pause Menu
-* NPCs
 * Some sort of dialog system with JSON
 * Dynamic and directional lighting 

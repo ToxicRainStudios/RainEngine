@@ -1,7 +1,6 @@
 package com.toxicrain.artifacts.behavior;
 
 import com.toxicrain.artifacts.NPC;
-import com.toxicrain.artifacts.Player;
 import com.toxicrain.factories.GameFactory;
 
 public class LookAtPlayerSeeingBehavior extends Behavior {
