@@ -21,7 +21,7 @@ public class KeyInfoParser {
     private static Map<String, String> keyBindings = new HashMap<>();
 
     /**
-     * Loads the keybinds.json and parses it into variables
+     * Loads the keybinds.json and parses it into the {@link HashMap}
      */
     public static void loadKeyInfo() {
         String filePath = FileUtils.getCurrentWorkingDirectory("resources/json/keybinds.json");
@@ -67,9 +67,22 @@ public class KeyInfoParser {
         }
     }
 
-    // Method to retrieve a specific key bind
+    /**
+     * Gets a keybinding from keybinds.json
+     *
+     * @param key The keybinding to get
+     */
     public static String getKeyBind(String key) {
         return keyBindings.getOrDefault(key, "undefined");
+    }
+
+    /**
+     * Gets a keybinding from keybinds.json as GLFW key.
+     *
+     * @param key The keybinding to get
+     */
+    public static int getKeyAsGLWFBind(String key) {
+        return convertToGLFWBind(getKeyBind(key));
     }
 
     /**

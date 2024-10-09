@@ -257,7 +257,7 @@ public class Player implements IArtifact {
     }
 
     private void handleSprinting() {
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.getKeyBind("keySprint")))) {
+        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keySprint"))) {
             cameraSpeed = 0.1f;
             isSprinting = true;
         } else {
@@ -267,10 +267,10 @@ public class Player implements IArtifact {
     }
 
     private void handleMovement() {
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.getKeyBind("keyWalkLeft")))) forward(false, 1);
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.getKeyBind("keyWalkRight")))) forward(false, -1);
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.getKeyBind("keyWalkForward")))) forward(true, 1);
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(KeyInfoParser.getKeyBind("keyWalkBackward")))) forward(true, -1);
+        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkLeft"))) forward(false, 1);
+        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkRight"))) forward(false, -1);
+        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkForward"))) forward(true, 1);
+        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkBackward"))) forward(true, -1);
     }
 
     private void handleAttack() {
