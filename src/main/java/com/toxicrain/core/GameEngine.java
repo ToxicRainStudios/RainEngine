@@ -169,9 +169,7 @@ public class GameEngine {
         if(menu){
             try {
                 Menu.initializeMenu();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (FontFormatException e) {
+            } catch (IOException | FontFormatException e) {
                 throw new RuntimeException(e);
             }
         }

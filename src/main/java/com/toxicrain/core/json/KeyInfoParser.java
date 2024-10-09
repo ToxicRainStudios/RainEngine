@@ -1,30 +1,27 @@
 package com.toxicrain.core.json;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import com.toxicrain.core.Logger;
 import com.toxicrain.util.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lwjgl.glfw.GLFW;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Iterator;
-
 /**
  * KeyInfoParser parsers the keybinds.json file
  * needed for game functionality
  */
 public class KeyInfoParser {
-    public static String keySprint = null;
-    public static String keyWalkForward = null;
-    public static String keyWalkBackward = null;
-    public static String keyWalkLeft = null;
-    public static String keyWalkRight = null;
-    public static String keyAttack = null;
-    public static String keyWeaponOne = null;
+    // A Map to hold the key bindings
+    private static Map<String, String> keyBindings = new HashMap<>();
 
     /**
-     * Loads the keybinds.json and parsers it into variables
+     * Loads the keybinds.json and parses it into variables
      */
     public static void loadKeyInfo() {
         String filePath = FileUtils.getCurrentWorkingDirectory("resources/json/keybinds.json");
@@ -44,42 +41,24 @@ public class KeyInfoParser {
                 for (int j = 0; j < valuesArray.length(); j++) {
                     JSONObject valueObject = valuesArray.getJSONObject(j);
 
-                    // Use traditional for-each loop instead of lambda
+                    // Use traditional for-each loop to get keys and values
                     Iterator<String> keys = valueObject.keys();
                     while (keys.hasNext()) {
                         String key = keys.next();
                         String value = valueObject.getString(key);
-                        switch (key) {
-                            case "keySprint":
-                                keySprint = value;
-                                break;
-                            case "keyWalkForward":
-                                keyWalkForward = value;
-                                break;
-                            case "keyWalkBackward":
-                                keyWalkBackward = value;
-                                break;
-                            case "keyWalkLeft":
-                                keyWalkLeft = value;
-                                break;
-                            case "keyWalkRight":
-                                keyWalkRight = value;
-                                break;
-                            case "keyAttack":
-                                keyAttack = value;
-                                break;
-                            case "keyWeaponOne":
-                                keyWeaponOne = value;
-                                break;
-                        }
+
+                        // Dynamically add the key-value pairs to the map
+                        keyBindings.put(key, value);
                     }
                 }
             }
+
+            Logger.printLOG("Key bindings loaded successfully.");
+
         } catch (FileNotFoundException e) {
             Logger.printERROR("File not found: " + filePath);
             e.printStackTrace();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Logger.printERROR("Error reading file: " + filePath);
             e.printStackTrace();
         } catch (Exception e) {
@@ -88,6 +67,10 @@ public class KeyInfoParser {
         }
     }
 
+    // Method to retrieve a specific key bind
+    public static String getKeyBind(String key) {
+        return keyBindings.getOrDefault(key, "undefined");
+    }
 
     /**
      * Converts a string found in keybinds.json into a GLFW key

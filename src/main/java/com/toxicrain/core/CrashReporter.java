@@ -16,7 +16,7 @@ public class CrashReporter implements Thread.UncaughtExceptionHandler {
         Logger.printERROR("A crash occurred: " + t.getMessage());
 
         // Log the crash to a file
-        try (FileWriter fw = new FileWriter("crash_report.txt", true);
+        try (FileWriter fw = new FileWriter("crash_report.txt", false);
              PrintWriter pw = new PrintWriter(fw)) {
 
             pw.println("=== Crash Report ===");
