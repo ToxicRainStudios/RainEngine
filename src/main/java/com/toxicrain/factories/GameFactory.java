@@ -48,9 +48,6 @@ public class GameFactory {
         shotgun = new Weapon("Shotgun", 30, 20,4,5);
 
     }
-    public static void loadSounds(){
-        sampleSound = soundSystem.loadSound("resources/sound/Sample.wav");
-    }
 
     public static void loadShaders(){
         //fogShaderProgram = ShaderUtils.createShaderProgram(FileUtils.getCurrentWorkingDirectory("resources/shaders/fog/fog_vertex.glsl"), FileUtils.getCurrentWorkingDirectory("resources/shaders/fog/fog_fragment.glsl"));

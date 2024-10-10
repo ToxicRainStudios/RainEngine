@@ -18,7 +18,7 @@ import static org.lwjgl.stb.STBImage.*;
 public class TextureSystem {
 
     // Map to store all loaded textures with file names
-    private static Map<String, TextureInfo> textures = new HashMap<>();
+    private static final Map<String, TextureInfo> textures = new HashMap<>();
 
     /**
      * Init the textures by dynamically loading all images from the /images folder
@@ -45,7 +45,7 @@ public class TextureSystem {
                             textures.put(textureName, texture);
                             Logger.printLOG("Loaded texture: " + textureName);
                         } else {
-                            Logger.printLOG("Failed to load texture: " + path.getFileName());
+                            Logger.printERROR("Failed to load texture: " + path.getFileName());
                         }
                     });
         } catch (IOException e) {

@@ -10,6 +10,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.ALC10.*;
@@ -21,6 +25,52 @@ public class SoundSystem {
     private int sourceId;
     private float currentVolume = 1.0f;  // Default volume (full)
     private boolean isFading = false;
+
+    // Map to store all loaded sounds with file names
+    private static final Map<String, SoundInfo> sounds = new HashMap<>();
+
+    /**
+     * Init the sounds by dynamically loading all images from the /sound folder
+     */
+    public static void initSounds() {
+        String soundDirectory = FileUtils.getCurrentWorkingDirectory("resources/sound"); // Directory containing sounds
+
+        try {
+            // Get all files in the images directory
+            Files.walk(Paths.get(soundDirectory))
+                    .filter(Files::isRegularFile) // Only regular files, not directories
+                    .filter(path -> {
+                        // Filter out files that are images (png, jpg, jpeg)
+                        String fileName = path.getFileName().toString().toLowerCase();
+                        return fileName.endsWith(".wav");
+                    })
+                    .forEach(path -> {
+                        // Load each sound
+                        String filePath = path.toString();
+                        SoundInfo sound = loadSound(filePath);
+                        // Store the sound with its file name (without extension) as the key
+                        String soundName = path.getFileName().toString().replaceFirst("[.][^.]+$", ""); // remove extension
+                        sounds.put(soundName, sound);
+                        Logger.printLOG("Loaded sound: " + soundName);
+                    });
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load sounds from directory: " + soundDirectory, e);
+        }
+    }
+
+    /**
+     * Retrieve a sound by its name (without extension)
+     *
+     * @param soundName Name of the sound file (without extension)
+     * @return SoundInfo object for the corresponding sound, or null if not found
+     */
+    public static SoundInfo getSound(String soundName) {
+        if (!sounds.containsKey(soundName)) {
+            Logger.printLOG("Sound not found: " + soundName);
+            return null;  // Return null or throw an exception if sound is not found
+        }
+        return sounds.get(soundName);
+    }
 
     public void init() {
         initOpenAL();
@@ -50,7 +100,7 @@ public class SoundSystem {
         AL.createCapabilities(alcCapabilities);
     }
 
-    public SoundInfo loadSound(String filePath) {
+    public static SoundInfo loadSound(String filePath) {
         int bufferId = alGenBuffers();
         if (bufferId == 0) {
             throw new IllegalStateException("Failed to generate an OpenAL buffer.");

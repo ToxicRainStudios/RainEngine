@@ -9,6 +9,7 @@ import com.toxicrain.factories.GameFactory;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.gui.Menu;
 import com.toxicrain.light.LightSystem;
+import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.texture.TextureSystem;
 import com.toxicrain.util.*;
@@ -187,7 +188,7 @@ public class GameEngine {
 
         Logger.printLOG("Initializing SoundSystem");
         GameFactory.soundSystem.init();
-        GameFactory.loadSounds();
+        SoundSystem.initSounds();
 
         Logger.printLOG("Loading Shaders");
         GameFactory.loadShaders();

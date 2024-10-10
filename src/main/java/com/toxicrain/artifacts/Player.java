@@ -1,6 +1,7 @@
 package com.toxicrain.artifacts;
 
 import com.toxicrain.core.Logger;
+import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.core.interfaces.IArtifact;
 import com.toxicrain.core.json.GameInfoParser;
@@ -274,6 +275,7 @@ public class Player implements IArtifact {
 
     private void handleAttack() {
         if (GameFactory.mouseUtils.isMouseButtonPressed(1)) {
+            GameFactory.soundSystem.play(SoundSystem.getSound("Sample"));
             Logger.printLOG("Player is attacking...");
             attack();
         }

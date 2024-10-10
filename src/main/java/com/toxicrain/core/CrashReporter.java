@@ -12,6 +12,7 @@ public class CrashReporter implements Thread.UncaughtExceptionHandler {
         generateCrashReport(e);
     }
 
+    @SuppressWarnings("CallToPrintStackTrace")
     public static void generateCrashReport(Throwable t) {
         Logger.printERROR("A crash occurred: " + t.getMessage());
 
