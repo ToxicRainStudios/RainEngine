@@ -4,6 +4,7 @@ import com.toxicrain.core.Logger;
 import com.toxicrain.core.json.KeyInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.factories.GameFactory;
+import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.util.FileUtils;
 import org.luaj.vm2.*;
 
@@ -299,6 +300,13 @@ public class LuaManager {
             }
         });
 
+        globals.set("playSound", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue sound) {
+                GameFactory.soundSystem.play(SoundSystem.getSound(String.valueOf(sound)));
+                return LuaValue.valueOf(String.valueOf(sound));
+            }
+        });
 
 
         // Add more functions as needed
