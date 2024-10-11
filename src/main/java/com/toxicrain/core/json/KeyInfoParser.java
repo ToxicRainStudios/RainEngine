@@ -18,7 +18,7 @@ import org.lwjgl.glfw.GLFW;
  */
 public class KeyInfoParser {
     // A Map to hold the key bindings
-    private static Map<String, String> keyBindings = new HashMap<>();
+    private static final Map<String, String> keyBindings = new HashMap<>();
 
     /**
      * Loads the keybinds.json and parses it into the {@link HashMap}
