@@ -42,7 +42,7 @@ public class GameEngine {
 
     private static boolean fullscreen = true;
 
-    private static final boolean menu = false;
+    private static final boolean menu = true;
 
     public GameEngine(){
 

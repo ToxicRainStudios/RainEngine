@@ -2,6 +2,7 @@ package com.toxicrain.gui;
 
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.util.ButtonEngine;
+import com.toxicrain.util.FileUtils;
 import com.toxicrain.util.TextEngine;
 
 import java.awt.*;
@@ -16,7 +17,8 @@ public class Menu {
     private static ButtonEngine button;
 
     public static void initializeMenu() throws IOException, FontFormatException {
-        font = Font.createFont(Font.TRUETYPE_FONT, new File("C:\\Users\\hudso\\Downloads\\perfect_dos_vga_437/Perfect DOS VGA 437.ttf")).deriveFont(24f);
+
+        font = Font.createFont(Font.TRUETYPE_FONT, new File(FileUtils.getCurrentWorkingDirectory("resources/fonts") + "/Perfect DOS VGA 437.ttf")).deriveFont(24f);
         textEngine = new TextEngine(font, 1);
 
 
