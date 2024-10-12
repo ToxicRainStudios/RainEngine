@@ -35,4 +35,8 @@ public class MathUtils {
 
         return (float) angleInDegrees;
     }
+
+    public static boolean approximatelyEqual(float a, float b, float epsilon) {
+        return Math.abs(a - b) < epsilon;
+    }
 }
