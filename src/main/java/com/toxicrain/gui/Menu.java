@@ -67,7 +67,7 @@ public class Menu {
 
     public static void render(BatchRenderer batchRenderer) {
         // Render the menu title
-        // textEngine.render(batchRenderer, "Main Menu", 0, 0); // Uncomment if needed
+        textEngine.render(batchRenderer, "Main Menu!", 0, 10); // Uncomment if needed
 
         // Render the buttons
         startButton.render(batchRenderer);

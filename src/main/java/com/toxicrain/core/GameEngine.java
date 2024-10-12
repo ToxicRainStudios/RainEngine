@@ -21,11 +21,16 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import static com.toxicrain.core.json.SettingsInfoParser.windowHeight;
+import static com.toxicrain.core.json.SettingsInfoParser.windowWidth;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -97,7 +102,7 @@ public class GameEngine {
         // Create the window
         window = glfwCreateWindow(300, 300, windowTitle, glfwGetPrimaryMonitor(), NULL);
         // Resize the window
-        glfwSetWindowSize(window, (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
+        glfwSetWindowSize(window, (int) windowWidth, (int) windowHeight);
 
         if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
 
@@ -162,7 +167,7 @@ public class GameEngine {
 
         // Set up the projection matrix with FOV of 90 degrees
         glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(createPerspectiveProjectionMatrix(SettingsInfoParser.fov, SettingsInfoParser.windowWidth / SettingsInfoParser.windowHeight, 1.0f, 100.0f));
+        glLoadMatrixf(createPerspectiveProjectionMatrix(SettingsInfoParser.fov, windowWidth / windowHeight, 1.0f, 100.0f));
 
 
         GameFactory.load();
@@ -180,7 +185,7 @@ public class GameEngine {
         PaletteInfoParser.loadTextureMappings();
 
         // Set the viewport size
-        glViewport(0, 0, (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight);
+        glViewport(0, 0, (int) windowWidth, (int) windowHeight);
 
         // Enable depth testing
         glEnable(GL_DEPTH_TEST);
@@ -341,9 +346,9 @@ public class GameEngine {
             glfwSetWindowMonitor(window, monitor, 0, 0, vidmode.width(), vidmode.height(), vidmode.refreshRate());
         } else {
             // Switch back to windowed mode
-            glfwSetWindowMonitor(window, NULL, (vidmode.width() - (int) SettingsInfoParser.windowWidth) / 2,
-                    (vidmode.height() - (int) SettingsInfoParser.windowHeight) / 2, (int) SettingsInfoParser.windowWidth,
-                    (int) SettingsInfoParser.windowHeight, GLFW_DONT_CARE);
+            glfwSetWindowMonitor(window, NULL, (vidmode.width() - (int) windowWidth) / 2,
+                    (vidmode.height() - (int) windowHeight) / 2, (int) windowWidth,
+                    (int) windowHeight, GLFW_DONT_CARE);
         }
     }
 
@@ -394,4 +399,17 @@ public class GameEngine {
     public static FloatBuffer getPerspectiveProjectionMatrixBuffer() {
         return buffer;
     }
+
+    private static TextureInfo convertToTextureInfo(BufferedImage image) {
+        try {
+            File tempFile = File.createTempFile("buttonTexture", ".png");
+            ImageIO.write(image, "png", tempFile); // Save the image to a temp file
+            TextureInfo textureInfo = TextureSystem.loadTexture(tempFile.getAbsolutePath());
+            tempFile.deleteOnExit(); // Clean up temp file on exit
+            return textureInfo;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to convert BufferedImage to TextureInfo", e);
+        }
+    }
+
 }

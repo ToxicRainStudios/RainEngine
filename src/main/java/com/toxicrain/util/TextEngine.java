@@ -17,7 +17,6 @@ import javax.imageio.ImageIO;
  * The TextEngine class provides a way to render "text" on the screen
  */
 public class TextEngine {
-    private static final float SCALE_FACTOR = 2.0f;
     private static final float TEXT_SCALE = 1.2f; // Scale factor for text rendering
     private static Font font;
     private final float transparency;
@@ -32,12 +31,6 @@ public class TextEngine {
     }
 
     public void render(BatchRenderer batchRenderer, String toWrite, int xOffset, int yOffset) {
-        // Hardcoded to 0,0 for debugging
-        float baseX = 0;  // Set to 0 for top-left corner
-        float baseY = 0;  // Set to 0 for top-left corner
-
-        // Log the position for debugging
-        System.out.println("Rendering at position: (" + baseX + ", " + baseY + ")");
 
         // Check if the text is in the cache
         TextureInfo textureInfo = textureCache.get(toWrite.trim());
@@ -55,8 +48,8 @@ public class TextEngine {
         // Render the texture using BatchRenderer
         batchRenderer.addTexture(
                 textureInfo,
-                baseX,  // X coordinate based on adjusted origin
-                baseY,   // Y coordinate based on adjusted origin
+                xOffset,  // X coordinate based on adjusted origin
+                yOffset,   // Y coordinate based on adjusted origin
                 TEXT_SCALE,
                 0,  // Rotation (assuming 0 for no rotation)
                 1.0f, // Scale for X

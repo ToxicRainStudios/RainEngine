@@ -23,7 +23,7 @@ public class AWTButton {
     // Define a static font instance for reuse
     private static final Font BUTTON_FONT = new Font("Arial", Font.PLAIN, 16);
     private static final Color BUTTON_COLOR = Color.LIGHT_GRAY;
-    private static final Color BORDER_COLOR = Color.BLACK;
+    private static final Color BORDER_COLOR = Color.WHITE;
     private static final Color TEXT_COLOR = Color.BLACK;
 
     public AWTButton(float centerX, float centerY, float width, float height, String label) {
@@ -35,6 +35,20 @@ public class AWTButton {
         this.label = label; // Set button label text
         createButtonImage(); // Create the visual representation of the button
     }
+
+    public void renderInteractionZone(Graphics2D g2d) {
+        float topLeftX = x - (width / 2); // Calculate top-left X position
+        float topLeftY = y - (height / 2); // Calculate top-left Y position
+
+        // Set color and stroke for the interaction zone outline
+        g2d.setColor(Color.RED); // Set color to red for visibility
+        g2d.setStroke(new BasicStroke(2)); // Thicker line for better visibility
+
+        // Draw the interaction zone as a rectangle
+        g2d.drawRect((int) topLeftX, (int) topLeftY, (int) width, (int) height);
+    }
+
+
 
     private void createButtonImage() {
         buttonImage = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
@@ -103,8 +117,11 @@ public class AWTButton {
 
     public boolean isMouseOver(float mouseX, float mouseY) {
         // Check if the mouse coordinates are over the button
-        return mouseX >= x && mouseX <= (x + width) &&
-                mouseY >= y && mouseY <= (y + height);
+        float adjustedX = x + (width / 2);
+        float adjustedY = y + (height / 2);
+
+        return mouseX >= adjustedX && mouseX <= (adjustedX + width) &&
+                mouseY >= adjustedY && mouseY <= (adjustedY + height);
     }
 
     public void onClick() {
