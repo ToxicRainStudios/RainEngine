@@ -144,4 +144,8 @@ public class WindowManager {
         glfwSetErrorCallback(null).free();
     }
 
+    public void setWindowTitle(String newTitle) {
+        glfwSetWindowTitle(window, newTitle);
+    }
+
 }

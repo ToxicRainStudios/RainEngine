@@ -1,5 +1,6 @@
 package com.toxicrain.core.lua;
 
+import com.toxicrain.core.GameEngine;
 import com.toxicrain.core.Logger;
 import com.toxicrain.core.json.KeyInfoParser;
 import com.toxicrain.core.json.MapInfoParser;
@@ -19,6 +20,7 @@ import static com.toxicrain.factories.GameFactory.luaEngine;
 public class LuaManager {
     private final Globals globals;
     private static final List<String> initScripts = new ArrayList<>();
+    private static final List<String> postInitScripts = new ArrayList<>();
     private static final List<String> tickScripts = new ArrayList<>();
     private static final List<String> mapAutorunScripts = new ArrayList<>();
     private static final List<String> imguiScripts = new ArrayList<>();
@@ -308,6 +310,14 @@ public class LuaManager {
             }
         });
 
+        globals.set("changeWindowTitle", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue title) {
+                GameEngine.windowManager.setWindowTitle(title.tojstring());
+                return LuaValue.valueOf(String.valueOf(title));
+            }
+        });
+
 
         // Add more functions as needed
     }
@@ -320,6 +330,16 @@ public class LuaManager {
      */
     public static boolean isInitFile(String fileName) {
         return fileName.startsWith("init_");
+    }
+
+    /**
+     * Determines if the given file name indicates that it is an "postinit" script.
+     *
+     * @param fileName the name of the Lua file
+     * @return true if the file is an "postinit" script, false otherwise
+     */
+    public static boolean isPostInitFile(String fileName) {
+        return fileName.startsWith("postinit_");
     }
 
     /**
@@ -360,6 +380,8 @@ public class LuaManager {
             for (File file : files) {
                 if (isInitFile(file.getName())) {
                     initScripts.add(file.getName());
+                }else if (isPostInitFile(file.getName())) {
+                    postInitScripts.add(file.getName());
                 } else if (isTickFile(file.getName())) {
                     tickScripts.add(file.getName());
                 } else if (isImguiFile(file.getName())) {
@@ -377,6 +399,16 @@ public class LuaManager {
     public static void executeInitScripts() {
         for (String script : initScripts) {
             Logger.printLOG("Executing init script: " + script);
+            loadScript(script, "resources/scripts/");
+        }
+    }
+
+    /**
+     * Executes all init scripts.
+     */
+    public static void executePostInitScripts() {
+        for (String script : postInitScripts) {
+            Logger.printLOG("Executing postinit script: " + script);
             loadScript(script, "resources/scripts/");
         }
     }

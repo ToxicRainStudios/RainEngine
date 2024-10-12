@@ -23,12 +23,11 @@ RainEngine is a WIP engine made with [LWJGL3](https://www.lwjgl.org/)
   * Merge scripts
   * Run more scripts
   * Script prefixes to de-hardcore scripting 
+  * Dynamically changing the window title
 * NPCs with BehaviorSequence's
 
 
 ## What's not done:
-* More control over the window title
-  * Dynamically changing the title
 * UI with configurability
   * Main Menu
   * Settings Menu (Edit Keybindings etc)

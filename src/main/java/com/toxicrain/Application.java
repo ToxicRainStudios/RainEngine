@@ -10,7 +10,7 @@ public class Application {
         Logger.printLOG("Starting game with: " + Arrays.toString(args));
 
         GameInfoParser.loadGameInfo();
-        GameEngine.run(GameInfoParser.defaultWindowName);
+        GameEngine.run();
     }
 
 }

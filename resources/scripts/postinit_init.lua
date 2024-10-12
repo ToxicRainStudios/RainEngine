@@ -1,0 +1,1 @@
+changeWindowTitle("Super Cool Game")

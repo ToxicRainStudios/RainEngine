@@ -49,7 +49,7 @@ public class GameEngine {
 
     public static final boolean menu = false;
 
-    public static void run(String windowTitle) {
+    public static void run() {
         Thread.setDefaultUncaughtExceptionHandler(new CrashReporter());
         Logger.printLOG("Hello LWJGL " + Version.getVersion() + "!");
         Logger.printLOG("Hello RainEngine " + Constants.engineVersion + "!");
@@ -66,7 +66,7 @@ public class GameEngine {
 
         windowManager = new WindowManager((int) windowWidth, (int) windowHeight, true);
 
-        init(windowTitle, SettingsInfoParser.vSync);
+        init();
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
 
@@ -77,7 +77,7 @@ public class GameEngine {
     }
 
 
-    private static void init(String windowTitle, boolean vSync) {
+    private static void init() {
         // Set up an error callback. The default implementation will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
 
@@ -86,7 +86,7 @@ public class GameEngine {
         if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
         Logger.printLOG("Creating Game Window");
-        windowManager.createWindow(windowTitle, SettingsInfoParser.vSync);
+        windowManager.createWindow(GameInfoParser.defaultWindowName, SettingsInfoParser.vSync);
 
         Logger.printLOG("Loading IMGUI");
         // Create and initialize ImguiHandler
@@ -140,6 +140,7 @@ public class GameEngine {
 
         windowManager.doOpenGLSetup();
 
+        LuaManager.executePostInitScripts();
     }
 
     private static void drawMap(BatchRenderer batchRenderer) {
