@@ -253,7 +253,7 @@ public class GameEngine {
             float[] mousePos = GameFactory.mouseUtils.getMousePosition();
             boolean mouseClick = GameFactory.mouseUtils.isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT);
             GameFactory.player.cameraZ = 25;
-            Menu.updateMenu(mousePos[0], mousePos[1], mouseClick);
+            Menu.updateMenu();
         }
     }
 
