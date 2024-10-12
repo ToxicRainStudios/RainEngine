@@ -96,73 +96,17 @@ public class BatchRenderer {
      * @param color the color tint as a float array (RGBA)
      */
     public void addTexture(TextureInfo textureInfo, float x, float y, float z, float angle, float scaleX, float scaleY, float[] color) {
-        if (textureVertexInfos.size() >= MAX_TEXTURES) {
-            renderBatch();
-            beginBatch();
-        }
+        handleBatchLimit();
 
-        // Calculate aspect ratio and create original vertices
-        float aspectRatio = (float) textureInfo.width / textureInfo.height;
-        float[] originalVertices = {
-                -aspectRatio * scaleX, -1.0f * scaleY, 0.0f,
-                aspectRatio * scaleX, -1.0f * scaleY, 0.0f,
-                aspectRatio * scaleX, scaleY, 0.0f,
-                -aspectRatio * scaleX, scaleY, 0.0f
-        };
+        float[] rotatedVertices = createRotatedVertices(textureInfo, x, y, z, angle, scaleX, scaleY);
+        float[] triangleVertices = generateTriangleVertices(rotatedVertices);
+        float[] texCoords = createTexCoords();
+        float[] triangleTexCoords = generateTriangleTexCoords(texCoords);
+        float[] triangleColors = generateTriangleColors(color);
 
-        // Calculate rotation
-        float cosTheta = (float) Math.cos(angle);
-        float sinTheta = (float) Math.sin(angle);
-
-        // Rotate vertices
-        float[] rotatedVertices = new float[12];
-        for (int i = 0; i < 4; i++) {
-            int index = i * 3;
-            float vx = originalVertices[index];
-            float vy = originalVertices[index + 1];
-            rotatedVertices[index]     = x + (vx * cosTheta - vy * sinTheta);
-            rotatedVertices[index + 1] = y + (vx * sinTheta + vy * cosTheta);
-            rotatedVertices[index + 2] = z;
-        }
-
-        // Texture coordinates for the two triangles
-        float[] texCoords = {
-                0.0f, 0.0f,
-                1.0f, 0.0f,
-                1.0f, 1.0f,
-                0.0f, 1.0f
-        };
-
-        // Generate texture coordinate and color data
-        float[] triangleVertices = {
-                rotatedVertices[0], rotatedVertices[1], rotatedVertices[2],
-                rotatedVertices[3], rotatedVertices[4], rotatedVertices[5],
-                rotatedVertices[6], rotatedVertices[7], rotatedVertices[8],
-
-                rotatedVertices[0], rotatedVertices[1], rotatedVertices[2],
-                rotatedVertices[6], rotatedVertices[7], rotatedVertices[8],
-                rotatedVertices[9], rotatedVertices[10], rotatedVertices[11]
-        };
-
-        float[] triangleTexCoords = {
-                texCoords[0], texCoords[1],
-                texCoords[2], texCoords[3],
-                texCoords[4], texCoords[5],
-
-                texCoords[0], texCoords[1],
-                texCoords[4], texCoords[5],
-                texCoords[6], texCoords[7]
-        };
-
-        float[] triangleColors = new float[24];
-        for (int i = 0; i < 6; i++) {
-            int baseIndex = i * 4;
-            System.arraycopy(color, 0, triangleColors, baseIndex, 4);
-        }
-
-        // Add the texture vertex info
         textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, triangleVertices, triangleTexCoords, triangleColors));
     }
+
 
     /**
      * Adds a lit texture with specified rotation and scaling to the current batch.
@@ -178,60 +122,81 @@ public class BatchRenderer {
      * @param lightPositions the list of light positions
      */
     public void addTextureLit(TextureInfo textureInfo, float x, float y, float z, float angle, float scaleX, float scaleY, List<float[]> lightPositions) {
+        handleBatchLimit();
+
+        float[] rotatedVertices = createRotatedVertices(textureInfo, x, y, z, angle, scaleX, scaleY);
+        float lightLevel = calculateLightLevel(lightPositions, rotatedVertices);
+        float[] color = determineColorBasedOnLightLevel(lightLevel);
+        float[] triangleVertices = generateTriangleVertices(rotatedVertices);
+        float[] texCoords = createTexCoords();
+        float[] triangleTexCoords = generateTriangleTexCoords(texCoords);
+        float[] triangleColors = generateTriangleColors(color);
+
+        textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, triangleVertices, triangleTexCoords, triangleColors));
+    }
+
+    /**
+     * Adds a texture with specified rotation and color to the current batch.
+     * If the batch exceeds the maximum texture count, it is rendered and a new batch is started.
+     *
+     * @param textureInfo the texture information
+     * @param x the x-coordinate of the texture
+     * @param y the y-coordinate of the texture
+     * @param z the z-coordinate of the texture
+     * @param posX the x-coordinate of the mouse or reference point for rotation
+     * @param posY the y-coordinate of the mouse or reference point for rotation
+     * @param scaleX a scale modifier for the x-axis
+     * @param scaleY a scale modifier for the y-axis
+     * @param color the color to apply to the texture (RGBA)
+     */
+    public void addTexturePos(TextureInfo textureInfo, float x, float y, float z, float posX, float posY, float scaleX, float scaleY, float[] color) {
+        handleBatchLimit();
+
+        float angle = calculateRotationAngle(x, y, posX, posY);
+        float[] rotatedVertices = createRotatedVertices(textureInfo, x, y, z, angle, scaleX, scaleY);
+        float[] triangleVertices = generateTriangleVertices(rotatedVertices);
+        float[] texCoords = createTexCoords();
+        float[] triangleTexCoords = generateTriangleTexCoords(texCoords);
+        float[] triangleColors = generateTriangleColors(color);
+
+        textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, triangleVertices, triangleTexCoords, triangleColors));
+    }
+
+// Helper Methods
+
+    private void handleBatchLimit() {
         if (textureVertexInfos.size() >= MAX_TEXTURES) {
             renderBatch();
             beginBatch();
         }
+    }
 
-        // Calculate aspect ratio and create original vertices
+    private float[] createRotatedVertices(TextureInfo textureInfo, float x, float y, float z, float angle, float scaleX, float scaleY) {
         float aspectRatio = (float) textureInfo.width / textureInfo.height;
         float[] originalVertices = {
-                -aspectRatio * scaleX, -1.0f * scaleY, 0.0f,
-                aspectRatio * scaleX, -1.0f * scaleY, 0.0f,
+                -aspectRatio * scaleX, -scaleY, 0.0f,
+                aspectRatio * scaleX, -scaleY, 0.0f,
                 aspectRatio * scaleX, scaleY, 0.0f,
                 -aspectRatio * scaleX, scaleY, 0.0f
         };
 
-        // Calculate rotation
         float cosTheta = (float) Math.cos(angle);
         float sinTheta = (float) Math.sin(angle);
 
-        // Rotate vertices
         float[] rotatedVertices = new float[12];
         for (int i = 0; i < 4; i++) {
             int index = i * 3;
             float vx = originalVertices[index];
             float vy = originalVertices[index + 1];
-            rotatedVertices[index]     = x + (vx * cosTheta - vy * sinTheta);
+            rotatedVertices[index] = x + (vx * cosTheta - vy * sinTheta);
             rotatedVertices[index + 1] = y + (vx * sinTheta + vy * cosTheta);
             rotatedVertices[index + 2] = z;
         }
+        return rotatedVertices;
+    }
 
-        // Texture coordinates for the two triangles
-        float[] texCoords = {
-                0.0f, 0.0f,
-                1.0f, 0.0f,
-                1.0f, 1.0f,
-                0.0f, 1.0f
-        };
-
-        // Calculate light level
-        float lightLevel = calculateLightLevel(lightPositions, rotatedVertices);
-
-        // Generate color based on light level
-        float[] color;
-        if (lightLevel >= 1.0f) {
-            color = Color.toFloatArray(Color.LIGHT_LEVEL_20); // Highest light level
-        } else if (lightLevel > 0) {
-            // Map the lightLevel to the range of 1 to 19
-            int level = (int) (lightLevel * 19);
-            color = Color.toFloatArray(Color.values()[level + Color.LIGHT_LEVEL_1.ordinal()]);
-        } else {
-            color = Color.toFloatArray(Color.LIGHT_LEVEL_0); // Default to the lowest light level
-        }
-
-        // Generate vertex, texture coordinate, and color data
-        float[] triangleVertices = {
+    private float[] generateTriangleVertices(float[] rotatedVertices) {
+        return new float[] {
                 rotatedVertices[0], rotatedVertices[1], rotatedVertices[2],
                 rotatedVertices[3], rotatedVertices[4], rotatedVertices[5],
                 rotatedVertices[6], rotatedVertices[7], rotatedVertices[8],
@@ -240,8 +205,19 @@ public class BatchRenderer {
                 rotatedVertices[6], rotatedVertices[7], rotatedVertices[8],
                 rotatedVertices[9], rotatedVertices[10], rotatedVertices[11]
         };
+    }
 
-        float[] triangleTexCoords = {
+    private float[] createTexCoords() {
+        return new float[] {
+                0.0f, 0.0f,
+                1.0f, 0.0f,
+                1.0f, 1.0f,
+                0.0f, 1.0f
+        };
+    }
+
+    private float[] generateTriangleTexCoords(float[] texCoords) {
+        return new float[] {
                 texCoords[0], texCoords[1],
                 texCoords[2], texCoords[3],
                 texCoords[4], texCoords[5],
@@ -250,16 +226,31 @@ public class BatchRenderer {
                 texCoords[4], texCoords[5],
                 texCoords[6], texCoords[7]
         };
+    }
 
+    private float[] generateTriangleColors(float[] color) {
         float[] triangleColors = new float[24];
         for (int i = 0; i < 6; i++) {
-            int baseIndex = i * 4;
-            System.arraycopy(color, 0, triangleColors, baseIndex, 4);
+            System.arraycopy(color, 0, triangleColors, i * 4, 4);
         }
-
-        // Add the texture vertex info
-        textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, triangleVertices, triangleTexCoords, triangleColors));
+        return triangleColors;
     }
+
+    private float calculateRotationAngle(float x, float y, float posX, float posY) {
+        return (float) Math.atan2(posY - y, posX - x);
+    }
+
+    private float[] determineColorBasedOnLightLevel(float lightLevel) {
+        if (lightLevel >= 1.0f) {
+            return Color.toFloatArray(Color.LIGHT_LEVEL_20); // Highest light level
+        } else if (lightLevel > 0) {
+            int level = (int) (lightLevel * 19);
+            return Color.toFloatArray(Color.values()[level + Color.LIGHT_LEVEL_1.ordinal()]);
+        } else {
+            return Color.toFloatArray(Color.LIGHT_LEVEL_0); // Lowest light level
+        }
+    }
+
 
 
     /**
@@ -300,109 +291,6 @@ public class BatchRenderer {
         // Normalize the total light level
         int vertexCount = vertices.length / 3;
         return Math.min(1.0f, totalLightLevel / vertexCount);
-    }
-
-
-    /**
-     * Adds a texture with specified rotation and color to the current batch.
-     * If the batch exceeds the maximum texture count, it is rendered and a new batch is started.
-     *
-     * @param textureInfo the texture information
-     * @param x the x-coordinate of the texture
-     * @param y the y-coordinate of the texture
-     * @param z the z-coordinate of the texture
-     * @param posX the x-coordinate of the mouse or reference point for rotation
-     * @param posY the y-coordinate of the mouse or reference point for rotation
-     * @param scaleX a scale modifier for the x-axis
-     * @param scaleY a scale modifier for the y-axis
-     * @param color the color to apply to the texture (RGBA)
-     */
-    public void addTexturePos(TextureInfo textureInfo, float x, float y, float z, float posX, float posY, float scaleX, float scaleY, float[] color) {
-        if (textureVertexInfos.size() >= MAX_TEXTURES) {
-            renderBatch();
-            beginBatch();
-        }
-
-        // Calculate aspect ratio
-        float aspectRatio = (float) textureInfo.width / textureInfo.height;
-
-        // Calculate rotation angle
-        float dx = posX - x;
-        float dy = posY - y;
-        float angle = (float) Math.atan2(dy, dx);
-        float cosTheta = (float) Math.cos(angle);
-        float sinTheta = (float) Math.sin(angle);
-
-        // Calculate aspect ratio and create original vertices
-        float[] originalVertices = {
-                -aspectRatio * scaleX, -1.0f * scaleY, 0.0f,
-                aspectRatio * scaleX, -1.0f * scaleY, 0.0f,
-                aspectRatio * scaleX, scaleY, 0.0f,
-                -aspectRatio * scaleX, scaleY, 0.0f
-        };
-
-        // Rotate and translate vertices
-        float[] rotatedVertices = new float[12];
-        for (int i = 0; i < 4; i++) {
-            int index = i * 3;
-            float vx = originalVertices[index];
-            float vy = originalVertices[index + 1];
-            rotatedVertices[index]     = x + (vx * cosTheta - vy * sinTheta);
-            rotatedVertices[index + 1] = y + (vx * sinTheta + vy * cosTheta);
-            rotatedVertices[index + 2] = z;
-
-        }
-
-        // Texture coordinates (assuming no scaling)
-        float[] texCoords = {
-                0.0f, 0.0f,
-                1.0f, 0.0f,
-                1.0f, 1.0f,
-                0.0f, 1.0f
-        };
-
-        // Repeat the color for each vertex
-        float[] colors = new float[24];
-        for (int i = 0; i < 4; i++) {
-            int baseIndex = i * 4;
-            System.arraycopy(color, 0, colors, baseIndex, 4);
-        }
-
-        // Define the vertices for two triangles
-        float[] triangleVertices = {
-                rotatedVertices[0], rotatedVertices[1], rotatedVertices[2],
-                rotatedVertices[3], rotatedVertices[4], rotatedVertices[5],
-                rotatedVertices[6], rotatedVertices[7], rotatedVertices[8],
-
-                rotatedVertices[0], rotatedVertices[1], rotatedVertices[2],
-                rotatedVertices[6], rotatedVertices[7], rotatedVertices[8],
-                rotatedVertices[9], rotatedVertices[10], rotatedVertices[11]
-        };
-
-        // Define the texture coordinates for the two triangles
-        float[] triangleTexCoords = {
-                texCoords[0], texCoords[1],
-                texCoords[2], texCoords[3],
-                texCoords[4], texCoords[5],
-
-                texCoords[0], texCoords[1],
-                texCoords[4], texCoords[5],
-                texCoords[6], texCoords[7]
-        };
-
-        // Define the colors for the two triangles
-        float[] triangleColors = {
-                colors[0], colors[1], colors[2], colors[3],
-                colors[4], colors[5], colors[6], colors[7],
-                colors[8], colors[9], colors[10], colors[11],
-
-                colors[0], colors[1], colors[2], colors[3],
-                colors[8], colors[9], colors[10], colors[11],
-                colors[12], colors[13], colors[14], colors[15]
-        };
-
-        // Add the texture information to the batch
-        textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, triangleVertices, triangleTexCoords, triangleColors));
     }
 
     /**
