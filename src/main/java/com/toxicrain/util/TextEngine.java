@@ -1,10 +1,8 @@
 package com.toxicrain.util;
 
 import com.toxicrain.core.Color;
-import com.toxicrain.core.Logger;
 import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.core.render.BatchRenderer;
-import com.toxicrain.factories.GameFactory;
 import com.toxicrain.texture.TextureSystem;
 
 import java.awt.*;
@@ -17,8 +15,6 @@ import javax.imageio.ImageIO;
 
 /**
  * The TextEngine class provides a way to render "text" on the screen
- *
- * @author Gabefry, strubium
  */
 public class TextEngine {
     private static final float SCALE_FACTOR = 2.0f;
@@ -36,9 +32,12 @@ public class TextEngine {
     }
 
     public void render(BatchRenderer batchRenderer, String toWrite, int xOffset, int yOffset) {
-        float scale = GameFactory.player.cameraZ / 30;
-        float baseX = GameFactory.player.cameraX - (toWrite.length() * scale) / SCALE_FACTOR;
-        float baseY = GameFactory.player.cameraY - yOffset * scale;
+        // Hardcoded to 0,0 for debugging
+        float baseX = 0;  // Set to 0 for top-left corner
+        float baseY = 0;  // Set to 0 for top-left corner
+
+        // Log the position for debugging
+        System.out.println("Rendering at position: (" + baseX + ", " + baseY + ")");
 
         // Check if the text is in the cache
         TextureInfo textureInfo = textureCache.get(toWrite.trim());
@@ -56,12 +55,12 @@ public class TextEngine {
         // Render the texture using BatchRenderer
         batchRenderer.addTexture(
                 textureInfo,
-                baseX + xOffset * SCALE_FACTOR * scale,  // Adjust for camera and scaling
-                baseY,
+                baseX,  // X coordinate based on adjusted origin
+                baseY,   // Y coordinate based on adjusted origin
                 TEXT_SCALE,
                 0,  // Rotation (assuming 0 for no rotation)
-                scale,
-                scale,
+                1.0f, // Scale for X
+                1.0f, // Scale for Y
                 com.toxicrain.core.Color.toFloatArray(transparency, Color.WHITE)  // Applying color/transparency
         );
     }
@@ -81,7 +80,7 @@ public class TextEngine {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         g2d = image.createGraphics();
         g2d.setFont(font);
-        g2d.drawString(text, 0, metrics.getAscent()); // Draw the text
+        g2d.drawString(text, 0, metrics.getAscent()); // Draw the text at the top left of the image
         g2d.dispose();
 
         return flipImageVertically(image);
@@ -129,5 +128,23 @@ public class TextEngine {
         g2d.dispose();  // Dispose of graphics context to free resources
 
         return textWidth;  // Return the width of the text in pixels
+    }
+
+    public static float getTextHeight(String text) {
+        // Create a temporary image to measure text size
+        BufferedImage tempImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = tempImage.createGraphics();
+        g2d.setFont(font);  // Set the font for measuring
+
+        // Get FontMetrics after setting the font
+        FontMetrics metrics = g2d.getFontMetrics();
+
+        // Calculate the height of the text
+        float textHeight = metrics.getHeight();
+
+        // Clean up
+        g2d.dispose();  // Dispose of graphics context to free resources
+
+        return textHeight;  // Return the height of the text in pixels
     }
 }
