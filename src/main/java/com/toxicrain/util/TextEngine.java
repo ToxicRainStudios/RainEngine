@@ -128,7 +128,6 @@ public class TextEngine {
         // Clean up
         g2d.dispose();  // Dispose of graphics context to free resources
 
-        Logger.printERROR("Texture Width: " + textWidth);
         return textWidth;  // Return the width of the text in pixels
     }
 }
