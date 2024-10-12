@@ -42,7 +42,7 @@ public class Menu {
         boolean mouseClick = GameFactory.mouseUtils.isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT); // Implement this based on your input handling
 
         // Update the button
-        startButton.update(mouseX, mouseY, mouseClick, 1920, 1080);
+        optionsButton.update(mouseX, mouseY, mouseClick, 1920, 1080);
 
 
         // Handle button clicks
