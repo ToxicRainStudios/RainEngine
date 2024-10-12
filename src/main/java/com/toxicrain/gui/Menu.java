@@ -20,8 +20,8 @@ public class Menu {
 
     // Create buttons for the menu
     static AWTButton startButton = new AWTButton(0, 0, 200, 50, "Start Game");  // Centered at (0, 0)
-    static AWTButton optionsButton = new AWTButton(0, -440, 200, 50, "Options"); // Adjusted Y to center options button
-    static AWTButton exitButton = new AWTButton(0, -380, 200, 50, "Exit");      // Adjusted Y to center exit button
+    static AWTButton optionsButton = new AWTButton(-10, -10, 200, 50, "Options"); // Adjusted Y to center options button
+    static AWTButton exitButton = new AWTButton(10, -20, 200, 50, "Exit");      // Adjusted Y to center exit button
 
     private static boolean inOptionsMenu = false;
 
