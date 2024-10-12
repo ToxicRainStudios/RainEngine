@@ -26,10 +26,10 @@ public class Menu {
         // Load the font and create TextEngine
         font = Font.createFont(Font.TRUETYPE_FONT, new File(FileUtils.getCurrentWorkingDirectory("resources/fonts") + "/Perfect DOS VGA 437.ttf")).deriveFont(24f);
         textEngine = new TextEngine(font, 1);
-        
+
         // Initialize buttons for the main menu
-        startButton = new ButtonEngine(textEngine, "Start Game", -10, 0);
-        optionsButton = new ButtonEngine(textEngine, "Options", -10, 5);
+        startButton = new ButtonEngine(textEngine, "Start Game", -10, 5);
+        optionsButton = new ButtonEngine(textEngine, "Options", 0, 0);
         exitButton = new ButtonEngine(textEngine, "Exit", -10, 10);
     }
 
@@ -42,7 +42,7 @@ public class Menu {
         boolean mouseClick = GameFactory.mouseUtils.isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT); // Implement this based on your input handling
 
         // Update the button
-        startButton.update(mouseX, mouseY, mouseClick);
+        startButton.update(mouseX, mouseY, mouseClick, 1920, 1080);
 
 
         // Handle button clicks
