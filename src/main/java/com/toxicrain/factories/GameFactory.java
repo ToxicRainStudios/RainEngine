@@ -15,6 +15,8 @@ import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.texture.TextureSystem;
 import com.toxicrain.util.MouseUtils;
 
+import static com.toxicrain.core.GameEngine.windowManager;
+
 public class GameFactory {
 
     public static ImguiHandler imguiApp;
@@ -35,13 +37,13 @@ public class GameFactory {
 
     public static void load(){
         player = new Player(5, 5, 5, TextureSystem.getTexture("playerTexture"), false);
-        imguiApp = new ImguiHandler(GameEngine.window);
+        imguiApp = new ImguiHandler(windowManager.getWindow());
         imguiApp.initialize();
         soundSystem = new SoundSystem();
 
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0, TextureSystem.getTexture("playerTexture"));
         character = new NPC(12,-4,1);
-        mouseUtils = new MouseUtils(GameEngine.window);
+        mouseUtils = new MouseUtils(windowManager.getWindow());
 
         pistol = new Weapon("Pistol", 3, 20,1,1);
         rifle = new Weapon("Rifle", 3, 20,1,1);

@@ -10,7 +10,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-import static com.toxicrain.core.GameEngine.window;
+import static com.toxicrain.core.GameEngine.windowManager;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Menu {
@@ -34,7 +34,7 @@ public class Menu {
     public static void updateMenu() {
         double[] mouseX = new double[1];
         double[] mouseY = new double[1];
-        glfwGetCursorPos(window, mouseX, mouseY);
+        glfwGetCursorPos(windowManager.getWindow(), mouseX, mouseY);
 
         float windowWidth = SettingsInfoParser.windowWidth; // Your actual window width
         float windowHeight = SettingsInfoParser.windowHeight; // Your actual window height
@@ -44,23 +44,23 @@ public class Menu {
         // Check if the buttons are clicked
         if (startButton.isMouseOver(adjustedMouseX, adjustedMouseY)) {
             System.out.println("Mouse is over Start Button.");
-            if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
+            if (glfwGetMouseButton(windowManager.getWindow(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
                 startButton.onClick();
             }
         }
 
         if (optionsButton.isMouseOver(adjustedMouseX, adjustedMouseY)) {
             System.out.println("Mouse is over Options Button.");
-            if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
+            if (glfwGetMouseButton(windowManager.getWindow(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
                 optionsButton.onClick(); // Use onClick instead of onMouseClick
             }
         }
 
         if (exitButton.isMouseOver(adjustedMouseX, adjustedMouseY)) {
             System.out.println("Mouse is over Exit Button.");
-            if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
+            if (glfwGetMouseButton(windowManager.getWindow(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
                 exitButton.onClick();
-                glfwSetWindowShouldClose(window, true);
+                glfwSetWindowShouldClose(windowManager.getWindow(), true);
             }
         }
     }

@@ -13,6 +13,7 @@ import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.texture.TextureSystem;
 import com.toxicrain.util.*;
+import lombok.experimental.UtilityClass;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -31,7 +32,6 @@ import java.nio.IntBuffer;
 
 import static com.toxicrain.core.json.SettingsInfoParser.windowHeight;
 import static com.toxicrain.core.json.SettingsInfoParser.windowWidth;
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
@@ -39,20 +39,15 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 
 
-
+@UtilityClass
 public class GameEngine {
 
     // The window handle
-    public static long window;
+    public static WindowManager windowManager;
 
     private static boolean fullscreen = true;
 
-    private static final boolean menu = true;
-
-    public GameEngine(){
-
-
-    }
+    public static final boolean menu = false;
 
     public static void run(String windowTitle) {
         Thread.setDefaultUncaughtExceptionHandler(new CrashReporter());
@@ -69,6 +64,8 @@ public class GameEngine {
         LuaManager.categorizeScripts("resources/scripts/");
         LuaManager.executeInitScripts();
 
+        windowManager = new WindowManager((int) windowWidth, (int) windowHeight, true);
+
         init(windowTitle, SettingsInfoParser.vSync);
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
@@ -76,12 +73,7 @@ public class GameEngine {
         loop(batchRenderer);
 
         // Free the window callbacks and destroy the window
-        glfwFreeCallbacks(window);
-        glfwDestroyWindow(window);
-
-        // Terminate GLFW and free the error callback
-        glfwTerminate();
-        glfwSetErrorCallback(null).free();
+        windowManager.destroy();
     }
 
 
@@ -93,62 +85,12 @@ public class GameEngine {
         // Initialize GLFW. Most GLFW functions will not work before doing this.
         if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
-        // Configure GLFW
-        glfwDefaultWindowHints(); // the current window hints are already the default
-        glfwWindowHint(GLFW_VISIBLE, 0); // the window will stay hidden after creation
-        glfwWindowHint(GLFW_RESIZABLE, 1); // the window will be resizable
-
         Logger.printLOG("Creating Game Window");
-        // Create the window
-        window = glfwCreateWindow(300, 300, windowTitle, glfwGetPrimaryMonitor(), NULL);
-        // Resize the window
-        glfwSetWindowSize(window, (int) windowWidth, (int) windowHeight);
-
-        if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
-
-        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-                glfwSetWindowShouldClose(window, true); // This is detected in the rendering loop
-            if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS) {
-                toggleFullscreen();
-            }
-        });
-        // Create and set the scroll callback
-        glfwSetScrollCallback(window, new GLFWScrollCallback() {
-            @Override
-            public void invoke(long window, double xoffset, double yoffset) {
-                GameFactory.player.scrollOffset = (float) yoffset;
-            }
-        });
-
-        // Get the thread stack and push a new frame
-        try (MemoryStack stack = stackPush()) {
-            IntBuffer pWidth = stack.mallocInt(1); // int*
-            IntBuffer pHeight = stack.mallocInt(1); // int*
-
-            // Get the window size passed to glfwCreateWindow
-            glfwGetWindowSize(window, pWidth, pHeight);
-
-            // Get the resolution of the primary monitor
-            GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-            // Center the window
-            glfwSetWindowPos(window, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
-        } // the stack frame is popped automatically
-
-        // Make the OpenGL context current
-        glfwMakeContextCurrent(window);
-
-        // Enable v-sync
-        glfwSwapInterval(vSync ? 1 : 0);
-        glfwShowWindow(window);
-
-        GL.createCapabilities();
+        windowManager.createWindow(windowTitle, SettingsInfoParser.vSync);
 
         Logger.printLOG("Loading IMGUI");
         // Create and initialize ImguiHandler
-        GameFactory.imguiApp = new ImguiHandler(window);
+        GameFactory.imguiApp = new ImguiHandler(windowManager.getWindow());
         GameFactory.imguiApp.initialize();
 
         Logger.printLOG("Creating Textures");
@@ -187,10 +129,6 @@ public class GameEngine {
         // Set the viewport size
         glViewport(0, 0, (int) windowWidth, (int) windowHeight);
 
-        // Enable depth testing
-        glEnable(GL_DEPTH_TEST);
-
-
         Logger.printLOG("Initializing SoundSystem");
         GameFactory.soundSystem.init();
         SoundSystem.initSounds();
@@ -200,8 +138,7 @@ public class GameEngine {
 
         GameFactory.player.addWeapon(GameFactory.pistol);
 
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK); // Cull back faces
+        windowManager.doOpenGLSetup();
 
     }
 
@@ -254,9 +191,6 @@ public class GameEngine {
         LuaManager.executeTickScripts();
 
         if (menu) {
-            // Check mouse position and button press
-            float[] mousePos = GameFactory.mouseUtils.getMousePosition();
-            boolean mouseClick = GameFactory.mouseUtils.isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT);
             GameFactory.player.cameraZ = 25;
             Menu.updateMenu();
         }
@@ -290,8 +224,8 @@ public class GameEngine {
 
         batchRenderer.setBlendingEnabled(false);
 
-        if (glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0) {
-            GameFactory.imguiApp.handleInput(window);
+        if (windowManager.isFocused()) {
+            GameFactory.imguiApp.handleInput(windowManager.getWindow());
             GameFactory.imguiApp.newFrame();
             GameFactory.imguiApp.drawSettingsUI();
             GameFactory.imguiApp.drawFileEditorUI();
@@ -300,13 +234,12 @@ public class GameEngine {
         }
 
         // Swap buffers and poll events
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        windowManager.swapAndPoll();
     }
 
     private static void loop(BatchRenderer batchRenderer) {
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
-        while (!glfwWindowShouldClose(window)) {
+        while (!windowManager.shouldClose()) {
             long currentTime = System.nanoTime();
             float deltaTime = (currentTime - lastFrameTime) / 1_000_000_000.0f; // Convert nanoseconds to seconds
             lastFrameTime = currentTime;
@@ -328,27 +261,6 @@ public class GameEngine {
         } else {
             Logger.printERROR("Engine Version check: FAIL");
             Logger.printERROR("Certain features may not work as intended");
-        }
-    }
-
-    /**
-     * Toggles fullscreen for the game window
-     */
-    private static void toggleFullscreen() {
-        fullscreen = !fullscreen;
-
-        // Get the primary monitor
-        long monitor = glfwGetPrimaryMonitor();
-        GLFWVidMode vidmode = glfwGetVideoMode(monitor);
-
-        if (fullscreen) {
-            // Switch to fullscreen mode
-            glfwSetWindowMonitor(window, monitor, 0, 0, vidmode.width(), vidmode.height(), vidmode.refreshRate());
-        } else {
-            // Switch back to windowed mode
-            glfwSetWindowMonitor(window, NULL, (vidmode.width() - (int) windowWidth) / 2,
-                    (vidmode.height() - (int) windowHeight) / 2, (int) windowWidth,
-                    (int) windowHeight, GLFW_DONT_CARE);
         }
     }
 
@@ -398,18 +310,6 @@ public class GameEngine {
      */
     public static FloatBuffer getPerspectiveProjectionMatrixBuffer() {
         return buffer;
-    }
-
-    private static TextureInfo convertToTextureInfo(BufferedImage image) {
-        try {
-            File tempFile = File.createTempFile("buttonTexture", ".png");
-            ImageIO.write(image, "png", tempFile); // Save the image to a temp file
-            TextureInfo textureInfo = TextureSystem.loadTexture(tempFile.getAbsolutePath());
-            tempFile.deleteOnExit(); // Clean up temp file on exit
-            return textureInfo;
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to convert BufferedImage to TextureInfo", e);
-        }
     }
 
 }
