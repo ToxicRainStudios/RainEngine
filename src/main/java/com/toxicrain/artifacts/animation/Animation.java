@@ -3,6 +3,7 @@ package com.toxicrain.artifacts.animation;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.texture.TextureSystem;
+import lombok.Getter;
 
 import javax.imageio.ImageIO;
 import java.awt.geom.AffineTransform;
@@ -17,6 +18,8 @@ public class Animation {
     private long lastFrameTime; // Time when the last frame change happened
     private int frameDuration; // Duration of each frame in milliseconds
     private boolean looping; // Whether the animation should loop
+
+    @Getter
     private boolean finished; // Whether the animation has finished
 
     private float x; // X-coordinate (horizontal position)
@@ -107,15 +110,6 @@ public class Animation {
         currentFrame = 0;
         finished = false;
         lastFrameTime = System.currentTimeMillis();
-    }
-
-    /**
-     * Checks if the animation has finished.
-     *
-     * @return True if the animation has finished, false otherwise.
-     */
-    public boolean isFinished() {
-        return finished;
     }
 
     /**

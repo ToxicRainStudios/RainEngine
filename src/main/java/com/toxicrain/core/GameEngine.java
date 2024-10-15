@@ -12,31 +12,22 @@ import com.toxicrain.light.LightSystem;
 import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.texture.TextureSystem;
-import com.toxicrain.util.*;
 import lombok.experimental.UtilityClass;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWScrollCallback;
-import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryStack;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import static com.toxicrain.core.json.SettingsInfoParser.windowHeight;
 import static com.toxicrain.core.json.SettingsInfoParser.windowWidth;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.system.MemoryUtil.NULL;
-
 
 
 @UtilityClass
@@ -44,8 +35,6 @@ public class GameEngine {
 
     // The window handle
     public static WindowManager windowManager;
-
-    private static boolean fullscreen = true;
 
     public static final boolean menu = false;
 
@@ -141,6 +130,9 @@ public class GameEngine {
         windowManager.doOpenGLSetup();
 
         LuaManager.executePostInitScripts();
+
+        Logger.printLOG("Loading Lang");
+        GameFactory.loadLang();
     }
 
     private static void drawMap(BatchRenderer batchRenderer) {

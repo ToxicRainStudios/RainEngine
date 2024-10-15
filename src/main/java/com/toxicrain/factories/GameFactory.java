@@ -5,6 +5,8 @@ import com.toxicrain.artifacts.Player;
 import com.toxicrain.artifacts.Projectile;
 import com.toxicrain.artifacts.Weapon;
 import com.toxicrain.core.GameEngine;
+import com.toxicrain.core.LangHelper;
+import com.toxicrain.core.Logger;
 import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.lua.LuaEngine;
@@ -14,6 +16,8 @@ import com.toxicrain.sound.SoundInfo;
 import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.texture.TextureSystem;
 import com.toxicrain.util.MouseUtils;
+
+import java.util.Locale;
 
 import static com.toxicrain.core.GameEngine.windowManager;
 
@@ -33,6 +37,8 @@ public class GameFactory {
     public static LuaEngine luaEngine;
     public static GuiLuaWrapper guiLuaWrapper;
     public static LuaManager functionManager;
+    public static LangHelper langHelper;
+
 
 
     public static void load(){
@@ -60,5 +66,10 @@ public class GameFactory {
         guiLuaWrapper = new GuiLuaWrapper();
         functionManager = new LuaManager(luaEngine.getGlobals());
 
+    }
+
+    public static void loadLang(){
+        langHelper = new LangHelper("raiengine", Locale.FRENCH);
+        Logger.printLOG(langHelper.get("greeting"));
     }
 }
