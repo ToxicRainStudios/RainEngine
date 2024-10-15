@@ -1,6 +1,7 @@
 package com.toxicrain.gui;
 
 import com.toxicrain.core.json.SettingsInfoParser;
+import com.toxicrain.factories.GameFactory;
 import com.toxicrain.util.FileUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiInputTextFlags;
@@ -119,7 +120,7 @@ public class ImguiHandler {
      * Draws the settings UI using ImGui.
      */
     public void drawSettingsUI() {
-        ImGui.begin("RainEngine Settings");
+        ImGui.begin("RainEngine " + GameFactory.langHelper.get("settings"));
         ImGui.text("Here is where you can change settings");
 
         ImGui.setWindowSize(300, 300); // Width and Height in pixels
