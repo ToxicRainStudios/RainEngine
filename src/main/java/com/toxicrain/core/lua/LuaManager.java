@@ -318,6 +318,13 @@ public class LuaManager {
             }
         });
 
+        globals.set("getLangFromKey", new LuaFunction() {
+            @Override
+            public LuaValue call(LuaValue key) {
+                return LuaValue.valueOf(GameFactory.langHelper.get(key.tojstring()));
+            }
+        });
+
 
         // Add more functions as needed
     }
