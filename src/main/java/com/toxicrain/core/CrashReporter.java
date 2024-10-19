@@ -4,6 +4,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+
+/**
+ * The Crash Reporting system for RainEngine
+ *
+ * @author strubium
+ */
 public class CrashReporter implements Thread.UncaughtExceptionHandler {
 
     @Override
