@@ -72,7 +72,7 @@ public class KeyInfoParser {
      *
      * @param key The keybinding to get
      */
-    public static String getKeyBind(String key) {
+    private static String getKeyBind(String key) {
         return keyBindings.getOrDefault(key, "undefined");
     }
 

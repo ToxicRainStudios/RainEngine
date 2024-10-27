@@ -4,7 +4,6 @@ import com.toxicrain.artifacts.NPC;
 import com.toxicrain.artifacts.Player;
 import com.toxicrain.artifacts.Projectile;
 import com.toxicrain.artifacts.Weapon;
-import com.toxicrain.core.GameEngine;
 import com.toxicrain.core.LangHelper;
 import com.toxicrain.core.Logger;
 import com.toxicrain.core.lua.LuaManager;
