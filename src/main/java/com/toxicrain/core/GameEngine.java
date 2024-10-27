@@ -7,7 +7,6 @@ import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.artifacts.Tile;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.gui.ImguiHandler;
-import com.toxicrain.gui.Menu;
 import com.toxicrain.light.LightSystem;
 import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.texture.TextureInfo;
@@ -18,11 +17,7 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import java.awt.*;
-import java.io.IOException;
 import java.nio.FloatBuffer;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 import static com.toxicrain.core.json.SettingsInfoParser.windowHeight;
 import static com.toxicrain.core.json.SettingsInfoParser.windowWidth;
@@ -36,7 +31,7 @@ public class GameEngine {
     // The window handle
     public static WindowManager windowManager;
 
-    public static final boolean menu = true;
+    public static final boolean menu = false;
 
     public static void run() {
         Thread.setDefaultUncaughtExceptionHandler(new CrashReporter());

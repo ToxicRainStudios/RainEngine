@@ -1,5 +1,7 @@
 package com.toxicrain.util;
 
+import lombok.experimental.UtilityClass;
+
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
@@ -9,9 +11,8 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@UtilityClass
 public class FileUtils {
-
-    private FileUtils() {}
 
     @Deprecated
     public static InputStream getFileFromResourceAsStream(String filePath) {
