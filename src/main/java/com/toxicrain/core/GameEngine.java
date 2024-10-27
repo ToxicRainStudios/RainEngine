@@ -36,7 +36,7 @@ public class GameEngine {
     // The window handle
     public static WindowManager windowManager;
 
-    public static final boolean menu = false;
+    public static final boolean menu = true;
 
     public static void run() {
         Thread.setDefaultUncaughtExceptionHandler(new CrashReporter());
@@ -103,14 +103,14 @@ public class GameEngine {
 
         GameFactory.load();
 
-        Logger.printLOG("Loading Menu");
-        if(menu){
-            try {
-                Menu.initializeMenu();
-            } catch (IOException | FontFormatException e) {
-                throw new RuntimeException(e);
-            }
-        }
+//        Logger.printLOG("Loading Menu");
+//        if(menu){
+//            try {
+//                Menu.initializeMenu();
+//            } catch (IOException | FontFormatException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
 
         Logger.printLOG("Loading Map Palette");
         PaletteInfoParser.loadTextureMappings();
@@ -180,13 +180,7 @@ public class GameEngine {
 
             GameFactory.projectile.update();
         }
-
         LuaManager.executeTickScripts();
-
-        if (menu) {
-            GameFactory.player.cameraZ = 25;
-            Menu.updateMenu();
-        }
     }
 
     private static void render(BatchRenderer batchRenderer) {
@@ -202,7 +196,7 @@ public class GameEngine {
         batchRenderer.beginBatch();
 
         if (menu) {
-            Menu.render(batchRenderer);
+            //Menu.render(batchRenderer);
         } else {
             drawMap(batchRenderer);
             GameFactory.character.render(batchRenderer);
@@ -220,6 +214,7 @@ public class GameEngine {
         if (windowManager.isFocused()) {
             GameFactory.imguiApp.handleInput(windowManager.getWindow());
             GameFactory.imguiApp.newFrame();
+            GameFactory.imguiApp.drawMainMenu();
             GameFactory.imguiApp.drawSettingsUI();
             GameFactory.imguiApp.drawFileEditorUI();
             LuaManager.executeAllImguiScripts();

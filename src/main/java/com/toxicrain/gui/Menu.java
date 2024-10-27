@@ -19,11 +19,6 @@ public class Menu {
     private static TextEngine textEngine;
     public static Font font;
 
-    // Create buttons for the menu
-    static AWTButton startButton = new AWTButton(0, 0, 200, 50, "Start Game");  // Centered at (0, 0)
-    static AWTButton optionsButton = new AWTButton(-10, -10, 200, 50, "Options"); // Adjusted Y to center options button
-    static AWTButton exitButton = new AWTButton(10, -20, 200, 50, "Exit");      // Adjusted Y to center exit button
-
     private static boolean inOptionsMenu = false;
 
     // Add an Animation for the background or button hover effect
@@ -54,36 +49,10 @@ public class Menu {
         double[] mouseY = new double[1];
         glfwGetCursorPos(windowManager.getWindow(), mouseX, mouseY);
 
-        float windowWidth = SettingsInfoParser.windowWidth; // Your actual window width
-        float windowHeight = SettingsInfoParser.windowHeight; // Your actual window height
-        float adjustedMouseX = (float) mouseX[0] - (windowWidth / 2); // Convert to centered coordinates
-        float adjustedMouseY = (windowHeight - (float) mouseY[0]) - (windowHeight / 2); // Invert and convert
+
 
         // Update the animation frames
         backgroundAnimation.update();
-
-        // Check if the buttons are clicked
-        if (startButton.isMouseOver(adjustedMouseX, adjustedMouseY)) {
-            System.out.println("Mouse is over Start Button.");
-            if (glfwGetMouseButton(windowManager.getWindow(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
-                startButton.onClick();
-            }
-        }
-
-        if (optionsButton.isMouseOver(adjustedMouseX, adjustedMouseY)) {
-            System.out.println("Mouse is over Options Button.");
-            if (glfwGetMouseButton(windowManager.getWindow(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
-                optionsButton.onClick();
-            }
-        }
-
-        if (exitButton.isMouseOver(adjustedMouseX, adjustedMouseY)) {
-            System.out.println("Mouse is over Exit Button.");
-            if (glfwGetMouseButton(windowManager.getWindow(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
-                exitButton.onClick();
-                glfwSetWindowShouldClose(windowManager.getWindow(), true);
-            }
-        }
     }
 
     public static void render(BatchRenderer batchRenderer) {
@@ -92,10 +61,5 @@ public class Menu {
 
         // Render the menu title
         textEngine.render(batchRenderer, "Main Menu!", 0, 10); // Uncomment if needed
-
-        // Render the buttons
-        startButton.render(batchRenderer);
-        optionsButton.render(batchRenderer);
-        exitButton.render(batchRenderer);
     }
 }

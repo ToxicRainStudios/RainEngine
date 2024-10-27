@@ -5,6 +5,7 @@ import com.toxicrain.factories.GameFactory;
 import com.toxicrain.util.FileUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiInputTextFlags;
+import imgui.flag.ImGuiWindowFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImFloat;
@@ -138,6 +139,39 @@ public class ImguiHandler {
         // End the ImGui window
         ImGui.end();
     }
+
+    public void drawMainMenu() {
+        // Set window flags to make the ImGui window transparent
+        int windowFlags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize |
+                ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar |
+                ImGuiWindowFlags.NoBackground;
+
+        // Position the ImGui window manually and set the transparency
+        ImGui.setNextWindowPos(50, 50); // Set position (x, y) for the text display
+        ImGui.setNextWindowSize(200, 100); // Size to fit both text and button
+
+        ImGui.begin("Invisible Window", windowFlags); // Begin ImGui "window" with no visuals
+
+        // Add text to the window
+        ImGui.text("Welcome to the Main Menu!");
+
+        // Add button
+        if (ImGui.button("Start Game")) {
+            System.out.println("Start Game button clicked!");
+        }
+
+        if (ImGui.button("Settings")) {
+            System.out.println("Settings button clicked!");
+        }
+
+        if (ImGui.button("Exit")) {
+            System.out.println("Exit button clicked!");
+        }
+
+        // End the ImGui window context
+        ImGui.end();
+    }
+
 
     /**
      * Draws the file editor UI using ImGui.
