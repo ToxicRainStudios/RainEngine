@@ -9,6 +9,7 @@ import com.toxicrain.core.Logger;
 import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.lua.LuaEngine;
+import com.toxicrain.gui.GuiManager;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.gui.GuiLuaWrapper;
 import com.toxicrain.sound.SoundInfo;
@@ -26,6 +27,7 @@ public class GameFactory {
     public static SoundSystem soundSystem;
 
     public static Player player;
+    public static GuiManager guiManager;
     public static Projectile projectile;
     public static NPC character;
     public static MouseUtils mouseUtils;
@@ -42,6 +44,7 @@ public class GameFactory {
 
     public static void load(){
         player = new Player(5, 5, 5, TextureSystem.getTexture("playerTexture"), false);
+        guiManager = new GuiManager();
         imguiApp = new ImguiHandler(windowManager.getWindow());
         imguiApp.initialize();
         soundSystem = new SoundSystem();
@@ -70,5 +73,9 @@ public class GameFactory {
     public static void loadLang(){
         langHelper = new LangHelper("raiengine", Locale.FRENCH);
         Logger.printLOG(langHelper.get("greeting"));
+    }
+
+    public void setupGUIs() {
+        guiManager.registerGUI("MainMenu", (v) -> imguiApp.drawMainMenu());
     }
 }

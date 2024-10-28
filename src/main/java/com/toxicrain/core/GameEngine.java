@@ -98,15 +98,6 @@ public class GameEngine {
 
         GameFactory.load();
 
-//        Logger.printLOG("Loading Menu");
-//        if(menu){
-//            try {
-//                Menu.initializeMenu();
-//            } catch (IOException | FontFormatException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-
         Logger.printLOG("Loading Map Palette");
         PaletteInfoParser.loadTextureMappings();
 

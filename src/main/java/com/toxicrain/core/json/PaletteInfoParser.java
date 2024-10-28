@@ -9,8 +9,6 @@ import org.json.JSONTokener;
 import java.io.FileReader;
 import java.io.IOException;
 
-import static com.toxicrain.texture.TextureSystem.*;
-
 public class PaletteInfoParser {
 
     public static JSONObject textureMappings;
