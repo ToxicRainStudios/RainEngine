@@ -141,30 +141,39 @@ public class ImguiHandler {
     }
 
     public void drawMainMenu() {
-        // Set window flags to make the ImGui window transparent
+        // Set window flags to make the ImGui window transparent and immovable
         int windowFlags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize |
                 ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoBackground;
 
-        // Position the ImGui window manually and set the transparency
-        ImGui.setNextWindowPos(50, 50); // Set position (x, y) for the text display
-        ImGui.setNextWindowSize(200, 100); // Size to fit both text and button
+        // Get the display size for full-screen coverage
+        float screenWidth = ImGui.getIO().getDisplaySizeX();
+        float screenHeight = ImGui.getIO().getDisplaySizeY();
+
+        // Position the ImGui window at the top-left corner
+        ImGui.setNextWindowPos(0, 0);
+        // Set the window size to cover the entire screen
+        ImGui.setNextWindowSize(screenWidth, screenHeight);
 
         ImGui.begin("Invisible Window", windowFlags); // Begin ImGui "window" with no visuals
 
-        // Add text to the window
+        // Center text by adding padding (optional)
+        ImGui.setCursorPos((screenWidth - ImGui.calcTextSize("Welcome to the Main Menu!").x) / 2, 50);
         ImGui.text("Welcome to the Main Menu!");
 
-        // Add button
-        if (ImGui.button("Start Game")) {
+        // Center buttons by calculating the offset for each button
+        ImGui.setCursorPos((screenWidth - 100) / 2, screenHeight / 2);
+        if (ImGui.button("Start Game", 100, 30)) {
             System.out.println("Start Game button clicked!");
         }
 
-        if (ImGui.button("Settings")) {
+        ImGui.setCursorPos((screenWidth - 100) / 2, (screenHeight / 2) + 40);
+        if (ImGui.button("Settings", 100, 30)) {
             System.out.println("Settings button clicked!");
         }
 
-        if (ImGui.button("Exit")) {
+        ImGui.setCursorPos((screenWidth - 100) / 2, (screenHeight / 2) + 80);
+        if (ImGui.button("Exit", 100, 30)) {
             System.out.println("Exit button clicked!");
         }
 

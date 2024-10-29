@@ -75,7 +75,8 @@ public class GameFactory {
         Logger.printLOG(langHelper.get("greeting"));
     }
 
-    public void setupGUIs() {
+    public static void setupGUIs() {
         guiManager.registerGUI("MainMenu", (v) -> imguiApp.drawMainMenu());
+        guiManager.setActiveGUI("MainMenu");
     }
 }

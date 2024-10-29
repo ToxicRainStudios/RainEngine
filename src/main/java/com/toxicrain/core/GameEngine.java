@@ -117,6 +117,8 @@ public class GameEngine {
 
         LuaManager.executePostInitScripts();
 
+        GameFactory.setupGUIs();
+
         Logger.printLOG("Loading Lang");
         GameFactory.loadLang();
     }
@@ -200,6 +202,7 @@ public class GameEngine {
         if (windowManager.isFocused()) {
             GameFactory.imguiApp.handleInput(windowManager.getWindow());
             GameFactory.imguiApp.newFrame();
+            GameFactory.guiManager.render(); // Outputs: Rendering Main Menu
             GameFactory.imguiApp.drawMainMenu();
             GameFactory.imguiApp.drawSettingsUI();
             GameFactory.imguiApp.drawFileEditorUI();

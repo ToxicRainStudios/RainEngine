@@ -6,6 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+
+/**
+ * Controls what GUI renders when
+ *
+ * @author strubium
+ */
 public class GuiManager {
     // Map of GUI names to their render functions
     private final Map<String, Consumer<Void>> guiScreens = new HashMap<>();
