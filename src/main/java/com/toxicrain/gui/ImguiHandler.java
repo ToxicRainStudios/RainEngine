@@ -158,8 +158,8 @@ public class ImguiHandler {
         ImGui.begin("Invisible Window", windowFlags); // Begin ImGui "window" with no visuals
 
         // Center text by adding padding (optional)
-        ImGui.setCursorPos((screenWidth - ImGui.calcTextSize("Welcome to the Main Menu!").x) / 2, 50);
-        ImGui.text("Welcome to the Main Menu!");
+        ImGui.setCursorPos((screenWidth - ImGui.calcTextSize(GameFactory.langHelper.get("gui.mainmenu.welcome")).x) / 2, 50);
+        ImGui.text(GameFactory.langHelper.get("gui.mainmenu.welcome"));
 
         // Center buttons by calculating the offset for each button
         ImGui.setCursorPos((screenWidth - 100) / 2, screenHeight / 2);

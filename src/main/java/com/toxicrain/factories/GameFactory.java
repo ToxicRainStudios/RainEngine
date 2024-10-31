@@ -40,8 +40,6 @@ public class GameFactory {
     public static LuaManager functionManager;
     public static LangHelper langHelper;
 
-
-
     public static void load(){
         player = new Player(5, 5, 5, TextureSystem.getTexture("playerTexture"), false);
         guiManager = new GuiManager();
