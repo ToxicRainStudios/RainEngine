@@ -2,8 +2,8 @@
   {
 
   "type": "map",
-  "playerx": 0,
-  "playery": 0,
+  "playerx": 5,
+  "playery": -10,
   "xsize": 16,
   "ysize": 16,
   "slices": [
