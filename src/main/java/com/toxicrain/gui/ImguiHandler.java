@@ -1,5 +1,6 @@
 package com.toxicrain.gui;
 
+import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.util.FileUtils;
@@ -163,19 +164,25 @@ public class ImguiHandler {
 
         // Center buttons by calculating the offset for each button
         ImGui.setCursorPos((screenWidth - 100) / 2, screenHeight / 2);
-        if (ImGui.button("Start Game", 100, 30)) {
+        if (ImGui.button(GameFactory.langHelper.get("gui.mainmenu.play"), 100, 30)) {
             System.out.println("Start Game button clicked!");
         }
 
         ImGui.setCursorPos((screenWidth - 100) / 2, (screenHeight / 2) + 40);
-        if (ImGui.button("Settings", 100, 30)) {
+        if (ImGui.button(GameFactory.langHelper.get("gui.mainmenu.settings"), 100, 30)) {
             System.out.println("Settings button clicked!");
         }
 
         ImGui.setCursorPos((screenWidth - 100) / 2, (screenHeight / 2) + 80);
-        if (ImGui.button("Exit", 100, 30)) {
+        if (ImGui.button(GameFactory.langHelper.get("gui.mainmenu.exit"), 100, 30)) {
             System.out.println("Exit button clicked!");
         }
+
+        String versionInfo = "© 2024 Toxic Rain - " + GameInfoParser.gameVersion;
+        float textWidth = ImGui.calcTextSize(versionInfo).x;
+        float textHeight = ImGui.calcTextSize(versionInfo).y;
+        ImGui.setCursorPos(screenWidth - textWidth - 10, screenHeight - textHeight - 10); // Adjusts padding from the edges
+        ImGui.text(versionInfo); // Display version info
 
         // End the ImGui window context
         ImGui.end();
