@@ -3,9 +3,9 @@ package com.toxicrain.gui;
 import com.toxicrain.core.Logger;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Consumer;
 
 
@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 public class GuiManager {
     // Map of GUI names to their render functions
     private final Map<String, Consumer<Void>> guiScreens = new HashMap<>();
-    private final Set<String> activeGUIs = new HashSet<>(); // Keeps track of active GUIs
+    private final Set<String> activeGUIs = new CopyOnWriteArraySet<>();
 
     // Registers a GUI screen with a unique name
     public void registerGUI(String name, Consumer<Void> renderFunction) {

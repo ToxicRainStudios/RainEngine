@@ -105,19 +105,17 @@ public class Player implements IArtifact {
     }
 
     public void update(float deltaTime) {
-        if (!ImguiHandler.imguiWindowOpen) {
-            processInput();
-            updatePos(cameraX, cameraY, cameraZ);
-            Vector3f center = WindowUtils.getCenter();
+        processInput();
+        updatePos(cameraX, cameraY, cameraZ);
+        Vector3f center = WindowUtils.getCenter();
 
-            // Calculate velocity based on deltaTime
-            float velocityX = (cameraX - prevCameraX) / deltaTime;
-            float velocityY = (cameraY - prevCameraY) / deltaTime;
+        // Calculate velocity based on deltaTime
+        float velocityX = (cameraX - prevCameraX) / deltaTime;
+        float velocityY = (cameraY - prevCameraY) / deltaTime;
 
-            // Update previous position
-            prevCameraX = cameraX;
-            prevCameraY = cameraY;
-        }
+        // Update previous position
+        prevCameraX = cameraX;
+        prevCameraY = cameraY;
     }
 
     private void getMouse() {

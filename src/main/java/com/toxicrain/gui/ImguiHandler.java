@@ -32,8 +32,6 @@ import javax.sound.sampled.*;
  * @author strubium
  */
 public class ImguiHandler {
-
-    public static boolean imguiWindowOpen = true;
     private ImGuiImplGl3 imguiGl3;
     ImFloat FOV = new ImFloat(SettingsInfoParser.fov);
     private final long window;
@@ -198,13 +196,6 @@ public class ImguiHandler {
         // Get the available space in the File Editor window
         float windowWidth = ImGui.getContentRegionAvailX();
         float windowHeight = ImGui.getContentRegionAvailY();
-
-        if (ImGui.isWindowFocused()) {
-            imguiWindowOpen = true;
-        }
-        else {
-            imguiWindowOpen = false;
-        }
 
         // File Browser
         ImGui.beginChild("File Browser", windowWidth * 0.3f, windowHeight, true); // 30% width for File Browser

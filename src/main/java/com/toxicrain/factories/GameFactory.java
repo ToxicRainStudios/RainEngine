@@ -75,6 +75,12 @@ public class GameFactory {
 
     public static void setupGUIs() {
         guiManager.registerGUI("MainMenu", (v) -> imguiApp.drawMainMenu());
+        guiManager.registerGUI("Settings", (v) -> imguiApp.drawSettingsUI());
+        guiManager.registerGUI("FileEditor", (v) -> imguiApp.drawFileEditorUI());
+
         guiManager.addActiveGUI("MainMenu");
+        guiManager.addActiveGUI("Settings");
+        guiManager.addActiveGUI("FileEditor");
+
     }
 }

@@ -183,14 +183,10 @@ public class GameEngine {
         // Begin the batch
         batchRenderer.beginBatch();
 
-        if (menu) {
-            //Menu.render(batchRenderer);
-        } else {
-            drawMap(batchRenderer);
-            GameFactory.character.render(batchRenderer);
-            GameFactory.projectile.render(batchRenderer);
-            GameFactory.player.render(batchRenderer);
-        }
+        drawMap(batchRenderer);
+        GameFactory.character.render(batchRenderer);
+        GameFactory.projectile.render(batchRenderer);
+        GameFactory.player.render(batchRenderer);
 
 
         batchRenderer.setBlendingEnabled(true);
@@ -199,15 +195,11 @@ public class GameEngine {
 
         batchRenderer.setBlendingEnabled(false);
 
-        if (windowManager.isFocused()) {
-            GameFactory.imguiApp.handleInput(windowManager.getWindow());
-            GameFactory.imguiApp.newFrame();
-            GameFactory.guiManager.render(); // Outputs: Rendering Main Menu
-            GameFactory.imguiApp.drawSettingsUI();
-            GameFactory.imguiApp.drawFileEditorUI();
-            LuaManager.executeAllImguiScripts();
-            GameFactory.imguiApp.render();
-        }
+        GameFactory.imguiApp.handleInput(windowManager.getWindow());
+        GameFactory.imguiApp.newFrame();
+        GameFactory.guiManager.render(); // Outputs: Rendering Main Menu
+        LuaManager.executeAllImguiScripts();
+        GameFactory.imguiApp.render();
 
         // Swap buffers and poll events
         windowManager.swapAndPoll();
