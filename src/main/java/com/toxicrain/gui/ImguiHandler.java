@@ -122,7 +122,7 @@ public class ImguiHandler {
      * Draws the settings UI using ImGui.
      */
     public void drawSettingsUI() {
-        ImGui.begin("RainEngine " + GameFactory.langHelper.get("settings"));
+        ImGui.begin("RainEngine " + GameFactory.langHelper.get("gui.settings.settings"));
         ImGui.text("Here is where you can change settings");
 
         ImGui.setWindowSize(300, 300); // Width and Height in pixels
@@ -165,7 +165,7 @@ public class ImguiHandler {
         // Center buttons by calculating the offset for each button
         ImGui.setCursorPos((screenWidth - 100) / 2, screenHeight / 2);
         if (ImGui.button(GameFactory.langHelper.get("gui.mainmenu.play"), 100, 30)) {
-            System.out.println("Start Game button clicked!");
+            GameFactory.guiManager.removeActiveGUI("MainMenu");
         }
 
         ImGui.setCursorPos((screenWidth - 100) / 2, (screenHeight / 2) + 40);

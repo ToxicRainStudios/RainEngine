@@ -203,7 +203,6 @@ public class GameEngine {
             GameFactory.imguiApp.handleInput(windowManager.getWindow());
             GameFactory.imguiApp.newFrame();
             GameFactory.guiManager.render(); // Outputs: Rendering Main Menu
-            GameFactory.imguiApp.drawMainMenu();
             GameFactory.imguiApp.drawSettingsUI();
             GameFactory.imguiApp.drawFileEditorUI();
             LuaManager.executeAllImguiScripts();
