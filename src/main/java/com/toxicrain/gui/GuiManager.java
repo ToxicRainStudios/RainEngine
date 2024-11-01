@@ -3,7 +3,9 @@ package com.toxicrain.gui;
 import com.toxicrain.core.Logger;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 
@@ -15,31 +17,40 @@ import java.util.function.Consumer;
 public class GuiManager {
     // Map of GUI names to their render functions
     private final Map<String, Consumer<Void>> guiScreens = new HashMap<>();
-    private String activeGUI = null; // Keeps track of the current active GUI
+    private final Set<String> activeGUIs = new HashSet<>(); // Keeps track of active GUIs
 
     // Registers a GUI screen with a unique name
     public void registerGUI(String name, Consumer<Void> renderFunction) {
         guiScreens.put(name, renderFunction);
     }
 
-    // Sets the active GUI to be rendered
-    public void setActiveGUI(String name) {
+    // Adds a GUI to the set of active GUIs to be rendered
+    public void addActiveGUI(String name) {
         if (guiScreens.containsKey(name)) {
-            activeGUI = name;
+            activeGUIs.add(name);
         } else {
             Logger.printERROR("GUI screen not found: " + name);
         }
     }
 
-    // Clears the active GUI, stopping any GUI rendering
-    public void clearActiveGUI() {
-        activeGUI = null;
+    // Removes a GUI from the set of active GUIs
+    public void removeActiveGUI(String name) {
+        activeGUIs.remove(name);
     }
 
-    // Renders the active GUI if it’s set
+    // Clears all active GUIs, stopping any GUI rendering
+    public void clearActiveGUIs() {
+        activeGUIs.clear();
+    }
+
+    // Renders all active GUIs
     public void render() {
-        if (activeGUI != null && guiScreens.containsKey(activeGUI)) {
-            guiScreens.get(activeGUI).accept(null);
+        for (String guiName : activeGUIs) {
+            if (guiScreens.containsKey(guiName)) {
+                guiScreens.get(guiName).accept(null);
+            } else {
+                Logger.printERROR("GUI screen not found during render: " + guiName);
+            }
         }
     }
 }

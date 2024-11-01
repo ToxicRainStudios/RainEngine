@@ -75,6 +75,6 @@ public class GameFactory {
 
     public static void setupGUIs() {
         guiManager.registerGUI("MainMenu", (v) -> imguiApp.drawMainMenu());
-        guiManager.setActiveGUI("MainMenu");
+        guiManager.addActiveGUI("MainMenu");
     }
 }
