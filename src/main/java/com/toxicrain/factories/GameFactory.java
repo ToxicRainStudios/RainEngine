@@ -34,7 +34,6 @@ public class GameFactory {
     public static Weapon pistol;
     public static Weapon rifle;
     public static Weapon shotgun;
-    public static SoundInfo sampleSound;
     public static LuaEngine luaEngine;
     public static GuiLuaWrapper guiLuaWrapper;
     public static LuaManager functionManager;
