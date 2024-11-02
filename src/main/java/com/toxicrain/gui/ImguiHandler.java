@@ -226,7 +226,7 @@ public class ImguiHandler {
         // Set the window size to cover the entire screen
         ImGui.setNextWindowSize(screenWidth, screenHeight);
 
-        ImGui.begin("Invisible Window", windowFlags); // Begin ImGui "window" with no visuals
+        ImGui.begin("Main Menu Window", windowFlags); // Begin ImGui "window" with no visuals
 
         // Center text by adding padding (optional)
         ImGui.setCursorPos((screenWidth - ImGui.calcTextSize(GameFactory.langHelper.get("gui.mainmenu.welcome")).x) / 2, 50);
@@ -247,7 +247,7 @@ public class ImguiHandler {
 
         ImGui.setCursorPos((screenWidth - 100) / 2, (screenHeight / 2) + 80);
         if (ImGui.button(GameFactory.langHelper.get("gui.mainmenu.exit"), 100, 30)) {
-            System.out.println("Exit button clicked!");
+            System.exit(0);
         }
 
         String versionInfo = "© 2024 Toxic Rain - " + GameInfoParser.gameVersion;
