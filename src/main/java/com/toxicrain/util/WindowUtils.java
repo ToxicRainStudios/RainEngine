@@ -25,12 +25,12 @@ public class WindowUtils{
         Matrix4f invProjectionViewMatrix = new Matrix4f(projectionViewMatrix).invert();
 
         // Get the center of the screen in window coordinates
-        float screenX = SettingsInfoParser.windowWidth / 2.0f;
-        float screenY = SettingsInfoParser.windowHeight / 2.0f;
+        float screenX = SettingsInfoParser.getInstance().windowWidth / 2.0f;
+        float screenY = SettingsInfoParser.getInstance().windowHeight / 2.0f;
 
         // Convert window coordinates to NDC (Normalized Device Coordinates)
-        float ndcX = (2.0f * screenX) / SettingsInfoParser.windowWidth - 1.0f;
-        float ndcY = 1.0f - (2.0f * screenY) / SettingsInfoParser.windowHeight;
+        float ndcX = (2.0f * screenX) / SettingsInfoParser.getInstance().windowWidth - 1.0f;
+        float ndcY = 1.0f - (2.0f * screenY) / SettingsInfoParser.getInstance().windowHeight;
 
         // Convert NDC to world coordinates
         Vector4f ndcPos = new Vector4f(ndcX, ndcY, -1.0f, 1.0f).mul(invProjectionViewMatrix);

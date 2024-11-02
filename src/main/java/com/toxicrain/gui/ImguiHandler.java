@@ -9,6 +9,7 @@ import imgui.flag.ImGuiInputTextFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
+import imgui.type.ImBoolean;
 import imgui.type.ImFloat;
 import imgui.type.ImString;
 import org.lwjgl.glfw.GLFW;
@@ -33,7 +34,7 @@ import javax.sound.sampled.*;
  */
 public class ImguiHandler {
     private ImGuiImplGl3 imguiGl3;
-    ImFloat FOV = new ImFloat(SettingsInfoParser.fov);
+    ImFloat FOV = new ImFloat(SettingsInfoParser.getInstance().fov);
     private final long window;
     private int textureID = -1;
     private BufferedImage bufferedImage;
@@ -71,7 +72,7 @@ public class ImguiHandler {
      * Starts a new ImGui frame.
      */
     public void newFrame() {
-        ImGui.getIO().setDisplaySize(SettingsInfoParser.windowWidth, SettingsInfoParser.windowHeight);
+        ImGui.getIO().setDisplaySize(SettingsInfoParser.getInstance().windowWidth, SettingsInfoParser.getInstance().windowHeight);
         ImGui.newFrame();
     }
 
@@ -119,23 +120,94 @@ public class ImguiHandler {
     /**
      * Draws the settings UI using ImGui.
      */
-    public void drawSettingsUI() {
-        ImGui.begin("RainEngine " + GameFactory.langHelper.get("gui.settings.settings"));
-        ImGui.text("Here is where you can change settings");
+    public void drawSettingsMenu() {
+        // Get the instance of SettingsInfo
+        SettingsInfoParser settings = SettingsInfoParser.getInstance();
 
-        ImGui.setWindowSize(300, 300); // Width and Height in pixels
+        // Set window flags to make the ImGui window transparent and immovable
+        int windowFlags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize |
+                ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar |
+                ImGuiWindowFlags.NoBackground;
 
-        ImGui.sliderFloat("FOV", FOV.getData(), 0, 120);
+        // Get the display size for full-screen coverage
+        float screenWidth = ImGui.getIO().getDisplaySizeX();
+        float screenHeight = ImGui.getIO().getDisplaySizeY();
 
-        ImGui.beginDisabled(); // Disables all following widgets
-        ImGui.checkbox("vSync", SettingsInfoParser.vSync);
+        // Position the ImGui window at the top-left corner
+        ImGui.setNextWindowPos(0, 0);
+        // Set the window size to cover the entire screen
+        ImGui.setNextWindowSize(screenWidth, screenHeight);
 
-        ImGui.endDisabled(); // Re-enables widgets
-        if(ImGui.button("Save")){
-            SettingsInfoParser.modifyKey("fov", String.valueOf(FOV));
+        ImGui.begin("Settings Window", windowFlags); // Begin ImGui "window" with no visuals
+
+        // Title
+        ImGui.setCursorPos((screenWidth - ImGui.calcTextSize("Settings").x) / 2, 50);
+        ImGui.text("Settings");
+
+        // Maximum width for sliders/input fields
+        float maxControlWidth = 200.0f;
+
+        // VSync Toggle (Checkbox)
+        String vSyncText = "VSync";
+        float vSyncTextWidth = ImGui.calcTextSize(vSyncText).x;
+        float vSyncTotalWidth = vSyncTextWidth + ImGui.getItemRectSize().x + 10; // Text width + checkbox width + spacing
+        ImGui.setCursorPos((screenWidth - vSyncTotalWidth) / 2, screenHeight / 2 - 80);
+        ImBoolean vSync = new ImBoolean(settings.getVsync());
+        ImGui.text(vSyncText);
+        ImGui.sameLine();
+        if (ImGui.checkbox("##VSyncCheckbox", vSync)) {
+            settings.modifySetting("vSync", vSync.get());
         }
 
-        // End the ImGui window
+        // Window Width Input
+        String widthText = "Window Width:";
+        float widthTextWidth = ImGui.calcTextSize(widthText).x;
+        float widthTotalWidth = widthTextWidth + maxControlWidth + 10; // Text width + input field width + spacing
+        ImGui.setCursorPos((screenWidth - widthTotalWidth) / 2, screenHeight / 2 - 40);
+        ImGui.text(widthText);
+        ImGui.sameLine();
+        ImFloat windowWidth = new ImFloat(settings.getWindowWidth());
+        ImGui.pushItemWidth(maxControlWidth); // Set max width for the input field
+        if (ImGui.inputFloat("##WindowWidth", windowWidth)) {
+            settings.modifySetting("windowWidth", windowWidth.get());
+        }
+        ImGui.popItemWidth(); // Reset item width after
+
+        // Window Height Input
+        String heightText = "Window Height:";
+        float heightTextWidth = ImGui.calcTextSize(heightText).x;
+        float heightTotalWidth = heightTextWidth + maxControlWidth + 10; // Text width + input field width + spacing
+        ImGui.setCursorPos((screenWidth - heightTotalWidth) / 2, screenHeight / 2);
+        ImGui.text(heightText);
+        ImGui.sameLine();
+        ImFloat windowHeight = new ImFloat(settings.getWindowHeight());
+        ImGui.pushItemWidth(maxControlWidth); // Set max width for the input field
+        if (ImGui.inputFloat("##WindowHeight", windowHeight)) {
+            settings.modifySetting("windowHeight", windowHeight.get());
+        }
+        ImGui.popItemWidth(); // Reset item width after
+
+        // FOV Slider
+        String fovText = "Field of View:";
+        float fovTextWidth = ImGui.calcTextSize(fovText).x;
+        float fovTotalWidth = fovTextWidth + maxControlWidth + 10; // Text width + slider width + spacing
+        ImGui.setCursorPos((screenWidth - fovTotalWidth) / 2, screenHeight / 2 + 40);
+        ImGui.text(fovText);
+        ImGui.sameLine();
+        ImFloat fov = new ImFloat(settings.getFov());
+        ImGui.pushItemWidth(maxControlWidth); // Set max width for the slider
+        if (ImGui.sliderFloat("##FovSlider", fov.getData(), 30.0f, 120.0f, "%.1f")) {
+            settings.modifySetting("fov", fov.get());
+        }
+        ImGui.popItemWidth(); // Reset item width after
+
+        // Back Button
+        ImGui.setCursorPos((screenWidth - 100) / 2, screenHeight / 2 + 100);
+        if (ImGui.button("Back", 100, 30)) {
+            GameFactory.guiManager.removeActiveGUI("Settings");
+            GameFactory.guiManager.addActiveGUI("MainMenu");
+        }
+
         ImGui.end();
     }
 
@@ -168,7 +240,9 @@ public class ImguiHandler {
 
         ImGui.setCursorPos((screenWidth - 100) / 2, (screenHeight / 2) + 40);
         if (ImGui.button(GameFactory.langHelper.get("gui.mainmenu.settings"), 100, 30)) {
-            System.out.println("Settings button clicked!");
+            GameFactory.guiManager.removeActiveGUI("MainMenu");
+            GameFactory.guiManager.addActiveGUI("Settings");
+
         }
 
         ImGui.setCursorPos((screenWidth - 100) / 2, (screenHeight / 2) + 80);

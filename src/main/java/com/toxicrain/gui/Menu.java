@@ -41,7 +41,7 @@ public class Menu {
 
         backgroundAnimation.setPosition(0, -5); // Center the animation on screen
         backgroundAnimation.setScale(0.01f, 0.01f); // Center the animation on screen
-        backgroundAnimation.setSize(SettingsInfoParser.windowWidth, SettingsInfoParser.windowHeight); // Set to window size
+        backgroundAnimation.setSize(SettingsInfoParser.getInstance().windowWidth, SettingsInfoParser.getInstance().windowHeight); // Set to window size
     }
 
     public static void updateMenu() {

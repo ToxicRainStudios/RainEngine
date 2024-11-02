@@ -1,1 +1,6 @@
-[{"values":[{"vSync":"true"},{"windowWidth":"1920"},{"windowHeight":"1080"},{"fov":"90.0"}],"type":"settings"}]
+{
+    "vSync": true,
+    "windowHeight": 1080,
+    "fov": 90,
+    "windowWidth": 1920
+}

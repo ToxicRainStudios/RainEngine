@@ -19,8 +19,6 @@ import org.lwjgl.opengl.GL;
 
 import java.nio.FloatBuffer;
 
-import static com.toxicrain.core.json.SettingsInfoParser.windowHeight;
-import static com.toxicrain.core.json.SettingsInfoParser.windowWidth;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -41,14 +39,14 @@ public class GameEngine {
         Logger.printLOG("Version: " + GameInfoParser.gameVersion);
         doVersionCheck();
         Logger.printLOG("Loading User Settings");
-        SettingsInfoParser.loadSettingsInfo();
+        new SettingsInfoParser();
 
         Logger.printLOG("Loading Lua");
         GameFactory.loadlua();
         LuaManager.categorizeScripts("resources/scripts/");
         LuaManager.executeInitScripts();
 
-        windowManager = new WindowManager((int) windowWidth, (int) windowHeight, true);
+        windowManager = new WindowManager((int) SettingsInfoParser.getInstance().windowWidth, (int) SettingsInfoParser.getInstance().windowHeight, true);
 
         init();
         // Create the batch renderer
@@ -70,7 +68,7 @@ public class GameEngine {
         if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
         Logger.printLOG("Creating Game Window");
-        windowManager.createWindow(GameInfoParser.defaultWindowName, SettingsInfoParser.vSync);
+        windowManager.createWindow(GameInfoParser.defaultWindowName, SettingsInfoParser.getInstance().getVsync());
 
         Logger.printLOG("Loading IMGUI");
         // Create and initialize ImguiHandler
@@ -93,7 +91,7 @@ public class GameEngine {
 
         // Set up the projection matrix with FOV of 90 degrees
         glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(createPerspectiveProjectionMatrix(SettingsInfoParser.fov, windowWidth / windowHeight, 1.0f, 100.0f));
+        glLoadMatrixf(createPerspectiveProjectionMatrix(SettingsInfoParser.getInstance().fov, SettingsInfoParser.getInstance().windowWidth / SettingsInfoParser.getInstance().windowHeight, 1.0f, 100.0f));
 
 
         GameFactory.load();
@@ -102,7 +100,7 @@ public class GameEngine {
         PaletteInfoParser.loadTextureMappings();
 
         // Set the viewport size
-        glViewport(0, 0, (int) windowWidth, (int) windowHeight);
+        glViewport(0, 0, (int) SettingsInfoParser.getInstance().windowWidth, (int) SettingsInfoParser.getInstance().windowHeight);
 
         Logger.printLOG("Initializing SoundSystem");
         GameFactory.soundSystem.init();

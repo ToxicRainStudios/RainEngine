@@ -121,7 +121,7 @@ public class Player implements IArtifact {
     private void getMouse() {
         float[] mousePos = GameFactory.mouseUtils.getMousePosition();
         openglMousePos = MouseUtils.convertToOpenGLCoordinatesOffset(mousePos[0], mousePos[1],
-                (int) SettingsInfoParser.windowWidth, (int) SettingsInfoParser.windowHeight, cameraX, cameraY);
+                (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowWidth(), cameraX, cameraY);
     }
 
     public void render(BatchRenderer batchRenderer) {

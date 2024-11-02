@@ -1,11 +1,14 @@
 package com.toxicrain.core.json;
 
 import com.toxicrain.core.Logger;
+import lombok.Getter;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
 
 import com.toxicrain.util.FileUtils;
@@ -15,82 +18,104 @@ import com.toxicrain.util.FileUtils;
  * needed for game functionality
  */
 public class SettingsInfoParser {
-    public static boolean vSync = true;
-    public static float windowWidth = 1920;
-    public static float windowHeight = 1080;
-    public static float fov = 90f;
+    private static SettingsInfoParser instance;
 
-    private static JSONArray jsonArray = new JSONArray();
-    private static JSONObject valueObject = new JSONObject();
+    public boolean vSync = true;
+    @Getter
+    public float windowWidth = 1920;
+    @Getter
+    public float windowHeight = 1080;
+    @Getter
+    public float fov = 90f;
 
-    /**
-     * Loads the settings.json and parsers it into variables
-     */
-    public static void loadSettingsInfo() {
-        String filePath = FileUtils.getCurrentWorkingDirectory("resources/json/settings.json");
+    private static final String SETTINGS_PATH = "resources/json/settings.json";
+    private JSONObject settingsJson;
+
+    // Enum to define keys for better readability
+    private enum SettingKey {
+        VSYNC("vSync"),
+        WINDOW_WIDTH("windowWidth"),
+        WINDOW_HEIGHT("windowHeight"),
+        FOV("fov");
+
+        private final String key;
+        SettingKey(String key) { this.key = key; }
+        @Override public String toString() { return key; }
+    }
+
+    public SettingsInfoParser() {
+        loadSettings();
+    }
+
+    public static SettingsInfoParser getInstance() {
+        if (instance == null) {
+            instance = new SettingsInfoParser();
+        }
+        return instance;
+    }
+
+    private void loadSettings() {
+        String filePath = FileUtils.getCurrentWorkingDirectory(SETTINGS_PATH);
 
         try {
-            // Read the file content into a string
-            String jsonString = FileUtils.readFile(filePath);
+            String jsonString = new String(Files.readAllBytes(Paths.get(filePath)));
+            settingsJson = new JSONObject(jsonString);
 
-            // Parse the JSON string into a JSONArray
-            jsonArray = new JSONArray(jsonString);
+            // Load settings
+            vSync = settingsJson.optBoolean(SettingKey.VSYNC.toString(), vSync);
+            windowWidth = (float) settingsJson.optDouble(SettingKey.WINDOW_WIDTH.toString(), windowWidth);
+            windowHeight = (float) settingsJson.optDouble(SettingKey.WINDOW_HEIGHT.toString(), windowHeight);
+            fov = (float) settingsJson.optDouble(SettingKey.FOV.toString(), fov);
 
-            // Iterate through the array
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                // Get the values array
-                JSONArray valuesArray = jsonObject.getJSONArray("values");
-                for (int j = 0; j < valuesArray.length(); j++) {
-                    valueObject = valuesArray.getJSONObject(j);
-
-                    // Use traditional for-each loop instead of lambda
-                    Iterator<String> keys = valueObject.keys();
-                    while (keys.hasNext()) {
-                        String key = keys.next();
-                        String value = valueObject.getString(key);
-                        switch (key) {
-                            case "vSync":
-                                vSync = Boolean.parseBoolean(value);
-                                break;
-                            case "windowWidth":
-                                windowWidth = Float.parseFloat(value);
-                                break;
-                            case "windowHeight":
-                                windowHeight = Float.parseFloat(value);
-                                break;
-                            case "fov":
-                                fov = Float.parseFloat(value);
-                                break;
-                        }
-                    }
-                }
-            }
-        } catch (FileNotFoundException e) {
-            Logger.printERROR("File not found: " + filePath);
-            e.printStackTrace();
         } catch (IOException e) {
-            Logger.printERROR("Error reading file: " + filePath);
+            Logger.printERROR("Failed to load settings file: " + filePath);
             e.printStackTrace();
-        } catch (Exception e) {
-            Logger.printERROR("Error parsing JSON: " + e.getMessage());
-            e.printStackTrace();
+            settingsJson = new JSONObject(); // Initialize to prevent null issues
         }
     }
 
-    public static void modifyKey(String key, String newValue) {
-        if (valueObject == null) {
-            Logger.printERROR("Error: valueObject is null");
+    public void modifySetting(String key, Object newValue) {
+        if (settingsJson == null) {
+            Logger.printERROR("Settings JSON not initialized");
             return;
         }
 
-        valueObject.put(key, newValue);
-        String updatedJsonString = jsonArray.toString();
+        // Modify the setting in memory and in JSON
+        settingsJson.put(key, newValue);
+        saveSettings();
 
-        try {
-            FileUtils.writeFile(FileUtils.getCurrentWorkingDirectory("resources/json/settings.json"), updatedJsonString);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        // Update the value in the instance variables
+        switch (key) {
+            case "vSync":
+                vSync = (boolean) newValue;
+                break;
+            case "windowWidth":
+                windowWidth = ((Number) newValue).floatValue();
+                break;
+            case "windowHeight":
+                windowHeight = ((Number) newValue).floatValue();
+                break;
+            case "fov":
+                fov = ((Number) newValue).floatValue();
+                break;
+            default:
+                Logger.printERROR("Unknown setting key: " + key);
         }
     }
+
+    private void saveSettings() {
+        String filePath = FileUtils.getCurrentWorkingDirectory(SETTINGS_PATH);
+        try {
+            Files.write(Paths.get(filePath), settingsJson.toString(4).getBytes());
+        } catch (IOException e) {
+            Logger.printERROR("Failed to save settings file: " + filePath);
+            e.printStackTrace();
+        }
+    }
+
+    public boolean getVsync(){
+        return vSync;
+    }
+
+
 }
