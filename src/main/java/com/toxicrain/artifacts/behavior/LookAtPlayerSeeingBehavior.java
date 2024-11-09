@@ -2,11 +2,10 @@ package com.toxicrain.artifacts.behavior;
 
 import com.toxicrain.artifacts.NPC;
 import com.toxicrain.factories.GameFactory;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class LookAtPlayerSeeingBehavior extends Behavior {
-
-    public LookAtPlayerSeeingBehavior() {
-    }
 
     @Override
     public boolean execute(NPC npc) {

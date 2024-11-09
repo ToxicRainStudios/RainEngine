@@ -19,8 +19,6 @@ public class Menu {
     private static TextEngine textEngine;
     public static Font font;
 
-    private static boolean inOptionsMenu = false;
-
     // Add an Animation for the background or button hover effect
     private static Animation backgroundAnimation;
 

@@ -127,7 +127,7 @@ public class Player implements IArtifact {
     public void render(BatchRenderer batchRenderer) {
         getMouse();
         Vector3f center = WindowUtils.getCenter();
-        batchRenderer.addTexturePos(TextureSystem.getTexture("playerTexture"), center.x, center.y, 1.1f, openglMousePos[0],
+        batchRenderer.addTexturePos(TextureSystem.getTexture("playerTextureRifle"), center.x, center.y, 1.1f, openglMousePos[0],
                 openglMousePos[1], 1, 1, Color.toFloatArray(Color.WHITE));
     }
 
