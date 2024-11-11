@@ -68,7 +68,7 @@ public class GameFactory {
     }
 
     public static void loadLang(){
-        langHelper = new LangHelper("raiengine", Locale.FRENCH);
+        langHelper = new LangHelper("raiengine", Locale.ENGLISH);
         Logger.printLOG(langHelper.get("greeting"));
     }
 

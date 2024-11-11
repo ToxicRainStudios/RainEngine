@@ -41,30 +41,7 @@ public enum Color {
     PURPLE(0.502f, 0.000f, 0.502f),
     TEAL(0.000f, 0.502f, 0.502f),
     VIOLET(0.933f, 0.510f, 0.933f),
-    NAVY(0.000f, 0.000f, 0.502f),
-
-    // Light levels 0-20
-    LIGHT_LEVEL_0(0.08f, 0.08f, 0.08f), // Dark
-    LIGHT_LEVEL_1(0.1f, 0.1f, 0.1f),    // Very dark grey
-    LIGHT_LEVEL_2(0.15f, 0.15f, 0.15f), // Dark grey
-    LIGHT_LEVEL_3(0.2f, 0.2f, 0.2f),    // Grey
-    LIGHT_LEVEL_4(0.25f, 0.25f, 0.25f), // Light grey
-    LIGHT_LEVEL_5(0.3f, 0.3f, 0.3f),    // Slightly lighter grey
-    LIGHT_LEVEL_6(0.35f, 0.35f, 0.35f), // Medium grey
-    LIGHT_LEVEL_7(0.4f, 0.4f, 0.4f),    // Light grey
-    LIGHT_LEVEL_8(0.45f, 0.45f, 0.45f), // Very light grey
-    LIGHT_LEVEL_9(0.5f, 0.5f, 0.5f),    // Medium light grey
-    LIGHT_LEVEL_10(0.55f, 0.55f, 0.55f),// Light gray
-    LIGHT_LEVEL_11(0.6f, 0.6f, 0.6f),   // Slightly lighter gray
-    LIGHT_LEVEL_12(0.65f, 0.65f, 0.65f),// Very light gray
-    LIGHT_LEVEL_13(0.7f, 0.7f, 0.7f),   // Almost white
-    LIGHT_LEVEL_14(0.75f, 0.75f, 0.75f),// Near white
-    LIGHT_LEVEL_15(0.8f, 0.8f, 0.8f),   // Lightest gray
-    LIGHT_LEVEL_16(0.85f, 0.85f, 0.85f),// Very light gray
-    LIGHT_LEVEL_17(0.9f, 0.9f, 0.9f),   // Almost white
-    LIGHT_LEVEL_18(0.95f, 0.95f, 0.95f),// Very near white
-    LIGHT_LEVEL_19(0.99f, 0.99f, 0.99f),   // Basically White
-    LIGHT_LEVEL_20(1.0f, 1.0f, 1.0f);   // White
+    NAVY(0.000f, 0.000f, 0.502f);
 
     private final float red;
     private final float green;

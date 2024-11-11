@@ -241,14 +241,19 @@ public class BatchRenderer {
     }
 
     private float[] determineColorBasedOnLightLevel(float lightLevel) {
-        if (lightLevel >= 1.0f) {
-            return Color.toFloatArray(Color.LIGHT_LEVEL_20); // Highest light level
-        } else if (lightLevel > 0) {
-            int level = (int) (lightLevel * 19);
-            return Color.toFloatArray(Color.values()[level + Color.LIGHT_LEVEL_1.ordinal()]);
-        } else {
-            return Color.toFloatArray(Color.LIGHT_LEVEL_0); // Lowest light level
+        float[] minLightColor = {0.03f, 0.03f, 0.03f, 1.0f}; // Color for minimum light level
+        float[] maxLightColor = {1.0f, 1.0f, 1.0f, 1.0f}; // Color for maximum light level
+
+        // Clamp lightLevel to the range [0, 1].
+        lightLevel = Math.max(0.0f, Math.min(lightLevel, 1.0f));
+
+        // Interpolate each color component based on the light level.
+        float[] interpolatedColor = new float[4]; // Store the RGBA result
+        for (int i = 0; i < 4; i++) {
+            interpolatedColor[i] = minLightColor[i] + (maxLightColor[i] - minLightColor[i]) * lightLevel;
         }
+
+        return interpolatedColor;
     }
 
 
