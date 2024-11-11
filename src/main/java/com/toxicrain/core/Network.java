@@ -15,7 +15,7 @@ public class Network {
             // Open a stream from the URL and copy its contents to the destination path
             try (InputStream inputStream = uri.toURL().openStream()) {
                 Files.copy(inputStream, destination);
-                System.out.println("File downloaded to: " + destination.toString());
+                Logger.printLOG("File downloaded to: " + destination);
             }
         } catch (Exception e) {
             Logger.printERROR("Failed to download the file from: " + fileURL);
