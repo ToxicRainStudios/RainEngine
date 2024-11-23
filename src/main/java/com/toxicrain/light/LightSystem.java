@@ -6,6 +6,7 @@ import lombok.experimental.UtilityClass;
 import java.util.ArrayList;
 import java.util.List;
 
+@UtilityClass
 public class LightSystem {
     @Getter
     private static final List<float[]> lightSources = new ArrayList<>();
