@@ -33,15 +33,15 @@ public class GameEngine {
 
     public static void run() {
         Thread.setDefaultUncaughtExceptionHandler(new CrashReporter());
-        Logger.printLOG("Hello LWJGL " + Version.getVersion() + "!");
-        Logger.printLOG("Hello RainEngine " + Constants.engineVersion + "!");
-        Logger.printLOG("Running: " + GameInfoParser.gameName + " by " + GameInfoParser.gameMakers);
-        Logger.printLOG("Version: " + GameInfoParser.gameVersion);
+        RainLogger.printLOG("Hello LWJGL " + Version.getVersion() + "!");
+        RainLogger.printLOG("Hello RainEngine " + Constants.engineVersion + "!");
+        RainLogger.printLOG("Running: " + GameInfoParser.gameName + " by " + GameInfoParser.gameMakers);
+        RainLogger.printLOG("Version: " + GameInfoParser.gameVersion);
         doVersionCheck();
-        Logger.printLOG("Loading User Settings");
+        RainLogger.printLOG("Loading User Settings");
         new SettingsInfoParser();
 
-        Logger.printLOG("Loading Lua");
+        RainLogger.printLOG("Loading Lua");
         GameFactory.loadlua();
         LuaManager.categorizeScripts("resources/scripts/");
         LuaManager.executeInitScripts();
@@ -63,27 +63,27 @@ public class GameEngine {
         // Set up an error callback. The default implementation will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
 
-        Logger.printLOG("Initializing GLFW");
+        RainLogger.printLOG("Initializing GLFW");
         // Initialize GLFW. Most GLFW functions will not work before doing this.
         if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
-        Logger.printLOG("Creating Game Window");
+        RainLogger.printLOG("Creating Game Window");
         windowManager.createWindow(GameInfoParser.defaultWindowName, SettingsInfoParser.getInstance().getVsync());
 
-        Logger.printLOG("Loading IMGUI");
+        RainLogger.printLOG("Loading IMGUI");
         // Create and initialize ImguiHandler
         GameFactory.imguiApp = new ImguiHandler(windowManager.getWindow());
         GameFactory.imguiApp.initialize();
 
-        Logger.printLOG("Creating Textures");
+        RainLogger.printLOG("Creating Textures");
         TextureSystem.initTextures();
 
         // This line is critical for LWJGL's interoperation with GLFW's OpenGL context, or any context that is managed externally.
         // LWJGL detects the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
-        Logger.printLOG("Creating OpenGL Capabilities");
+        RainLogger.printLOG("Creating OpenGL Capabilities");
         GL.createCapabilities();
 
-        Logger.printLOG("Loading Keybinds");
+        RainLogger.printLOG("Loading Keybinds");
         KeyInfoParser.loadKeyInfo();
 
         // Set the "background" color
@@ -96,17 +96,17 @@ public class GameEngine {
 
         GameFactory.load();
 
-        Logger.printLOG("Loading Map Palette");
+        RainLogger.printLOG("Loading Map Palette");
         PaletteInfoParser.loadTextureMappings();
 
         // Set the viewport size
         glViewport(0, 0, (int) SettingsInfoParser.getInstance().windowWidth, (int) SettingsInfoParser.getInstance().windowHeight);
 
-        Logger.printLOG("Initializing SoundSystem");
+        RainLogger.printLOG("Initializing SoundSystem");
         GameFactory.soundSystem.init();
         SoundSystem.initSounds();
 
-        Logger.printLOG("Loading Shaders");
+        RainLogger.printLOG("Loading Shaders");
         GameFactory.loadShaders();
 
         GameFactory.player.addWeapon(GameFactory.pistol);
@@ -119,7 +119,7 @@ public class GameEngine {
 
         GameFactory.loadNPC();
 
-        Logger.printLOG("Loading Lang");
+        RainLogger.printLOG("Loading Lang");
         GameFactory.loadLang();
     }
 
@@ -146,7 +146,7 @@ public class GameEngine {
                         LightSystem.getLightSources()
                 ); // Top-right corner
             } else {
-                Logger.printLOG("Index out of bounds: space=" + k);
+                RainLogger.printLOG("Index out of bounds: space=" + k);
             }
         }
     }
@@ -217,10 +217,10 @@ public class GameEngine {
      */
     private static void doVersionCheck() {
         if (Constants.engineVersion.equals(GameInfoParser.engineVersion)) {
-            Logger.printLOG("Engine Version check: Pass");
+            RainLogger.printLOG("Engine Version check: Pass");
         } else {
-            Logger.printERROR("Engine Version check: FAIL");
-            Logger.printERROR("Certain features may not work as intended");
+            RainLogger.printERROR("Engine Version check: FAIL");
+            RainLogger.printERROR("Certain features may not work as intended");
         }
     }
 

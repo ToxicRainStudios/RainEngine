@@ -1,11 +1,17 @@
 package com.toxicrain.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Utility class for logging messages to the console.
  *
  * @author strubium
  */
-public class Logger {
+public class RainLogger { //TODO maybe replace this? Separate loggers for Lua would be nice
+
+    private static final Logger logger = LoggerFactory.getLogger("RainEngine");
+
 
     /**
      * Prints a log message to the console.
@@ -13,7 +19,7 @@ public class Logger {
      * @param input The message to be logged.
      */
     public static void printLOG(String input){
-        System.out.println("[LOG]: " + input);
+        logger.info(input);
     }
     /**
      * Prints a log message to the console if a condition
@@ -23,7 +29,7 @@ public class Logger {
      * @param bool The condition to print
      */
     public static void printLOGConditional(String input, boolean bool){
-        if(bool)System.out.println("[LOG]: " + input);
+        if(bool) logger.info(input);
     }
     /**
      * Prints an error message to the console.
@@ -31,7 +37,7 @@ public class Logger {
      * @param input The error message to be logged.
      */
     public static void printERROR(String input){
-        System.err.println("[ERROR]: " + input);
+        logger.error(input);
     }
 
 }

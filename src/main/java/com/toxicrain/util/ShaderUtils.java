@@ -1,6 +1,6 @@
 package com.toxicrain.util;
 
-import com.toxicrain.core.Logger;
+import com.toxicrain.core.RainLogger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
@@ -30,8 +30,8 @@ public class ShaderUtils {
     }
 
     public int createShaderProgram(String vertexShaderPath, String fragmentShaderPath) {
-        Logger.printLOG("Loading Vertex Shader: " + vertexShaderPath);
-        Logger.printLOG("Loading Fragment Shader: " + fragmentShaderPath);
+        RainLogger.printLOG("Loading Vertex Shader: " + vertexShaderPath);
+        RainLogger.printLOG("Loading Fragment Shader: " + fragmentShaderPath);
 
         int vertexShader = loadShader(GL20.GL_VERTEX_SHADER, vertexShaderPath);
         int fragmentShader = loadShader(GL20.GL_FRAGMENT_SHADER, fragmentShaderPath);

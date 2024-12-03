@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.toxicrain.core.Logger;
+import com.toxicrain.core.RainLogger;
 import com.toxicrain.util.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -53,16 +53,16 @@ public class KeyInfoParser {
                 }
             }
 
-            Logger.printLOG("Key bindings loaded successfully.");
+            RainLogger.printLOG("Key bindings loaded successfully.");
 
         } catch (FileNotFoundException e) {
-            Logger.printERROR("File not found: " + filePath);
+            RainLogger.printERROR("File not found: " + filePath);
             e.printStackTrace();
         } catch (IOException e) {
-            Logger.printERROR("Error reading file: " + filePath);
+            RainLogger.printERROR("Error reading file: " + filePath);
             e.printStackTrace();
         } catch (Exception e) {
-            Logger.printERROR("Error parsing JSON: " + e.getMessage());
+            RainLogger.printERROR("Error parsing JSON: " + e.getMessage());
             e.printStackTrace();
         }
     }

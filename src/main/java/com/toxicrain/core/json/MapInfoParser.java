@@ -1,7 +1,7 @@
 package com.toxicrain.core.json;
 
 
-import com.toxicrain.core.Logger;
+import com.toxicrain.core.RainLogger;
 import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.artifacts.Tile;
 import com.toxicrain.util.FileUtils;
@@ -41,8 +41,8 @@ public class MapInfoParser {
 
             // Check for required keys
             if (!part.has("type") || !part.has("xsize") || !part.has("ysize") || !part.has("slices") || !part.has("lighting")) {
-                Logger.printERROR("Missing keys in JSON object at index " + i);
-                Logger.printERROR(part.toString(4));
+                RainLogger.printERROR("Missing keys in JSON object at index " + i);
+                RainLogger.printERROR(part.toString(4));
                 continue;
             }
 
@@ -50,11 +50,11 @@ public class MapInfoParser {
             playery = part.getInt("playery");
 
             if (doExtraLogs) {
-                Logger.printLOG("type: " + part.getString("type"));
+                RainLogger.printLOG("type: " + part.getString("type"));
                 xsize = part.getInt("xsize");
                 ysize = part.getInt("ysize");
-                Logger.printLOG("xsize: " + xsize);
-                Logger.printLOG("ysize: " + ysize);
+                RainLogger.printLOG("xsize: " + xsize);
+                RainLogger.printLOG("ysize: " + ysize);
             }
 
             try {
@@ -95,14 +95,14 @@ public class MapInfoParser {
                     }
                 }
             } catch (JSONException e) {
-                Logger.printERROR("Error parsing slices or lighting: " + e.getMessage());
+                RainLogger.printERROR("Error parsing slices or lighting: " + e.getMessage());
                 e.printStackTrace();
             }
         }
 
         // Log the final map data
-        Logger.printLOGConditional("mapDataX: " + mapDataX, doExtraLogs);
-        Logger.printLOGConditional("mapDataY: " + mapDataY, doExtraLogs);
-        Logger.printLOGConditional("Lighting sources: " + LightSystem.getLightSources(), doExtraLogs);
+        RainLogger.printLOGConditional("mapDataX: " + mapDataX, doExtraLogs);
+        RainLogger.printLOGConditional("mapDataY: " + mapDataY, doExtraLogs);
+        RainLogger.printLOGConditional("Lighting sources: " + LightSystem.getLightSources(), doExtraLogs);
     }
 }

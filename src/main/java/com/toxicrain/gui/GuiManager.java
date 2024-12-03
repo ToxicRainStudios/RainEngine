@@ -1,6 +1,6 @@
 package com.toxicrain.gui;
 
-import com.toxicrain.core.Logger;
+import com.toxicrain.core.RainLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +29,7 @@ public class GuiManager {
         if (guiScreens.containsKey(name)) {
             activeGUIs.add(name);
         } else {
-            Logger.printERROR("GUI screen not found: " + name);
+            RainLogger.printERROR("GUI screen not found: " + name);
         }
     }
 
@@ -49,7 +49,7 @@ public class GuiManager {
             if (guiScreens.containsKey(guiName)) {
                 guiScreens.get(guiName).accept(null);
             } else {
-                Logger.printERROR("GUI screen not found during render: " + guiName);
+                RainLogger.printERROR("GUI screen not found during render: " + guiName);
             }
         }
     }

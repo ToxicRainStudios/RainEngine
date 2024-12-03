@@ -20,7 +20,7 @@ public class CrashReporter implements Thread.UncaughtExceptionHandler {
 
     @SuppressWarnings("CallToPrintStackTrace")
     public static void generateCrashReport(Throwable t) {
-        Logger.printERROR("A crash occurred: " + t.getMessage());
+        RainLogger.printERROR("A crash occurred: " + t.getMessage());
 
         // Log the crash to a file
         try (FileWriter fw = new FileWriter("crash_report.txt", false);

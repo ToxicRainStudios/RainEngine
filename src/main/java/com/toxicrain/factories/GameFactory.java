@@ -7,7 +7,7 @@ import com.toxicrain.artifacts.behavior.LookAtPlayerSeeingBehavior;
 import com.toxicrain.artifacts.manager.NPCManager;
 import com.toxicrain.artifacts.manager.ProjectileManager;
 import com.toxicrain.core.LangHelper;
-import com.toxicrain.core.Logger;
+import com.toxicrain.core.RainLogger;
 import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.lua.LuaEngine;
@@ -89,7 +89,7 @@ public class GameFactory {
 
     public static void loadLang(){
         langHelper = new LangHelper("raiengine", Locale.ENGLISH);
-        Logger.printLOG(langHelper.get("greeting"));
+        RainLogger.printLOG(langHelper.get("greeting"));
     }
 
     public static void setupGUIs() {

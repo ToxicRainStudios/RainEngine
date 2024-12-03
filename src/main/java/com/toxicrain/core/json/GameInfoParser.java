@@ -1,6 +1,6 @@
 package com.toxicrain.core.json;
 
-import com.toxicrain.core.Logger;
+import com.toxicrain.core.RainLogger;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
@@ -92,14 +92,14 @@ public class GameInfoParser {
                 }
             }
         } catch (FileNotFoundException e) {
-            Logger.printERROR("File not found: " + filePath);
+            RainLogger.printERROR("File not found: " + filePath);
             e.printStackTrace();
         }
         catch (IOException e) {
-            Logger.printERROR("Error reading file: " + filePath);
+            RainLogger.printERROR("Error reading file: " + filePath);
             e.printStackTrace();
         } catch (Exception e) {
-            Logger.printERROR("Error parsing JSON: " + e.getMessage());
+            RainLogger.printERROR("Error parsing JSON: " + e.getMessage());
             e.printStackTrace();
         }
     }

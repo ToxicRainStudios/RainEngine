@@ -1,6 +1,6 @@
 package com.toxicrain.util;
 
-import com.toxicrain.core.Logger;
+import com.toxicrain.core.RainLogger;
 import org.lwjgl.glfw.GLFW;
 
 
@@ -18,7 +18,7 @@ public class FPSUtils {
         if (elapsedTime >= 1.0) {
             // Calculate FPS
             int fps = frameCount;
-            Logger.printLOG("FPS: " + fps);
+            RainLogger.printLOG("FPS: " + fps);
 
             // Reset for next second
             frameCount = 0;

@@ -1,7 +1,7 @@
 package com.toxicrain.gui;
 
 import com.toxicrain.artifacts.animation.Animation;
-import com.toxicrain.core.Logger;
+import com.toxicrain.core.RainLogger;
 import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.factories.GameFactory;

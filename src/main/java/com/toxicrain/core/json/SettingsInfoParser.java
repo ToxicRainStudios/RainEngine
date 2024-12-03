@@ -1,6 +1,6 @@
 package com.toxicrain.core.json;
 
-import com.toxicrain.core.Logger;
+import com.toxicrain.core.RainLogger;
 import lombok.Getter;
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -68,7 +68,7 @@ public class SettingsInfoParser {
             fov = (float) settingsJson.optDouble(SettingKey.FOV.toString(), fov);
 
         } catch (IOException e) {
-            Logger.printERROR("Failed to load settings file: " + filePath);
+            RainLogger.printERROR("Failed to load settings file: " + filePath);
             e.printStackTrace();
             settingsJson = new JSONObject(); // Initialize to prevent null issues
         }
@@ -76,7 +76,7 @@ public class SettingsInfoParser {
 
     public void modifySetting(String key, Object newValue) {
         if (settingsJson == null) {
-            Logger.printERROR("Settings JSON not initialized");
+            RainLogger.printERROR("Settings JSON not initialized");
             return;
         }
 
@@ -99,7 +99,7 @@ public class SettingsInfoParser {
                 fov = ((Number) newValue).floatValue();
                 break;
             default:
-                Logger.printERROR("Unknown setting key: " + key);
+                RainLogger.printERROR("Unknown setting key: " + key);
         }
     }
 
@@ -108,7 +108,7 @@ public class SettingsInfoParser {
         try {
             Files.write(Paths.get(filePath), settingsJson.toString(4).getBytes());
         } catch (IOException e) {
-            Logger.printERROR("Failed to save settings file: " + filePath);
+            RainLogger.printERROR("Failed to save settings file: " + filePath);
             e.printStackTrace();
         }
     }

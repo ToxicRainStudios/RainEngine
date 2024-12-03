@@ -2,7 +2,7 @@ package com.toxicrain.artifacts;
 
 import com.toxicrain.core.AABB;
 import com.toxicrain.core.GameEngine;
-import com.toxicrain.core.Logger;
+import com.toxicrain.core.RainLogger;
 import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.core.interfaces.IArtifact;
@@ -69,9 +69,9 @@ public class Player implements IArtifact {
             }
             equippedWeapon = weapon;
             equippedWeapon.equip();
-            Logger.printLOG("Equipped weapon: " + weapon.getName());
+            RainLogger.printLOG("Equipped weapon: " + weapon.getName());
         } else {
-            Logger.printLOG("Weapon not found in inventory.");
+            RainLogger.printLOG("Weapon not found in inventory.");
         }
     }
 
@@ -79,7 +79,7 @@ public class Player implements IArtifact {
         if (equippedWeapon != null) {
             equippedWeapon.attack();
         } else {
-            Logger.printLOG("No weapon equipped.");
+            RainLogger.printLOG("No weapon equipped.");
         }
     }
 
@@ -198,7 +198,7 @@ public class Player implements IArtifact {
     private void handleAttack() {
         if (GameFactory.mouseUtils.isMouseButtonPressed(1)) {
             GameFactory.soundSystem.play(SoundSystem.getSound("Sample"));
-            Logger.printLOG("Player is attacking...");
+            RainLogger.printLOG("Player is attacking...");
             attack();
         }
     }

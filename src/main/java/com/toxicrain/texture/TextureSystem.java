@@ -1,6 +1,6 @@
 package com.toxicrain.texture;
 
-import com.toxicrain.core.Logger;
+import com.toxicrain.core.RainLogger;
 import com.toxicrain.util.FileUtils;
 import org.lwjgl.system.MemoryStack;
 
@@ -43,16 +43,16 @@ public class TextureSystem {
                             // Store the texture with its file name (without extension) as the key
                             String textureName = path.getFileName().toString().replaceFirst("[.][^.]+$", ""); // remove extension
                             textures.put(textureName, texture);
-                            Logger.printLOG("Loaded texture: " + textureName);
+                            RainLogger.printLOG("Loaded texture: " + textureName);
                         } else {
-                            Logger.printERROR("Failed to load texture: " + path.getFileName());
+                            RainLogger.printERROR("Failed to load texture: " + path.getFileName());
                         }
                     });
         } catch (IOException e) {
             throw new RuntimeException("Failed to load textures from directory: " + textureDirectory, e);
         }
 
-        Logger.printLOG(String.format("Loaded %d textures.", textures.size()));
+        RainLogger.printLOG(String.format("Loaded %d textures.", textures.size()));
     }
 
     /**
@@ -63,7 +63,7 @@ public class TextureSystem {
      */
     public static TextureInfo getTexture(String textureName) {
         if (!textures.containsKey(textureName)) {
-            Logger.printLOG("Texture not found: " + textureName);
+            RainLogger.printLOG("Texture not found: " + textureName);
             return null;  // Return null or throw an exception if texture is not found
         }
         return textures.get(textureName);
@@ -93,7 +93,7 @@ public class TextureSystem {
             width = widthBuffer.get();
             height = heightBuffer.get();
             long fileSize = FileUtils.getFileSize(filePath);
-            Logger.printLOG(String.format("Loaded texture: %s (Width: %d, Height: %d, File Size: %d bytes)", filePath, width, height, fileSize));
+            RainLogger.printLOG(String.format("Loaded texture: %s (Width: %d, Height: %d, File Size: %d bytes)", filePath, width, height, fileSize));
         } catch (Exception e) {
             throw new RuntimeException("Error loading texture: " + filePath, e);
         }

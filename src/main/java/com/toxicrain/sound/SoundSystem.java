@@ -1,6 +1,6 @@
 package com.toxicrain.sound;
 
-import com.toxicrain.core.Logger;
+import com.toxicrain.core.RainLogger;
 import com.toxicrain.util.FileUtils;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
@@ -51,7 +51,7 @@ public class SoundSystem {
                         // Store the sound with its file name (without extension) as the key
                         String soundName = path.getFileName().toString().replaceFirst("[.][^.]+$", ""); // remove extension
                         sounds.put(soundName, sound);
-                        Logger.printLOG("Loaded sound: " + soundName);
+                        RainLogger.printLOG("Loaded sound: " + soundName);
                     });
         } catch (IOException e) {
             throw new RuntimeException("Failed to load sounds from directory: " + soundDirectory, e);
@@ -66,7 +66,7 @@ public class SoundSystem {
      */
     public static SoundInfo getSound(String soundName) {
         if (!sounds.containsKey(soundName)) {
-            Logger.printLOG("Sound not found: " + soundName);
+            RainLogger.printLOG("Sound not found: " + soundName);
             return null;  // Return null or throw an exception if sound is not found
         }
         return sounds.get(soundName);
@@ -113,15 +113,15 @@ public class SoundSystem {
             alBufferData(bufferId, wavData.format, wavData.data, wavData.samplerate);
 
             long fileSize = FileUtils.getFileSize(filePath);
-            Logger.printLOG(String.format("Loaded sound: %s (File Size: %d bytes, Format: %d)", filePath, fileSize, wavData.format));
+            RainLogger.printLOG(String.format("Loaded sound: %s (File Size: %d bytes, Format: %d)", filePath, fileSize, wavData.format));
         } catch (FileNotFoundException e) {
-            Logger.printERROR("File not found: " + filePath);
+            RainLogger.printERROR("File not found: " + filePath);
             e.printStackTrace();
         } catch (IOException e) {
-            Logger.printERROR("Error reading file: " + filePath);
+            RainLogger.printERROR("Error reading file: " + filePath);
             e.printStackTrace();
         } catch (Exception e) {
-            Logger.printERROR("Error processing sound file: " + e.getMessage());
+            RainLogger.printERROR("Error processing sound file: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -142,7 +142,7 @@ public class SoundSystem {
     public void play(SoundInfo soundInfo) {
         int state = alGetSourcei(sourceId, AL_SOURCE_STATE);
         if (state != AL_PLAYING) {
-            Logger.printLOG("Playing sound");
+            RainLogger.printLOG("Playing sound");
             alSourcei(sourceId, AL_BUFFER, soundInfo.bufferId);
             alSourcePlay(sourceId);
         }
@@ -206,7 +206,7 @@ public class SoundSystem {
 
                 isFading = false;
             } catch (InterruptedException e) {
-                Logger.printERROR("Fade-in interrupted.");
+                RainLogger.printERROR("Fade-in interrupted.");
             }
         }).start();
     }
@@ -226,7 +226,7 @@ public class SoundSystem {
                 alSourceStop(sourceId);
                 isFading = false;
             } catch (InterruptedException e) {
-                Logger.printERROR("Fade-out interrupted.");
+                RainLogger.printERROR("Fade-out interrupted.");
             }
         }).start();
     }
