@@ -117,6 +117,8 @@ public class GameEngine {
 
         GameFactory.setupGUIs();
 
+        GameFactory.loadNPC();
+
         Logger.printLOG("Loading Lang");
         GameFactory.loadLang();
     }
@@ -152,17 +154,9 @@ public class GameEngine {
     private static long lastFrameTime = System.nanoTime();
 
     private static void update(float deltaTime) {
-        FollowPlayerBehavior followPlayerBehavior = new FollowPlayerBehavior(5.0f);
-        LookAtPlayerBehavior lookAtPlayerBehavior = new LookAtPlayerBehavior();
-        LookAtPlayerSeeingBehavior lookAtPlayerSeeingBehavior = new LookAtPlayerSeeingBehavior();
-
-
-        BehaviorSequence behaviorSequence2 = new BehaviorSequence(new FollowPlayerSeeingBehavior(00.1f), lookAtPlayerSeeingBehavior);
-        BehaviorSequence behaviorSequence = new BehaviorSequence(followPlayerBehavior, lookAtPlayerBehavior);
-
         for (int engineFrames = 30; engineFrames >= 0; engineFrames--) {
             GameFactory.player.update(deltaTime);
-            behaviorSequence2.execute(GameFactory.character);
+            GameFactory.npcManager.update(deltaTime);
 
             GameFactory.projectile.update();
         }
@@ -182,7 +176,7 @@ public class GameEngine {
         batchRenderer.beginBatch();
 
         drawMap(batchRenderer);
-        GameFactory.character.render(batchRenderer);
+        GameFactory.npcManager.render(batchRenderer);
         GameFactory.projectile.render(batchRenderer);
         GameFactory.player.render(batchRenderer);
 

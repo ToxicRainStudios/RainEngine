@@ -1,5 +1,6 @@
 package com.toxicrain.artifacts;
 
+import com.toxicrain.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.core.Constants;
 import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
@@ -25,6 +26,9 @@ public class NPC {
     private float visionDistance;   // Max distance NPC can see
     private boolean playerInSight;  // If the player is within the vision cone
     private float size;
+    @Getter @Setter
+    private BehaviorSequence behaviorSequence;
+
 
     public NPC(float startingXpos, float startingYpos, float rotation, float size) {
         this.X = startingXpos;
@@ -81,6 +85,7 @@ public class NPC {
     public void moveTowardsPlayer(float speed) {
         float deltaX = GameFactory.player.getPosX() - this.X;
         float deltaY = GameFactory.player.getPosY() - this.Y;
+        handleCollisions();
 
         // Normalize direction
         float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
