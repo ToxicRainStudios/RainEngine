@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'com.github.johnrengelman.shadow' version '8.0.0'  // Shadow plugin for creating fat JAR
 }
 
 group 'com.toxicrain'
@@ -17,6 +18,7 @@ project.ext.lwjglNatives = 'natives-windows'
 repositories {
     mavenCentral()
     maven { url 'https://jitpack.io' }
+    gradlePluginPortal()
 }
 
 dependencies {
@@ -66,3 +68,10 @@ jar {
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
+task launch4j(type: Exec) {
+    commandLine 'path/to/launch4j', 'path/to/your/config.xml'
+}
+
+
+
