@@ -1,9 +1,6 @@
 package com.toxicrain.factories;
 
-import com.toxicrain.artifacts.NPC;
-import com.toxicrain.artifacts.Player;
-import com.toxicrain.artifacts.Projectile;
-import com.toxicrain.artifacts.Weapon;
+import com.toxicrain.artifacts.*;
 import com.toxicrain.core.LangHelper;
 import com.toxicrain.core.Logger;
 import com.toxicrain.core.lua.LuaManager;
@@ -47,7 +44,7 @@ public class GameFactory {
         soundSystem = new SoundSystem();
 
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0, TextureSystem.getTexture("playerTexture"));
-        character = new NPC(12,-4,1);
+        character = new NPC(12,-4,1, Size.AVERAGE.ordinal());
         mouseUtils = new MouseUtils(windowManager.getWindow());
 
         pistol = new Weapon("Pistol", 3, 20,1,1);

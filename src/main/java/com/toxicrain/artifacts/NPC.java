@@ -24,8 +24,9 @@ public class NPC {
     private float fieldOfViewAngle; // Vision cone angle in degrees
     private float visionDistance;   // Max distance NPC can see
     private boolean playerInSight;  // If the player is within the vision cone
+    private float size;
 
-    public NPC(float startingXpos, float startingYpos, float rotation,float size) {
+    public NPC(float startingXpos, float startingYpos, float rotation, float size) {
         this.X = startingXpos;
         this.Y = startingYpos;
         this.directionX = (float) Math.cos(rotation);
@@ -33,6 +34,7 @@ public class NPC {
         this.rotation = rotation; // Set initial rotation
         this.fieldOfViewAngle = 90f;  // Example 90-degree FOV
         this.visionDistance = 300f;   // Max distance the NPC can see
+        this.size = size;
     }
 
     public boolean canSeePlayer() {
@@ -93,34 +95,35 @@ public class NPC {
         batchRenderer.addTexture(TextureSystem.getTexture("playerTexture"), this.X, this.Y, Constants.npcZLevel,
                 this.rotation, 1, 1, Color.toFloatArray(Color.WHITE));
     }
+
     private void handleCollisions() {
         int collisionType = 0;
-        float playerHalfSize = GameInfoParser.playerSize / 2.0f;
+        float halfSize = this.size / 2.0f;
 
         // Create player's AABB based on its position and size
         AABB playerAABB = new AABB(
-                cameraX - playerHalfSize, // minX
-                cameraY - playerHalfSize, // minY
-                cameraX + playerHalfSize, // maxX
-                cameraY + playerHalfSize  // maxY
+                getX() - halfSize, // minX
+                getY() - halfSize, // minY
+                getX() + halfSize, // maxX
+                getY() + halfSize  // maxY
         );
         for (int i = Tile.aabbs.size()- 1; i >= 0; i--) {
 
             // Push player back slightly based on collision direction
             if (Collisions.collide(playerAABB, i) == 'u') {
                 // Colliding from below
-                cameraY += 0.02f;
+                this.Y += 0.02f;
             } else if (Collisions.collide(playerAABB, i) == 'd') {
                 // Colliding from above
-                cameraY -= 0.02f;
+                this.Y -= 0.02f;
             }
 
             if (Collisions.collide(playerAABB, i) == 'l') {
                 // Colliding from the left
-                cameraX += 0.02f;
+                this.X += 0.02f;
             } else if (Collisions.collide(playerAABB, i) == 'r') {
                 // Colliding from the right
-                cameraX -= 0.02f;
+                this.X -= 0.02f;
             }
         }
 
