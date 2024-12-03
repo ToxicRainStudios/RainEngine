@@ -4,13 +4,8 @@ import com.toxicrain.core.json.MapInfoParser;
 
 import java.util.BitSet;
 
-
+//TODO I dont like this class, if we are gonna handle collisions with should fully do it here -strubium
 public class Collisions {
-
-
-    public Collisions(float minX, float minY, float maxX, float maxY) {
-
-    }
 
     // Iterate through all tile AABBs
     public static char collide(AABB colideeAABB, int i) {
