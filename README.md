@@ -32,5 +32,5 @@ RainEngine is a WIP engine made with [LWJGL3](https://www.lwjgl.org/)
   * Main Menu
   * Settings Menu (Edit Keybindings etc)
   * Pause Menu
-* Some sort of dialog system with JSON
+* Some sort of dialog system with JSON or Lua
 * Dynamic and directional lighting 

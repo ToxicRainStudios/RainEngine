@@ -5,8 +5,10 @@ import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.core.interfaces.IArtifact;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.core.Color;
+import lombok.Getter;
 
 public class Projectile implements IArtifact {
+    @Getter
     private float x, y;
     private final float velocityX, velocityY;
     private final TextureInfo texture;

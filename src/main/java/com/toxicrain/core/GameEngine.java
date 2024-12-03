@@ -158,7 +158,7 @@ public class GameEngine {
             GameFactory.player.update(deltaTime);
             GameFactory.npcManager.update(deltaTime);
 
-            GameFactory.projectile.update();
+            GameFactory.projectileManager.update(deltaTime);
         }
         LuaManager.executeTickScripts();
     }
@@ -177,7 +177,7 @@ public class GameEngine {
 
         drawMap(batchRenderer);
         GameFactory.npcManager.render(batchRenderer);
-        GameFactory.projectile.render(batchRenderer);
+        GameFactory.projectileManager.render(batchRenderer);
         GameFactory.player.render(batchRenderer);
 
 

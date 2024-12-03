@@ -5,6 +5,7 @@ import com.toxicrain.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.artifacts.behavior.FollowPlayerSeeingBehavior;
 import com.toxicrain.artifacts.behavior.LookAtPlayerSeeingBehavior;
 import com.toxicrain.artifacts.manager.NPCManager;
+import com.toxicrain.artifacts.manager.ProjectileManager;
 import com.toxicrain.core.LangHelper;
 import com.toxicrain.core.Logger;
 import com.toxicrain.core.lua.LuaManager;
@@ -29,6 +30,7 @@ public class GameFactory {
 
     public static Player player;
     public static GuiManager guiManager;
+    public static ProjectileManager projectileManager;
     public static Projectile projectile;
     public static MouseUtils mouseUtils;
     public static Weapon pistol;
@@ -51,7 +53,10 @@ public class GameFactory {
         imguiApp.initialize();
         soundSystem = new SoundSystem();
 
+        projectileManager = new ProjectileManager();
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0, TextureSystem.getTexture("playerTexture"));
+        projectileManager.addProjectile(projectile);
+
         mouseUtils = new MouseUtils(windowManager.getWindow());
 
         pistol = new Weapon("Pistol", 3, 20,1,1);
