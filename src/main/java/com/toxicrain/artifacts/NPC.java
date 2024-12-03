@@ -1,8 +1,8 @@
 package com.toxicrain.artifacts;
 
 import com.toxicrain.artifacts.behavior.BehaviorSequence;
+import com.toxicrain.core.AABB;
 import com.toxicrain.core.Constants;
-import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.core.Color;

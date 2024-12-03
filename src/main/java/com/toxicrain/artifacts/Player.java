@@ -1,5 +1,6 @@
 package com.toxicrain.artifacts;
 
+import com.toxicrain.core.AABB;
 import com.toxicrain.core.GameEngine;
 import com.toxicrain.core.Logger;
 import com.toxicrain.sound.SoundSystem;
@@ -11,7 +12,6 @@ import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.factories.GameFactory;
-import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.core.Color;
 import com.toxicrain.texture.TextureSystem;
 import com.toxicrain.util.MathUtils;

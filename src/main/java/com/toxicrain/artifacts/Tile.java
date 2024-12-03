@@ -1,5 +1,7 @@
 package com.toxicrain.artifacts;
 
+import com.toxicrain.core.AABB;
+
 import java.util.ArrayList;
 
 public class Tile {

@@ -1,8 +1,7 @@
 package com.toxicrain.artifacts;
 
+import com.toxicrain.core.AABB;
 import com.toxicrain.core.json.MapInfoParser;
-
-import java.util.BitSet;
 
 //TODO I dont like this class, if we are gonna handle collisions with should fully do it here -strubium
 public class Collisions {

@@ -63,7 +63,7 @@ public class GameFactory {
     public static void loadNPC(){
         npcManager = new NPCManager();
 
-        character = new NPC(12,-4,1, Size.AVERAGE.ordinal());
+        character = new NPC(12,-4,1, Size.AVERAGE.getSize());
         LookAtPlayerSeeingBehavior lookAtPlayerSeeingBehavior = new LookAtPlayerSeeingBehavior();
         npcBasicSequence = new BehaviorSequence(new FollowPlayerSeeingBehavior(00.1f), lookAtPlayerSeeingBehavior);
 

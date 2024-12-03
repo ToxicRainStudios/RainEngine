@@ -1,4 +1,4 @@
-package com.toxicrain.artifacts;
+package com.toxicrain.core;
 
 public class AABB {
     public float minX, minY; // Minimum corner
