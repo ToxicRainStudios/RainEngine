@@ -133,111 +133,61 @@ public class Player implements IArtifact {
 
     private void handleCollisions() {
         int collisionType = 0;
-        for (int j = 1; j > -2; j--) {
-            float k = (float) j * GameInfoParser.playerSize;
-            for (int i = Tile.extentTop.size() - 1; i >= 0; i--) {
-                if ((cameraY + k <= Tile.extentTop.get(i)) && (cameraY + k >= Tile.extentCenterY.get(i))) {
-                    if ((cameraX + k >= Tile.extentLeft.get(i)) && !(cameraX + k >= Tile.extentCenterX.get(i))) {
-                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
-                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
-                                cameraY += 0.02f;
-                                break;
-                            }
-                            if(Tile.mapDataType.get(i) == '1'){
-                                collisionType = 1;
-                                break;
-                            }
-                        }
-                    } else if ((cameraX + k <= Tile.extentRight.get(i)) && !(cameraX + k <= Tile.extentCenterX.get(i))) {
-                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
-                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
-                                cameraY += 0.02f;
-                                break;
-                            }
-                            if(Tile.mapDataType.get(i) == '1'){
-                                collisionType = 1;
-                                break;
-                            }
-                        }
+        float playerHalfSize = GameInfoParser.playerSize / 2.0f;
+
+        // Create player's AABB based on its position and size
+        AABB playerAABB = new AABB(
+                cameraX - playerHalfSize, // minX
+                cameraY - playerHalfSize, // minY
+                cameraX + playerHalfSize, // maxX
+                cameraY + playerHalfSize  // maxY
+        );
+
+        // Iterate through all tile AABBs
+        for (int i = Tile.aabbs.size() - 1; i >= 0; i--) {
+            AABB tileAABB = Tile.aabbs.get(i);
+
+            // Check for intersection with the player's AABB
+            if (playerAABB.intersects(tileAABB)) {
+                // Handle different collision types based on map data type
+                char mapType = Tile.mapDataType.get(i);
+
+                // Check if the tile is in the list of collidable types
+                boolean isCollidable = false;
+                for (char collidableType : MapInfoParser.doCollide) {
+                    if (mapType == collidableType) {
+                        isCollidable = true;
+                        break;
                     }
                 }
-                if ((cameraY + k >= Tile.extentBottom.get(i)) && (cameraY + k <= Tile.extentCenterY.get(i))) {
-                    if ((cameraX + k >= Tile.extentLeft.get(i)) && !(cameraX + k >= Tile.extentCenterX.get(i))) {
-                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
-                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
-                                cameraY -= 0.02f;
-                                break;
-                            }
-                            if(Tile.mapDataType.get(i) == '1'){
-                                collisionType = 1;
-                                break;
-                            }
-                        }
-                    } else if ((cameraX + k <= Tile.extentRight.get(i)) && !(cameraX + k <= Tile.extentCenterX.get(i))) {
-                        for (int p = MapInfoParser.doCollide.size()-1; p >= 0; p--) {
-                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
-                                cameraY -= 0.02f;
-                                break;
-                            }
-                            if(Tile.mapDataType.get(i) == '1'){
-                                collisionType = 1;
-                                break;
-                            }
-                        }
+
+                if (isCollidable) {
+                    // Push player back slightly based on collision direction
+                    if (playerAABB.minY < tileAABB.maxY && playerAABB.maxY > tileAABB.maxY) {
+                        // Colliding from below
+                        cameraY += 0.02f;
+                    } else if (playerAABB.maxY > tileAABB.minY && playerAABB.minY < tileAABB.minY) {
+                        // Colliding from above
+                        cameraY -= 0.02f;
+                    }
+
+                    if (playerAABB.minX < tileAABB.maxX && playerAABB.maxX > tileAABB.maxX) {
+                        // Colliding from the left
+                        cameraX += 0.02f;
+                    } else if (playerAABB.maxX > tileAABB.minX && playerAABB.minX < tileAABB.minX) {
+                        // Colliding from the right
+                        cameraX -= 0.02f;
                     }
                 }
-                if ((cameraX + k <= Tile.extentRight.get(i)) && (cameraX + k >= Tile.extentCenterX.get(i))) {
-                    if ((cameraY + k >= Tile.extentBottom.get(i)) && !(cameraY + k > Tile.extentCenterY.get(i))) {
-                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
-                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
-                                cameraX += 0.02f;
-                                break;
-                            }
-                            if(Tile.mapDataType.get(i) == '1'){
-                                collisionType = 1;
-                                break;
-                            }
-                        }
-                    } else if ((cameraY + k <= Tile.extentTop.get(i)) && !(cameraY + k <= Tile.extentCenterY.get(i))) {
-                        for (int p = MapInfoParser.doCollide.size()-1; p >= 0; p--) {
-                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
-                                cameraX += 0.02f;
-                                break;
-                            }
-                            if(Tile.mapDataType.get(i) == '1'){
-                                collisionType = 1;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if ((cameraX + k >= Tile.extentLeft.get(i)) && (cameraX + k <= Tile.extentCenterX.get(i))) {
-                    if ((cameraY + k >= Tile.extentBottom.get(i)) && !(cameraY + k >= Tile.extentCenterY.get(i))) {
-                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
-                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
-                                cameraX -= 0.02f;
-                                break;
-                            }
-                            if(Tile.mapDataType.get(i) == '1'){
-                                collisionType = 1;
-                                break;
-                            }
-                        }
-                    } else if ((cameraY + k <= Tile.extentTop.get(i)) && !(cameraY + k <= Tile.extentCenterY.get(i))) {
-                        for(int p = MapInfoParser.doCollide.size()-1; p >=0; p--) {
-                            if (Tile.mapDataType.get(i) == MapInfoParser.doCollide.get(p)) {
-                                cameraX -= 0.02f;
-                                break;
-                            }
-                            if(Tile.mapDataType.get(i) == '1'){
-                                collisionType = 1;
-                                break;
-                            }
-                        }
-                    }
+
+                // Handle special collision types (e.g., type '1')
+                if (mapType == '1') {
+                    collisionType = 1;
                 }
             }
         }
+
+        // Adjust camera speed if a special collision was detected
         if (collisionType == 1) {
             cameraSpeed = 0.010f;
         }
