@@ -1,6 +1,7 @@
 package com.toxicrain.artifacts;
 
 import com.toxicrain.core.Constants;
+import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.core.Color;
@@ -24,7 +25,7 @@ public class NPC {
     private float visionDistance;   // Max distance NPC can see
     private boolean playerInSight;  // If the player is within the vision cone
 
-    public NPC(float startingXpos, float startingYpos, float rotation) {
+    public NPC(float startingXpos, float startingYpos, float rotation,float size) {
         this.X = startingXpos;
         this.Y = startingYpos;
         this.directionX = (float) Math.cos(rotation);
@@ -92,4 +93,37 @@ public class NPC {
         batchRenderer.addTexture(TextureSystem.getTexture("playerTexture"), this.X, this.Y, Constants.npcZLevel,
                 this.rotation, 1, 1, Color.toFloatArray(Color.WHITE));
     }
+    private void handleCollisions() {
+        int collisionType = 0;
+        float playerHalfSize = GameInfoParser.playerSize / 2.0f;
+
+        // Create player's AABB based on its position and size
+        AABB playerAABB = new AABB(
+                cameraX - playerHalfSize, // minX
+                cameraY - playerHalfSize, // minY
+                cameraX + playerHalfSize, // maxX
+                cameraY + playerHalfSize  // maxY
+        );
+        for (int i = Tile.aabbs.size()- 1; i >= 0; i--) {
+
+            // Push player back slightly based on collision direction
+            if (Collisions.collide(playerAABB, i) == 'u') {
+                // Colliding from below
+                cameraY += 0.02f;
+            } else if (Collisions.collide(playerAABB, i) == 'd') {
+                // Colliding from above
+                cameraY -= 0.02f;
+            }
+
+            if (Collisions.collide(playerAABB, i) == 'l') {
+                // Colliding from the left
+                cameraX += 0.02f;
+            } else if (Collisions.collide(playerAABB, i) == 'r') {
+                // Colliding from the right
+                cameraX -= 0.02f;
+            }
+        }
+
+    }
 }
+

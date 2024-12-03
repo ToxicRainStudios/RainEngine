@@ -142,55 +142,26 @@ public class Player implements IArtifact {
                 cameraX + playerHalfSize, // maxX
                 cameraY + playerHalfSize  // maxY
         );
+        for (int i = Tile.aabbs.size()- 1; i >= 0; i--) {
 
-        // Iterate through all tile AABBs
-        for (int i = Tile.aabbs.size() - 1; i >= 0; i--) {
-            AABB tileAABB = Tile.aabbs.get(i);
+            // Push player back slightly based on collision direction
+            if (Collisions.collide(playerAABB, i) == 'u') {
+                // Colliding from below
+                cameraY += 0.02f;
+            } else if (Collisions.collide(playerAABB, i) == 'd') {
+                // Colliding from above
+                cameraY -= 0.02f;
+            }
 
-            // Check for intersection with the player's AABB
-            if (playerAABB.intersects(tileAABB)) {
-                // Handle different collision types based on map data type
-                char mapType = Tile.mapDataType.get(i);
-
-                // Check if the tile is in the list of collidable types
-                boolean isCollidable = false;
-                for (char collidableType : MapInfoParser.doCollide) {
-                    if (mapType == collidableType) {
-                        isCollidable = true;
-                        break;
-                    }
-                }
-
-                if (isCollidable) {
-                    // Push player back slightly based on collision direction
-                    if (playerAABB.minY < tileAABB.maxY && playerAABB.maxY > tileAABB.maxY) {
-                        // Colliding from below
-                        cameraY += 0.02f;
-                    } else if (playerAABB.maxY > tileAABB.minY && playerAABB.minY < tileAABB.minY) {
-                        // Colliding from above
-                        cameraY -= 0.02f;
-                    }
-
-                    if (playerAABB.minX < tileAABB.maxX && playerAABB.maxX > tileAABB.maxX) {
-                        // Colliding from the left
-                        cameraX += 0.02f;
-                    } else if (playerAABB.maxX > tileAABB.minX && playerAABB.minX < tileAABB.minX) {
-                        // Colliding from the right
-                        cameraX -= 0.02f;
-                    }
-                }
-
-                // Handle special collision types (e.g., type '1')
-                if (mapType == '1') {
-                    collisionType = 1;
-                }
+            if (Collisions.collide(playerAABB, i) == 'l') {
+                // Colliding from the left
+                cameraX += 0.02f;
+            } else if (Collisions.collide(playerAABB, i) == 'r') {
+                // Colliding from the right
+                cameraX -= 0.02f;
             }
         }
 
-        // Adjust camera speed if a special collision was detected
-        if (collisionType == 1) {
-            cameraSpeed = 0.010f;
-        }
     }
 
 
