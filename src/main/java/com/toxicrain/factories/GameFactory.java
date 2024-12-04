@@ -55,7 +55,6 @@ public class GameFactory {
 
         projectileManager = new ProjectileManager();
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0, TextureSystem.getTexture("playerTexture"));
-        projectileManager.addProjectile(projectile);
 
         mouseUtils = new MouseUtils(windowManager.getWindow());
 
@@ -70,10 +69,8 @@ public class GameFactory {
 
         character = new NPC(12,-4,1, Size.AVERAGE.getSize());
         LookAtPlayerSeeingBehavior lookAtPlayerSeeingBehavior = new LookAtPlayerSeeingBehavior();
-        npcBasicSequence = new BehaviorSequence(new FollowPlayerSeeingBehavior(00.1f), lookAtPlayerSeeingBehavior);
+        character.setBehaviorSequence(new BehaviorSequence(new FollowPlayerSeeingBehavior(00.1f), lookAtPlayerSeeingBehavior));
 
-
-        npcManager.addNPC(character, npcBasicSequence);
     }
 
     public static void loadShaders(){

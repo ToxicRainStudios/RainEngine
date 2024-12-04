@@ -39,6 +39,7 @@ public class NPC {
         this.fieldOfViewAngle = 90f;  // Example 90-degree FOV
         this.visionDistance = 300f;   // Max distance the NPC can see
         this.size = size;
+        GameFactory.npcManager.addNPC(this, behaviorSequence);
     }
 
     public boolean canSeePlayer() {
