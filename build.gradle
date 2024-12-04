@@ -51,7 +51,7 @@ dependencies {
 
     // Logging
     implementation 'org.slf4j:slf4j-api:1.7.32'
-    implementation 'ch.qos.logback:logback-classic:1.2.6'
+    implementation 'ch.qos.logback:logback-classic:1.4.12'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.28' // Use the latest version available
@@ -59,7 +59,7 @@ dependencies {
 }
 
 application {
-    mainClassName = 'Application'
+    mainClassName = 'com.toxicrain.Application'
 }
 
 jar {
