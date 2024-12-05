@@ -19,6 +19,7 @@ public class MathUtils {
     public static float clamp(float value, int min, int max) {
         return Math.max(min, Math.min(value, max));
     }
+
     /**
      * Calculates the angle in degrees between the positive x-axis and the point (x, y).
      *
