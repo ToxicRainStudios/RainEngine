@@ -24,7 +24,7 @@ public class LookAtPlayerSeeingBehavior extends Behavior {
             float angle = (float) Math.atan2(deltaY, deltaX);
 
             // Set the NPC's rotation or facing direction
-            npc.lookAt(angle); // Implement lookAt method in NPC class
+            npc.lookAt(angle);
 
             return true; // Indicates that the behavior executed successfully
         }

@@ -1,5 +1,8 @@
 package com.toxicrain.core;
 
+/**
+ * The Axis Aligned Bounding Box
+ */
 public class AABB {
     public float minX, minY; // Minimum corner
     public float maxX, maxY; // Maximum corner

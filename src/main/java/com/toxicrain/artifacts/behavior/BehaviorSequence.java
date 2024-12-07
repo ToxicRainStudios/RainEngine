@@ -2,7 +2,9 @@ package com.toxicrain.artifacts.behavior;
 
 import com.toxicrain.artifacts.NPC;
 
-// Composite class to manage a sequence of behaviors
+/**
+ * Composite class to manage a sequence of behaviors
+ */
 public class BehaviorSequence extends Behavior {
     private final Behavior[] behaviors;
 
