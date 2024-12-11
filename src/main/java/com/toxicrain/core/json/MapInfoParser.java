@@ -31,8 +31,6 @@ public class MapInfoParser {
         // Read JSON file as String
         String jsonString = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory("resources/json/" + mapName + ".json"));
 
-        doCollide.add(':');
-
         // Parse JSON string
         JSONArray jsonArray = new JSONArray(jsonString);
 

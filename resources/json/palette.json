@@ -1,12 +1,36 @@
 {
   "textures": {
-    ":": "floorTexture",
-    "+": "concreteTexture1",
-    "-": "concreteTexture2",
-    "1": "dirtTexture1",
-    "2": "dirtTexture2",
-    "3": "grassTexture1",
-    "`": "playerTexture",
-    "~": "splatterTexture"
+    ":": {
+      "name": "floorTexture",
+      "collision": true
+    },
+    "+": {
+      "name": "concreteTexture1",
+      "collision": true
+    },
+    "-": {
+      "name": "concreteTexture2",
+      "collision": true
+    },
+    "1": {
+      "name": "dirtTexture1",
+      "collision": false
+    },
+    "2": {
+      "name": "dirtTexture2",
+      "collision": false
+    },
+    "3": {
+      "name": "grassTexture1",
+      "collision": true
+    },
+    "`": {
+      "name": "playerTexture",
+      "collision": false
+    },
+    "~": {
+      "name": "splatterTexture",
+      "collision": false
+    }
   }
 }
