@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
  */
 public class RainLogger { //TODO maybe replace this? Separate loggers for Lua would be nice
 
-    private static final Logger logger = LoggerFactory.getLogger("RainEngine");
-
+    private static final Logger rainLogger = LoggerFactory.getLogger("RainEngine");
+    private static final Logger luaLogger = LoggerFactory.getLogger("RainEngine - Lua");
 
     /**
      * Prints a log message to the console.
@@ -19,7 +19,7 @@ public class RainLogger { //TODO maybe replace this? Separate loggers for Lua wo
      * @param input The message to be logged.
      */
     public static void printLOG(String input){
-        logger.info(input);
+        rainLogger.info(input);
     }
     /**
      * Prints a log message to the console if a condition
@@ -29,7 +29,7 @@ public class RainLogger { //TODO maybe replace this? Separate loggers for Lua wo
      * @param bool The condition to print
      */
     public static void printLOGConditional(String input, boolean bool){
-        if(bool) logger.info(input);
+        if(bool) rainLogger.info(input);
     }
     /**
      * Prints an error message to the console.
@@ -37,7 +37,7 @@ public class RainLogger { //TODO maybe replace this? Separate loggers for Lua wo
      * @param input The error message to be logged.
      */
     public static void printERROR(String input){
-        logger.error(input);
+        rainLogger.error(input);
     }
 
 }
