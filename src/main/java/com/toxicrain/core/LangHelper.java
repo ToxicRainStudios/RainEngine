@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 public class LangHelper {
     private ResourceBundle resourceBundle;
+    private final String baseName;
 
     /**
      * Constructs a LangHelper with the specified resource bundle base name and locale.
@@ -13,6 +14,7 @@ public class LangHelper {
      * @param locale   The locale to use.
      */
     public LangHelper(String baseName, Locale locale) {
+        this.baseName = baseName;
         loadResourceBundle(baseName, locale);
     }
 
@@ -37,7 +39,11 @@ public class LangHelper {
      * @return The message corresponding to the key, or a default message if the key is not found.
      */
     public String get(String key) {
-        return resourceBundle.getString(key);
+        try {
+            return resourceBundle.getString(key);
+        } catch (java.util.MissingResourceException e) {
+            return "Missing key: " + key; // Default message if key is not found
+        }
     }
 
     /**
@@ -46,7 +52,6 @@ public class LangHelper {
      * @param locale The new locale to set.
      */
     public void changeLocale(Locale locale) {
-        loadResourceBundle(resourceBundle.getBaseBundleName(), locale);
+        loadResourceBundle(baseName, locale);
     }
 }
-

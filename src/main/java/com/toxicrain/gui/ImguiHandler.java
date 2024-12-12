@@ -11,6 +11,7 @@ import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImBoolean;
 import imgui.type.ImFloat;
+import imgui.type.ImInt;
 import imgui.type.ImString;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -23,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Locale;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 
@@ -141,8 +143,8 @@ public class ImguiHandler {
         ImGui.begin("Settings Window", windowFlags); // Begin ImGui "window" with no visuals
 
         // Title
-        ImGui.setCursorPos((screenWidth - ImGui.calcTextSize("Settings").x) / 2, 50);
-        ImGui.text("Settings");
+        ImGui.setCursorPos((screenWidth - ImGui.calcTextSize(GameFactory.langHelper.get("gui.menu.settings")).x) / 2, 50);
+        ImGui.text(GameFactory.langHelper.get("gui.menu.settings"));
 
         // Maximum width for sliders/input fields
         float maxControlWidth = 200.0f;
@@ -186,6 +188,39 @@ public class ImguiHandler {
             settings.modifySetting("windowHeight", windowHeight.get());
         }
         ImGui.popItemWidth(); // Reset item width after
+
+        // Initialize the selected language index using ImInt
+        ImInt selectedLang = new ImInt(0);  // Default to English
+
+        // Languages array for the combo box
+        String[] languages = {"English", "Español", "Français"};
+
+        // Language Label
+        String langLabel = GameFactory.langHelper.get("gui.menu.lang");
+        float langTotalWidth = ImGui.calcTextSize(langLabel).x + ImGui.getItemRectSize().x + 10; // Text width + checkbox width + spacing
+        ImGui.setCursorPos((screenWidth - langTotalWidth) / 2, screenHeight / 2 - 120);
+        ImGui.text(langLabel);
+        ImGui.sameLine();
+        ImGui.pushItemWidth(200);
+
+        // Show the combo box and update selectedLang
+        if (ImGui.combo("##LanguageCombo", selectedLang, languages, languages.length)) {
+            String selectedLanguage = languages[selectedLang.get()];
+            Locale newLocale;
+
+            if (selectedLanguage.equals("Español")) {
+                newLocale = new Locale("es", "ES");
+            } else if (selectedLanguage.equals("Français")) {
+                newLocale = new Locale("fr", "FR");
+            } else {
+                newLocale = new Locale("en", "US"); // Default to English
+            }
+
+            // Change language in LangHelper
+           GameFactory.langHelper.changeLocale(newLocale);
+           ImGui.popItemWidth();
+        }
+
 
         // FOV Slider
         String fovText = "Field of View:";
