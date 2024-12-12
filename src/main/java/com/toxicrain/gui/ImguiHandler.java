@@ -250,7 +250,7 @@ public class ImguiHandler {
             System.exit(0);
         }
 
-        String versionInfo = "© 2024 Toxic Rain - " + GameInfoParser.gameVersion;
+        String versionInfo = "© 2024 "+ GameInfoParser.gameMakers + " - " + GameInfoParser.gameVersion;
         float textWidth = ImGui.calcTextSize(versionInfo).x;
         float textHeight = ImGui.calcTextSize(versionInfo).y;
         ImGui.setCursorPos(screenWidth - textWidth - 10, screenHeight - textHeight - 10); // Adjusts padding from the edges

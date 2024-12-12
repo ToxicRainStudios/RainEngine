@@ -22,7 +22,7 @@
     },
     "3": {
       "name": "grassTexture1",
-      "collision": true
+      "collision": false
     },
     "`": {
       "name": "playerTexture",
