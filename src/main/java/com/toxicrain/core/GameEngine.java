@@ -1,9 +1,7 @@
 package com.toxicrain.core;
 
-import com.toxicrain.artifacts.behavior.*;
 import com.toxicrain.core.json.*;
 import com.toxicrain.core.lua.LuaManager;
-import com.toxicrain.core.render.AABBRenderer;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.artifacts.Tile;
 import com.toxicrain.factories.GameFactory;
