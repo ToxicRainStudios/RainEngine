@@ -44,8 +44,6 @@ public class GameFactory {
     public static NPCManager npcManager;
     public static NPC character;
 
-    public static BehaviorSequence npcBasicSequence;
-
     public static void load(){
         player = new Player(5, 5, 5, TextureSystem.getTexture("playerTexture"), false);
         guiManager = new GuiManager();
