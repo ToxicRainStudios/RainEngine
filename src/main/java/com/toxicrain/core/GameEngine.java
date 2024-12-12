@@ -3,6 +3,7 @@ package com.toxicrain.core;
 import com.toxicrain.artifacts.behavior.*;
 import com.toxicrain.core.json.*;
 import com.toxicrain.core.lua.LuaManager;
+import com.toxicrain.core.render.AABBRenderer;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.artifacts.Tile;
 import com.toxicrain.factories.GameFactory;
@@ -45,6 +46,7 @@ public class GameEngine {
         GameFactory.loadlua();
         LuaManager.categorizeScripts("resources/scripts/");
         LuaManager.executeInitScripts();
+        Tile.combineTouchingAABBs();
 
         windowManager = new WindowManager((int) SettingsInfoParser.getInstance().windowWidth, (int) SettingsInfoParser.getInstance().windowHeight, true);
 
@@ -192,7 +194,6 @@ public class GameEngine {
         GameFactory.guiManager.render(); // Outputs: Rendering Main Menu
         LuaManager.executeAllImguiScripts();
         GameFactory.imguiApp.render();
-
         // Swap buffers and poll events
         windowManager.swapAndPoll();
     }
