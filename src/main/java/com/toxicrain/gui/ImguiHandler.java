@@ -126,7 +126,10 @@ public class ImguiHandler {
         // Get the instance of SettingsInfo
         SettingsInfoParser settings = SettingsInfoParser.getInstance();
 
-        // Set window flags to make the ImGui window transparent and immovable
+        // Initialize the GuiBuilder
+        GuiBuilder gui = new GuiBuilder();
+
+        // Set window flags for transparency and immovability
         int windowFlags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize |
                 ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoBackground;
@@ -135,27 +138,24 @@ public class ImguiHandler {
         float screenWidth = ImGui.getIO().getDisplaySizeX();
         float screenHeight = ImGui.getIO().getDisplaySizeY();
 
-        // Position the ImGui window at the top-left corner
-        ImGui.setNextWindowPos(0, 0);
-        // Set the window size to cover the entire screen
-        ImGui.setNextWindowSize(screenWidth, screenHeight);
+        // Start the window with no visuals (full-screen size and position)
+        gui.beginWindow("Settings Window", windowFlags);
 
-        ImGui.begin("Settings Window", windowFlags); // Begin ImGui "window" with no visuals
-
-        // Title
-        ImGui.setCursorPos((screenWidth - ImGui.calcTextSize(GameFactory.langHelper.get("gui.menu.settings")).x) / 2, 50);
-        ImGui.text(GameFactory.langHelper.get("gui.menu.settings"));
+        // Title centered
+        gui.addTextCentered(GameFactory.langHelper.get("gui.menu.settings"), 50);
 
         // Maximum width for sliders/input fields
         float maxControlWidth = 200.0f;
 
         // VSync Toggle (Checkbox)
-        String vSyncText = "VSync";
+        String vSyncText = GameFactory.langHelper.get("gui.menu.vsync");
+        ImBoolean vSync = new ImBoolean(settings.getVsync());
+        gui.addTextCentered(vSyncText, screenHeight / 2 - 65);
+
+        // Set up checkbox to be centered horizontally
         float vSyncTextWidth = ImGui.calcTextSize(vSyncText).x;
         float vSyncTotalWidth = vSyncTextWidth + ImGui.getItemRectSize().x + 10; // Text width + checkbox width + spacing
-        ImGui.setCursorPos((screenWidth - vSyncTotalWidth) / 2, screenHeight / 2 - 80);
-        ImBoolean vSync = new ImBoolean(settings.getVsync());
-        ImGui.text(vSyncText);
+        ImGui.setCursorPos((screenWidth - vSyncTotalWidth) / 2, screenHeight / 2 - 65);
         ImGui.sameLine();
         if (ImGui.checkbox("##VSyncCheckbox", vSync)) {
             settings.modifySetting("vSync", vSync.get());
@@ -163,51 +163,31 @@ public class ImguiHandler {
 
         // Window Width Input
         String widthText = "Window Width:";
-        float widthTextWidth = ImGui.calcTextSize(widthText).x;
-        float widthTotalWidth = widthTextWidth + maxControlWidth + 10; // Text width + input field width + spacing
-        ImGui.setCursorPos((screenWidth - widthTotalWidth) / 2, screenHeight / 2 - 40);
-        ImGui.text(widthText);
-        ImGui.sameLine();
         ImFloat windowWidth = new ImFloat(settings.getWindowWidth());
-        ImGui.pushItemWidth(maxControlWidth); // Set max width for the input field
-        if (ImGui.inputFloat("##WindowWidth", windowWidth)) {
-            settings.modifySetting("windowWidth", windowWidth.get());
-        }
-        ImGui.popItemWidth(); // Reset item width after
+        gui.addTextCentered(widthText, screenHeight / 2 - 40)
+                .addFloatInput("##WindowWidth", windowWidth, maxControlWidth);
+        settings.modifySetting("windowWidth", windowWidth.get());
 
         // Window Height Input
         String heightText = "Window Height:";
-        float heightTextWidth = ImGui.calcTextSize(heightText).x;
-        float heightTotalWidth = heightTextWidth + maxControlWidth + 10; // Text width + input field width + spacing
-        ImGui.setCursorPos((screenWidth - heightTotalWidth) / 2, screenHeight / 2);
-        ImGui.text(heightText);
-        ImGui.sameLine();
         ImFloat windowHeight = new ImFloat(settings.getWindowHeight());
-        ImGui.pushItemWidth(maxControlWidth); // Set max width for the input field
-        if (ImGui.inputFloat("##WindowHeight", windowHeight)) {
-            settings.modifySetting("windowHeight", windowHeight.get());
-        }
-        ImGui.popItemWidth(); // Reset item width after
+        gui.addTextCentered(heightText, screenHeight / 2)
+                .addFloatInput("##WindowHeight", windowHeight, maxControlWidth);
+        settings.modifySetting("windowHeight", windowHeight.get());
 
-        // Initialize the selected language index using ImInt
-        ImInt selectedLang = new ImInt(0);  // Default to English
-
-        // Languages array for the combo box
+        // Language Selection ComboBox
+        ImInt selectedLang = new ImInt(0); // Default to English
         String[] languages = {"English", "Español", "Français"};
+        gui.addTextCentered(GameFactory.langHelper.get("gui.menu.lang"), screenHeight / 2 - 120);
 
-        // Language Label
-        String langLabel = GameFactory.langHelper.get("gui.menu.lang");
-        float langTotalWidth = ImGui.calcTextSize(langLabel).x + ImGui.getItemRectSize().x + 10; // Text width + checkbox width + spacing
-        ImGui.setCursorPos((screenWidth - langTotalWidth) / 2, screenHeight / 2 - 120);
-        ImGui.text(langLabel);
-        ImGui.sameLine();
-        ImGui.pushItemWidth(200);
+// Center the combo box
+        float langComboBoxWidth = maxControlWidth; // Max width for the combo box
+        ImGui.setCursorPos((screenWidth - langComboBoxWidth) / 2, screenHeight / 2 - 105); // Position combo box horizontally centered
+        ImGui.pushItemWidth(maxControlWidth);  // Set max width for the combo box
 
-        // Show the combo box and update selectedLang
         if (ImGui.combo("##LanguageCombo", selectedLang, languages, languages.length)) {
             String selectedLanguage = languages[selectedLang.get()];
             Locale newLocale;
-
             if (selectedLanguage.equals("Español")) {
                 newLocale = new Locale("es", "ES");
             } else if (selectedLanguage.equals("Français")) {
@@ -215,36 +195,29 @@ public class ImguiHandler {
             } else {
                 newLocale = new Locale("en", "US"); // Default to English
             }
-
-            // Change language in LangHelper
-           GameFactory.langHelper.changeLocale(newLocale);
-           ImGui.popItemWidth();
+            GameFactory.langHelper.changeLocale(newLocale);
         }
+
+        ImGui.popItemWidth();  // Reset item width after
 
 
         // FOV Slider
         String fovText = "Field of View:";
-        float fovTextWidth = ImGui.calcTextSize(fovText).x;
-        float fovTotalWidth = fovTextWidth + maxControlWidth + 10; // Text width + slider width + spacing
-        ImGui.setCursorPos((screenWidth - fovTotalWidth) / 2, screenHeight / 2 + 40);
-        ImGui.text(fovText);
-        ImGui.sameLine();
         ImFloat fov = new ImFloat(settings.getFov());
-        ImGui.pushItemWidth(maxControlWidth); // Set max width for the slider
-        if (ImGui.sliderFloat("##FovSlider", fov.getData(), 30.0f, 120.0f, "%.1f")) {
-            settings.modifySetting("fov", fov.get());
-        }
-        ImGui.popItemWidth(); // Reset item width after
+        gui.addTextCentered(fovText, screenHeight / 2 + 40)
+                .addSlider("##FovSlider", fov, 30.0f, 120.0f, "%.1f", maxControlWidth);
+        settings.modifySetting("fov", fov.get());
 
-        // Back Button
-        ImGui.setCursorPos((screenWidth - 100) / 2, screenHeight / 2 + 100);
-        if (ImGui.button("Back", 100, 30)) {
+        // Back Button centered
+        gui.addButtonCentered("Back", () -> {
             GameFactory.guiManager.removeActiveGUI("Settings");
             GameFactory.guiManager.addActiveGUI("MainMenu");
-        }
+        }, screenHeight / 2 + 100, 100);
 
-        ImGui.end();
+        // Render the GUI
+        gui.endWindow();
     }
+
 
     public void drawMainMenu() {
         int windowFlags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize |
@@ -263,18 +236,18 @@ public class ImguiHandler {
                 // Add the centered "Play" button
                 .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.play"), () -> {
                     GameFactory.guiManager.removeActiveGUI("MainMenu");
-                }, ImGui.getIO().getDisplaySizeY() / 2)
+                }, ImGui.getIO().getDisplaySizeY() / 2, 100)
 
                 // Add the centered "Settings" button
                 .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.settings"), () -> {
                     GameFactory.guiManager.removeActiveGUI("MainMenu");
                     GameFactory.guiManager.addActiveGUI("Settings");
-                }, ImGui.getIO().getDisplaySizeY() / 2 + 40)
+                }, ImGui.getIO().getDisplaySizeY() / 2 + 40, 100)
 
                 // Add the centered "Exit" button
                 .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.exit"), () -> {
                     System.exit(0);
-                }, ImGui.getIO().getDisplaySizeY() / 2 + 80)
+                }, ImGui.getIO().getDisplaySizeY() / 2 + 80, 100)
 
                 // Add version info at the bottom-right corner
                 .addTextAtPosition("© 2024 " + GameInfoParser.gameMakers + " - " + GameInfoParser.gameVersion,

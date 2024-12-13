@@ -2,6 +2,7 @@ package com.toxicrain.gui;
 
 import imgui.ImGui;
 import imgui.type.ImBoolean;
+import imgui.type.ImFloat;
 import imgui.type.ImInt;
 
 import java.util.List;
@@ -9,7 +10,13 @@ import java.util.List;
 public class GuiBuilder {
 
     public GuiBuilder beginWindow(String name) {
-        ImGui.begin(name);
+        return beginWindow(name, 0); // Default flags as 0
+    }
+
+    public GuiBuilder beginWindow(String name, int flags) {
+        ImGui.setNextWindowPos(0, 0);
+        ImGui.setNextWindowSize(ImGui.getIO().getDisplaySizeX(), ImGui.getIO().getDisplaySizeY());
+        ImGui.begin(name, flags);
         return this;
     }
 
@@ -35,17 +42,18 @@ public class GuiBuilder {
         return this;
     }
 
-    // Combo box support
     public GuiBuilder addComboBox(String label, ImInt selectedIndex, List<String> options) {
-        // Convert the List of options to an array of Strings (as required by ImGui)
+        if (options == null || options.isEmpty()) {
+            throw new IllegalArgumentException("Options for combo box cannot be null or empty.");
+        }
+
         String[] optionsArray = options.toArray(new String[0]);
 
-        // Create the combo box
         if (ImGui.beginCombo(label, optionsArray[selectedIndex.get()])) {
             for (int i = 0; i < optionsArray.length; i++) {
                 boolean selected = (i == selectedIndex.get());
                 if (ImGui.selectable(optionsArray[i], selected)) {
-                    selectedIndex.set(i); // Update the selected index
+                    selectedIndex.set(i);
                 }
             }
             ImGui.endCombo();
@@ -53,11 +61,26 @@ public class GuiBuilder {
 
         return this;
     }
+    public GuiBuilder addSlider(String label, ImFloat value, float minValue, float maxValue, String format, float maxWidth) {
+        float screenWidth = ImGui.getIO().getDisplaySizeX();
+        ImGui.setCursorPos((screenWidth - maxWidth) / 2, ImGui.getCursorPosY());
+        ImGui.pushItemWidth(maxWidth); // Set max width for the slider
+        if (ImGui.sliderFloat(label, value.getData(), minValue, maxValue, format)) {
+            // Handle value change if needed
+        }
+        ImGui.popItemWidth(); // Reset item width after
+        return this;
+    }
 
-    public GuiBuilder beginWindow(String name, int flags) {
-        ImGui.setNextWindowPos(0, 0);
-        ImGui.setNextWindowSize(ImGui.getIO().getDisplaySizeX(), ImGui.getIO().getDisplaySizeY());
-        ImGui.begin(name, flags);
+    // New Method: addFloatInput for float values
+    public GuiBuilder addFloatInput(String label, ImFloat value, float maxWidth) {
+        float screenWidth = ImGui.getIO().getDisplaySizeX();
+        ImGui.setCursorPos((screenWidth - maxWidth) / 2, ImGui.getCursorPosY());
+        ImGui.pushItemWidth(maxWidth); // Set max width for the input field
+        if (ImGui.inputFloat(label, value)) {
+            // Handle value change if needed
+        }
+        ImGui.popItemWidth(); // Reset item width after
         return this;
     }
 
@@ -69,9 +92,8 @@ public class GuiBuilder {
         return this;
     }
 
-    public GuiBuilder addButtonCentered(String label, Runnable onClick, float yOffset) {
+    public GuiBuilder addButtonCentered(String label, Runnable onClick, float yOffset, float buttonWidth) {
         float screenWidth = ImGui.getIO().getDisplaySizeX();
-        float buttonWidth = 100;
         ImGui.setCursorPos((screenWidth - buttonWidth) / 2, yOffset);
         if (ImGui.button(label, buttonWidth, 30)) {
             onClick.run();
@@ -88,5 +110,4 @@ public class GuiBuilder {
     public void render() {
         ImGui.render();
     }
-
 }
