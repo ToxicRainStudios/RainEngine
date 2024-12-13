@@ -180,7 +180,7 @@ public class ImguiHandler {
         String[] languages = {"English", "Español", "Français"};
         gui.addTextCentered(GameFactory.langHelper.get("gui.menu.lang"), screenHeight / 2 - 120);
 
-// Center the combo box
+        // Center the combo box
         float langComboBoxWidth = maxControlWidth; // Max width for the combo box
         ImGui.setCursorPos((screenWidth - langComboBoxWidth) / 2, screenHeight / 2 - 105); // Position combo box horizontally centered
         ImGui.pushItemWidth(maxControlWidth);  // Set max width for the combo box
