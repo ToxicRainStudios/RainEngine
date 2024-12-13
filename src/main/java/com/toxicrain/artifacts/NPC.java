@@ -3,6 +3,7 @@ package com.toxicrain.artifacts;
 import com.toxicrain.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.core.AABB;
 import com.toxicrain.core.Constants;
+import com.toxicrain.core.interfaces.IArtifact;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.core.Color;
@@ -11,7 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 
-public class NPC {
+public class NPC implements IArtifact {
     @Getter @Setter
     private float X; // Current X position
     @Getter @Setter
@@ -103,7 +104,6 @@ public class NPC {
     }
 
     private void handleCollisions() {
-        int collisionType = 0;
         float halfSize = this.size / 2.0f;
 
         // Create player's AABB based on its position and size
@@ -113,24 +113,21 @@ public class NPC {
                 getX() + halfSize, // maxX
                 getY() + halfSize  // maxY
         );
-        for (int i = Tile.aabbs.size()- 1; i >= 0; i--) {
+        // Push player back slightly based on collision direction
+        if (Collisions.collideWorld(playerAABB) == 'u') {
+            // Colliding from below
+            this.Y += 0.02f;
+        } else if (Collisions.collideWorld(playerAABB) == 'd') {
+            // Colliding from above
+            this.Y -= 0.02f;
+        }
 
-            // Push player back slightly based on collision direction
-            if (Collisions.collide(playerAABB, i) == 'u') {
-                // Colliding from below
-                this.Y += 0.02f;
-            } else if (Collisions.collide(playerAABB, i) == 'd') {
-                // Colliding from above
-                this.Y -= 0.02f;
-            }
-
-            if (Collisions.collide(playerAABB, i) == 'l') {
-                // Colliding from the left
-                this.X += 0.02f;
-            } else if (Collisions.collide(playerAABB, i) == 'r') {
-                // Colliding from the right
-                this.X -= 0.02f;
-            }
+        if (Collisions.collideWorld(playerAABB) == 'l') {
+            // Colliding from the left
+            this.X += 0.02f;
+        } else if (Collisions.collideWorld(playerAABB) == 'r') {
+            // Colliding from the right
+            this.X -= 0.02f;
         }
 
     }

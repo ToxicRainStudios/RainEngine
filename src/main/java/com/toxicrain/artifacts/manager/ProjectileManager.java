@@ -1,7 +1,6 @@
 package com.toxicrain.artifacts.manager;
 
 import com.toxicrain.artifacts.Projectile;
-import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.render.BatchRenderer;
 
 import java.util.ArrayList;
