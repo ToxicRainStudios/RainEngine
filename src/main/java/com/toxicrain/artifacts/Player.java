@@ -141,22 +141,26 @@ public class Player implements IArtifact {
                 cameraX + playerHalfSize, // maxX
                 cameraY + playerHalfSize  // maxY
         );
+        char collisionDirection = Collisions.collideWorld(playerAABB);
 
-        // Push player back slightly based on collision direction
-        if (Collisions.collideWorld(playerAABB) == 'u') {
-            // Colliding from below
-            cameraY += 0.02f;
-        } else if (Collisions.collideWorld(playerAABB) == 'd') {
-            // Colliding from above
-            cameraY -= 0.02f;
-        }
-
-        if (Collisions.collideWorld(playerAABB) == 'l') {
-            // Colliding from the left
-            cameraX += 0.02f;
-        } else if (Collisions.collideWorld(playerAABB) == 'r') {
-            // Colliding from the right
-            cameraX -= 0.02f;
+        // Handle the collision direction with a switch statement
+        switch (collisionDirection) {
+            case 'u':
+                // Colliding from below
+                cameraY += 0.02f;
+                break;
+            case 'd':
+                // Colliding from above
+                cameraY -= 0.02f;
+                break;
+            case 'l':
+                // Colliding from the left
+                cameraX += 0.02f;
+                break;
+            case 'r':
+                // Colliding from the right
+                cameraX -= 0.02f;
+                break;
         }
 
     }

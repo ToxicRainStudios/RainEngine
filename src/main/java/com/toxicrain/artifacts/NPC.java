@@ -113,23 +113,28 @@ public class NPC implements IArtifact {
                 getX() + halfSize, // maxX
                 getY() + halfSize  // maxY
         );
-        // Push player back slightly based on collision direction
-        if (Collisions.collideWorld(playerAABB) == 'u') {
-            // Colliding from below
-            this.Y += 0.02f;
-        } else if (Collisions.collideWorld(playerAABB) == 'd') {
-            // Colliding from above
-            this.Y -= 0.02f;
-        }
 
-        if (Collisions.collideWorld(playerAABB) == 'l') {
-            // Colliding from the left
-            this.X += 0.02f;
-        } else if (Collisions.collideWorld(playerAABB) == 'r') {
-            // Colliding from the right
-            this.X -= 0.02f;
-        }
+        char collisionDirection = Collisions.collideWorld(playerAABB);
 
+        // Handle the collision direction with a switch statement
+        switch (collisionDirection) {
+            case 'u':
+                // Colliding from below
+                this.Y += 0.002f;
+                break;
+            case 'd':
+                // Colliding from above
+                this.Y -= 0.002f;
+                break;
+            case 'l':
+                // Colliding from the left
+                this.X += 0.002f;
+                break;
+            case 'r':
+                // Colliding from the right
+                this.X -= 0.002f;
+                break;
+        }
     }
 }
 
