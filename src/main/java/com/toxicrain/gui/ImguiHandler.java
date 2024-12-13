@@ -247,53 +247,44 @@ public class ImguiHandler {
     }
 
     public void drawMainMenu() {
-        // Set window flags to make the ImGui window transparent and immovable
         int windowFlags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize |
                 ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoBackground;
 
-        // Get the display size for full-screen coverage
-        float screenWidth = ImGui.getIO().getDisplaySizeX();
-        float screenHeight = ImGui.getIO().getDisplaySizeY();
+        // Initialize the builder and use it for fluent window building
+        GuiBuilder builder = new GuiBuilder();
 
-        // Position the ImGui window at the top-left corner
-        ImGui.setNextWindowPos(0, 0);
-        // Set the window size to cover the entire screen
-        ImGui.setNextWindowSize(screenWidth, screenHeight);
+        // Begin window with flags (transparent, immovable, etc.)
+        builder.beginWindow("Main Menu Window", windowFlags)
 
-        ImGui.begin("Main Menu Window", windowFlags); // Begin ImGui "window" with no visuals
+                // Add the centered welcome text
+                .addTextCentered(GameFactory.langHelper.get("gui.mainmenu.welcome"), 50)
 
-        // Center text by adding padding (optional)
-        ImGui.setCursorPos((screenWidth - ImGui.calcTextSize(GameFactory.langHelper.get("gui.mainmenu.welcome")).x) / 2, 50);
-        ImGui.text(GameFactory.langHelper.get("gui.mainmenu.welcome"));
+                // Add the centered "Play" button
+                .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.play"), () -> {
+                    GameFactory.guiManager.removeActiveGUI("MainMenu");
+                }, ImGui.getIO().getDisplaySizeY() / 2)
 
-        // Center buttons by calculating the offset for each button
-        ImGui.setCursorPos((screenWidth - 100) / 2, screenHeight / 2);
-        if (ImGui.button(GameFactory.langHelper.get("gui.mainmenu.play"), 100, 30)) {
-            GameFactory.guiManager.removeActiveGUI("MainMenu");
-        }
+                // Add the centered "Settings" button
+                .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.settings"), () -> {
+                    GameFactory.guiManager.removeActiveGUI("MainMenu");
+                    GameFactory.guiManager.addActiveGUI("Settings");
+                }, ImGui.getIO().getDisplaySizeY() / 2 + 40)
 
-        ImGui.setCursorPos((screenWidth - 100) / 2, (screenHeight / 2) + 40);
-        if (ImGui.button(GameFactory.langHelper.get("gui.mainmenu.settings"), 100, 30)) {
-            GameFactory.guiManager.removeActiveGUI("MainMenu");
-            GameFactory.guiManager.addActiveGUI("Settings");
+                // Add the centered "Exit" button
+                .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.exit"), () -> {
+                    System.exit(0);
+                }, ImGui.getIO().getDisplaySizeY() / 2 + 80)
 
-        }
+                // Add version info at the bottom-right corner
+                .addTextAtPosition("© 2024 " + GameInfoParser.gameMakers + " - " + GameInfoParser.gameVersion,
+                        ImGui.getIO().getDisplaySizeX() - ImGui.calcTextSize("© 2024 " + GameInfoParser.gameMakers + " - " + GameInfoParser.gameVersion).x - 10,
+                        ImGui.getIO().getDisplaySizeY() - ImGui.calcTextSize("© 2024 " + GameInfoParser.gameMakers + " - " + GameInfoParser.gameVersion).y - 10)
 
-        ImGui.setCursorPos((screenWidth - 100) / 2, (screenHeight / 2) + 80);
-        if (ImGui.button(GameFactory.langHelper.get("gui.mainmenu.exit"), 100, 30)) {
-            System.exit(0);
-        }
-
-        String versionInfo = "© 2024 "+ GameInfoParser.gameMakers + " - " + GameInfoParser.gameVersion;
-        float textWidth = ImGui.calcTextSize(versionInfo).x;
-        float textHeight = ImGui.calcTextSize(versionInfo).y;
-        ImGui.setCursorPos(screenWidth - textWidth - 10, screenHeight - textHeight - 10); // Adjusts padding from the edges
-        ImGui.text(versionInfo); // Display version info
-
-        // End the ImGui window context
-        ImGui.end();
+                // End window context
+                .endWindow();
     }
+
 
 
     /**
