@@ -119,6 +119,11 @@ public class ImguiHandler {
         ImGui.destroyContext();
     }
 
+    int windowFlags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize |
+            ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar |
+            ImGuiWindowFlags.NoBackground;
+
+
     /**
      * Draws the settings UI using ImGui.
      */
@@ -128,12 +133,7 @@ public class ImguiHandler {
 
         // Initialize the GuiBuilder
         GuiBuilder gui = new GuiBuilder();
-
-        // Set window flags for transparency and immovability
-        int windowFlags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize |
-                ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar |
-                ImGuiWindowFlags.NoBackground;
-
+        
         // Get the display size for full-screen coverage
         float screenWidth = ImGui.getIO().getDisplaySizeX();
         float screenHeight = ImGui.getIO().getDisplaySizeY();
@@ -220,9 +220,6 @@ public class ImguiHandler {
 
 
     public void drawMainMenu() {
-        int windowFlags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize |
-                ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar |
-                ImGuiWindowFlags.NoBackground;
 
         // Initialize the builder and use it for fluent window building
         GuiBuilder builder = new GuiBuilder();
