@@ -93,7 +93,6 @@ public class GameEngine {
         glMatrixMode(GL_PROJECTION);
         glLoadMatrixf(createPerspectiveProjectionMatrix(SettingsInfoParser.getInstance().fov, SettingsInfoParser.getInstance().windowWidth / SettingsInfoParser.getInstance().windowHeight, 1.0f, 100.0f));
 
-
         GameFactory.load();
 
         RainLogger.printLOG("Loading Map Palette");

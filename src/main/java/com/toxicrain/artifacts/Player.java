@@ -94,8 +94,6 @@ public class Player implements IArtifact {
         if (equippedWeapon != null) {
             equippedWeapon.attack(getAngle(MouseUtils.convertToOpenGLCoordinatesOffset(GameFactory.mouseUtils.getMousePosition()[0], GameFactory.mouseUtils.getMousePosition()[1],
                             (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowWidth(), cameraX, cameraY)), cameraX, cameraY);
-        } else {
-            RainLogger.printLOG("No weapon equipped.");
         }
     }
 
