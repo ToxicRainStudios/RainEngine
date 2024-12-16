@@ -48,6 +48,10 @@ public class Player implements IArtifact {
     private float[] openglMousePos;
     private AABB playerAABB;
 
+    // New variable to hold the player's angle
+    @Getter @Setter
+    private float angle;
+
     public Player(float posX, float posY, float posZ, TextureInfo texture, boolean isSprinting) {
         this.posX = posX;
         this.posY = posY;
@@ -88,21 +92,24 @@ public class Player implements IArtifact {
 
     public void attack() {
         if (equippedWeapon != null) {
-            equippedWeapon.attack();
+            equippedWeapon.attack(getAngle(MouseUtils.convertToOpenGLCoordinatesOffset(GameFactory.mouseUtils.getMousePosition()[0], GameFactory.mouseUtils.getMousePosition()[1],
+                            (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowWidth(), cameraX, cameraY)), cameraX, cameraY);
         } else {
             RainLogger.printLOG("No weapon equipped.");
         }
     }
 
     private float getAngle(float[] mousePos) {
+        // Calculate the angle based on the mouse position and player's position
         float dx = mousePos[0] - posX;
         float dy = mousePos[1] - posY;
-        return (float) Math.atan2(dy, dx);
+        this.angle = (float) Math.atan2(dy, dx);  // Store the angle in the field
+        return this.angle;
     }
 
     private void forward(boolean useMouse, int direction) {
         getMouse();
-        float angle = getAngle(openglMousePos);
+        // Now use the stored angle
         float angleXS = (float) Math.sin(angle) * -1;
         float angleYS = (float) Math.cos(angle);
 
@@ -177,7 +184,6 @@ public class Player implements IArtifact {
 
     }
 
-
     private void processInput() {
         handleSprinting();
         handleCollisions();
@@ -200,12 +206,11 @@ public class Player implements IArtifact {
     }
 
     private void handleMovement() {
-        if(!GameEngine.menu){
-            if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkLeft"))) forward(false, 1);
-            if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkRight"))) forward(false, -1);
-            if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkForward"))) forward(true, 1);
-            if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkBackward"))) forward(true, -1);
-        }
+        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkLeft"))) forward(false, 1);
+        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkRight"))) forward(false, -1);
+        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkForward"))) forward(true, 1);
+        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkBackward"))) forward(true, -1);
+        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWeaponOne"))) equipWeapon(GameFactory.pistol);
     }
 
     private void handleAttack() {
