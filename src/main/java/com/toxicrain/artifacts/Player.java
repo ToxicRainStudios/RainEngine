@@ -46,6 +46,7 @@ public class Player implements IArtifact {
     private final List<Weapon> weapons;
     private Weapon equippedWeapon;
     private float[] openglMousePos;
+    private AABB playerAABB;
 
     public Player(float posX, float posY, float posZ, TextureInfo texture, boolean isSprinting) {
         this.posX = posX;
@@ -56,6 +57,16 @@ public class Player implements IArtifact {
         this.weapons = new ArrayList<>();
         this.cameraX = MapInfoParser.playerx;
         this.cameraY = MapInfoParser.playery;
+
+        float playerHalfSize = GameInfoParser.playerSize / 2.0f;
+
+        // Create player's AABB based on its position and size
+        this.playerAABB = new AABB(
+                cameraX - playerHalfSize, // minX
+                cameraY - playerHalfSize, // minY
+                cameraX + playerHalfSize, // maxX
+                cameraY + playerHalfSize  // maxY
+        );
     }
 
     public void addWeapon(Weapon weapon) {
@@ -132,16 +143,17 @@ public class Player implements IArtifact {
     }
 
     private void handleCollisions() {
-        float playerHalfSize = GameInfoParser.playerSize / 2.0f;
+        float halfSize = GameInfoParser.playerSize / 2.0f;
 
-        // Create player's AABB based on its position and size
-        AABB playerAABB = new AABB(
-                cameraX - playerHalfSize, // minX
-                cameraY - playerHalfSize, // minY
-                cameraX + playerHalfSize, // maxX
-                cameraY + playerHalfSize  // maxY
+        // Update npc's AABB based on its position and size
+        this.playerAABB.update(
+                cameraX - halfSize,
+                cameraY - halfSize,
+                cameraX + halfSize,
+                cameraY + halfSize
         );
-        char collisionDirection = Collisions.collideWorld(playerAABB);
+
+        char collisionDirection = Collisions.collideWorld(this.playerAABB);
 
         // Handle the collision direction with a switch statement
         switch (collisionDirection) {

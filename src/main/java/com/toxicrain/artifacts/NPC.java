@@ -27,6 +27,7 @@ public class NPC implements IArtifact {
     private float visionDistance;   // Max distance NPC can see
     private boolean playerInSight;  // If the player is within the vision cone
     private float size;
+    private AABB npcAABB;
     @Getter @Setter
     private BehaviorSequence behaviorSequence;
 
@@ -41,6 +42,16 @@ public class NPC implements IArtifact {
         this.visionDistance = 300f;   // Max distance the NPC can see
         this.size = size;
         GameFactory.npcManager.addNPC(this, behaviorSequence);
+
+        float halfSize = this.size / 2.0f;
+
+        this.npcAABB = new AABB(
+                getX() - halfSize, // minX
+                getY() - halfSize, // minY
+                getX() + halfSize, // maxX
+                getY() + halfSize  // maxY
+        );
+
     }
 
     public boolean canSeePlayer() {
@@ -106,15 +117,15 @@ public class NPC implements IArtifact {
     private void handleCollisions() {
         float halfSize = this.size / 2.0f;
 
-        // Create player's AABB based on its position and size
-        AABB playerAABB = new AABB(
-                getX() - halfSize, // minX
-                getY() - halfSize, // minY
-                getX() + halfSize, // maxX
-                getY() + halfSize  // maxY
+        // Update npc's AABB based on its position and size
+         this.npcAABB.update(
+                getX() - halfSize,
+                getY() - halfSize,
+                getX() + halfSize,
+                getY() + halfSize
         );
 
-        char collisionDirection = Collisions.collideWorld(playerAABB);
+        char collisionDirection = Collisions.collideWorld(this.npcAABB);
 
         // Handle the collision direction with a switch statement
         switch (collisionDirection) {

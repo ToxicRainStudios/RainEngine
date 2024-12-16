@@ -32,4 +32,11 @@ public class AABB {
         this.maxX = combinedMaxX;
         this.maxY = combinedMaxY;
     }
+
+    public void update(float minX, float minY, float maxX, float maxY) {
+        this.minX = minX;
+        this.minY = minY;
+        this.maxX = maxX;
+        this.maxY = maxY;
+    }
 }
