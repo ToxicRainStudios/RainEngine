@@ -1,5 +1,6 @@
 package com.toxicrain.artifacts;
 
+import com.toxicrain.core.RainLogger;
 import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.util.MathUtils;
 import lombok.Getter;
@@ -45,16 +46,16 @@ public class Weapon {
         if (isEquipped) {
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastAttackTime < cooldown) {
-                System.out.println("Weapon is on cooldown. Wait " + (cooldown - (currentTime - lastAttackTime)) + " ms.");
+                RainLogger.rainLogger.debug("Weapon is on cooldown. Wait " + (cooldown - (currentTime - lastAttackTime)) + " ms.");
                 return;
             }
 
             lastAttackTime = currentTime; // Update the last attack time
-            System.out.println("Attacking with " + name + " for " + damage + " damage!");
+            RainLogger.rainLogger.debug("Attacking with " + name + " for " + damage + " damage!");
 
             // Get a random number of projectiles to fire based on the weapon's shot range
             int shotsToFire = MathUtils.getRandomIntBetween(minShot, maxShot);
-            System.out.println("Firing " + shotsToFire + " projectiles!");
+            RainLogger.rainLogger.debug("Firing " + shotsToFire + " projectiles!");
 
             // Fire the projectiles with randomness in position and angle
             for (int i = 0; i < shotsToFire; i++) {
@@ -66,7 +67,7 @@ public class Weapon {
                 createProjectile(playerPosX, playerPosY, randomizedAngle); // Use randomized angle and position
             }
         } else {
-            System.out.println("No weapon equipped.");
+            RainLogger.rainLogger.debug("No weapon equipped.");
         }
     }
 
