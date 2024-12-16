@@ -215,7 +215,6 @@ public class Player implements IArtifact {
 
     private void handleAttack() {
         if (GameFactory.mouseUtils.isMouseButtonPressed(0)) {
-            GameFactory.soundSystem.play(SoundSystem.getSound("Sample"));
             attack();
         }
     }

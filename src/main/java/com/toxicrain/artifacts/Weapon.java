@@ -1,6 +1,9 @@
 package com.toxicrain.artifacts;
 
 import com.toxicrain.core.RainLogger;
+import com.toxicrain.factories.GameFactory;
+import com.toxicrain.sound.SoundInfo;
+import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.util.MathUtils;
 import lombok.Getter;
@@ -20,8 +23,9 @@ public class Weapon {
     private long lastAttackTime; // Tracks the last time the weapon was used
     private long cooldown; // Cooldown duration in milliseconds
     private float spread;
+    private SoundInfo soundInfo;
 
-    public Weapon(String name, int damage, float range, int maxShot, int minShot, TextureInfo projectileTexture, long cooldown, float spread) {
+    public Weapon(String name, int damage, float range, int maxShot, int minShot, TextureInfo projectileTexture, long cooldown, float spread, String soundInfo) {
         this.name = name;
         this.damage = damage;
         this.range = range;
@@ -32,6 +36,7 @@ public class Weapon {
         this.cooldown = cooldown;
         this.lastAttackTime = 0;
         this.spread = spread;
+        this.soundInfo = SoundSystem.getSound(soundInfo);
     }
 
     public void equip() {
@@ -49,6 +54,9 @@ public class Weapon {
                 RainLogger.rainLogger.debug("Weapon is on cooldown. Wait " + (cooldown - (currentTime - lastAttackTime)) + " ms.");
                 return;
             }
+
+            //Play weapon sound
+            GameFactory.soundSystem.play(this.soundInfo);
 
             lastAttackTime = currentTime; // Update the last attack time
             RainLogger.rainLogger.debug("Attacking with " + name + " for " + damage + " damage!");
@@ -76,7 +84,7 @@ public class Weapon {
         float angleInRadians = (float) Math.toRadians(playerAngle + 90);
 
         // Calculate velocity from the adjusted angle
-        float velocityX = (float) Math.cos(angleInRadians) * 0.001f; // Adjust speed as needed
+        float velocityX = (float) Math.cos(angleInRadians) * 0.001f;
         float velocityY = (float) Math.sin(angleInRadians) * 0.001f;
 
         // Spawn the projectile
