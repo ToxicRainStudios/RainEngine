@@ -56,9 +56,9 @@ public class GameFactory {
 
         mouseUtils = new MouseUtils(windowManager.getWindow());
 
-        pistol = new Weapon("Pistol", 3, 20,1,1, TextureSystem.getTexture("bullet"));
-        rifle = new Weapon("Rifle", 3, 20,1,1, TextureSystem.getTexture("bullet"));
-        shotgun = new Weapon("Shotgun", 30, 20,4,5, TextureSystem.getTexture("bullet"));
+        pistol = new Weapon("Pistol", 3, 20,1,1, TextureSystem.getTexture("bullet"),120, 0.00001f);
+        rifle = new Weapon("Rifle", 3, 20,1,1, TextureSystem.getTexture("bullet"), 60, 0.001f);
+        shotgun = new Weapon("Shotgun", 30, 20,4,5, TextureSystem.getTexture("bullet"), 35, 0.1f);
 
     }
 

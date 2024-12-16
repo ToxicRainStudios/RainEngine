@@ -16,6 +16,16 @@ public class MathUtils {
         return random.nextInt((max - min) + 1) + min;
     }
 
+    public static float getRandomFloatBetween(float min, float max) {
+        if (min > max) {
+            throw new IllegalArgumentException("Min cannot be greater than Max");
+        }
+        if (min == max) { //It's stupid to do math if they are the same
+            return min;
+        }
+        return random.nextFloat((max - min) + 1) + min;
+    }
+
     public static float clamp(float value, int min, int max) {
         return Math.max(min, Math.min(value, max));
     }

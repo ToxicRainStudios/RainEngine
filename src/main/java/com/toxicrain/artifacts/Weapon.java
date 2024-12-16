@@ -16,8 +16,11 @@ public class Weapon {
     private int maxShot;
     private int minShot;
     private TextureInfo projectileTexture;
+    private long lastAttackTime; // Tracks the last time the weapon was used
+    private long cooldown; // Cooldown duration in milliseconds
+    private float spread;
 
-    public Weapon(String name, int damage, float range, int maxShot, int minShot, TextureInfo projectileTexture) {
+    public Weapon(String name, int damage, float range, int maxShot, int minShot, TextureInfo projectileTexture, long cooldown, float spread) {
         this.name = name;
         this.damage = damage;
         this.range = range;
@@ -25,6 +28,9 @@ public class Weapon {
         this.maxShot = maxShot;
         this.minShot = minShot;
         this.projectileTexture = projectileTexture;
+        this.cooldown = cooldown;
+        this.lastAttackTime = 0;
+        this.spread = spread;
     }
 
     public void equip() {
@@ -37,18 +43,27 @@ public class Weapon {
 
     public void attack(float playerAngle, float playerPosX, float playerPosY) {
         if (isEquipped) {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastAttackTime < cooldown) {
+                System.out.println("Weapon is on cooldown. Wait " + (cooldown - (currentTime - lastAttackTime)) + " ms.");
+                return;
+            }
+
+            lastAttackTime = currentTime; // Update the last attack time
             System.out.println("Attacking with " + name + " for " + damage + " damage!");
 
             // Get a random number of projectiles to fire based on the weapon's shot range
             int shotsToFire = MathUtils.getRandomIntBetween(minShot, maxShot);
             System.out.println("Firing " + shotsToFire + " projectiles!");
 
-            // Fire the projectiles
+            // Fire the projectiles with randomness in position and angle
             for (int i = 0; i < shotsToFire; i++) {
-                // Adjust the projectile's position slightly for each shot (e.g., randomize x position)
-                float xpos = playerPosX + (i * 2f);  // Example: Slightly offset each shot
-                float ypos = playerPosY;  // Start from player's position
-                createProjectile(xpos, ypos, playerAngle);  // Use player angle for projectile direction
+
+                // Add slight random variation to the angle
+                float angleVariation = MathUtils.getRandomFloatBetween(-spread, spread); // Angle in degrees
+                float randomizedAngle = playerAngle + angleVariation;
+
+                createProjectile(playerPosX, playerPosY, randomizedAngle); // Use randomized angle and position
             }
         } else {
             System.out.println("No weapon equipped.");
@@ -56,13 +71,16 @@ public class Weapon {
     }
 
     private void createProjectile(float xpos, float ypos, float playerAngle) {
-        // Calculate velocity based on the player's angle
-        float velocityX = (float) Math.cos(playerAngle) * range;  // Adjust based on angle
-        float velocityY = (float) Math.sin(playerAngle) * range;  // Adjust based on angle
+        // Rotate the angle by 90 degrees and convert to radians
+        float angleInRadians = (float) Math.toRadians(playerAngle + 90);
 
-        // Create the projectile at the player's position, moving in the direction of the angle
+        // Calculate velocity from the adjusted angle
+        float velocityX = (float) Math.cos(angleInRadians) * 0.001f; // Adjust speed as needed
+        float velocityY = (float) Math.sin(angleInRadians) * 0.001f;
+
+        // Spawn the projectile
         new Projectile(xpos, ypos, velocityX, velocityY, projectileTexture);
 
-        System.out.println("Projectile fired from " + name + "!");
+        System.out.println("Projectile created at (" + xpos + ", " + ypos + ") with velocity (" + velocityX + ", " + velocityY + ")");
     }
 }
