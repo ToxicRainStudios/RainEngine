@@ -81,11 +81,12 @@ public class Weapon {
 
     private void createProjectile(float xpos, float ypos, float playerAngle) {
         // Rotate the angle by 90 degrees and convert to radians
-        float angleInRadians = (float) Math.toRadians(playerAngle + 90);
+        float angleInRadians = (float) Math.toRadians(playerAngle);
+        float[] mousePos = GameFactory.player.getMouse();
 
         // Calculate velocity from the adjusted angle
-        float velocityX = (float) Math.cos(angleInRadians) * 0.001f;
-        float velocityY = (float) Math.sin(angleInRadians) * 0.001f;
+        float velocityX = mousePos[0] * 0.001f;
+        float velocityY = mousePos[1] * 0.001f;
 
         // Spawn the projectile
         new Projectile(xpos, ypos, velocityX, velocityY, projectileTexture);

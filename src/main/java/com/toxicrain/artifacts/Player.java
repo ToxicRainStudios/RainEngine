@@ -1,9 +1,7 @@
 package com.toxicrain.artifacts;
 
 import com.toxicrain.core.AABB;
-import com.toxicrain.core.GameEngine;
 import com.toxicrain.core.RainLogger;
-import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.core.interfaces.IArtifact;
 import com.toxicrain.core.json.GameInfoParser;
@@ -134,10 +132,11 @@ public class Player implements IArtifact {
         prevCameraY = cameraY;
     }
 
-    private void getMouse() {
+    float[] getMouse() {
         float[] mousePos = GameFactory.mouseUtils.getMousePosition();
         openglMousePos = MouseUtils.convertToOpenGLCoordinatesOffset(mousePos[0], mousePos[1],
                 (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowWidth(), cameraX, cameraY);
+        return openglMousePos;
     }
 
     public void render(BatchRenderer batchRenderer) {
