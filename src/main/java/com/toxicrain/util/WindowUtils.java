@@ -1,6 +1,5 @@
 package com.toxicrain.util;
 
-import com.toxicrain.artifacts.Player;
 import com.toxicrain.core.GameEngine;
 import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.factories.GameFactory;
