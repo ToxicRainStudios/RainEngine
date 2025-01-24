@@ -55,11 +55,12 @@ public class GameFactory {
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0, TextureSystem.getTexture("playerTexture"));
 
         mouseUtils = new MouseUtils(windowManager.getWindow());
+    }
 
-        pistol = new Weapon("Pistol", 3, 20,1,1);
-        rifle = new Weapon("Rifle", 3, 20,1,1);
-        shotgun = new Weapon("Shotgun", 30, 20,4,5);
-
+    public static void loadWeapons(){
+        pistol = new Weapon("Pistol", 3, 20,1,1, TextureSystem.getTexture("bullet"),120, 0.00001f, "Sample");
+        rifle = new Weapon("Rifle", 3, 20,1,1, TextureSystem.getTexture("bullet"), 60, 0.001f,"Sample");
+        shotgun = new Weapon("Shotgun", 30, 20,4,5, TextureSystem.getTexture("bullet"), 35, 0.1f,"Sample");
     }
 
     public static void loadNPC(){

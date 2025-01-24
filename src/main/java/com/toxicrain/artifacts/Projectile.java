@@ -12,6 +12,8 @@ public class Projectile implements IArtifact {
     @Getter
     private float x, y;
     private final float velocityX, velocityY;
+    @Getter
+    private float lifeTime;
     private final TextureInfo texture;
 
 
@@ -27,9 +29,10 @@ public class Projectile implements IArtifact {
     public void update() {
         this.x += this.velocityX;
         this.y += this.velocityY;
+        this.lifeTime += 0.0001f;
     }
 
     public void render(BatchRenderer batchRenderer) {
-        batchRenderer.addTexture(this.texture, this.x, this.y, Constants.npcZLevel, 0, 1,1, Color.toFloatArray(Color.WHITE));
+        batchRenderer.addTexturePos(this.texture, this.x, this.y, 1.02f, velocityX, velocityY,1, 1, Color.toFloatArray(Color.WHITE));
     }
 }

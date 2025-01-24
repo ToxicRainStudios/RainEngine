@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
  */
 public class RainLogger { //TODO maybe replace this? Separate loggers for Lua would be nice
 
-    private static final Logger rainLogger = LoggerFactory.getLogger("RainEngine");
-    private static final Logger luaLogger = LoggerFactory.getLogger("RainEngine - Lua");
+    public static final Logger rainLogger = LoggerFactory.getLogger("RainEngine");
+    public static final Logger luaLogger = LoggerFactory.getLogger("RainEngine: Lua");
 
     /**
      * Prints a log message to the console.

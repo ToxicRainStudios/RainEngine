@@ -1,6 +1,7 @@
 package com.toxicrain.artifacts.manager;
 
 import com.toxicrain.artifacts.Projectile;
+import com.toxicrain.core.RainLogger;
 import com.toxicrain.core.render.BatchRenderer;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.List;
 
 public class ProjectileManager {
 
+    private static final int MAX_PROJECTILES = 500; // Maximum number of projectiles allowed
     private final List<Projectile> projectiles;
 
     public ProjectileManager() {
@@ -16,20 +18,25 @@ public class ProjectileManager {
 
     // Add a new projectile to the manager
     public void addProjectile(Projectile projectile) {
-        projectiles.add(projectile);
+        // If the list exceeds the maximum size, remove the oldest projectile
+        while (projectiles.size() >= MAX_PROJECTILES) {
+            projectiles.remove(0); // Remove the first projectile (oldest)
+        }
+        projectiles.add(projectile); // Add the new projectile
     }
 
     // Update all projectiles
     public void update(float deltaTime) {
-        // Loop through all projectiles and update their position
         for (int i = 0; i < projectiles.size(); i++) {
             Projectile projectile = projectiles.get(i);
-            projectile.update();  // Update the projectile's position based on velocity
 
-            // Optionally remove projectiles if they are out of bounds, or if they should expire
+            // Update the projectile's position and age
+            projectile.update();
+
+            // Remove projectiles that meet removal criteria
             if (shouldRemove(projectile)) {
                 projectiles.remove(i);
-                i--;  // Adjust index after removal to avoid skipping elements
+                i--; // Adjust index after removal
             }
         }
     }
@@ -37,7 +44,7 @@ public class ProjectileManager {
     // Render all projectiles
     public void render(BatchRenderer batchRenderer) {
         for (Projectile projectile : projectiles) {
-            projectile.render(batchRenderer);  // Render each projectile
+            projectile.render(batchRenderer);
         }
     }
 
@@ -53,7 +60,10 @@ public class ProjectileManager {
 
     // A method to check if a projectile should be removed
     private boolean shouldRemove(Projectile projectile) {
-        //TODO finish me
+        if (projectile.getLifeTime() > 10.0f) {
+            RainLogger.rainLogger.debug("Removing projectile: " + projectile);
+            return true;
+        }
         return false;
     }
 }

@@ -1,5 +1,10 @@
 package com.toxicrain.artifacts;
 
+import com.toxicrain.core.RainLogger;
+import com.toxicrain.factories.GameFactory;
+import com.toxicrain.sound.SoundInfo;
+import com.toxicrain.sound.SoundSystem;
+import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.util.MathUtils;
 import lombok.Getter;
 
@@ -14,14 +19,24 @@ public class Weapon {
     private boolean isEquipped;
     private int maxShot;
     private int minShot;
+    private TextureInfo projectileTexture;
+    private long lastAttackTime; // Tracks the last time the weapon was used
+    private long cooldown; // Cooldown duration in milliseconds
+    private float spread;
+    private SoundInfo soundInfo;
 
-    public Weapon(String name, int damage, float range, int maxShot, int minShot) {
+    public Weapon(String name, int damage, float range, int maxShot, int minShot, TextureInfo projectileTexture, long cooldown, float spread, String soundInfo) {
         this.name = name;
         this.damage = damage;
         this.range = range;
         this.isEquipped = false;
         this.maxShot = maxShot;
         this.minShot = minShot;
+        this.projectileTexture = projectileTexture;
+        this.cooldown = cooldown;
+        this.lastAttackTime = 0;
+        this.spread = spread;
+        this.soundInfo = SoundSystem.getSound(soundInfo);
     }
 
     public void equip() {
@@ -32,12 +47,50 @@ public class Weapon {
         this.isEquipped = false;
     }
 
-    public void attack() {
+    public void attack(float playerAngle, float playerPosX, float playerPosY) {
         if (isEquipped) {
-            System.out.println("Attacking with " + name + " for " + damage + " damage!");
-            System.out.println(MathUtils.getRandomIntBetween(minShot, maxShot));
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastAttackTime < cooldown) {
+                RainLogger.rainLogger.debug("Weapon is on cooldown. Wait " + (cooldown - (currentTime - lastAttackTime)) + " ms.");
+                return;
+            }
+
+            //Play weapon sound
+            GameFactory.soundSystem.play(this.soundInfo);
+
+            lastAttackTime = currentTime; // Update the last attack time
+            RainLogger.rainLogger.debug("Attacking with " + name + " for " + damage + " damage!");
+
+            // Get a random number of projectiles to fire based on the weapon's shot range
+            int shotsToFire = MathUtils.getRandomIntBetween(minShot, maxShot);
+            RainLogger.rainLogger.debug("Firing " + shotsToFire + " projectiles!");
+
+            // Fire the projectiles with randomness in position and angle
+            for (int i = 0; i < shotsToFire; i++) {
+
+                // Add slight random variation to the angle
+                float angleVariation = MathUtils.getRandomFloatBetween(-spread, spread); // Angle in degrees
+                float randomizedAngle = playerAngle + angleVariation;
+
+                createProjectile(playerPosX, playerPosY, randomizedAngle); // Use randomized angle and position
+            }
         } else {
-            System.out.println("No weapon equipped.");
+            RainLogger.rainLogger.debug("No weapon equipped.");
         }
+    }
+
+    private void createProjectile(float xpos, float ypos, float playerAngle) {
+        // Rotate the angle by 90 degrees and convert to radians
+        float angleInRadians = (float) Math.toRadians(playerAngle);
+        float[] mousePos = GameFactory.player.getMouse();
+
+        // Calculate velocity from the adjusted angle
+        float velocityX = mousePos[0] * 0.001f;
+        float velocityY = mousePos[1] * 0.001f;
+
+        // Spawn the projectile
+        new Projectile(xpos, ypos, velocityX, velocityY, projectileTexture);
+
+        System.out.println("Projectile created at (" + xpos + ", " + ypos + ") with velocity (" + velocityX + ", " + velocityY + ")");
     }
 }

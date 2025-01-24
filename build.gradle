@@ -8,7 +8,7 @@ version 'Dev-2'
 
 sourceCompatibility = 1.8
 
-project.ext.lwjglVersion = '3.3.4'
+project.ext.lwjglVersion = '3.3.6'
 project.ext.jomlVersion = '1.10.1'
 project.ext.imguiVersion = '1.86.11'
 project.ext.luajVersion = '3.0.1'
@@ -51,7 +51,7 @@ dependencies {
 
     // Logging
     implementation 'org.slf4j:slf4j-api:1.7.32'
-    implementation 'ch.qos.logback:logback-classic:1.4.12'
+    implementation 'ch.qos.logback:logback-classic:1.5.16'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.28' // Use the latest version available

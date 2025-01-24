@@ -93,7 +93,6 @@ public class GameEngine {
         glMatrixMode(GL_PROJECTION);
         glLoadMatrixf(createPerspectiveProjectionMatrix(SettingsInfoParser.getInstance().fov, SettingsInfoParser.getInstance().windowWidth / SettingsInfoParser.getInstance().windowHeight, 1.0f, 100.0f));
 
-
         GameFactory.load();
 
         RainLogger.printLOG("Loading Map Palette");
@@ -105,6 +104,9 @@ public class GameEngine {
         RainLogger.printLOG("Initializing SoundSystem");
         GameFactory.soundSystem.init();
         SoundSystem.initSounds();
+
+        //Weapons must be loaded after sounds have been loaded
+        GameFactory.loadWeapons();
 
         RainLogger.printLOG("Loading Shaders");
         GameFactory.loadShaders();
