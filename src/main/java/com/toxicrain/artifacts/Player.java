@@ -60,7 +60,7 @@ public class Player implements IArtifact {
         this.cameraX = MapInfoParser.playerx;
         this.cameraY = MapInfoParser.playery;
 
-        float playerHalfSize = GameInfoParser.playerSize / 2.0f;
+        float playerHalfSize = Size.AVERAGE.getSize();
 
         // Create player's AABB based on its position and size
         this.playerAABB = new AABB(
@@ -91,7 +91,7 @@ public class Player implements IArtifact {
     public void attack() {
         if (equippedWeapon != null) {
             equippedWeapon.attack(getAngle(MouseUtils.convertToOpenGLCoordinatesOffset(GameFactory.mouseUtils.getMousePosition()[0], GameFactory.mouseUtils.getMousePosition()[1],
-                            (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowWidth(), cameraX, cameraY)), cameraX, cameraY);
+                            (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight(), cameraX, cameraY)), cameraX, cameraY);
         }
     }
 
@@ -119,9 +119,9 @@ public class Player implements IArtifact {
     }
 
     public void update(float deltaTime) {
+        getMouse();
         processInput();
         updatePos(cameraX, cameraY, cameraZ);
-        Vector3f center = WindowUtils.getCenter();
 
         // Calculate velocity based on deltaTime
         float velocityX = (cameraX - prevCameraX) / deltaTime;
@@ -135,12 +135,11 @@ public class Player implements IArtifact {
     float[] getMouse() {
         float[] mousePos = GameFactory.mouseUtils.getMousePosition();
         openglMousePos = MouseUtils.convertToOpenGLCoordinatesOffset(mousePos[0], mousePos[1],
-                (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowWidth(), cameraX, cameraY);
+                (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight(), cameraX, cameraY);
         return openglMousePos;
     }
 
     public void render(BatchRenderer batchRenderer) {
-        getMouse();
         Vector3f center = WindowUtils.getCenter();
         batchRenderer.addTexturePos(TextureSystem.getTexture("playerTextureRifle"), center.x, center.y, 1.1f, openglMousePos[0],
                 openglMousePos[1], 1, 1, Color.toFloatArray(Color.WHITE));
