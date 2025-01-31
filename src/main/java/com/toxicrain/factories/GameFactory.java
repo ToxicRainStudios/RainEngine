@@ -58,9 +58,9 @@ public class GameFactory {
     }
 
     public static void loadWeapons(){
-        pistol = new Weapon("Pistol", 3, 20,1,1, TextureSystem.getTexture("bullet"),120, 0.00001f, "Sample");
-        rifle = new Weapon("Rifle", 3, 20,1,1, TextureSystem.getTexture("bullet"), 60, 0.001f,"Sample");
-        shotgun = new Weapon("Shotgun", 30, 20,4,5, TextureSystem.getTexture("bullet"), 35, 0.1f,"Sample");
+        pistol = new Weapon("Pistol", 3, 20,1,1, TextureSystem.getTexture("bullet"),120, 0.9f, "Sample");
+        rifle = new Weapon("Rifle", 3, 20,1,1, TextureSystem.getTexture("bullet"), 60, 0.2f,"Sample");
+        shotgun = new Weapon("Shotgun", 30, 20,5,4, TextureSystem.getTexture("bullet"), 35, 0.1f,"Sample");
     }
 
     public static void loadNPC(){

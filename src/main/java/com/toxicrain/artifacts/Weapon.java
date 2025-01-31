@@ -91,7 +91,7 @@ public class Weapon {
         // Spawn the projectile
         new Projectile(xpos, ypos, velocityX, velocityY, projectileTexture);
 
-        System.out.println("Projectile created at (" + xpos + ", " + ypos +
+        RainLogger.rainLogger.debug("Projectile created at (" + xpos + ", " + ypos +
                 ") with velocity (" + velocityX + ", " + velocityY + ") and angle: " +
                 Math.toDegrees(playerAngle) + " degrees");
     }

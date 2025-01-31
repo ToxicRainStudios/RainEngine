@@ -111,7 +111,7 @@ public class GameEngine {
         RainLogger.printLOG("Loading Shaders");
         GameFactory.loadShaders();
 
-        GameFactory.player.addWeapon(GameFactory.pistol);
+        GameFactory.player.addWeapon(GameFactory.shotgun);
 
         windowManager.doOpenGLSetup();
 
