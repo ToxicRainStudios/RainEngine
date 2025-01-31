@@ -1,6 +1,5 @@
 package com.toxicrain.artifacts;
 
-import com.toxicrain.core.Constants;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.core.interfaces.IArtifact;
@@ -30,6 +29,10 @@ public class Projectile implements IArtifact {
         this.x += this.velocityX;
         this.y += this.velocityY;
         this.lifeTime += 0.0001f;
+
+        if (lifeTime >= 10) { //"De-spawn" projectile
+            GameFactory.projectileManager.removeProjectile(this);
+        }
     }
 
     public void render(BatchRenderer batchRenderer) {

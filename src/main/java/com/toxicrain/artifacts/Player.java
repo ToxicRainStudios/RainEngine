@@ -34,7 +34,8 @@ public class Player implements IArtifact {
     @Setter @Getter
     private float posZ;
     @Getter @Setter
-    private TextureInfo texture;
+    private TextureInfo defaultTexture;
+    private TextureInfo selectedTexture;
     private boolean isSprinting;
     public float cameraX, cameraY, cameraZ = 2; // Default camera Z
     private float prevCameraX, prevCameraY;
@@ -50,11 +51,11 @@ public class Player implements IArtifact {
     @Getter @Setter
     private float angle;
 
-    public Player(float posX, float posY, float posZ, TextureInfo texture, boolean isSprinting) {
+    public Player(float posX, float posY, float posZ, TextureInfo defaultTexture, boolean isSprinting) {
         this.posX = posX;
         this.posY = posY;
         this.posZ = posZ;
-        this.texture = texture;
+        this.defaultTexture = defaultTexture;
         this.isSprinting = isSprinting;
         this.weapons = new ArrayList<>();
         this.cameraX = MapInfoParser.playerx;
@@ -87,6 +88,11 @@ public class Player implements IArtifact {
             RainLogger.printLOG("Weapon not found in inventory.");
         }
     }
+
+    public boolean isWeaponEquipped(Weapon weapon) {
+        return equippedWeapon != null && equippedWeapon.equals(weapon);
+    }
+
 
     public void attack() {
         if (equippedWeapon != null) {
@@ -141,6 +147,21 @@ public class Player implements IArtifact {
     public void update(float deltaTime) {
         getMouse();
         processInput();
+
+        if (isWeaponEquipped(GameFactory.pistol)){
+            selectedTexture = TextureSystem.getTexture("playerTexturePistol");
+        }
+        if (isWeaponEquipped(GameFactory.rifle)){
+            selectedTexture = TextureSystem.getTexture("playerTextureRifle");
+        }
+        if (isWeaponEquipped(GameFactory.shotgun)){
+            selectedTexture = TextureSystem.getTexture("playerTextureShotgun");
+        }
+        else {
+            selectedTexture = defaultTexture;
+        }
+
+
         updatePos(cameraX, cameraY, cameraZ);
 
         // Calculate velocity based on deltaTime
@@ -161,12 +182,12 @@ public class Player implements IArtifact {
 
     public void render(BatchRenderer batchRenderer) {
         Vector3f center = WindowUtils.getCenter();
-        batchRenderer.addTexturePos(TextureSystem.getTexture("playerTextureRifle"), center.x, center.y, 1.1f, openglMousePos[0],
+        batchRenderer.addTexturePos(selectedTexture, center.x, center.y, 1.1f, openglMousePos[0],
                 openglMousePos[1], 1, 1, Color.toFloatArray(Color.WHITE));
     }
 
     private void handleCollisions() {
-        float halfSize = GameInfoParser.playerSize / 2.0f;
+        float halfSize = GameInfoParser.playerSize / 2.0f; //TODO Size
 
         // Update npc's AABB based on its position and size
         this.playerAABB.update(
