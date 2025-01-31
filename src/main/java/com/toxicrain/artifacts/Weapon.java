@@ -55,24 +55,24 @@ public class Weapon {
                 return;
             }
 
-            //Play weapon sound
+            // Play weapon sound
             GameFactory.soundSystem.play(this.soundInfo);
 
-            lastAttackTime = currentTime; // Update the last attack time
+            lastAttackTime = currentTime; // Update last attack time
             RainLogger.rainLogger.debug("Attacking with " + name + " for " + damage + " damage!");
 
             // Get a random number of projectiles to fire based on the weapon's shot range
             int shotsToFire = MathUtils.getRandomIntBetween(minShot, maxShot);
             RainLogger.rainLogger.debug("Firing " + shotsToFire + " projectiles!");
 
-            // Fire the projectiles with randomness in position and angle
             for (int i = 0; i < shotsToFire; i++) {
-
-                // Add slight random variation to the angle
-                float angleVariation = MathUtils.getRandomFloatBetween(-spread, spread); // Angle in degrees
+                // Add slight random variation to the angle (converted to radians if needed)
+                float angleVariation = (float) Math.toRadians(MathUtils.getRandomFloatBetween(-spread, spread));
                 float randomizedAngle = playerAngle + angleVariation;
 
-                createProjectile(playerPosX, playerPosY, randomizedAngle); // Use randomized angle and position
+                RainLogger.rainLogger.debug("Projectile " + (i + 1) + " fired at angle: " + Math.toDegrees(randomizedAngle) + " degrees.");
+
+                createProjectile(playerPosX, playerPosY, randomizedAngle);
             }
         } else {
             RainLogger.rainLogger.debug("No weapon equipped.");
@@ -80,17 +80,19 @@ public class Weapon {
     }
 
     private void createProjectile(float xpos, float ypos, float playerAngle) {
-        // Rotate the angle by 90 degrees and convert to radians
-        float angleInRadians = (float) Math.toRadians(playerAngle);
-        float[] mousePos = GameFactory.player.getMouse();
+        // Ensure playerAngle is in radians (it should be already if from atan2)
 
-        // Calculate velocity from the adjusted angle
-        float velocityX = mousePos[0] * 0.001f;
-        float velocityY = mousePos[1] * 0.001f;
+        float speed = 0.1f; // Adjust speed as needed
+
+        // Calculate velocity from the playerAngle
+        float velocityX = (float) Math.cos(playerAngle) * speed;
+        float velocityY = (float) Math.sin(playerAngle) * speed;
 
         // Spawn the projectile
         new Projectile(xpos, ypos, velocityX, velocityY, projectileTexture);
 
-        System.out.println("Projectile created at (" + xpos + ", " + ypos + ") with velocity (" + velocityX + ", " + velocityY + ")");
+        System.out.println("Projectile created at (" + xpos + ", " + ypos +
+                ") with velocity (" + velocityX + ", " + velocityY + ") and angle: " +
+                Math.toDegrees(playerAngle) + " degrees");
     }
 }

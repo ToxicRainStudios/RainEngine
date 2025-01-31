@@ -90,8 +90,22 @@ public class Player implements IArtifact {
 
     public void attack() {
         if (equippedWeapon != null) {
-            equippedWeapon.attack(getAngle(MouseUtils.convertToOpenGLCoordinatesOffset(GameFactory.mouseUtils.getMousePosition()[0], GameFactory.mouseUtils.getMousePosition()[1],
-                            (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight(), cameraX, cameraY)), cameraX, cameraY);
+            // Get OpenGL mouse coordinates, as used in rendering
+            float[] openglMousePos = MouseUtils.convertToOpenGLCoordinates(
+                    GameFactory.mouseUtils.getMousePosition()[0],
+                    GameFactory.mouseUtils.getMousePosition()[1],
+                    (int) SettingsInfoParser.getInstance().getWindowWidth(),
+                    (int) SettingsInfoParser.getInstance().getWindowHeight()
+            );
+
+            // Convert to world coordinates by factoring in the camera position
+            float worldMouseX = openglMousePos[0] + cameraX;
+            float worldMouseY = openglMousePos[1] + cameraY;
+
+            // Use the same angle as rendering
+            float playerAngle = getAngle(worldMouseX, worldMouseY);
+
+            equippedWeapon.attack(playerAngle, posX, posY);
         }
     }
 
@@ -100,6 +114,12 @@ public class Player implements IArtifact {
         float dx = mousePos[0] - posX;
         float dy = mousePos[1] - posY;
         this.angle = (float) Math.atan2(dy, dx);  // Store the angle in the field
+        return this.angle;
+    }
+    private float getAngle(float targetX, float targetY) {
+        float dx = targetX - posX;
+        float dy = targetY - posY;
+        this.angle = (float) Math.atan2(dy, dx);
         return this.angle;
     }
 
