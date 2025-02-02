@@ -3,13 +3,10 @@ package com.toxicrain.core.json;
 import com.toxicrain.core.RainLogger;
 import lombok.Getter;
 import org.json.JSONObject;
-import org.json.JSONArray;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Iterator;
 
 import com.toxicrain.util.FileUtils;
 

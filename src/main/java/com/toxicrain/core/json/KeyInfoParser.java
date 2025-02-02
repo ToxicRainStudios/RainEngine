@@ -55,9 +55,9 @@ public class KeyInfoParser {
 
             RainLogger.printLOG("Key bindings loaded successfully.");
 
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             RainLogger.printERROR("File not found: " + filePath);
-            e.printStackTrace();
         } catch (IOException e) {
             RainLogger.printERROR("Error reading file: " + filePath);
             e.printStackTrace();

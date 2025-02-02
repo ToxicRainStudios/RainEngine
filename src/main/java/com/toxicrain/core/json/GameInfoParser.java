@@ -91,9 +91,9 @@ public class GameInfoParser {
                     }
                 }
             }
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             RainLogger.printERROR("File not found: " + filePath);
-            e.printStackTrace();
         }
         catch (IOException e) {
             RainLogger.printERROR("Error reading file: " + filePath);

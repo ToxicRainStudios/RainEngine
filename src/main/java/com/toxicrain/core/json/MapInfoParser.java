@@ -93,7 +93,7 @@ public class MapInfoParser {
                     }
                 }
             } catch (JSONException e) {
-                RainLogger.printERROR("Error parsing slices or lighting: " + e.getMessage());
+                RainLogger.printERROR("Error parsing map data: " + e.getMessage());
                 e.printStackTrace();
             }
         }
