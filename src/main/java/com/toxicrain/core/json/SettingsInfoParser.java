@@ -7,40 +7,21 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.toxicrain.util.FileUtils;
 
 /**
- * SettingsInfoParser parsers the settings.json file
- * needed for game functionality
+ * SettingsInfoParser dynamically loads and manages settings.json file
  */
 public class SettingsInfoParser {
     private static SettingsInfoParser instance;
-
-    public boolean vSync = true;
-    @Getter
-    public float windowWidth = 1920;
-    @Getter
-    public float windowHeight = 1080;
-    @Getter
-    public float fov = 90f;
-
     private static final String SETTINGS_PATH = "resources/json/settings.json";
     private JSONObject settingsJson;
+    private final Map<String, Object> settings = new HashMap<>();
 
-    // Enum to define keys for better readability
-    private enum SettingKey {
-        VSYNC("vSync"),
-        WINDOW_WIDTH("windowWidth"),
-        WINDOW_HEIGHT("windowHeight"),
-        FOV("fov");
-
-        private final String key;
-        SettingKey(String key) { this.key = key; }
-        @Override public String toString() { return key; }
-    }
-
-    public SettingsInfoParser() {
+    private SettingsInfoParser() {
         loadSettings();
     }
 
@@ -58,16 +39,14 @@ public class SettingsInfoParser {
             String jsonString = new String(Files.readAllBytes(Paths.get(filePath)));
             settingsJson = new JSONObject(jsonString);
 
-            // Load settings
-            vSync = settingsJson.optBoolean(SettingKey.VSYNC.toString(), vSync);
-            windowWidth = (float) settingsJson.optDouble(SettingKey.WINDOW_WIDTH.toString(), windowWidth);
-            windowHeight = (float) settingsJson.optDouble(SettingKey.WINDOW_HEIGHT.toString(), windowHeight);
-            fov = (float) settingsJson.optDouble(SettingKey.FOV.toString(), fov);
-
+            // Dynamically load settings
+            for (String key : settingsJson.keySet()) {
+                settings.put(key, settingsJson.get(key));
+            }
         } catch (IOException e) {
             RainLogger.printERROR("Failed to load settings file: " + filePath);
             e.printStackTrace();
-            settingsJson = new JSONObject(); // Initialize to prevent null issues
+            settingsJson = new JSONObject(); // Prevent null issues
         }
     }
 
@@ -77,27 +56,9 @@ public class SettingsInfoParser {
             return;
         }
 
-        // Modify the setting in memory and in JSON
+        settings.put(key, newValue);
         settingsJson.put(key, newValue);
         saveSettings();
-
-        // Update the value in the instance variables
-        switch (key) {
-            case "vSync":
-                vSync = (boolean) newValue;
-                break;
-            case "windowWidth":
-                windowWidth = ((Number) newValue).floatValue();
-                break;
-            case "windowHeight":
-                windowHeight = ((Number) newValue).floatValue();
-                break;
-            case "fov":
-                fov = ((Number) newValue).floatValue();
-                break;
-            default:
-                RainLogger.printERROR("Unknown setting key: " + key);
-        }
     }
 
     private void saveSettings() {
@@ -110,9 +71,33 @@ public class SettingsInfoParser {
         }
     }
 
-    public boolean getVsync(){
-        return vSync;
+    // Generic getter methods
+    public boolean getBoolean(String key, boolean defaultValue) {
+        return settings.getOrDefault(key, defaultValue) instanceof Boolean ? (Boolean) settings.get(key) : defaultValue;
     }
 
+    public int getInt(String key, int defaultValue) {
+        return settings.getOrDefault(key, defaultValue) instanceof Number ? ((Number) settings.get(key)).intValue() : defaultValue;
+    }
 
+    public float getFloat(String key, float defaultValue) {
+        return settings.getOrDefault(key, defaultValue) instanceof Number ? ((Number) settings.get(key)).floatValue() : defaultValue;
+    }
+
+    public String getString(String key, String defaultValue) {
+        return settings.getOrDefault(key, defaultValue) instanceof String ? (String) settings.get(key) : defaultValue;
+    }
+
+    public boolean getVsync(){
+        return getBoolean("vSync", true);
+    }
+    public float getWindowHeight(){
+        return getFloat("windowHeight", 1080);
+    }
+    public float getWindowWidth(){
+        return getFloat("windowWidth", 1920);
+    }
+    public float getFOV(){
+        return getFloat("fov", 90);
+    }
 }

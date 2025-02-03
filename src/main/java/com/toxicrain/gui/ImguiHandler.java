@@ -36,7 +36,7 @@ import javax.sound.sampled.*;
  */
 public class ImguiHandler {
     private ImGuiImplGl3 imguiGl3;
-    ImFloat FOV = new ImFloat(SettingsInfoParser.getInstance().fov);
+    ImFloat FOV = new ImFloat(SettingsInfoParser.getInstance().getFOV());
     private final long window;
     private int textureID = -1;
     private BufferedImage bufferedImage;
@@ -74,7 +74,7 @@ public class ImguiHandler {
      * Starts a new ImGui frame.
      */
     public void newFrame() {
-        ImGui.getIO().setDisplaySize(SettingsInfoParser.getInstance().windowWidth, SettingsInfoParser.getInstance().windowHeight);
+        ImGui.getIO().setDisplaySize(SettingsInfoParser.getInstance().getWindowWidth(), SettingsInfoParser.getInstance().getWindowHeight());
         ImGui.newFrame();
     }
 
@@ -203,7 +203,7 @@ public class ImguiHandler {
 
         // FOV Slider
         String fovText = "Field of View:";
-        ImFloat fov = new ImFloat(settings.getFov());
+        ImFloat fov = new ImFloat(settings.getFOV());
         gui.addTextCentered(fovText, screenHeight / 2 + 40)
                 .addSlider("##FovSlider", fov, 30.0f, 120.0f, "%.1f", maxControlWidth);
         settings.modifySetting("fov", fov.get());
@@ -272,8 +272,8 @@ public class ImguiHandler {
 
                 // GLFW Window Info
                 .addText(String.format("Window Size: %.0fx%.0f",
-                        SettingsInfoParser.getInstance().windowWidth,
-                        SettingsInfoParser.getInstance().windowHeight))
+                        SettingsInfoParser.getInstance().getWindowWidth(),
+                        SettingsInfoParser.getInstance().getWindowHeight()))
 
                 // OpenGL Version
                 .addText("OpenGL Version: " + GL11.glGetString(GL11.GL_VERSION))

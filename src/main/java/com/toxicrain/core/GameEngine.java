@@ -37,8 +37,6 @@ public class GameEngine {
         RainLogger.printLOG("Running: " + GameInfoParser.gameName + " by " + GameInfoParser.gameMakers);
         RainLogger.printLOG("Version: " + GameInfoParser.gameVersion);
         doVersionCheck();
-        RainLogger.printLOG("Loading User Settings");
-        new SettingsInfoParser();
 
         RainLogger.printLOG("Loading Lua");
         GameFactory.loadlua();
@@ -46,7 +44,7 @@ public class GameEngine {
         LuaManager.executeInitScripts();
         Tile.combineTouchingAABBs();
 
-        windowManager = new WindowManager((int) SettingsInfoParser.getInstance().windowWidth, (int) SettingsInfoParser.getInstance().windowHeight, true);
+        windowManager = new WindowManager((int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight(), true);
 
         init();
         // Create the batch renderer
@@ -91,7 +89,7 @@ public class GameEngine {
 
         // Set up the projection matrix with FOV of 90 degrees
         glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(createPerspectiveProjectionMatrix(SettingsInfoParser.getInstance().fov, SettingsInfoParser.getInstance().windowWidth / SettingsInfoParser.getInstance().windowHeight, 1.0f, 100.0f));
+        glLoadMatrixf(createPerspectiveProjectionMatrix(SettingsInfoParser.getInstance().getFOV(), SettingsInfoParser.getInstance().getWindowWidth() / SettingsInfoParser.getInstance().getWindowHeight(), 1.0f, 100.0f));
 
         GameFactory.load();
 
@@ -99,7 +97,7 @@ public class GameEngine {
         PaletteInfoParser.loadTextureMappings();
 
         // Set the viewport size
-        glViewport(0, 0, (int) SettingsInfoParser.getInstance().windowWidth, (int) SettingsInfoParser.getInstance().windowHeight);
+        glViewport(0, 0, (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight());
 
         RainLogger.printLOG("Initializing SoundSystem");
         GameFactory.soundSystem.init();
