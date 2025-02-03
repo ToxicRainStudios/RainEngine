@@ -103,7 +103,7 @@ public class GameEngine {
         GameFactory.soundSystem.init();
         SoundSystem.initSounds();
 
-        //Weapons must be loaded after sounds have been loaded
+        // Weapons must be loaded after sounds have been loaded
         GameFactory.loadWeapons();
 
         RainLogger.printLOG("Loading Shaders");

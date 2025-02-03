@@ -1,10 +1,6 @@
 package com.toxicrain.util;
 
-import com.toxicrain.artifacts.Player;
 import org.lwjgl.glfw.GLFW;
-
-
-
 
 /**
  * The MouseUtils class provides help working with mice
