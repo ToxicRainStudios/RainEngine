@@ -10,20 +10,20 @@ import lombok.Getter;
 
 public class Weapon {
     @Getter
-    private String name;
+    private final String name;
     @Getter
-    private int damage;
+    private final int damage;
     @Getter
-    private float range;
+    private final float range;
     @Getter
     private boolean isEquipped;
-    private int maxShot;
-    private int minShot;
-    private TextureInfo projectileTexture;
+    private final int maxShot;
+    private final int minShot;
+    private final TextureInfo projectileTexture;
     private long lastAttackTime; // Tracks the last time the weapon was used
-    private long cooldown; // Cooldown duration in milliseconds
-    private float spread;
-    private SoundInfo soundInfo;
+    private final long cooldown; // Cooldown duration in milliseconds
+    private final float spread;
+    private final SoundInfo soundInfo;
 
     public Weapon(String name, int damage, float range, int maxShot, int minShot, TextureInfo projectileTexture, long cooldown, float spread, String soundInfo) {
         this.name = name;
@@ -51,7 +51,7 @@ public class Weapon {
         if (isEquipped) {
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastAttackTime < cooldown) {
-                RainLogger.rainLogger.debug("Weapon is on cooldown. Wait " + (cooldown - (currentTime - lastAttackTime)) + " ms.");
+                RainLogger.rainLogger.debug("Weapon is on cooldown. Wait {} ms.", cooldown - (currentTime - lastAttackTime));
                 return;
             }
 
@@ -59,18 +59,18 @@ public class Weapon {
             GameFactory.soundSystem.play(this.soundInfo);
 
             lastAttackTime = currentTime; // Update last attack time
-            RainLogger.rainLogger.debug("Attacking with " + name + " for " + damage + " damage!");
+            RainLogger.rainLogger.debug("Attacking with {} for {} damage!", name, damage);
 
             // Get a random number of projectiles to fire based on the weapon's shot range
             int shotsToFire = MathUtils.getRandomIntBetween(minShot, maxShot);
-            RainLogger.rainLogger.debug("Firing " + shotsToFire + " projectiles!");
+            RainLogger.rainLogger.debug("Firing {} projectiles!", shotsToFire);
 
             for (int i = 0; i < shotsToFire; i++) {
                 // Add slight random variation to the angle (converted to radians if needed)
                 float angleVariation = (float) Math.toRadians(MathUtils.getRandomFloatBetween(-spread, spread));
                 float randomizedAngle = playerAngle + angleVariation;
 
-                RainLogger.rainLogger.debug("Projectile " + (i + 1) + " fired at angle: " + Math.toDegrees(randomizedAngle) + " degrees.");
+                RainLogger.rainLogger.debug("Projectile {} fired at angle: {} degrees.", i + 1, Math.toDegrees(randomizedAngle));
 
                 createProjectile(playerPosX, playerPosY, randomizedAngle);
             }
@@ -91,8 +91,6 @@ public class Weapon {
         // Spawn the projectile
         new Projectile(xpos, ypos, velocityX, velocityY, projectileTexture);
 
-        RainLogger.rainLogger.debug("Projectile created at (" + xpos + ", " + ypos +
-                ") with velocity (" + velocityX + ", " + velocityY + ") and angle: " +
-                Math.toDegrees(playerAngle) + " degrees");
+        RainLogger.rainLogger.debug("Projectile created at ({}, {}) with velocity ({}, {}) and angle: {} degrees", xpos, ypos, velocityX, velocityY, Math.toDegrees(playerAngle));
     }
 }

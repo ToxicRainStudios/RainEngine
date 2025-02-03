@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * The Player class provides information about the player
  */
-public class Player implements IArtifact {
+public class Player implements IArtifact { //TODO this needs a de-spaghettification
 
     @Getter @Setter
     private float posX;
@@ -115,13 +115,6 @@ public class Player implements IArtifact {
         }
     }
 
-    private float getAngle(float[] mousePos) {
-        // Calculate the angle based on the mouse position and player's position
-        float dx = mousePos[0] - posX;
-        float dy = mousePos[1] - posY;
-        this.angle = (float) Math.atan2(dy, dx);  // Store the angle in the field
-        return this.angle;
-    }
     private float getAngle(float targetX, float targetY) {
         float dx = targetX - posX;
         float dy = targetY - posY;
