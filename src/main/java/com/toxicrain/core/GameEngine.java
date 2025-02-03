@@ -39,7 +39,7 @@ public class GameEngine {
         doVersionCheck();
 
         RainLogger.printLOG("Loading Lua");
-        GameFactory.loadlua();
+        GameFactory.loadLua();
         LuaManager.categorizeScripts("resources/scripts/");
         LuaManager.executeInitScripts();
         Tile.combineTouchingAABBs();

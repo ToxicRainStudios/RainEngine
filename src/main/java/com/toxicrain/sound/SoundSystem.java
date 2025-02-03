@@ -66,8 +66,7 @@ public class SoundSystem {
      */
     public static SoundInfo getSound(String soundName) {
         if (!sounds.containsKey(soundName)) {
-            RainLogger.printLOG("Sound not found: " + soundName);
-            return null;  // Return null or throw an exception if sound is not found
+            throw new IllegalStateException("Cannot find sound: " + soundName);
         }
         return sounds.get(soundName);
     }

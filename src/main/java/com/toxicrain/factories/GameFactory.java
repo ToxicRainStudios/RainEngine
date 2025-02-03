@@ -14,7 +14,6 @@ import com.toxicrain.core.lua.LuaEngine;
 import com.toxicrain.gui.GuiManager;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.gui.GuiLuaWrapper;
-import com.toxicrain.sound.SoundInfo;
 import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.texture.TextureSystem;
 import com.toxicrain.util.MouseUtils;
@@ -76,7 +75,7 @@ public class GameFactory {
         //fogShaderProgram = ShaderUtils.createShaderProgram(FileUtils.getCurrentWorkingDirectory("resources/shaders/fog/fog_vertex.glsl"), FileUtils.getCurrentWorkingDirectory("resources/shaders/fog/fog_fragment.glsl"));
     }
 
-    public static void loadlua(){
+    public static void loadLua(){
         luaEngine = new LuaEngine();
         guiLuaWrapper = new GuiLuaWrapper();
         functionManager = new LuaManager(luaEngine.getGlobals());
