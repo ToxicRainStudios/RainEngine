@@ -96,6 +96,7 @@ public class GameFactory {
         guiManager.registerGUI("Debug", (v) -> imguiApp.drawDebugInfo());
 
         guiManager.addActiveGUI("Inventory");
+        guiManager.addActiveGUI("Debug");
         guiManager.addActiveGUI("MainMenu");
     }
 }
