@@ -43,6 +43,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
     private float cameraSpeed = 0.02f; // Camera Speed
     private final float scrollSpeed = 0.5f; // Max scroll speed
     private final List<Weapon> weapons;
+    @Getter
     private Weapon equippedWeapon;
     private float[] openglMousePos;
     private AABB playerAABB;

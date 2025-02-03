@@ -91,10 +91,11 @@ public class GameFactory {
     public static void setupGUIs() {
         guiManager.registerGUI("MainMenu", (v) -> imguiApp.drawMainMenu());
         guiManager.registerGUI("Settings", (v) -> imguiApp.drawSettingsMenu());
+        guiManager.registerGUI("Inventory", (v) -> imguiApp.drawInventory());
         guiManager.registerGUI("FileEditor", (v) -> imguiApp.drawFileEditorUI());
         guiManager.registerGUI("Debug", (v) -> imguiApp.drawDebugInfo());
 
-        guiManager.addActiveGUI("Debug");
+        guiManager.addActiveGUI("Inventory");
         guiManager.addActiveGUI("MainMenu");
     }
 }
