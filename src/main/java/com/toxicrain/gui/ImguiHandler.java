@@ -279,22 +279,23 @@ public class ImguiHandler {
 
         // Begin Debug Window
         builder.beginWindow("Debug Info", windowFlags)
+                .addText(GameFactory.langHelper.get("gui.debug.tile"))
 
                 // FPS Counter
-                .addText("FPS: " + ImGui.getIO().getFramerate())
+                .addText(GameFactory.langHelper.get("gui.debug.text.fps") + ": " + ImGui.getIO().getFramerate())
 
                 // Memory Usage
-                .addText(String.format("Memory Usage: %d MB / %d MB",
+                .addText(String.format(GameFactory.langHelper.get("gui.debug.text.mem")+ ": %d MB / %d MB",
                         (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024),
                         Runtime.getRuntime().totalMemory() / (1024 * 1024)))
 
                 // GLFW Window Info
-                .addText(String.format("Window Size: %.0fx%.0f",
+                .addText(String.format(GameFactory.langHelper.get("gui.debug.text.window") + ": %.0fx%.0f",
                         SettingsInfoParser.getInstance().getWindowWidth(),
                         SettingsInfoParser.getInstance().getWindowHeight()))
 
                 // OpenGL Version
-                .addText("OpenGL Version: " + GL11.glGetString(GL11.GL_VERSION))
+                .addText(GameFactory.langHelper.get("gui.debug.text.opengl") + ": " + GL11.glGetString(GL11.GL_VERSION))
 
                 // End Window
                 .endWindow();
