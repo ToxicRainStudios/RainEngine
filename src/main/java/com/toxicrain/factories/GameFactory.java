@@ -46,18 +46,25 @@ public class GameFactory {
     public static NPC character;
 
     public static void load(){
-        GuiBuilder.setFont("dos", FileUtils.getCurrentWorkingDirectory("resources/fonts/Perfect DOS VGA 437.ttf"), 30);
 
         player = new Player(5, 5, 5, TextureSystem.getTexture("playerTexture"), false);
-        guiManager = new GuiManager();
-        imguiApp = new ImguiHandler(windowManager.getWindow());
-        imguiApp.initialize();
+
         soundSystem = new SoundSystem();
 
         projectileManager = new ProjectileManager();
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0, TextureSystem.getTexture("playerTexture"));
 
         mouseUtils = new MouseUtils(windowManager.getWindow());
+    }
+
+    public static void loadImgui(){
+        guiManager = new GuiManager();
+        imguiApp = new ImguiHandler(windowManager.getWindow());
+        imguiApp.initialize();
+    }
+
+    public static void loadFonts(){
+        GuiBuilder.setFont("dos", FileUtils.getCurrentWorkingDirectory("resources/fonts/Perfect DOS VGA 437.ttf"), 30);
     }
 
     public static void loadWeapons(){

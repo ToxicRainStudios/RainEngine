@@ -93,7 +93,7 @@ public class TextureSystem {
             width = widthBuffer.get();
             height = heightBuffer.get();
             long fileSize = FileUtils.getFileSize(filePath);
-            RainLogger.printLOG(String.format("Loaded texture: %s (Width: %d, Height: %d, File Size: %d bytes)", filePath, width, height, fileSize));
+            RainLogger.rainLogger.debug("Loaded texture: {} (Width: {}, Height: {}, File Size: {} bytes)", filePath, width, height, fileSize);
         } catch (Exception e) {
             throw new RuntimeException("Error loading texture: " + filePath, e);
         }

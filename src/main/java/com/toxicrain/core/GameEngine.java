@@ -93,8 +93,14 @@ public class GameEngine {
 
         GameFactory.load();
 
+        RainLogger.printLOG("Loading Fonts");
+        GameFactory.loadFonts();
+
         RainLogger.printLOG("Loading Map Palette");
         PaletteInfoParser.loadTextureMappings();
+
+        RainLogger.printLOG("Loading ImGUI");
+        GameFactory.loadImgui();
 
         // Set the viewport size
         glViewport(0, 0, (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight());
