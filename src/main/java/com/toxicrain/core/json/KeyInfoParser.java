@@ -70,6 +70,51 @@ public class KeyInfoParser {
     }
 
     /**
+     * Updates a keybinding in memory and writes the change to keybinds.json
+     *
+     * @param key   The keybinding to update
+     * @param value The new value for the keybinding
+     */
+    public static void updateKeyBinding(String key, String value) {
+        if (keyBindings.containsKey(key)) {
+            keyBindings.put(key, value);
+            saveKeyBindings();
+            RainLogger.printLOG("Key binding updated: " + key + " -> " + value);
+        } else {
+            RainLogger.printERROR("Key binding not found: " + key);
+        }
+    }
+
+    /**
+     * Saves the current key bindings to keybinds.json
+     */
+    private static void saveKeyBindings() {
+        String filePath = FileUtils.getCurrentWorkingDirectory("resources/json/keybinds.json");
+
+        JSONArray jsonArray = new JSONArray();
+        JSONObject keyBindingsObject = new JSONObject();
+        JSONArray valuesArray = new JSONArray();
+
+        for (Map.Entry<String, String> entry : keyBindings.entrySet()) {
+            JSONObject valueObject = new JSONObject();
+            valueObject.put(entry.getKey(), entry.getValue());
+            valuesArray.put(valueObject);
+        }
+
+        keyBindingsObject.put("values", valuesArray);
+        jsonArray.put(keyBindingsObject);
+
+        try {
+            FileUtils.writeFile(filePath, jsonArray.toString(4)); // Pretty print with indentation
+            RainLogger.printLOG("Key bindings saved successfully.");
+        } catch (IOException e) {
+            RainLogger.printERROR("Error writing file: " + filePath);
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
      * Gets a keybinding from keybinds.json
      *
      * @param key The keybinding to get
