@@ -1,13 +1,29 @@
 package com.toxicrain.gui;
 
+import imgui.ImFont;
+import imgui.ImFontAtlas;
 import imgui.ImGui;
+import imgui.ImGuiIO;
 import imgui.type.ImBoolean;
 import imgui.type.ImFloat;
 import imgui.type.ImInt;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GuiBuilder {
+    private static final Map<String, ImFont> fonts = new HashMap<>();
+    private static ImFont currentFont;
+
+    public static void setFont(String alias, String fontPath, float fontSize) {
+        ImGuiIO io = ImGui.getIO();
+        ImFontAtlas fontAtlas = io.getFonts();
+        ImFont font = fontAtlas.addFontFromFileTTF(fontPath, fontSize);
+        if (font != null) {
+            fonts.put(alias, font);
+        }
+    }
 
     public GuiBuilder beginWindow(String name) {
         return beginWindow(name, 0); // Default flags as 0
@@ -22,6 +38,23 @@ public class GuiBuilder {
 
     public GuiBuilder endWindow() {
         ImGui.end();
+        return this;
+    }
+
+    public GuiBuilder pushFont(String alias) {
+        ImFont font = fonts.get(alias);
+        if (font != null) {
+            ImGui.pushFont(font);
+            currentFont = font;
+        }
+        return this;
+    }
+
+    public GuiBuilder popFont() {
+        if (currentFont != null) {
+            ImGui.popFont();
+            currentFont = null;
+        }
         return this;
     }
 

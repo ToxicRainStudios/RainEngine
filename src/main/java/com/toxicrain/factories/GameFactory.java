@@ -11,11 +11,13 @@ import com.toxicrain.core.RainLogger;
 import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.lua.LuaEngine;
+import com.toxicrain.gui.GuiBuilder;
 import com.toxicrain.gui.GuiManager;
 import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.gui.GuiLuaWrapper;
 import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.texture.TextureSystem;
+import com.toxicrain.util.FileUtils;
 import com.toxicrain.util.MouseUtils;
 
 import java.util.Locale;
@@ -44,6 +46,8 @@ public class GameFactory {
     public static NPC character;
 
     public static void load(){
+        GuiBuilder.setFont("dos", FileUtils.getCurrentWorkingDirectory("resources/fonts/Perfect DOS VGA 437.ttf"), 30);
+
         player = new Player(5, 5, 5, TextureSystem.getTexture("playerTexture"), false);
         guiManager = new GuiManager();
         imguiApp = new ImguiHandler(windowManager.getWindow());

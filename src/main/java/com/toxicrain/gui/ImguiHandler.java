@@ -268,10 +268,13 @@ public class ImguiHandler {
         }
 
         builder.beginWindow("Inventory", windowFlags)
+            .pushFont("dos")
             .addTextCentered(string, 1)
 
+            .popFont()
             .endWindow();
     }
+
 
     public void drawDebugInfo() {
         // Initialize the builder
