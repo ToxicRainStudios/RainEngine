@@ -214,7 +214,7 @@ public class ImguiHandler {
         gui.addButtonCentered("Back", () -> {
             GameFactory.guiManager.removeActiveGUI("Settings");
             GameFactory.guiManager.addActiveGUI("MainMenu");
-        }, screenHeight / 2 + 100, 20);
+        }, screenHeight / 2 + 100, 20, 5);
 
         // Render the GUI
         gui.endWindow();
@@ -236,18 +236,18 @@ public class ImguiHandler {
                 .pushFont("dos")
                 .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.play"), () -> {
                     GameFactory.guiManager.removeActiveGUI("MainMenu");
-                }, ImGui.getIO().getDisplaySizeY() / 2, 20)
+                }, ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
 
                 // Add the centered "Settings" button
                 .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.settings"), () -> {
                     GameFactory.guiManager.removeActiveGUI("MainMenu");
                     GameFactory.guiManager.addActiveGUI("Settings");
-                }, ImGui.getIO().getDisplaySizeY() / 2 + 40, 20)
+                }, ImGui.getIO().getDisplaySizeY() / 2 + 40, 20, 5)
 
                 // Add the centered "Exit" button
                 .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.exit"), () -> {
                     System.exit(0);
-                }, ImGui.getIO().getDisplaySizeY() / 2 + 80, 20)
+                }, ImGui.getIO().getDisplaySizeY() / 2 + 80, 20, 5)
                 .popFont()
 
                 // Add version info at the bottom-right corner

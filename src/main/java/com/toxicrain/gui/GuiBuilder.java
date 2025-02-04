@@ -130,13 +130,13 @@ public class GuiBuilder {
         return this;
     }
 
-    public GuiBuilder addButtonCentered(String label, Runnable onClick, float yOffset, float padding) {
+    public GuiBuilder addButtonCentered(String label, Runnable onClick, float yOffset, float paddingWidth, float paddingHeight) {
         float screenWidth = ImGui.getIO().getDisplaySizeX();
         float textWidth = ImGui.calcTextSize(label).x;
-        float buttonWidth = textWidth + padding; // Ensure padding allows for a nice button size
+        float buttonWidth = textWidth + paddingWidth; // Ensure padding allows for a nice button size
 
         ImGui.setCursorPos((screenWidth - buttonWidth) / 2, yOffset);
-        if (ImGui.button(label, buttonWidth, 30)) {
+        if (ImGui.button(label, buttonWidth, 30 + paddingHeight)) {
             onClick.run();
         }
         return this;
