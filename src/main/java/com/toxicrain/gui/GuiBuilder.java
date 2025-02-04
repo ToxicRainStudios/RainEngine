@@ -40,6 +40,11 @@ public class GuiBuilder {
         ImGui.end();
         return this;
     }
+    public GuiBuilder setPos(float x, float y){
+        ImGui.setCursorPos(x, y);
+        return this;
+    }
+
 
     public GuiBuilder pushFont(String alias) {
         ImFont font = fonts.get(alias);
@@ -125,14 +130,18 @@ public class GuiBuilder {
         return this;
     }
 
-    public GuiBuilder addButtonCentered(String label, Runnable onClick, float yOffset, float buttonWidth) {
+    public GuiBuilder addButtonCentered(String label, Runnable onClick, float yOffset, float padding) {
         float screenWidth = ImGui.getIO().getDisplaySizeX();
+        float textWidth = ImGui.calcTextSize(label).x;
+        float buttonWidth = textWidth + padding; // Ensure padding allows for a nice button size
+
         ImGui.setCursorPos((screenWidth - buttonWidth) / 2, yOffset);
         if (ImGui.button(label, buttonWidth, 30)) {
             onClick.run();
         }
         return this;
     }
+
 
     public GuiBuilder addTextAtPosition(String text, float x, float y) {
         ImGui.setCursorPos(x, y);

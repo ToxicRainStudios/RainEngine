@@ -2,6 +2,7 @@ package com.toxicrain.gui;
 
 import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.SettingsInfoParser;
+import com.toxicrain.core.json.KeyInfoParser;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.util.FileUtils;
 import imgui.ImGui;
@@ -25,6 +26,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 
@@ -212,7 +214,7 @@ public class ImguiHandler {
         gui.addButtonCentered("Back", () -> {
             GameFactory.guiManager.removeActiveGUI("Settings");
             GameFactory.guiManager.addActiveGUI("MainMenu");
-        }, screenHeight / 2 + 100, 100);
+        }, screenHeight / 2 + 100, 20);
 
         // Render the GUI
         gui.endWindow();
@@ -231,20 +233,22 @@ public class ImguiHandler {
                 .addTextCentered(GameFactory.langHelper.get("gui.mainmenu.welcome"), 50)
 
                 // Add the centered "Play" button
+                .pushFont("dos")
                 .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.play"), () -> {
                     GameFactory.guiManager.removeActiveGUI("MainMenu");
-                }, ImGui.getIO().getDisplaySizeY() / 2, 100)
+                }, ImGui.getIO().getDisplaySizeY() / 2, 20)
 
                 // Add the centered "Settings" button
                 .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.settings"), () -> {
                     GameFactory.guiManager.removeActiveGUI("MainMenu");
                     GameFactory.guiManager.addActiveGUI("Settings");
-                }, ImGui.getIO().getDisplaySizeY() / 2 + 40, 100)
+                }, ImGui.getIO().getDisplaySizeY() / 2 + 40, 20)
 
                 // Add the centered "Exit" button
                 .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.exit"), () -> {
                     System.exit(0);
-                }, ImGui.getIO().getDisplaySizeY() / 2 + 80, 100)
+                }, ImGui.getIO().getDisplaySizeY() / 2 + 80, 20)
+                .popFont()
 
                 // Add version info at the bottom-right corner
                 .addTextAtPosition("© 2024 " + GameInfoParser.gameMakers + " - " + GameInfoParser.gameVersion,
@@ -274,6 +278,36 @@ public class ImguiHandler {
             .popFont()
             .endWindow();
     }
+
+    public void drawKeyBindingInfo() {
+        // Initialize the builder
+        GuiBuilder builder = new GuiBuilder();
+
+        // Begin Key Bindings Window
+        builder.beginWindow("Key Bindings", windowFlags)
+
+                // Title
+                .addTextCentered("Current Key Bindings:", 70.0f);
+
+        // Initial vertical offset for spacing
+        float yOffset = 90.0f;
+
+        // Loop through key bindings and display them centered
+        for (Map.Entry<String, String> entry : KeyInfoParser.getKeyBindings().entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            String displayText = GameFactory.langHelper.get("gui.keybinds." + key) + ": " + value;
+
+            // Add centered text with incremental vertical spacing
+            builder.addTextCentered(displayText, yOffset);
+            yOffset += 20.0f; // Adjust spacing for next entry
+        }
+
+        // End Window
+        builder.endWindow();
+    }
+
+
 
 
     public void drawDebugInfo() {

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.toxicrain.core.RainLogger;
 import com.toxicrain.util.FileUtils;
+import lombok.Getter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lwjgl.glfw.GLFW;
@@ -18,6 +19,7 @@ import org.lwjgl.glfw.GLFW;
  */
 public class KeyInfoParser {
     // A Map to hold the key bindings
+    @Getter
     private static final Map<String, String> keyBindings = new HashMap<>();
 
     /**
