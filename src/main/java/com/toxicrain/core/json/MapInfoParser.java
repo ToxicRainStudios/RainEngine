@@ -1,6 +1,5 @@
 package com.toxicrain.core.json;
 
-
 import com.toxicrain.core.RainLogger;
 import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.artifacts.Tile;
@@ -12,6 +11,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MapInfoParser {
 
@@ -27,6 +27,10 @@ public class MapInfoParser {
     public static ArrayList<Double> mapDataZ = new ArrayList<>();
 
     public static void parseMapFile(String mapName) throws IOException {
+        parseMap(mapName, 0, 0);  // Main map at position (0, 0)
+    }
+
+    private static void parseMap(String mapName, int offsetX, int offsetY) throws IOException {
         LuaManager.executeMapScript(mapName);
         // Read JSON file as String
         String jsonString = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory("resources/json/" + mapName + ".json"));
@@ -78,8 +82,8 @@ public class MapInfoParser {
                         String row = sliceLayer.getString(k);
                         for (int l = 0; l < row.length(); l++) {
                             if (row.charAt(l) != ' ') {
-                                xpos = l;
-                                ypos = k;
+                                xpos = l + offsetX;  // Apply offset for sub-maps
+                                ypos = k + offsetY;  // Apply offset for sub-maps
 
                                 // Add tile data
                                 mapDataX.add(xpos * 2);
@@ -92,6 +96,26 @@ public class MapInfoParser {
                         }
                     }
                 }
+
+                // Check if there are sub-maps to load
+                if (part.has("subMaps")) {
+                    JSONArray subMaps = part.getJSONArray("subMaps");
+                    for (int subMapIndex = 0; subMapIndex < subMaps.length(); subMapIndex++) {
+                        JSONObject subMap = subMaps.getJSONObject(subMapIndex);
+                        String subMapName = subMap.getString("name");
+                        if(!Objects.equals(subMapName, mapName)){
+                            int subMapOffsetX = subMap.getInt("offsetX");
+                            int subMapOffsetY = subMap.getInt("offsetY");
+
+                            // Recursively load sub-maps too
+                            parseMap(subMapName, offsetX + subMapOffsetX, offsetY + subMapOffsetY);
+                        }
+                        else {
+                            RainLogger.rainLogger.error("Submap name :{} matches current map name: {}", subMapName, mapName);
+                        }
+                    }
+                }
+
             } catch (JSONException e) {
                 RainLogger.printERROR("Error parsing map data: " + e.getMessage());
                 e.printStackTrace();
