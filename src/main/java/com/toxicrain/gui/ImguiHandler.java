@@ -38,7 +38,6 @@ import javax.sound.sampled.*;
  */
 public class ImguiHandler {
     private ImGuiImplGl3 imguiGl3;
-    ImFloat FOV = new ImFloat(SettingsInfoParser.getInstance().getFOV());
     private final long window;
     private int textureID = -1;
     private BufferedImage bufferedImage;
