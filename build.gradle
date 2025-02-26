@@ -56,6 +56,8 @@ dependencies {
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.28' // Use the latest version available
     annotationProcessor 'org.projectlombok:lombok:1.18.28' // Necessary for annotation processing
+
+    implementation 'com.github.strubium:JavaWindowManager:1.0.0'
 }
 
 application {

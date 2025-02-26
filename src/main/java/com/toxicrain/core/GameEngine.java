@@ -1,5 +1,6 @@
 package com.toxicrain.core;
 
+import com.github.strubium.windowmanager.window.WindowManager;
 import com.toxicrain.core.json.*;
 import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.core.render.BatchRenderer;
@@ -70,7 +71,7 @@ public class GameEngine {
 
         RainLogger.printLOG("Loading IMGUI");
         // Create and initialize ImguiHandler
-        GameFactory.imguiApp = new ImguiHandler(windowManager.getWindow());
+        GameFactory.imguiApp = new ImguiHandler(windowManager.window);
         GameFactory.imguiApp.initialize();
 
         RainLogger.printLOG("Creating Textures");
@@ -116,8 +117,6 @@ public class GameEngine {
         GameFactory.loadShaders();
 
         GameFactory.player.addWeapon(GameFactory.shotgun);
-
-        windowManager.doOpenGLSetup();
 
         LuaManager.executePostInitScripts();
 
@@ -193,9 +192,9 @@ public class GameEngine {
 
         batchRenderer.setBlendingEnabled(false);
 
-        GameFactory.imguiApp.handleInput(windowManager.getWindow());
+        GameFactory.imguiApp.handleInput(windowManager.window);
         GameFactory.imguiApp.newFrame();
-        GameFactory.guiManager.render(); // Outputs: Rendering Main Menu
+        GameFactory.guiManager.render();
         LuaManager.executeAllImguiScripts();
         GameFactory.imguiApp.render();
         // Swap buffers and poll events

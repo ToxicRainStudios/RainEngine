@@ -54,12 +54,12 @@ public class GameFactory {
         projectileManager = new ProjectileManager();
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0, TextureSystem.getTexture("playerTexture"));
 
-        mouseUtils = new MouseUtils(windowManager.getWindow());
+        mouseUtils = new MouseUtils(windowManager.window);
     }
 
     public static void loadImgui(){
         guiManager = new GuiManager();
-        imguiApp = new ImguiHandler(windowManager.getWindow());
+        imguiApp = new ImguiHandler(windowManager.window);
         imguiApp.initialize();
     }
 
