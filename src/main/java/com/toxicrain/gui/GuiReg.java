@@ -1,22 +1,22 @@
 package com.toxicrain.gui;
 
+import com.github.strubium.windowmanager.imgui.GuiBuilder;
 import com.toxicrain.core.json.GameInfoParser;
-import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.json.KeyInfoParser;
+import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.util.FileUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiInputTextFlags;
 import imgui.flag.ImGuiWindowFlags;
-import imgui.gl3.ImGuiImplGl3;
-import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImBoolean;
 import imgui.type.ImFloat;
 import imgui.type.ImInt;
 import imgui.type.ImString;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
+import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -27,18 +27,9 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import javax.imageio.ImageIO;
-import javax.sound.sampled.*;
 
-/**
- * Handler class for integrating ImGui with GLFW and OpenGL.
- * Provides initialization, input handling, and rendering for ImGui.
- *
- * @author strubium
- */
-public class ImguiHandler {
-    private ImGuiImplGl3 imguiGl3;
-    private final long window;
+public class GuiReg {
+
     private int textureID = -1;
     private BufferedImage bufferedImage;
 
@@ -48,82 +39,14 @@ public class ImguiHandler {
     private final ImString fileContent = new ImString(1024 * 18); // 18KB initial buffer size
     private Clip audioClip;
 
-    /**
-     * Constructor for ImguiHandler.
-     *
-     * @param window the GLFW window handle.
-     */
-    public ImguiHandler(long window) {
-        this.window = window;
+    public GuiReg(){
         loadFilesInDirectory(currentDirectory);
-    }
 
-    /**
-     * Initializes ImGui and sets up OpenGL bindings.
-     */
-    public void initialize() {
-        ImGui.createContext();
-        ImGuiImplGlfw imguiGlfw = new ImGuiImplGlfw();
-        imguiGlfw.init(window, true);
-        imguiGl3 = new ImGuiImplGl3();
-        imguiGl3.init("#version 130"); // OpenGL version
-    }
-
-
-
-    /**
-     * Starts a new ImGui frame.
-     */
-    public void newFrame() {
-        ImGui.getIO().setDisplaySize(SettingsInfoParser.getInstance().getWindowWidth(), SettingsInfoParser.getInstance().getWindowHeight());
-        ImGui.newFrame();
-    }
-
-    /**
-     * Handles the keyboard and mouse input for IMGUI
-     *
-     * @param window the GLFW window handle.
-     */
-    public void handleInput(long window) {
-        // Handle keyboard input
-        for (int key = GLFW.GLFW_KEY_SPACE; key <= GLFW.GLFW_KEY_LAST; key++) {
-            int state = GLFW.glfwGetKey(window, key);
-            ImGui.getIO().setKeysDown(key, GLFW.GLFW_PRESS == state);
-        }
-
-        // Handle mouse input
-        ImGui.getIO().setMouseDown(0, GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS);
-        ImGui.getIO().setMouseDown(1, GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS);
-        ImGui.getIO().setMouseDown(2, GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_MIDDLE) == GLFW.GLFW_PRESS);
-
-        double[] mouseX = new double[1];
-        double[] mouseY = new double[1];
-        GLFW.glfwGetCursorPos(window, mouseX, mouseY);
-        ImGui.getIO().setMousePos((float) mouseX[0], (float) mouseY[0]);
-
-        // Handle scroll input
-        // ImGui.getIO().setMouseWheel((float) GLFW.glfwGetScrollY(window));
-    }
-
-    /**
-     * Renders the ImGui frame.
-     */
-    public void render() {
-        ImGui.render();
-        imguiGl3.renderDrawData(ImGui.getDrawData());
-    }
-
-    /**
-     * Cleans up ImGui resources.
-     */
-    public static void cleanup() {
-        ImGui.destroyContext();
     }
 
     int windowFlags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize |
             ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar |
             ImGuiWindowFlags.NoBackground;
-
 
     /**
      * Draws the settings UI using ImGui.
@@ -134,7 +57,7 @@ public class ImguiHandler {
 
         // Initialize the GuiBuilder
         GuiBuilder gui = new GuiBuilder();
-        
+
         // Get the display size for full-screen coverage
         float screenWidth = ImGui.getIO().getDisplaySizeX();
         float screenHeight = ImGui.getIO().getDisplaySizeY();
@@ -264,18 +187,18 @@ public class ImguiHandler {
         String string;
 
         if (GameFactory.player.getEquippedWeapon() == null){
-             string = "No Weapon";
+            string = "No Weapon";
         }
         else {
             string = GameFactory.player.getEquippedWeapon().getName();
         }
 
         builder.beginWindow("Inventory", windowFlags)
-            .pushFont("dos")
-            .addTextCentered(string, 1)
+                .pushFont("dos")
+                .addTextCentered(string, 1)
 
-            .popFont()
-            .endWindow();
+                .popFont()
+                .endWindow();
     }
 
     public void drawKeyBindingInfo() {

@@ -6,15 +6,16 @@ import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.artifacts.Tile;
 import com.toxicrain.factories.GameFactory;
-import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.light.LightSystem;
 import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.texture.TextureSystem;
+import imgui.ImGui;
 import lombok.experimental.UtilityClass;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.opengl.GL;
 
 import java.nio.FloatBuffer;
@@ -68,11 +69,15 @@ public class GameEngine {
 
         RainLogger.printLOG("Creating Game Window");
         windowManager.createWindow(GameInfoParser.defaultWindowName, SettingsInfoParser.getInstance().getVsync());
+        windowManager.setupDefaultKeys();
 
-        RainLogger.printLOG("Loading IMGUI");
-        // Create and initialize ImguiHandler
-        GameFactory.imguiApp = new ImguiHandler(windowManager.window);
-        GameFactory.imguiApp.initialize();
+        // Create and set the scroll callback
+        glfwSetScrollCallback(windowManager.window, new GLFWScrollCallback() {
+            @Override
+            public void invoke(long window, double xoffset, double yoffset) {
+                GameFactory.player.scrollOffset = (float) yoffset;
+            }
+        });
 
         RainLogger.printLOG("Creating Textures");
         TextureSystem.initTextures();
@@ -94,14 +99,14 @@ public class GameEngine {
 
         GameFactory.load();
 
+        RainLogger.printLOG("Loading ImGUI");
+        GameFactory.loadImgui();
+
         RainLogger.printLOG("Loading Fonts");
         GameFactory.loadFonts();
 
         RainLogger.printLOG("Loading Map Palette");
         PaletteInfoParser.loadTextureMappings();
-
-        RainLogger.printLOG("Loading ImGUI");
-        GameFactory.loadImgui();
 
         // Set the viewport size
         glViewport(0, 0, (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight());
@@ -212,7 +217,7 @@ public class GameEngine {
             update(deltaTime);
             render(batchRenderer);
         }
-        ImguiHandler.cleanup();
+        GameFactory.imguiApp.cleanup();
         GameFactory.soundSystem.cleanup();
     }
 

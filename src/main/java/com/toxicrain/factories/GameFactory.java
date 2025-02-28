@@ -1,5 +1,8 @@
 package com.toxicrain.factories;
 
+import com.github.strubium.windowmanager.imgui.GuiBuilder;
+import com.github.strubium.windowmanager.imgui.GuiManager;
+import com.github.strubium.windowmanager.imgui.ImguiHandler;
 import com.toxicrain.artifacts.*;
 import com.toxicrain.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.artifacts.behavior.FollowPlayerSeeingBehavior;
@@ -11,10 +14,8 @@ import com.toxicrain.core.RainLogger;
 import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.lua.LuaEngine;
-import com.toxicrain.gui.GuiBuilder;
-import com.toxicrain.gui.GuiManager;
-import com.toxicrain.gui.ImguiHandler;
 import com.toxicrain.gui.GuiLuaWrapper;
+import com.toxicrain.gui.GuiReg;
 import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.texture.TextureSystem;
 import com.toxicrain.util.FileUtils;
@@ -27,6 +28,7 @@ import static com.toxicrain.core.GameEngine.windowManager;
 public class GameFactory {
 
     public static ImguiHandler imguiApp;
+    public static GuiReg guiReg;
     public static SoundSystem soundSystem;
 
     public static Player player;
@@ -59,12 +61,12 @@ public class GameFactory {
 
     public static void loadImgui(){
         guiManager = new GuiManager();
-        imguiApp = new ImguiHandler(windowManager.window);
-        imguiApp.initialize();
+        imguiApp = new ImguiHandler(windowManager);
+        imguiApp.initialize("#version 130");
     }
 
     public static void loadFonts(){
-        GuiBuilder.setFont("dos", FileUtils.getCurrentWorkingDirectory("resources/fonts/Perfect DOS VGA 437.ttf"), 30);
+        //GuiBuilder.setFont("dos", FileUtils.getCurrentWorkingDirectory("resources/fonts/Perfect DOS VGA 437.ttf"), 30);
     }
 
     public static void loadWeapons(){
@@ -99,12 +101,13 @@ public class GameFactory {
     }
 
     public static void setupGUIs() {
-        guiManager.registerGUI("MainMenu", (v) -> imguiApp.drawMainMenu());
-        guiManager.registerGUI("Settings", (v) -> imguiApp.drawSettingsMenu());
-        guiManager.registerGUI("Keybinds", (v) -> imguiApp.drawKeyBindingInfo());
-        guiManager.registerGUI("Inventory", (v) -> imguiApp.drawInventory());
-        guiManager.registerGUI("FileEditor", (v) -> imguiApp.drawFileEditorUI());
-        guiManager.registerGUI("Debug", (v) -> imguiApp.drawDebugInfo());
+        guiReg = new GuiReg();
+        guiManager.registerGUI("MainMenu", (v) -> guiReg.drawMainMenu());
+        guiManager.registerGUI("Settings", (v) -> guiReg.drawSettingsMenu());
+        guiManager.registerGUI("Keybinds", (v) -> guiReg.drawKeyBindingInfo());
+        guiManager.registerGUI("Inventory", (v) -> guiReg.drawInventory());
+        guiManager.registerGUI("FileEditor", (v) -> guiReg.drawFileEditorUI());
+        guiManager.registerGUI("Debug", (v) -> guiReg.drawDebugInfo());
 
         guiManager.addActiveGUI("Inventory");
         guiManager.addActiveGUI("Debug");
