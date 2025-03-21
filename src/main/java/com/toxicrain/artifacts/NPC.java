@@ -14,22 +14,22 @@ import lombok.Setter;
 
 public class NPC implements IArtifact {
     @Getter @Setter
-    private float X; // Current X position
+    float X; // Current X position
     @Getter @Setter
-    private float Y; // Current Y position
+    float Y; // Current Y position
     @Getter @Setter
     private float directionX; // Direction vector X
     @Getter @Setter
     private float directionY; // Direction vector Y
-    private float rotation; // Rotation angle in radians
+    float rotation; // Rotation angle in radians
 
     private float fieldOfViewAngle; // Vision cone angle in degrees
     private float visionDistance;   // Max distance NPC can see
     private boolean playerInSight;  // If the player is within the vision cone
-    private float size;
+    float size;
     private AABB npcAABB;
     @Getter @Setter
-    private BehaviorSequence behaviorSequence;
+    BehaviorSequence behaviorSequence;
 
 
     public NPC(float startingXpos, float startingYpos, float rotation, float size) {
@@ -114,7 +114,7 @@ public class NPC implements IArtifact {
                 this.rotation, 1, 1, Color.toFloatArray(Color.WHITE));
     }
 
-    private void handleCollisions() {
+    void handleCollisions() {
         float halfSize = this.size / 2.0f;
 
         // Update npc's AABB based on its position and size

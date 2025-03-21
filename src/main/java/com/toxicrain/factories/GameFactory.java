@@ -46,6 +46,7 @@ public class GameFactory {
 
     public static NPCManager npcManager;
     public static NPC character;
+    public static BossNPC bossNPC;
 
     public static void load(){
 
@@ -79,7 +80,9 @@ public class GameFactory {
         npcManager = new NPCManager();
 
         character = new NPC(12,-4,1, Size.AVERAGE.getSize());
+        bossNPC = new BossNPC(12,-4, 10,  Size.AVERAGE.getSize(), 1000);
         LookAtPlayerSeeingBehavior lookAtPlayerSeeingBehavior = new LookAtPlayerSeeingBehavior();
+        bossNPC.setBehaviorSequence(new BehaviorSequence(lookAtPlayerSeeingBehavior));
         character.setBehaviorSequence(new BehaviorSequence(new FollowPlayerSeeingBehavior(00.1f), lookAtPlayerSeeingBehavior));
 
     }
