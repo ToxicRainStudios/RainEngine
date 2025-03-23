@@ -112,8 +112,7 @@ public class GameEngine {
         glViewport(0, 0, (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight());
 
         RainLogger.printLOG("Initializing SoundSystem");
-        GameFactory.soundSystem.init();
-        SoundSystem.initSounds();
+        GameFactory.loadSounds();
 
         // Weapons must be loaded after sounds have been loaded
         GameFactory.loadWeapons();
@@ -204,6 +203,9 @@ public class GameEngine {
         GameFactory.imguiApp.render();
         // Swap buffers and poll events
         windowManager.swapAndPoll();
+
+        GameFactory.musicManager.update("COMBAT");
+
     }
 
     private static void loop(BatchRenderer batchRenderer) {

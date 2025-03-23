@@ -17,6 +17,7 @@ import com.toxicrain.core.lua.LuaEngine;
 import com.toxicrain.gui.GuiLuaWrapper;
 import com.toxicrain.gui.GuiReg;
 import com.toxicrain.sound.SoundSystem;
+import com.toxicrain.sound.music.MusicManager;
 import com.toxicrain.texture.TextureSystem;
 import com.toxicrain.util.FileUtils;
 import com.toxicrain.util.MouseUtils;
@@ -30,6 +31,7 @@ public class GameFactory {
     public static ImguiHandler imguiApp;
     public static GuiReg guiReg;
     public static SoundSystem soundSystem;
+    public static MusicManager musicManager;
 
     public static Player player;
     public static GuiManager guiManager;
@@ -52,12 +54,22 @@ public class GameFactory {
 
         player = new Player(5, 5, 5, TextureSystem.getTexture("playerTexture"), false);
 
-        soundSystem = new SoundSystem();
+
 
         projectileManager = new ProjectileManager();
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0, TextureSystem.getTexture("playerTexture"));
 
         mouseUtils = new MouseUtils(windowManager.window);
+    }
+
+    public static void loadSounds(){
+        soundSystem = new SoundSystem();
+
+        soundSystem.init();
+        SoundSystem.initSounds();
+
+        musicManager = new MusicManager(SoundSystem.getSound("panic_3"),SoundSystem.getSound("Sample"), SoundSystem.getSound("Sample"), soundSystem);
+
     }
 
     public static void loadImgui(){
