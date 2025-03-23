@@ -108,7 +108,7 @@ public class BossNPC extends NPC {
     public void render(BatchRenderer batchRenderer) {
         // Boss-specific render
         batchRenderer.addTexture(TextureSystem.getTexture(bossTexture), this.X, this.Y, Constants.npcZLevel+0.1f,
-                this.rotation, 2f, 2f, Color.toFloatArray(Color.RED));
+                this.rotation, 2f, 2f, Color.toFloatArray(Color.WHITE));
 
         renderHealthBar(batchRenderer);
     }
