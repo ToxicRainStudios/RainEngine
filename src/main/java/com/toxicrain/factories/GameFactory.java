@@ -68,7 +68,7 @@ public class GameFactory {
         soundSystem.init();
         SoundSystem.initSounds();
 
-        musicManager = new MusicManager(SoundSystem.getSound("panic_3"),SoundSystem.getSound("Sample"), SoundSystem.getSound("Sample"), soundSystem);
+        musicManager = new MusicManager(SoundSystem.getSound("A1"),SoundSystem.getSound("A2"),SoundSystem.getSound("A3"),SoundSystem.getSound("B1"),SoundSystem.getSound("Breakdown"),SoundSystem.getSound("Intro"),SoundSystem.getSound("Panic1"),SoundSystem.getSound("Panic2"),SoundSystem.getSound("Panic3"), soundSystem);
 
     }
 

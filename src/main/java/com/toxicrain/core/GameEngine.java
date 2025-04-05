@@ -204,6 +204,9 @@ public class GameEngine {
         // Swap buffers and poll events
         windowManager.swapAndPoll();
 
+
+
+        //"COMBAT" is the normal track, "PANIC" is the low health track, "CALM" is the quiet track
         GameFactory.musicManager.update("COMBAT");
 
     }
