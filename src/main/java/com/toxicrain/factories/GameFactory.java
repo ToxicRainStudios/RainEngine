@@ -16,13 +16,16 @@ import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.lua.LuaEngine;
 import com.toxicrain.gui.GuiLuaWrapper;
 import com.toxicrain.gui.GuiReg;
+import com.toxicrain.sound.SoundInfo;
 import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.sound.music.MusicManager;
 import com.toxicrain.texture.TextureSystem;
 import com.toxicrain.util.FileUtils;
 import com.toxicrain.util.MouseUtils;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import static com.toxicrain.core.GameEngine.windowManager;
 
@@ -51,10 +54,7 @@ public class GameFactory {
     public static BossNPC bossNPC;
 
     public static void load(){
-
         player = new Player(5, 5, 5, TextureSystem.getTexture("playerTexture"), false);
-
-
 
         projectileManager = new ProjectileManager();
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0, TextureSystem.getTexture("playerTexture"));
@@ -64,11 +64,24 @@ public class GameFactory {
 
     public static void loadSounds(){
         soundSystem = new SoundSystem();
-
         soundSystem.init();
+
         SoundSystem.initSounds();
 
-        musicManager = new MusicManager(SoundSystem.getSound("A1"),SoundSystem.getSound("A2"),SoundSystem.getSound("A3"),SoundSystem.getSound("B1"),SoundSystem.getSound("Breakdown"),SoundSystem.getSound("Intro"),SoundSystem.getSound("Panic1"),SoundSystem.getSound("Panic2"),SoundSystem.getSound("Panic3"), soundSystem);
+        //All possible music clips
+        Map<String, SoundInfo> sounds = new HashMap<>();
+        sounds.put("CALM0", SoundSystem.getSound("Intro"));
+        sounds.put("CALM1", SoundSystem.getSound("A1"));
+        sounds.put("CALM2", SoundSystem.getSound("A2"));
+        sounds.put("CALM3", SoundSystem.getSound("A3"));
+        sounds.put("BREAKDOWN", SoundSystem.getSound("Breakdown"));
+        sounds.put("COMBAT", SoundSystem.getSound("B1"));
+        sounds.put("PANIC1", SoundSystem.getSound("Panic1"));
+        sounds.put("PANIC2", SoundSystem.getSound("Panic2"));
+        sounds.put("PANIC3", SoundSystem.getSound("Panic3"));
+
+
+        musicManager = new MusicManager(sounds, soundSystem);
 
     }
 
