@@ -3,7 +3,7 @@
 RainEngine is a WIP engine made with [LWJGL3](https://www.lwjgl.org/)
 
 
-## What's done:
+## Features:
 * Parsing general game information from gameinfo.json files
 * Basic texture rendering
 * Basic Map Loading
