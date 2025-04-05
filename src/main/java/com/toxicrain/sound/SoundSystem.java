@@ -15,6 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
+import java.util.LinkedList;
 
 import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.ALC10.*;
@@ -23,7 +25,9 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class SoundSystem {
     private long device;
     private long context;
-    @Getter private int sourceId;
+
+    @Getter private Queue<Integer> availableSources;
+    private static final int MAX_SOURCES = 8;  // Max number of sources allowed
     private float currentVolume = 1.0f;  // Default volume (full)
     private boolean isFading = false;
 
@@ -74,7 +78,7 @@ public class SoundSystem {
 
     public void init() {
         initOpenAL();
-        sourceId = createSoundSource();
+        initializeSourcePool();
     }
 
     private void initOpenAL() {
@@ -98,6 +102,38 @@ public class SoundSystem {
         // Create OpenAL capabilities
         ALCCapabilities alcCapabilities = ALC.createCapabilities(device);
         AL.createCapabilities(alcCapabilities);
+    }
+
+    private void initializeSourcePool() {
+        availableSources = new LinkedList<>();
+        // Pre-generate a pool of sources
+        for (int i = 0; i < MAX_SOURCES; i++) {
+            int sourceId = alGenSources();
+            if (sourceId == 0) {
+                throw new IllegalStateException("Failed to generate OpenAL source.");
+            }
+            availableSources.add(sourceId);
+        }
+    }
+
+    /**
+     * Get an available source from the pool
+     *
+     * @return sourceId
+     */
+    private int getAvailableSource() {
+        Integer sourceId = availableSources.poll();
+        if (sourceId == null) {
+            throw new IllegalStateException("No available sources to play sound.");
+        }
+        return sourceId;
+    }
+
+    /**
+     * Return the source to the pool once it's no longer needed
+     */
+    public void releaseSource(int sourceId) {
+        availableSources.offer(sourceId);
     }
 
     public static SoundInfo loadSound(String filePath) {
@@ -129,23 +165,13 @@ public class SoundSystem {
         return new SoundInfo(wavData, bufferId);
     }
 
-
-    public int createSoundSource() {
-        int sourceId = alGenSources();
-        if (sourceId == 0) {
-            int error = alGetError();
-            throw new IllegalStateException("Failed to generate OpenAL source. Error code: " + error);
-        }
-        return sourceId;
-    }
-
     public void play(SoundInfo soundInfo) {
-        int state = alGetSourcei(sourceId, AL_SOURCE_STATE);
-        if (state != AL_PLAYING) {
-            RainLogger.printLOG("Playing sound");
-            alSourcei(sourceId, AL_BUFFER, soundInfo.bufferId);
-            alSourcePlay(sourceId);
-        }
+        // Get an available source from the pool
+        int sourceId = getAvailableSource();
+
+        // Set the buffer for the source and play the sound
+        alSourcei(sourceId, AL_BUFFER, soundInfo.bufferId);
+        alSourcePlay(sourceId);
     }
 
     public void play(SoundInfo soundInfo, boolean fadeIn, float fadeDuration) {
@@ -157,9 +183,13 @@ public class SoundSystem {
     }
 
     public void stop() {
-        int state = alGetSourcei(sourceId, AL_SOURCE_STATE);
-        if (state == AL_PLAYING) {
-            alSourceStop(sourceId);
+        // Stop all active sounds
+        for (Integer sourceId : availableSources) {
+            int state = alGetSourcei(sourceId, AL_SOURCE_STATE);
+            if (state == AL_PLAYING) {
+                alSourceStop(sourceId);
+                releaseSource(sourceId);  // Return the source to the pool after stopping
+            }
         }
     }
 
@@ -173,11 +203,16 @@ public class SoundSystem {
 
     public void cleanup(SoundInfo soundInfo) {
         stop();
-        alDeleteSources(sourceId);
+        alDeleteSources(soundInfo.bufferId);
         alDeleteBuffers(soundInfo.bufferId);
     }
 
     public void cleanup() {
+        for (Integer sourceId : availableSources) {
+            alDeleteSources(sourceId);
+        }
+        availableSources.clear();
+
         if (context != NULL) {
             alcDestroyContext(context);
             context = NULL;
@@ -191,6 +226,7 @@ public class SoundSystem {
     private void fadeIn(SoundInfo soundInfo, float duration) {
         new Thread(() -> {
             try {
+                int sourceId = getAvailableSource();
                 alSourcei(sourceId, AL_BUFFER, soundInfo.bufferId);
                 setVolume(0.0f);  // Start at zero volume
                 alSourcePlay(sourceId);
@@ -204,6 +240,7 @@ public class SoundSystem {
                     Thread.sleep(10);  // Update volume every 10ms
                 }
 
+                releaseSource(sourceId);
                 isFading = false;
             } catch (InterruptedException e) {
                 RainLogger.printERROR("Fade-in interrupted.");
@@ -223,7 +260,7 @@ public class SoundSystem {
                     Thread.sleep(10);  // Update volume every 10ms
                 }
 
-                alSourceStop(sourceId);
+                stop();
                 isFading = false;
             } catch (InterruptedException e) {
                 RainLogger.printERROR("Fade-out interrupted.");
@@ -233,7 +270,9 @@ public class SoundSystem {
 
     public void setVolume(float volume) {
         currentVolume = volume;
-        alSourcef(sourceId, AL_GAIN, volume);
+        for (Integer sourceId : availableSources) {
+            alSourcef(sourceId, AL_GAIN, volume);
+        }
     }
 
     public float getVolume() {

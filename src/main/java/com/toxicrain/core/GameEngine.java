@@ -56,7 +56,9 @@ public class GameEngine {
         windowManager.destroy();
     }
 
-
+    /**
+     * Does all the loading for RainEngine.
+     */
     private static void init() {
         // Set up an error callback. The default implementation will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
