@@ -55,16 +55,16 @@ public class KeyInfoParser {
                 }
             }
 
-            RainLogger.printLOG("Key bindings loaded successfully.");
+            RainLogger.rainLogger.info("Key bindings loaded successfully.");
 
         }
         catch (FileNotFoundException e) {
-            RainLogger.printERROR("File not found: " + filePath);
+            RainLogger.rainLogger.error("File not found: {}", filePath);
         } catch (IOException e) {
-            RainLogger.printERROR("Error reading file: " + filePath);
+            RainLogger.rainLogger.error("Error reading file: {}", filePath);
             e.printStackTrace();
         } catch (Exception e) {
-            RainLogger.printERROR("Error parsing JSON: " + e.getMessage());
+            RainLogger.rainLogger.error("Error parsing JSON: {}", e.getMessage());
             e.printStackTrace();
         }
     }
@@ -79,9 +79,9 @@ public class KeyInfoParser {
         if (keyBindings.containsKey(key)) {
             keyBindings.put(key, value);
             saveKeyBindings();
-            RainLogger.printLOG("Key binding updated: " + key + " -> " + value);
+            RainLogger.rainLogger.info("Key binding updated: {} -> {}", key, value);
         } else {
-            RainLogger.printERROR("Key binding not found: " + key);
+            RainLogger.rainLogger.error("Key binding not found: {}", key);
         }
     }
 
@@ -106,9 +106,9 @@ public class KeyInfoParser {
 
         try {
             FileUtils.writeFile(filePath, jsonArray.toString(4)); // Pretty print with indentation
-            RainLogger.printLOG("Key bindings saved successfully.");
+            RainLogger.rainLogger.info("Key bindings saved successfully.");
         } catch (IOException e) {
-            RainLogger.printERROR("Error writing file: " + filePath);
+            RainLogger.rainLogger.error("Error writing file: {}", filePath);
             e.printStackTrace();
         }
     }

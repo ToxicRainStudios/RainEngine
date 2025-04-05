@@ -130,7 +130,7 @@ public class LuaManager {
         globals.set("isKeyPressed", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue arg) {
-                if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(arg.toString()))) {
+                if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(arg.toString()))) {
                     return LuaValue.TRUE;
                 }
                 return LuaValue.FALSE;

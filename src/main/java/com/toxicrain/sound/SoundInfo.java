@@ -20,4 +20,8 @@ public class SoundInfo {
         this.wavInfo = wavInfo;
         this.bufferId = bufferId;
     }
+
+    public void free(){
+        wavInfo.free();
+    }
 }

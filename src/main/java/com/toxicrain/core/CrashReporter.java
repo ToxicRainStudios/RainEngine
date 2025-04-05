@@ -24,7 +24,7 @@ public class CrashReporter implements Thread.UncaughtExceptionHandler {
     @SuppressWarnings("CallToPrintStackTrace")
     public static void generateCrashReport(Throwable t) {
         // Print error to log
-        RainLogger.printERROR("A crash occurred: " + t.getCause());
+        RainLogger.rainLogger.error("A crash occurred: {}", String.valueOf(t.getCause()));
 
         // Generate a unique crash file name with a timestamp
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));

@@ -6,8 +6,8 @@ import java.util.Map;
 
 public class MusicManager {
 
-    private Map<String, SoundInfo> soundMap;
-    private SoundSystem soundSystem;
+    private final Map<String, SoundInfo> soundMap;
+    private final SoundSystem soundSystem;
     private String currentState = "CALM";
 
     public MusicManager(Map<String, SoundInfo> sounds, SoundSystem soundSystem) {

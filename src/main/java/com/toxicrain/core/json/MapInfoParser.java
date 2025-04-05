@@ -43,8 +43,8 @@ public class MapInfoParser {
 
             // Check for required keys
             if (!part.has("type") || !part.has("xsize") || !part.has("ysize") || !part.has("slices") || !part.has("lighting")) {
-                RainLogger.printERROR("Missing keys in JSON object at index " + i);
-                RainLogger.printERROR(part.toString(4));
+                RainLogger.rainLogger.error("Missing keys in JSON object at index {}", i);
+                RainLogger.rainLogger.error(part.toString(4));
                 continue;
             }
 
@@ -52,11 +52,11 @@ public class MapInfoParser {
             playery = part.getInt("playery");
 
             if (doExtraLogs) {
-                RainLogger.printLOG("type: " + part.getString("type"));
+                RainLogger.rainLogger.info("type: {}", part.getString("type"));
                 xsize = part.getInt("xsize");
                 ysize = part.getInt("ysize");
-                RainLogger.printLOG("xsize: " + xsize);
-                RainLogger.printLOG("ysize: " + ysize);
+                RainLogger.rainLogger.info("xsize: {}", xsize);
+                RainLogger.rainLogger.info("ysize: {}", ysize);
             }
 
             try {
@@ -103,28 +103,29 @@ public class MapInfoParser {
                     for (int subMapIndex = 0; subMapIndex < subMaps.length(); subMapIndex++) {
                         JSONObject subMap = subMaps.getJSONObject(subMapIndex);
                         String subMapName = subMap.getString("name");
-                        if(!Objects.equals(subMapName, mapName)){
+                        if (!Objects.equals(subMapName, mapName)) {
                             int subMapOffsetX = subMap.getInt("offsetX");
                             int subMapOffsetY = subMap.getInt("offsetY");
 
                             // Recursively load sub-maps too
                             parseMap(subMapName, offsetX + subMapOffsetX, offsetY + subMapOffsetY);
-                        }
-                        else {
+                        } else {
                             RainLogger.rainLogger.error("Submap name :{} matches current map name: {}", subMapName, mapName);
                         }
                     }
                 }
 
             } catch (JSONException e) {
-                RainLogger.printERROR("Error parsing map data: " + e.getMessage());
+                RainLogger.rainLogger.error("Error parsing map data: {}", e.getMessage());
                 e.printStackTrace();
             }
         }
 
         // Log the final map data
-        RainLogger.printLOGConditional("mapDataX: " + mapDataX, doExtraLogs);
-        RainLogger.printLOGConditional("mapDataY: " + mapDataY, doExtraLogs);
-        RainLogger.printLOGConditional("Lighting sources: " + LightSystem.getLightSources(), doExtraLogs);
+        if (doExtraLogs) {
+            RainLogger.rainLogger.info("mapDataX: {}", mapDataX);
+            RainLogger.rainLogger.info("mapDataY: {}", mapDataY);
+            RainLogger.rainLogger.info("Lighting sources: {}", LightSystem.getLightSources());
+        }
     }
 }

@@ -5,7 +5,7 @@ import org.lwjgl.glfw.GLFW;
 /**
  * The MouseUtils class provides help working with mice
  */
-public class MouseUtils {
+public class InputUtils {
 
     private final long window;
 
@@ -14,7 +14,7 @@ public class MouseUtils {
      *
      * @param window The window handle
      */
-    public MouseUtils(long window) {
+    public InputUtils(long window) {
         this.window = window;
     }
 

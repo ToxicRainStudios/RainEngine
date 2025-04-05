@@ -3,6 +3,7 @@ package com.toxicrain.artifacts;
 import com.toxicrain.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.core.Color;
 import com.toxicrain.core.Constants;
+import com.toxicrain.core.RainLogger;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.texture.TextureSystem;
@@ -29,7 +30,7 @@ public class BossNPC extends NPC {
         // Assign a boss-specific behavior sequence
         GameFactory.npcManager.addNPC(this, this.behaviorSequence);
 
-        System.out.println("Boss NPC spawned at: (" + startingXpos + ", " + startingYpos + ")");
+        RainLogger.rainLogger.info("Boss NPC spawned at: ({}, {})", startingXpos, startingYpos);
     }
 
     public void takeDamage(float damage) {

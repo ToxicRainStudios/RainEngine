@@ -9,7 +9,7 @@ import java.util.Arrays;
 public class Application {
 
     public static void main(String[] args) {
-        RainLogger.printLOG("Starting with args: " + Arrays.toString(args));
+        RainLogger.rainLogger.info("Starting with args: {}", Arrays.toString(args));
 
         GameInfoParser.loadGameInfo();
         GameEngine.run();

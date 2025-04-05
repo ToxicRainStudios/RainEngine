@@ -56,7 +56,7 @@ public class SoundSystem {
                         // Store the sound with its file name (without extension) as the key
                         String soundName = path.getFileName().toString().replaceFirst("[.][^.]+$", ""); // remove extension
                         sounds.put(soundName, sound);
-                        RainLogger.printLOG("Loaded sound: " + soundName);
+                        RainLogger.rainLogger.info("Loaded sound: {}", soundName);
                     });
         } catch (IOException e) {
             throw new RuntimeException("Failed to load sounds from directory: " + soundDirectory, e);
@@ -149,15 +149,15 @@ public class SoundSystem {
             alBufferData(bufferId, wavData.format, wavData.data, wavData.samplerate);
 
             long fileSize = FileUtils.getFileSize(filePath);
-            RainLogger.printLOG(String.format("Loaded sound: %s (File Size: %d bytes, Format: %d)", filePath, fileSize, wavData.format));
+            RainLogger.rainLogger.debug("Loaded sound: {} (File Size: {} bytes, Format: {})", filePath, fileSize, wavData.format);
         } catch (FileNotFoundException e) {
-            RainLogger.printERROR("File not found: " + filePath);
+            RainLogger.rainLogger.error("File not found: {}", filePath);
             e.printStackTrace();
         } catch (IOException e) {
-            RainLogger.printERROR("Error reading file: " + filePath);
+            RainLogger.rainLogger.error("Error reading file: {}", filePath);
             e.printStackTrace();
         } catch (Exception e) {
-            RainLogger.printERROR("Error processing sound file: " + e.getMessage());
+            RainLogger.rainLogger.error("Error processing sound file: {}", e.getMessage());
             e.printStackTrace();
         }
 

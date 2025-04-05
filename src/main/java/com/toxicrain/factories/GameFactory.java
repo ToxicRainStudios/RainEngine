@@ -1,6 +1,5 @@
 package com.toxicrain.factories;
 
-import com.github.strubium.windowmanager.imgui.GuiBuilder;
 import com.github.strubium.windowmanager.imgui.GuiManager;
 import com.github.strubium.windowmanager.imgui.ImguiHandler;
 import com.toxicrain.artifacts.*;
@@ -20,8 +19,7 @@ import com.toxicrain.sound.SoundInfo;
 import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.sound.music.MusicManager;
 import com.toxicrain.texture.TextureSystem;
-import com.toxicrain.util.FileUtils;
-import com.toxicrain.util.MouseUtils;
+import com.toxicrain.util.InputUtils;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -40,7 +38,7 @@ public class GameFactory {
     public static GuiManager guiManager;
     public static ProjectileManager projectileManager;
     public static Projectile projectile;
-    public static MouseUtils mouseUtils;
+    public static InputUtils inputUtils;
     public static Weapon pistol;
     public static Weapon rifle;
     public static Weapon shotgun;
@@ -59,7 +57,7 @@ public class GameFactory {
         projectileManager = new ProjectileManager();
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0, TextureSystem.getTexture("playerTexture"));
 
-        mouseUtils = new MouseUtils(windowManager.window);
+        inputUtils = new InputUtils(windowManager.window);
     }
 
     public static void loadSounds(){
@@ -125,7 +123,7 @@ public class GameFactory {
 
     public static void loadLang(){
         langHelper = new LangHelper("raiengine", Locale.ENGLISH);
-        RainLogger.printLOG(langHelper.get("greeting"));
+        RainLogger.rainLogger.info(langHelper.get("greeting"));
     }
 
     public static void setupGUIs() {

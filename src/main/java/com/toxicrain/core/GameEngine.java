@@ -28,8 +28,6 @@ public class GameEngine {
     // The window handle
     public static WindowManager windowManager;
 
-    public static final boolean menu = false;
-
     public static void run() {
         Thread.setDefaultUncaughtExceptionHandler(new CrashReporter());
         RainLogger.printLOG("Hello LWJGL " + Version.getVersion() + "!");

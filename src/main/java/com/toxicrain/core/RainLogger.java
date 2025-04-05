@@ -18,6 +18,7 @@ public class RainLogger { //TODO maybe replace this? Separate loggers for Lua wo
      *
      * @param input The message to be logged.
      */
+    @Deprecated
     public static void printLOG(String input){
         rainLogger.info(input);
     }
@@ -28,6 +29,7 @@ public class RainLogger { //TODO maybe replace this? Separate loggers for Lua wo
      * @param input The message to be logged.
      * @param bool The condition to print
      */
+    @Deprecated
     public static void printLOGConditional(String input, boolean bool){
         if(bool) rainLogger.info(input);
     }
@@ -36,6 +38,7 @@ public class RainLogger { //TODO maybe replace this? Separate loggers for Lua wo
      *
      * @param input The error message to be logged.
      */
+    @Deprecated
     public static void printERROR(String input){
         rainLogger.error(input);
     }

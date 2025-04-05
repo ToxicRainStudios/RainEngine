@@ -13,7 +13,7 @@ import com.toxicrain.factories.GameFactory;
 import com.toxicrain.core.Color;
 import com.toxicrain.texture.TextureSystem;
 import com.toxicrain.util.MathUtils;
-import com.toxicrain.util.MouseUtils;
+import com.toxicrain.util.InputUtils;
 import com.toxicrain.util.WindowUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -98,9 +98,9 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
     public void attack() {
         if (equippedWeapon != null) {
             // Get OpenGL mouse coordinates, as used in rendering
-            float[] openglMousePos = MouseUtils.convertToOpenGLCoordinates(
-                    GameFactory.mouseUtils.getMousePosition()[0],
-                    GameFactory.mouseUtils.getMousePosition()[1],
+            float[] openglMousePos = InputUtils.convertToOpenGLCoordinates(
+                    GameFactory.inputUtils.getMousePosition()[0],
+                    GameFactory.inputUtils.getMousePosition()[1],
                     (int) SettingsInfoParser.getInstance().getWindowWidth(),
                     (int) SettingsInfoParser.getInstance().getWindowHeight()
             );
@@ -168,8 +168,8 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
     }
 
     float[] getMouse() {
-        float[] mousePos = GameFactory.mouseUtils.getMousePosition();
-        openglMousePos = MouseUtils.convertToOpenGLCoordinatesOffset(mousePos[0], mousePos[1],
+        float[] mousePos = GameFactory.inputUtils.getMousePosition();
+        openglMousePos = InputUtils.convertToOpenGLCoordinatesOffset(mousePos[0], mousePos[1],
                 (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight(), cameraX, cameraY);
         return openglMousePos;
     }
@@ -227,7 +227,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
     }
 
     private void handleSprinting() {
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keySprint"))) {
+        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keySprint"))) {
             cameraSpeed = 0.1f;
             isSprinting = true;
         } else {
@@ -237,15 +237,15 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
     }
 
     private void handleMovement() {
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkLeft"))) forward(false, 1);
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkRight"))) forward(false, -1);
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkForward"))) forward(true, 1);
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkBackward"))) forward(true, -1);
-        if (GameFactory.mouseUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWeaponOne"))) equipWeapon(GameFactory.shotgun);
+        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkLeft"))) forward(false, 1);
+        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkRight"))) forward(false, -1);
+        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkForward"))) forward(true, 1);
+        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkBackward"))) forward(true, -1);
+        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWeaponOne"))) equipWeapon(GameFactory.shotgun);
     }
 
     private void handleAttack() {
-        if (GameFactory.mouseUtils.isMouseButtonPressed(0)) {
+        if (GameFactory.inputUtils.isMouseButtonPressed(0)) {
             attack();
         }
     }

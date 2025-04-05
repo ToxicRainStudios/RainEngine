@@ -4,9 +4,9 @@ import lombok.Getter;
 import org.luaj.vm2.*;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
+@Getter
 public class LuaEngine {
 
-    @Getter
     private final Globals globals;
 
     public LuaEngine() {

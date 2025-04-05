@@ -1,7 +1,6 @@
 package com.toxicrain.core.json;
 
 import com.toxicrain.core.RainLogger;
-import lombok.Getter;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -44,7 +43,7 @@ public class SettingsInfoParser {
                 settings.put(key, settingsJson.get(key));
             }
         } catch (IOException e) {
-            RainLogger.printERROR("Failed to load settings file: " + filePath);
+            RainLogger.rainLogger.error("Failed to load settings file: {}", filePath);
             e.printStackTrace();
             settingsJson = new JSONObject(); // Prevent null issues
         }
@@ -52,7 +51,7 @@ public class SettingsInfoParser {
 
     public void modifySetting(String key, Object newValue) {
         if (settingsJson == null) {
-            RainLogger.printERROR("Settings JSON not initialized");
+            RainLogger.rainLogger.error("Settings JSON not initialized");
             return;
         }
 
@@ -66,7 +65,7 @@ public class SettingsInfoParser {
         try {
             Files.write(Paths.get(filePath), settingsJson.toString(4).getBytes());
         } catch (IOException e) {
-            RainLogger.printERROR("Failed to save settings file: " + filePath);
+            RainLogger.rainLogger.error("Failed to save settings file: {}", filePath);
             e.printStackTrace();
         }
     }
