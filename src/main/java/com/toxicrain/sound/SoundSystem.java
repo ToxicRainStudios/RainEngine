@@ -2,6 +2,7 @@ package com.toxicrain.sound;
 
 import com.toxicrain.core.RainLogger;
 import com.toxicrain.util.FileUtils;
+import lombok.Getter;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
@@ -22,7 +23,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class SoundSystem {
     private long device;
     private long context;
-    private int sourceId;
+    @Getter private int sourceId;
     private float currentVolume = 1.0f;  // Default volume (full)
     private boolean isFading = false;
 
