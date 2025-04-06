@@ -61,6 +61,9 @@ public class SoundSystem {
         } catch (IOException e) {
             throw new RuntimeException("Failed to load sounds from directory: " + soundDirectory, e);
         }
+
+        RainLogger.rainLogger.info("Loaded {} sounds.", sounds.size());
+
     }
 
     /**

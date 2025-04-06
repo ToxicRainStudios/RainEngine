@@ -84,9 +84,6 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
             }
             equippedWeapon = weapon;
             equippedWeapon.equip();
-            RainLogger.rainLogger.info("Equipped weapon: " + weapon.getName());
-        } else {
-            RainLogger.rainLogger.info("Weapon not found in inventory.");
         }
     }
 
@@ -157,10 +154,6 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
 
 
         updatePos(cameraX, cameraY, cameraZ);
-
-        // Calculate velocity based on deltaTime
-        float velocityX = (cameraX - prevCameraX) / deltaTime;
-        float velocityY = (cameraY - prevCameraY) / deltaTime;
 
         // Update previous position
         prevCameraX = cameraX;

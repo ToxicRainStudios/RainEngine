@@ -10,9 +10,10 @@ import org.joml.Vector4f;
 import java.nio.FloatBuffer;
 
 public class WindowUtils{
+    static FloatBuffer projMatrixBuffer = GameEngine.getPerspectiveProjectionMatrixBuffer();
+
 
     public static Vector3f getCenter() {
-        FloatBuffer projMatrixBuffer = GameEngine.getPerspectiveProjectionMatrixBuffer();
         Matrix4f projectionMatrix = new Matrix4f();
         projectionMatrix.set(projMatrixBuffer);
 
