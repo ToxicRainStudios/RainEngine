@@ -43,16 +43,16 @@ public class TextureSystem {
                             // Store the texture with its file name (without extension) as the key
                             String textureName = path.getFileName().toString().replaceFirst("[.][^.]+$", ""); // remove extension
                             textures.put(textureName, texture);
-                            RainLogger.printLOG("Loaded texture: " + textureName);
+                            RainLogger.rainLogger.info("Loaded texture: {}", textureName);
                         } else {
-                            RainLogger.printERROR("Failed to load texture: " + path.getFileName());
+                            RainLogger.rainLogger.error("Failed to load texture: {}", path.getFileName());
                         }
                     });
         } catch (IOException e) {
             throw new RuntimeException("Failed to load textures from directory: " + textureDirectory, e);
         }
 
-        RainLogger.printLOG(String.format("Loaded %d textures.", textures.size()));
+        RainLogger.rainLogger.info("Loaded {} textures.", textures.size());
     }
 
     /**
@@ -63,7 +63,7 @@ public class TextureSystem {
      */
     public static TextureInfo getTexture(String textureName) {
         if (!textures.containsKey(textureName)) {
-            RainLogger.printLOG("Texture not found: " + textureName);
+            RainLogger.rainLogger.info("Texture not found: {}", textureName);
             return null;  // Return null or throw an exception if texture is not found
         }
         return textures.get(textureName);

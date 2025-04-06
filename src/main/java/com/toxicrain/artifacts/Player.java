@@ -84,9 +84,9 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
             }
             equippedWeapon = weapon;
             equippedWeapon.equip();
-            RainLogger.printLOG("Equipped weapon: " + weapon.getName());
+            RainLogger.rainLogger.info("Equipped weapon: " + weapon.getName());
         } else {
-            RainLogger.printLOG("Weapon not found in inventory.");
+            RainLogger.rainLogger.info("Weapon not found in inventory.");
         }
     }
 

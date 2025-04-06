@@ -45,7 +45,7 @@ public class LuaManager {
         globals.set("error", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue arg) {
-                RainLogger.printERROR(arg.tojstring());
+                RainLogger.rainLogger.error(arg.tojstring());
                 return arg;
             }
         });
@@ -473,7 +473,7 @@ public class LuaManager {
             LuaValue chunk = globals.load(script, scriptPath);  // Load the script from content
             chunk.call();  // Execute the script
         } catch (FileNotFoundException e) {
-            RainLogger.printERROR("Error loading Script! FileNotFound");
+            RainLogger.rainLogger.error("Error loading Script! FileNotFound");
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();

@@ -12,16 +12,7 @@ public class RainLogger { //TODO maybe replace this? Separate loggers for Lua wo
 
     public static final Logger rainLogger = LoggerFactory.getLogger("RainEngine");
     public static final Logger luaLogger = LoggerFactory.getLogger("RainEngine: Lua");
-
-    /**
-     * Prints a log message to the console.
-     *
-     * @param input The message to be logged.
-     */
-    @Deprecated
-    public static void printLOG(String input){
-        rainLogger.info(input);
-    }
+    
     /**
      * Prints a log message to the console if a condition
      * is true
@@ -33,14 +24,6 @@ public class RainLogger { //TODO maybe replace this? Separate loggers for Lua wo
     public static void printLOGConditional(String input, boolean bool){
         if(bool) rainLogger.info(input);
     }
-    /**
-     * Prints an error message to the console.
-     *
-     * @param input The error message to be logged.
-     */
-    @Deprecated
-    public static void printERROR(String input){
-        rainLogger.error(input);
-    }
+
 
 }

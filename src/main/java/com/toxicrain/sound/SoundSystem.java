@@ -152,13 +152,10 @@ public class SoundSystem {
             RainLogger.rainLogger.debug("Loaded sound: {} (File Size: {} bytes, Format: {})", filePath, fileSize, wavData.format);
         } catch (FileNotFoundException e) {
             RainLogger.rainLogger.error("File not found: {}", filePath);
-            e.printStackTrace();
         } catch (IOException e) {
             RainLogger.rainLogger.error("Error reading file: {}", filePath);
-            e.printStackTrace();
         } catch (Exception e) {
             RainLogger.rainLogger.error("Error processing sound file: {}", e.getMessage());
-            e.printStackTrace();
         }
 
         // Return the SoundInfo containing the WavInfo and bufferId
@@ -243,7 +240,7 @@ public class SoundSystem {
                 releaseSource(sourceId);
                 isFading = false;
             } catch (InterruptedException e) {
-                RainLogger.printERROR("Fade-in interrupted.");
+                RainLogger.rainLogger.error("Fade-in interrupted.");
             }
         }).start();
     }
@@ -263,7 +260,7 @@ public class SoundSystem {
                 stop();
                 isFading = false;
             } catch (InterruptedException e) {
-                RainLogger.printERROR("Fade-out interrupted.");
+                RainLogger.rainLogger.error("Fade-out interrupted");
             }
         }).start();
     }

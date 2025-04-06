@@ -156,9 +156,7 @@ public class GuiReg {
 
                 // Add the centered "Play" button
                 .pushFont("dos")
-                .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.play"), () -> {
-                    GameFactory.guiManager.removeActiveGUI("MainMenu");
-                }, ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
+                .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.play"), () -> GameFactory.guiManager.removeActiveGUI("MainMenu"), ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
 
                 // Add the centered "Settings" button
                 .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.settings"), () -> {
@@ -167,9 +165,7 @@ public class GuiReg {
                 }, ImGui.getIO().getDisplaySizeY() / 2 + 40, 20, 5)
 
                 // Add the centered "Exit" button
-                .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.exit"), () -> {
-                    System.exit(0);
-                }, ImGui.getIO().getDisplaySizeY() / 2 + 80, 20, 5)
+                .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.exit"), () -> System.exit(0), ImGui.getIO().getDisplaySizeY() / 2 + 80, 20, 5)
                 .popFont()
 
                 // Add version info at the bottom-right corner
