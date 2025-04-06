@@ -123,24 +123,24 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         return this.angle;
     }
 
-    private void forward(boolean useMouse, int direction) {
+    private void forward(boolean useMouse, int direction, float deltaTime) {
         getMouse();
-        // Now use the stored angle
+
         float angleXS = (float) Math.sin(angle) * -1;
         float angleYS = (float) Math.cos(angle);
 
         if (useMouse) {
-            cameraX += (openglMousePos[0] - posX) * 0.01f * direction;
-            cameraY += (openglMousePos[1] - posY) * 0.01f * direction;
+            cameraX += (openglMousePos[0] - posX) * 9.3f * direction * deltaTime;
+            cameraY += (openglMousePos[1] - posY) * 9.3f * direction * deltaTime;
         } else {
-            cameraX += angleXS * 0.007f * direction;
-            cameraY += angleYS * 0.007f * direction;
+            cameraX += angleXS * 4.2f * direction * deltaTime;
+            cameraY += angleYS * 4.2f * direction * deltaTime;
         }
     }
 
     public void update(float deltaTime) {
         getMouse();
-        processInput();
+        processInput(deltaTime);
 
         if (isWeaponEquipped(GameFactory.pistol)){
             selectedTexture = TextureSystem.getTexture("playerTexturePistol");
@@ -215,10 +215,10 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
 
     }
 
-    private void processInput() {
+    private void processInput(float deltaTime) {
         handleSprinting();
         handleCollisions();
-        handleMovement();
+        handleMovement(deltaTime);
         handleAttack();
 
         // Update cameraZ based on the scroll input
@@ -236,11 +236,11 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         }
     }
 
-    private void handleMovement() {
-        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkLeft"))) forward(false, 1);
-        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkRight"))) forward(false, -1);
-        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkForward"))) forward(true, 1);
-        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkBackward"))) forward(true, -1);
+    private void handleMovement(float deltaTime) {
+        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkLeft"))) forward(false, 1,deltaTime);
+        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkRight"))) forward(false, -1,deltaTime);
+        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkForward"))) forward(true, 1,deltaTime);
+        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkBackward"))) forward(true, -1,deltaTime);
         if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWeaponOne"))) equipWeapon(GameFactory.shotgun);
     }
 

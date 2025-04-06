@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
  *
  * @author strubium
  */
-public class RainLogger { //TODO maybe replace this? Separate loggers for Lua would be nice
+public class RainLogger {
 
     public static final Logger rainLogger = LoggerFactory.getLogger("RainEngine");
-    public static final Logger luaLogger = LoggerFactory.getLogger("RainEngine: Lua");
-    
+    public static final Logger luaLogger = LoggerFactory.getLogger("RainLua");
+
     /**
      * Prints a log message to the console if a condition
      * is true

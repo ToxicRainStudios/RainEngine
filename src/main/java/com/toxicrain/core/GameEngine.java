@@ -161,8 +161,8 @@ public class GameEngine {
     private static long lastFrameTime = System.nanoTime();
 
     private static void update(float deltaTime) {
+        GameFactory.player.update(deltaTime);
         for (int engineFrames = 30; engineFrames >= 0; engineFrames--) {
-            GameFactory.player.update(deltaTime);
             GameFactory.npcManager.update(deltaTime);
 
             GameFactory.projectileManager.update(deltaTime);
@@ -213,7 +213,7 @@ public class GameEngine {
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!windowManager.shouldClose()) {
             long currentTime = System.nanoTime();
-            float deltaTime = (currentTime - lastFrameTime) / 1_000_000_000.0f; // Convert nanoseconds to seconds
+            float deltaTime = (currentTime - lastFrameTime) / 1000000000.0f; // Convert nanoseconds to seconds
             lastFrameTime = currentTime;
 
 
