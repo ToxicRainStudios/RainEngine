@@ -1,4 +1,4 @@
-package com.toxicrain.core.gamestate;
+package com.toxicrain.core.json.gamestate;
 
 import com.toxicrain.core.RainLogger;
 import com.toxicrain.core.json.MapInfoParser;

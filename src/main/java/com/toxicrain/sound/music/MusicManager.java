@@ -5,14 +5,12 @@ import com.toxicrain.sound.SoundInfo;
 import com.toxicrain.sound.SoundSystem;
 
 import java.util.*;
-import java.util.concurrent.*;
 
 public class MusicManager {
 
     private final List<String> trackOrder;
     private final Map<String, SoundInfo> soundMap;
     private final SoundSystem soundSystem;
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     private int currentTrackIndex = 0;
     private boolean isPlaying = false;
@@ -53,7 +51,6 @@ public class MusicManager {
     }
 
     public void stop() {
-        scheduler.shutdownNow();
         isPlaying = false;
     }
 

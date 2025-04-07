@@ -1,4 +1,4 @@
-package com.toxicrain.core.gamestate;
+package com.toxicrain.core.json.gamestate;
 
 public class GameState {
     public String playerName;
