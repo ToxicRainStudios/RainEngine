@@ -94,4 +94,16 @@ public class MusicManager {
         RainLogger.rainLogger.info("Set starting track to '{}'", trackName);
     }
 
+    /**
+     * Get the currently playing track name.
+     *
+     * @return The name of the track that is currently playing or null if no track is playing.
+     */
+    public String getCurrentTrackName() {
+        if (currentTrackIndex >= 0 && currentTrackIndex < trackOrder.size()) {
+            return trackOrder.get(currentTrackIndex);
+        }
+        return null; // Return null if no track is currently playing.
+    }
+
 }
