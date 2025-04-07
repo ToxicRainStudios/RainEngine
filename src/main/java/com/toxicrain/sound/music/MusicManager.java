@@ -15,7 +15,6 @@ public class MusicManager {
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     private int currentTrackIndex = 0;
-    private ScheduledFuture<?> nextTrackTask = null;
     private boolean isPlaying = false;
 
     public MusicManager(Map<String, SoundInfo> sounds, SoundSystem soundSystem) {
@@ -54,7 +53,6 @@ public class MusicManager {
     }
 
     public void stop() {
-        if (nextTrackTask != null) nextTrackTask.cancel(false);
         scheduler.shutdownNow();
         isPlaying = false;
     }
