@@ -19,6 +19,9 @@
       },
       {
         "keyWeaponOne": "key_1"
+      },
+      {
+        "keyReloadTextures": "key_f9"
       }
     ]
   }

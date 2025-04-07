@@ -12,7 +12,7 @@ RainEngine is a WIP engine made with [LWJGL3](https://www.lwjgl.org/)
 * Keybinding system
 * Lighting
 * "Palette" system for controlling what's what in a map file
-* A File Editor
+* Gui with Imgui
 * Dynamic Texture loading
   * Simply place the image in the images folder, then use it 
 * [Lua](https://www.lua.org/) scripting
@@ -25,7 +25,7 @@ RainEngine is a WIP engine made with [LWJGL3](https://www.lwjgl.org/)
   * Script prefixes to de-hardcore scripting 
   * Dynamically changing the window title
 * NPCs with BehaviorSequence's
-
+* Localization
 
 ## What's not done:
 * UI with configurability

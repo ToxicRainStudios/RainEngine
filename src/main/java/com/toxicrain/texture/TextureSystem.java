@@ -63,8 +63,8 @@ public class TextureSystem {
      */
     public static TextureInfo getTexture(String textureName) {
         if (!textures.containsKey(textureName)) {
-            RainLogger.rainLogger.info("Texture not found: {}", textureName);
-            return null;  // Return null or throw an exception if texture is not found
+            RainLogger.rainLogger.error("Texture not found: {}", textureName);
+            return getTexture("missing");  // Return null or throw an exception if texture is not found
         }
         return textures.get(textureName);
     }
@@ -148,4 +148,25 @@ public class TextureSystem {
 
         return false;  // No transparency detected
     }
+
+    /**
+     * Reloads all textures by clearing current textures and reinitializing.
+     */
+    public static void reloadTextures() {
+        // Delete all currently loaded OpenGL textures
+        for (TextureInfo texture : textures.values()) {
+            glDeleteTextures(texture.textureId);
+        }
+
+        // Clear the textures map
+        textures.clear();
+
+        RainLogger.rainLogger.info("Cleared all textures. Reloading...");
+
+        // Re-initialize textures
+        initTextures();
+
+        RainLogger.rainLogger.info("Reload complete.");
+    }
+
 }
