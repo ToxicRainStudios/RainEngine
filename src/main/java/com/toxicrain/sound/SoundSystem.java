@@ -149,7 +149,7 @@ public class SoundSystem {
         try {
             ByteBuffer wavBuffer = FileUtils.ioResourceToByteBuffer(FileUtils.getCurrentWorkingDirectory(filePath));
             wavData = WAVDecoder.decode(wavBuffer);
-            alBufferData(bufferId, wavData.format, wavData.data, wavData.samplerate);
+            alBufferData(bufferId, wavData.format, wavData.data, wavData.sampleRate);
 
             long fileSize = FileUtils.getFileSize(filePath);
             RainLogger.rainLogger.debug("Loaded sound: {} (File Size: {} bytes, Format: {})", filePath, fileSize, wavData.format);
@@ -181,6 +181,30 @@ public class SoundSystem {
             play(soundInfo);
         }
     }
+
+    public void play(SoundInfo soundInfo, Runnable onEnd) {
+        int sourceId = getAvailableSource();
+        alSourcei(sourceId, AL_BUFFER, soundInfo.bufferId);
+        alSourcePlay(sourceId);
+
+        // Start a thread to monitor the sound playback
+        new Thread(() -> {
+            int state;
+            do {
+                state = alGetSourcei(sourceId, AL_SOURCE_STATE);
+                try {
+                    Thread.sleep(10); // check every 10ms
+                } catch (InterruptedException ignored) {}
+            } while (state == AL_PLAYING);
+
+            // Cleanup after playback finishes
+            releaseSource(sourceId);
+            if (onEnd != null) {
+                onEnd.run();
+            }
+        }, "SoundPlaybackMonitor").start();
+    }
+
 
     public void stop() {
         // Stop all active sounds

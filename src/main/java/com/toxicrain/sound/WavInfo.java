@@ -12,12 +12,14 @@ import java.nio.ByteBuffer;
 public class WavInfo {
     public final ByteBuffer data;
     public final int format;
-    public final int samplerate;
+    public final int sampleRate;
+    public final double durationSeconds;
 
-    public WavInfo(ByteBuffer data, int format, int samplerate) {
+    public WavInfo(ByteBuffer data, int format, int sampleRate, double durationSeconds) {
         this.data = data;
         this.format = format;
-        this.samplerate = samplerate;
+        this.sampleRate = sampleRate;
+        this.durationSeconds = durationSeconds;
     }
 
     public void free() {

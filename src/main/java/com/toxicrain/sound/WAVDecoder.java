@@ -102,6 +102,7 @@ public class WAVDecoder {
                 throw new IOException("Unsupported WAV format: " + numChannels + " channels");
         }
 
-        return new WavInfo(data, format, sampleRate);
+        double durationSeconds = (double) dataSize / (sampleRate * numChannels * (bitsPerSample / 8));
+        return new WavInfo(data, format, sampleRate, durationSeconds);
     }
 }

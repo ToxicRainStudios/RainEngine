@@ -128,6 +128,11 @@ public class GameEngine {
 
         RainLogger.rainLogger.info("Loading Lang");
         GameFactory.loadLang();
+
+
+        //"COMBAT" is the normal track, "PANIC" is the low health track, "CALM" is the quiet track
+        GameFactory.musicManager.start();
+        GameFactory.musicManager.setNextTrack("CALM1");
     }
 
     private static void drawMap(BatchRenderer batchRenderer) {
@@ -201,11 +206,6 @@ public class GameEngine {
         GameFactory.imguiApp.render();
         // Swap buffers and poll events
         windowManager.swapAndPoll();
-
-
-
-        //"COMBAT" is the normal track, "PANIC" is the low health track, "CALM" is the quiet track
-        GameFactory.musicManager.update("CALM0");
 
     }
 
