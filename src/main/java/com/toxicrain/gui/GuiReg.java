@@ -5,6 +5,7 @@ import com.toxicrain.core.json.GameInfoParser;
 import com.toxicrain.core.json.KeyInfoParser;
 import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.factories.GameFactory;
+import com.toxicrain.sound.SoundSystem;
 import com.toxicrain.util.FileUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiInputTextFlags;
@@ -47,6 +48,12 @@ public class GuiReg {
     int windowFlags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize |
             ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar |
             ImGuiWindowFlags.NoBackground;
+
+    public void runBoth(Runnable first, Runnable second) {
+        if (first != null) first.run();
+        if (second != null) second.run();
+    }
+
 
     /**
      * Draws the settings UI using ImGui.
@@ -156,7 +163,7 @@ public class GuiReg {
 
                 // Add the centered "Play" button
                 .pushFont("dos")
-                .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.play"), () -> GameFactory.guiManager.removeActiveGUI("MainMenu"), ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
+                .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.play"),  () -> runBoth(() ->GameFactory.guiManager.removeActiveGUI("MainMenu"), () ->GameFactory.soundSystem.play(SoundSystem.getSound("removeMeClick"))), ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
 
                 // Add the centered "Settings" button
                 .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.settings"), () -> {
