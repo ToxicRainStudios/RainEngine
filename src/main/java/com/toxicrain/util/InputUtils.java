@@ -3,7 +3,7 @@ package com.toxicrain.util;
 import org.lwjgl.glfw.GLFW;
 
 /**
- * The MouseUtils class provides help working with mice
+ * The InputUtils class provides help working with mice
  */
 public class InputUtils {
 

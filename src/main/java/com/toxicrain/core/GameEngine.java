@@ -131,6 +131,7 @@ public class GameEngine {
 
 
         //"COMBAT" is the normal track, "PANIC" is the low health track, "CALM" is the quiet track
+        GameFactory.musicManager.setStartingSound("CALM0");
         GameFactory.musicManager.start();
         GameFactory.musicManager.setNextTrack("CALM1");
     }

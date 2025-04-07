@@ -75,4 +75,23 @@ public class MusicManager {
 
         RainLogger.rainLogger.info("Inserted track '{}' to play next (after index {}).", trackName, currentTrackIndex);
     }
+
+    /**
+     * Sets the starting track that should play first.
+     *
+     * @param trackName The name of the track to start with (must exist in soundMap)
+     */
+    public void setStartingSound(String trackName) {
+        if (!soundMap.containsKey(trackName)) {
+            RainLogger.rainLogger.warn("Tried to set unknown track as starting sound: {}", trackName);
+            return;
+        }
+
+        trackOrder.remove(trackName); // Avoid duplicate
+        trackOrder.add(0, trackName); // Insert at the beginning
+        currentTrackIndex = 0;        // Reset index to start with this track
+
+        RainLogger.rainLogger.info("Set starting track to '{}'", trackName);
+    }
+
 }
