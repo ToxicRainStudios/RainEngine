@@ -30,10 +30,10 @@ public class GameEngine {
 
     public static void run() {
         Thread.setDefaultUncaughtExceptionHandler(new CrashReporter());
-        RainLogger.rainLogger.info("Hello LWJGL " + Version.getVersion() + "!");
+        RainLogger.rainLogger.info("Hello LWJGL {}!", Version.getVersion());
         RainLogger.rainLogger.info("Hello RainEngine " + Constants.engineVersion + "!");
-        RainLogger.rainLogger.info("Running: " + GameInfoParser.gameName + " by " + GameInfoParser.gameMakers);
-        RainLogger.rainLogger.info("Version: " + GameInfoParser.gameVersion);
+        RainLogger.rainLogger.info("Running: {} by {}", GameInfoParser.gameName, GameInfoParser.gameMakers);
+        RainLogger.rainLogger.info("Version: {}", GameInfoParser.gameVersion);
         doVersionCheck();
 
         RainLogger.rainLogger.info("Loading Lua");
@@ -159,7 +159,7 @@ public class GameEngine {
                         LightSystem.getLightSources()
                 ); // Top-right corner
             } else {
-                RainLogger.rainLogger.info("Index out of bounds: space=" + k);
+                RainLogger.rainLogger.info("Index out of bounds: space={}", k);
             }
         }
     }
