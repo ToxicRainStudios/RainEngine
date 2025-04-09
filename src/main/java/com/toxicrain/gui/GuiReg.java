@@ -85,7 +85,7 @@ public class GuiReg {
 
         // Set up checkbox to be centered horizontally
         float vSyncTextWidth = ImGui.calcTextSize(vSyncText).x;
-        float vSyncTotalWidth = vSyncTextWidth + ImGui.getItemRectSize().x + 10; // Text width + checkbox width + spacing
+        float vSyncTotalWidth = vSyncTextWidth + ImGui.getItemRectSize().x + 10;
         ImGui.setCursorPos((screenWidth - vSyncTotalWidth) / 2, screenHeight / 2 - 65);
         ImGui.sameLine();
         if (ImGui.checkbox("##VSyncCheckbox", vSync)) {
@@ -107,30 +107,49 @@ public class GuiReg {
         settings.modifySetting("windowHeight", windowHeight.get());
 
         // Language Selection ComboBox
-        ImInt selectedLang = new ImInt(0); // Default to English
-        String[] languages = {"English", "Español", "Français"};
         gui.addTextCentered(GameFactory.langHelper.get("gui.menu.lang"), screenHeight / 2 - 120);
+        String[] languages = {"English", "Español", "Français"};
 
-        // Center the combo box
-        float langComboBoxWidth = maxControlWidth; // Max width for the combo box
-        ImGui.setCursorPos((screenWidth - langComboBoxWidth) / 2, screenHeight / 2 - 105); // Position combo box horizontally centered
-        ImGui.pushItemWidth(maxControlWidth);  // Set max width for the combo box
-
-        if (ImGui.combo("##LanguageCombo", selectedLang, languages, languages.length)) {
-            String selectedLanguage = languages[selectedLang.get()];
-            Locale newLocale;
-            if (selectedLanguage.equals("Español")) {
-                newLocale = new Locale("es", "ES");
-            } else if (selectedLanguage.equals("Français")) {
-                newLocale = new Locale("fr", "FR");
-            } else {
-                newLocale = new Locale("en", "US"); // Default to English
-            }
-            GameFactory.langHelper.changeLocale(newLocale);
+        // Determine current language index
+        Locale currentLocale = Locale.forLanguageTag(settings.getLanguage());
+        int currentLangIndex = 0;
+        switch (currentLocale.getLanguage()) {
+            case "es":
+                currentLangIndex = 1;
+                break;
+            case "fr":
+                currentLangIndex = 2;
+                break;
+            default:
+                currentLangIndex = 0;
+                break;
         }
 
-        ImGui.popItemWidth();  // Reset item width after
+        ImInt selectedLang = new ImInt(currentLangIndex);
 
+        float langComboBoxWidth = maxControlWidth;
+        ImGui.setCursorPos((screenWidth - langComboBoxWidth) / 2, screenHeight / 2 - 105);
+        ImGui.pushItemWidth(maxControlWidth);
+
+        if (ImGui.combo("##LanguageCombo", selectedLang, languages, languages.length)) {
+            Locale newLocale;
+            switch (selectedLang.get()) {
+                case 1:
+                    newLocale = new Locale("es", "ES");
+                    break;
+                case 2:
+                    newLocale = new Locale("fr", "FR");
+                    break;
+                default:
+                    newLocale = new Locale("en", "US");
+                    break;
+            }
+
+            GameFactory.langHelper.changeLocale(newLocale);
+            settings.modifySetting("language", newLocale); // Save language in settings
+        }
+
+        ImGui.popItemWidth();
 
         // FOV Slider
         String fovText = "Field of View:";
@@ -139,13 +158,14 @@ public class GuiReg {
                 .addSlider("##FovSlider", fov, 30.0f, 120.0f, "%.1f", maxControlWidth);
         settings.modifySetting("fov", fov.get());
 
-        // Back Button centered
-        gui.addButtonCentered("Back", () -> {
-            GameFactory.guiManager.removeActiveGUI("Settings");
-            GameFactory.guiManager.addActiveGUI("MainMenu");
+        gui.addButtonCentered("Back", new Runnable() {
+            @Override
+            public void run() {
+                GameFactory.guiManager.removeActiveGUI("Settings");
+                GameFactory.guiManager.addActiveGUI("MainMenu");
+            }
         }, screenHeight / 2 + 100, 20, 5);
 
-        // Render the GUI
         gui.endWindow();
     }
 

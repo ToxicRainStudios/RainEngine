@@ -1,6 +1,7 @@
 {
     "vSync": true,
     "windowHeight": 1080,
+    "language": "fr_FR",
     "fov": 90,
     "windowWidth": 1920
 }

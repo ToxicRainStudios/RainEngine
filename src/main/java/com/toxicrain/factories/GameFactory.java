@@ -10,6 +10,7 @@ import com.toxicrain.artifacts.manager.NPCManager;
 import com.toxicrain.artifacts.manager.ProjectileManager;
 import com.toxicrain.core.LangHelper;
 import com.toxicrain.core.RainLogger;
+import com.toxicrain.core.json.SettingsInfoParser;
 import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.core.json.MapInfoParser;
 import com.toxicrain.core.lua.LuaEngine;
@@ -122,7 +123,13 @@ public class GameFactory {
     }
 
     public static void loadLang(){
-        langHelper = new LangHelper("raiengine", Locale.ENGLISH);
+        String langTag = SettingsInfoParser.getInstance().getLanguage();
+        RainLogger.rainLogger.info("Using Lang: {}", langTag);
+
+        //We need to replace "_" with a "-" so it loads correctly
+        String languageTag = langTag.replace('_', '-');
+
+        langHelper = new LangHelper("raiengine", Locale.forLanguageTag(languageTag));
         RainLogger.rainLogger.info(langHelper.get("greeting"));
     }
 

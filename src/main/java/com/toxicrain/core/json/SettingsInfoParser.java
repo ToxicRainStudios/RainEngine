@@ -15,7 +15,7 @@ import com.toxicrain.util.FileUtils;
  * SettingsInfoParser dynamically loads and manages settings.json file
  */
 public class SettingsInfoParser {
-    private static SettingsInfoParser instance;
+    private static SettingsInfoParser instance = null;
     private static final String SETTINGS_PATH = "resources/json/settings.json";
     private JSONObject settingsJson;
     private final Map<String, Object> settings = new HashMap<>();
@@ -98,5 +98,8 @@ public class SettingsInfoParser {
     }
     public float getFOV(){
         return getFloat("fov", 90);
+    }
+    public String getLanguage(){
+        return getString("language", "fr");
     }
 }
