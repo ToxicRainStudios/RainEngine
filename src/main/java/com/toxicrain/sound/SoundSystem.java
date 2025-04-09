@@ -27,7 +27,7 @@ public class SoundSystem {
     private long context;
 
     @Getter private Queue<Integer> availableSources;
-    private static final int MAX_SOURCES = 8;  // Max number of sources allowed
+    private static final int MAX_SOURCES = 32;  // Max number of sources allowed
     private float currentVolume = 1.0f;  // Default volume (full)
     private boolean isFading = false;
 
