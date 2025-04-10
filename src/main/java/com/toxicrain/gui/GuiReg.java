@@ -93,14 +93,14 @@ public class GuiReg {
         }
 
         // Window Width Input
-        String widthText = "Window Width:";
+        String widthText = GameFactory.langHelper.get("gui.menu.window.width");
         ImFloat windowWidth = new ImFloat(settings.getWindowWidth());
         gui.addTextCentered(widthText, screenHeight / 2 - 40)
                 .addFloatInput("##WindowWidth", windowWidth, maxControlWidth);
         settings.modifySetting("windowWidth", windowWidth.get());
 
         // Window Height Input
-        String heightText = "Window Height:";
+        String heightText = GameFactory.langHelper.get("gui.menu.window.height");
         ImFloat windowHeight = new ImFloat(settings.getWindowHeight());
         gui.addTextCentered(heightText, screenHeight / 2)
                 .addFloatInput("##WindowHeight", windowHeight, maxControlWidth);
@@ -152,13 +152,13 @@ public class GuiReg {
         ImGui.popItemWidth();
 
         // FOV Slider
-        String fovText = "Field of View:";
+        String fovText = GameFactory.langHelper.get("gui.menu.fov");
         ImFloat fov = new ImFloat(settings.getFOV());
         gui.addTextCentered(fovText, screenHeight / 2 + 40)
                 .addSlider("##FovSlider", fov, 30.0f, 120.0f, "%.1f", maxControlWidth);
         settings.modifySetting("fov", fov.get());
 
-        gui.addButtonCentered("Back", new Runnable() {
+        gui.addButtonCentered(GameFactory.langHelper.get("gui.menu.back"), new Runnable() {
             @Override
             public void run() {
                 GameFactory.guiManager.removeActiveGUI("Settings");
