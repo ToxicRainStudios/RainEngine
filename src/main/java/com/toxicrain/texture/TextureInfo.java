@@ -44,4 +44,12 @@ public class TextureInfo {
     public String toString() {
         return "Texture ID: " + textureId + " Width: "+ width +" Height: " + height;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        TextureInfo that = (TextureInfo) obj;
+        return textureId == that.textureId && width == that.width && height == that.height && isTransparent == that.isTransparent;
+    }
 }
