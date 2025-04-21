@@ -21,6 +21,7 @@ public class BatchRenderer {
 
     /** The maximum number of textures per batch */
     private static final int MAX_TEXTURES = GameInfoParser.maxTexturesPerBatch;
+    private static final int VERTICES_PER_QUAD = 6;
     private final FloatBuffer vertexBuffer;
     private final FloatBuffer texCoordBuffer;
     private final FloatBuffer colorBuffer;
@@ -35,9 +36,9 @@ public class BatchRenderer {
      * as well as the Vertex Buffer Objects (VBOs).
      */
     public BatchRenderer() {
-        vertexBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * 6 * 3); // 2 triangles per quad, 3 vertices per triangle
-        texCoordBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * 6 * 2); // 2 triangles per quad, 2 coords per vertex
-        colorBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * 6 * 4); // 2 triangles per quad, 4 colors per vertex
+        vertexBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * VERTICES_PER_QUAD * 3); // 2 triangles per quad, 3 vertices per triangle
+        texCoordBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * VERTICES_PER_QUAD * 2); // 2 triangles per quad, 2 coords per vertex
+        colorBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * VERTICES_PER_QUAD * 4); // 2 triangles per quad, 4 colors per vertex
         textureVertexInfos = new ArrayList<>(MAX_TEXTURES);
 
         // Generate VBOs
@@ -95,7 +96,10 @@ public class BatchRenderer {
      * @param color the color tint as a float array (RGBA)
      */
     public void addTexture(TextureInfo textureInfo, float x, float y, float z, float angle, float scaleX, float scaleY, float[] color) {
-        handleBatchLimit();
+        if (willOverflow()) {
+            renderBatch();  // Flush before we overflow
+            beginBatch();   // Reset state
+        }
 
         float[] rotatedVertices = createRotatedVertices(textureInfo, x, y, z, angle, scaleX, scaleY);
         float[] triangleVertices = generateTriangleVertices(rotatedVertices);
@@ -121,8 +125,10 @@ public class BatchRenderer {
      * @param lightPositions the list of light positions
      */
     public void addTextureLit(TextureInfo textureInfo, float x, float y, float z, float angle, float scaleX, float scaleY, List<float[]> lightPositions) {
-        handleBatchLimit();
-
+        if (willOverflow()) {
+            renderBatch();  // Flush before we overflow
+            beginBatch();   // Reset state
+        }
         float[] rotatedVertices = createRotatedVertices(textureInfo, x, y, z, angle, scaleX, scaleY);
         float lightLevel = calculateLightLevel(lightPositions, rotatedVertices);
         float[] color = determineColorBasedOnLightLevel(lightLevel);
@@ -149,7 +155,10 @@ public class BatchRenderer {
      * @param color the color to apply to the texture (RGBA)
      */
     public void addTexturePos(TextureInfo textureInfo, float x, float y, float z, float posX, float posY, float scaleX, float scaleY, float[] color) {
-        handleBatchLimit();
+        if (willOverflow()) {
+            renderBatch();  // Flush before we overflow
+            beginBatch();   // Reset state
+        }
 
         float angle = calculateRotationAngle(x, y, posX, posY);
         float[] rotatedVertices = createRotatedVertices(textureInfo, x, y, z, angle, scaleX, scaleY);
@@ -161,13 +170,10 @@ public class BatchRenderer {
         textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, triangleVertices, triangleTexCoords, triangleColors));
     }
 
-// Helper Methods
-
-    private void handleBatchLimit() {
-        if (textureVertexInfos.size() >= MAX_TEXTURES) {
-            renderBatch();
-            beginBatch();
-        }
+    // Helper Methods
+    private boolean willOverflow() {
+        int requiredVertices = (textureVertexInfos.size() + 1) * VERTICES_PER_QUAD;
+        return requiredVertices > MAX_TEXTURES * VERTICES_PER_QUAD;
     }
 
     private float[] createRotatedVertices(TextureInfo textureInfo, float x, float y, float z, float angle, float scaleX, float scaleY) {
@@ -358,6 +364,10 @@ public class BatchRenderer {
     }
 
     private void renderCurrentBatch() {
+        // Make sure transparency works
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         // Upload vertex data to VBO
         glBindBuffer(GL_ARRAY_BUFFER, vertexVboId);
         glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_DYNAMIC_DRAW);
@@ -374,19 +384,5 @@ public class BatchRenderer {
         glColorPointer(4, GL_FLOAT, 0, 0);
 
         glDrawArrays(GL_TRIANGLES, 0, vertexBuffer.limit() / 3);
-    }
-
-    /**
-     * Enables or disables blending.
-     *
-     * @param enabled true to enable blending, false to disable
-     */
-    public void setBlendingEnabled(boolean enabled) {
-        if (enabled) {
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        } else {
-            glDisable(GL_BLEND);
-        }
     }
 }

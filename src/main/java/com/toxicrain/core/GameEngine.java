@@ -194,11 +194,8 @@ public class GameEngine {
         GameFactory.player.render(batchRenderer);
 
 
-        batchRenderer.setBlendingEnabled(true);
         // Render the batch
         batchRenderer.renderBatch();
-
-        batchRenderer.setBlendingEnabled(false);
 
         GameFactory.imguiApp.handleInput(windowManager.window);
         GameFactory.imguiApp.newFrame();
