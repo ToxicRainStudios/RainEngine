@@ -125,13 +125,14 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
 
         float angleXS = (float) Math.sin(angle) * -1;
         float angleYS = (float) Math.cos(angle);
-
+        double distanceOfMouse = Math.sqrt(Math.pow(openglMousePos[0] - posX,2)+Math.pow(openglMousePos[1] - posY,2));
         if (useMouse) {
-            cameraX += (openglMousePos[0] - posX) * 9.3f * direction * deltaTime;
-            cameraY += (openglMousePos[1] - posY) * 9.3f * direction * deltaTime;
+            cameraX += (float) (((openglMousePos[0] - posX)/distanceOfMouse) * 9.3f * direction * deltaTime);
+
+            cameraY += (float) (((openglMousePos[1] - posY)/distanceOfMouse) * 9.3f * direction * deltaTime);
         } else {
-            cameraX += angleXS * 4.2f * direction * deltaTime;
-            cameraY += angleYS * 4.2f * direction * deltaTime;
+            cameraX += (float) (Math.cos((Math.acos(openglMousePos[0] - posX)/distanceOfMouse)+3.14159/2)  * direction* 9.3f  * deltaTime);
+            cameraY += (float) (Math.sin((Math.asin(openglMousePos[1] - posY)/distanceOfMouse)+3.14159/2 ) * direction* 9.3f  * deltaTime);
         }
     }
 
