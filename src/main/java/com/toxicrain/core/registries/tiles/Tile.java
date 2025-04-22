@@ -1,4 +1,4 @@
-package com.toxicrain.artifacts;
+package com.toxicrain.core.registries.tiles;
 
 import com.toxicrain.core.AABB;
 

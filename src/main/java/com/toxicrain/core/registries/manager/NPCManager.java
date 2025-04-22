@@ -1,4 +1,4 @@
-package com.toxicrain.core.manager;
+package com.toxicrain.core.registries.manager;
 
 import com.toxicrain.artifacts.NPC;
 import com.toxicrain.artifacts.behavior.BehaviorSequence;

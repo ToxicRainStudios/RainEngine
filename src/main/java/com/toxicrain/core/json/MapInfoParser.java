@@ -2,7 +2,7 @@ package com.toxicrain.core.json;
 
 import com.toxicrain.core.RainLogger;
 import com.toxicrain.core.lua.LuaManager;
-import com.toxicrain.artifacts.Tile;
+import com.toxicrain.core.registries.tiles.Tile;
 import com.toxicrain.util.FileUtils;
 import com.toxicrain.light.LightSystem;
 import org.json.JSONArray;

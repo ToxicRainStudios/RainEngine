@@ -4,6 +4,7 @@ import com.toxicrain.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.core.AABB;
 import com.toxicrain.core.Constants;
 import com.toxicrain.core.interfaces.IArtifact;
+import com.toxicrain.core.registries.tiles.Collisions;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.core.Color;

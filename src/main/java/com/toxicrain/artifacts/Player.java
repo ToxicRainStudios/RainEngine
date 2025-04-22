@@ -2,6 +2,7 @@ package com.toxicrain.artifacts;
 
 import com.toxicrain.core.AABB;
 import com.toxicrain.core.registries.WeaponRegistry;
+import com.toxicrain.core.registries.tiles.Collisions;
 import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.core.interfaces.IArtifact;
 import com.toxicrain.core.json.GameInfoParser;

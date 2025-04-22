@@ -5,7 +5,7 @@ import com.toxicrain.core.json.*;
 import com.toxicrain.core.lua.LuaManager;
 import com.toxicrain.core.registries.WeaponRegistry;
 import com.toxicrain.core.render.BatchRenderer;
-import com.toxicrain.artifacts.Tile;
+import com.toxicrain.core.registries.tiles.Tile;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.light.LightSystem;
 import com.toxicrain.texture.TextureInfo;
