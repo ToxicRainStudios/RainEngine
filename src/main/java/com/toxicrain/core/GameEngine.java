@@ -132,9 +132,12 @@ public class GameEngine {
             throw new IllegalStateException("Texture mappings not loaded! Call PaletteInfoParser.loadTextureMappings() first.");
         }
 
-        for (int k = MapInfoParser.mapDataX.size() - 1; k >= 0; k--) {
-            // Ensure that indices are valid
-            if (k >= 0 && k < MapInfoParser.mapDataY.size() && k < MapInfoParser.mapDataX.size()) {
+        int sizeX = MapInfoParser.mapDataX.size();  // Get the size once
+        int sizeY = MapInfoParser.mapDataY.size();
+        int sizeZ = MapInfoParser.mapDataZ.size();
+
+        for (int k = sizeX - 1; k >= 0; k--) {
+            if (k < sizeY && k < sizeZ) {  // Only check bounds once
                 char textureChar = Tile.mapDataType.get(k);  // Get the character representing the texture
                 TextureInfo textureInfo = PaletteInfoParser.getTexture(textureChar);  // Get the TextureInfo from TextureLoader
 
@@ -147,7 +150,7 @@ public class GameEngine {
                         1,
                         1,
                         LightSystem.getLIGHT_SOURCES()
-                ); // Top-right corner
+                );
             } else {
                 RainLogger.RAIN_LOGGER.info("Index out of bounds: space={}", k);
             }

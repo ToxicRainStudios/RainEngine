@@ -16,8 +16,8 @@ public class Animation {
     private TextureInfo[] frameTextures; // TextureInfo for each frame
     private int currentFrame; // Index of the current frame being displayed
     private long lastFrameTime; // Time when the last frame change happened
-    private int frameDuration; // Duration of each frame in milliseconds
-    private boolean looping; // Whether the animation should loop
+    private final int frameDuration; // Duration of each frame in milliseconds
+    private final boolean looping; // Whether the animation should loop
 
     @Getter
     private boolean finished; // Whether the animation has finished
