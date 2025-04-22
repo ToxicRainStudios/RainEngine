@@ -13,9 +13,7 @@ import com.toxicrain.texture.TextureSystem;
 import lombok.experimental.UtilityClass;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
-import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
-import org.lwjgl.opengl.GL;
 
 import java.nio.FloatBuffer;
 
@@ -61,12 +59,6 @@ public class GameEngine {
      * Does all the loading for RainEngine.
      */
     private static void init() {
-        // Set up an error callback. The default implementation will print the error message in System.err.
-        GLFWErrorCallback.createPrint(System.err).set();
-
-        RainLogger.RAIN_LOGGER.info("Initializing GLFW");
-        // Initialize GLFW. Most GLFW functions will not work before doing this.
-        if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
         RainLogger.RAIN_LOGGER.info("Creating Game Window");
         windowManager.createWindow(GameInfoParser.defaultWindowName, SettingsInfoParser.getInstance().getVsync());
@@ -82,11 +74,6 @@ public class GameEngine {
 
         RainLogger.RAIN_LOGGER.info("Creating Textures");
         TextureSystem.initTextures();
-
-        // This line is critical for LWJGL's interoperation with GLFW's OpenGL context, or any context that is managed externally.
-        // LWJGL detects the context that is current in the current thread, creates the GLCapabilities instance and makes the OpenGL bindings available for use.
-        RainLogger.RAIN_LOGGER.info("Creating OpenGL Capabilities");
-        GL.createCapabilities();
 
         RainLogger.RAIN_LOGGER.info("Loading Keybinds");
         KeyInfoParser.loadKeyInfo();
