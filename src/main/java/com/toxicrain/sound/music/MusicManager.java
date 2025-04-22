@@ -8,37 +8,37 @@ import java.util.*;
 
 public class MusicManager {
 
-    private final List<String> trackOrder;
-    private final Map<String, SoundInfo> soundMap;
-    private final SoundSystem soundSystem;
+    private final List<String> TRACK_ORDER;
+    private final Map<String, SoundInfo> SOUND_MAP;
+    private final SoundSystem SOUND_SYSTEM;
 
     private int currentTrackIndex = 0;
     private boolean isPlaying = false;
 
     public MusicManager(Map<String, SoundInfo> sounds, SoundSystem soundSystem) {
-        this.soundMap = sounds;
-        this.soundSystem = soundSystem;
-        this.trackOrder = new ArrayList<>(sounds.keySet());
+        this.SOUND_MAP = sounds;
+        this.SOUND_SYSTEM = soundSystem;
+        this.TRACK_ORDER = new ArrayList<>(sounds.keySet());
     }
 
     /**
      * Start playing music
      */
     public void start() {
-        if (!trackOrder.isEmpty() && !isPlaying) {
+        if (!TRACK_ORDER.isEmpty() && !isPlaying) {
             playCurrentTrack();
         }
     }
 
     private void playCurrentTrack() {
-        if (isPlaying || currentTrackIndex >= trackOrder.size()) return;
+        if (isPlaying || currentTrackIndex >= TRACK_ORDER.size()) return;
 
-        String currentTrack = trackOrder.get(currentTrackIndex);
-        SoundInfo info = soundMap.get(currentTrack);
+        String currentTrack = TRACK_ORDER.get(currentTrackIndex);
+        SoundInfo info = SOUND_MAP.get(currentTrack);
 
         try {
             isPlaying = true;
-            soundSystem.play(info, () -> {
+            SOUND_SYSTEM.play(info, () -> {
                 isPlaying = false;
                 currentTrackIndex++;
                 playCurrentTrack(); // Play next track immediately
@@ -61,17 +61,17 @@ public class MusicManager {
      * @param trackName The name of the track (must exist in soundMap)
      */
     public void setNextTrack(String trackName) {
-        if (!soundMap.containsKey(trackName)) {
+        if (!SOUND_MAP.containsKey(trackName)) {
             RainLogger.RAIN_LOGGER.warn("Tried to set unknown track as next: {}", trackName);
             return;
         }
 
         // Prevent duplicates by removing if it already exists in the list
-        trackOrder.remove(trackName);
+        TRACK_ORDER.remove(trackName);
 
         // Insert right after the current track index
-        int insertIndex = Math.min(currentTrackIndex + 1, trackOrder.size());
-        trackOrder.add(insertIndex, trackName);
+        int insertIndex = Math.min(currentTrackIndex + 1, TRACK_ORDER.size());
+        TRACK_ORDER.add(insertIndex, trackName);
 
         RainLogger.RAIN_LOGGER.info("Inserted track '{}' to play next (after index {}).", trackName, currentTrackIndex);
     }
@@ -82,13 +82,13 @@ public class MusicManager {
      * @param trackName The name of the track to start with (must exist in soundMap)
      */
     public void setStartingSound(String trackName) {
-        if (!soundMap.containsKey(trackName)) {
+        if (!SOUND_MAP.containsKey(trackName)) {
             RainLogger.RAIN_LOGGER.warn("Tried to set unknown track as starting sound: {}", trackName);
             return;
         }
 
-        trackOrder.remove(trackName); // Avoid duplicate
-        trackOrder.add(0, trackName); // Insert at the beginning
+        TRACK_ORDER.remove(trackName); // Avoid duplicate
+        TRACK_ORDER.add(0, trackName); // Insert at the beginning
         currentTrackIndex = 0;        // Reset index to start with this track
 
         RainLogger.RAIN_LOGGER.info("Set starting track to '{}'", trackName);
@@ -100,8 +100,8 @@ public class MusicManager {
      * @return The name of the track that is currently playing or null if no track is playing.
      */
     public String getCurrentTrackName() {
-        if (currentTrackIndex >= 0 && currentTrackIndex < trackOrder.size()) {
-            return trackOrder.get(currentTrackIndex);
+        if (currentTrackIndex >= 0 && currentTrackIndex < TRACK_ORDER.size()) {
+            return TRACK_ORDER.get(currentTrackIndex);
         }
         return null; // Return null if no track is currently playing.
     }

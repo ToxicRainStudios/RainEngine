@@ -18,7 +18,7 @@ import static org.lwjgl.stb.STBImage.*;
 public class TextureSystem {
 
     // Map to store all loaded textures with file names
-    private static final Map<String, TextureInfo> textures = new HashMap<>();
+    private static final Map<String, TextureInfo> TEXTURE_INFO_MAP = new HashMap<>();
 
     /**
      * Init the textures by dynamically loading all images from the /images folder
@@ -42,7 +42,7 @@ public class TextureSystem {
                         if (texture != null) {
                             // Store the texture with its file name (without extension) as the key
                             String textureName = path.getFileName().toString().replaceFirst("[.][^.]+$", ""); // remove extension
-                            textures.put(textureName, texture);
+                            TEXTURE_INFO_MAP.put(textureName, texture);
                             RainLogger.RAIN_LOGGER.info("Loaded texture: {}", textureName);
                         } else {
                             RainLogger.RAIN_LOGGER.error("Failed to load texture: {}", path.getFileName());
@@ -52,7 +52,7 @@ public class TextureSystem {
             throw new RuntimeException("Failed to load textures from directory: " + textureDirectory, e);
         }
 
-        RainLogger.RAIN_LOGGER.info("Loaded {} textures.", textures.size());
+        RainLogger.RAIN_LOGGER.info("Loaded {} textures.", TEXTURE_INFO_MAP.size());
     }
 
     /**
@@ -62,11 +62,11 @@ public class TextureSystem {
      * @return TextureInfo object for the corresponding texture, or null if not found
      */
     public static TextureInfo getTexture(String textureName) {
-        if (!textures.containsKey(textureName)) {
+        if (!TEXTURE_INFO_MAP.containsKey(textureName)) {
             RainLogger.RAIN_LOGGER.error("Texture not found: {}", textureName);
             return getTexture("missing");  // Return null or throw an exception if texture is not found
         }
-        return textures.get(textureName);
+        return TEXTURE_INFO_MAP.get(textureName);
     }
 
     /**
@@ -154,12 +154,12 @@ public class TextureSystem {
      */
     public static void reloadTextures() {
         // Delete all currently loaded OpenGL textures
-        for (TextureInfo texture : textures.values()) {
+        for (TextureInfo texture : TEXTURE_INFO_MAP.values()) {
             glDeleteTextures(texture.textureId);
         }
 
         // Clear the textures map
-        textures.clear();
+        TEXTURE_INFO_MAP.clear();
 
         RainLogger.RAIN_LOGGER.info("Cleared all textures. Reloading...");
 

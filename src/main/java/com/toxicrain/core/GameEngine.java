@@ -158,7 +158,7 @@ public class GameEngine {
                         0,
                         1,
                         1,
-                        LightSystem.getLightSources()
+                        LightSystem.getLIGHT_SOURCES()
                 ); // Top-right corner
             } else {
                 RainLogger.RAIN_LOGGER.info("Index out of bounds: space={}", k);

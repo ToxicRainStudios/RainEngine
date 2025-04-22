@@ -64,7 +64,7 @@ public class MapInfoParser {
                 JSONArray lighting = part.getJSONArray("lighting");
 
                 // Clear existing lighting data
-                LightSystem.getLightSources().clear();
+                LightSystem.getLIGHT_SOURCES().clear();
 
                 // Process lighting data
                 for (int j = 0; j < lighting.length(); j++) {
@@ -125,7 +125,7 @@ public class MapInfoParser {
         if (doExtraLogs) {
             RainLogger.RAIN_LOGGER.info("mapDataX: {}", mapDataX);
             RainLogger.RAIN_LOGGER.info("mapDataY: {}", mapDataY);
-            RainLogger.RAIN_LOGGER.info("Lighting sources: {}", LightSystem.getLightSources());
+            RainLogger.RAIN_LOGGER.info("Lighting sources: {}", LightSystem.getLIGHT_SOURCES());
         }
     }
 }

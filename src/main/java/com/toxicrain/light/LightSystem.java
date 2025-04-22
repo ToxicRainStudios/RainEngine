@@ -9,7 +9,7 @@ import java.util.List;
 @UtilityClass
 public class LightSystem {
     @Getter
-    private static final List<float[]> lightSources = new ArrayList<>();
+    private static final List<float[]> LIGHT_SOURCES = new ArrayList<>();
 
     /**
      * Adds a light source to a position with a strength
@@ -18,7 +18,7 @@ public class LightSystem {
      * @param strength the strength of the light, cannot be 0 or 1
      */
     public static void addLightSource(float x, float y, float strength) {
-        lightSources.add(new float[] { x, y, strength });
+        LIGHT_SOURCES.add(new float[] { x, y, strength });
     }
 
     /**
@@ -29,10 +29,10 @@ public class LightSystem {
      * @return true if a light source was removed, false otherwise
      */
     public static boolean removeLightSource(float x, float y, float strength) {
-        for (int i = 0; i < lightSources.size(); i++) {
-            float[] lightSource = lightSources.get(i);
+        for (int i = 0; i < LIGHT_SOURCES.size(); i++) {
+            float[] lightSource = LIGHT_SOURCES.get(i);
             if (lightSource[0] == x && lightSource[1] == y && lightSource[2] == strength) {
-                lightSources.remove(i);
+                LIGHT_SOURCES.remove(i);
                 return true;
             }
         }
