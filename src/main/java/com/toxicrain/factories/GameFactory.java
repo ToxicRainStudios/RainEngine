@@ -6,8 +6,8 @@ import com.toxicrain.artifacts.*;
 import com.toxicrain.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.artifacts.behavior.FollowPlayerSeeingBehavior;
 import com.toxicrain.artifacts.behavior.LookAtPlayerSeeingBehavior;
-import com.toxicrain.artifacts.manager.NPCManager;
-import com.toxicrain.artifacts.manager.ProjectileManager;
+import com.toxicrain.core.manager.NPCManager;
+import com.toxicrain.core.manager.ProjectileManager;
 import com.toxicrain.core.LangHelper;
 import com.toxicrain.core.RainLogger;
 import com.toxicrain.core.json.SettingsInfoParser;
@@ -40,9 +40,6 @@ public class GameFactory {
     public static ProjectileManager projectileManager;
     public static Projectile projectile;
     public static InputUtils inputUtils;
-    public static Weapon pistol;
-    public static Weapon rifle;
-    public static Weapon shotgun;
     public static LuaEngine luaEngine;
     public static GuiLuaWrapper guiLuaWrapper;
     public static LuaManager functionManager;
@@ -95,9 +92,9 @@ public class GameFactory {
     }
 
     public static void loadWeapons(){
-        pistol = new Weapon("Pistol", 3, 20,1,1, TextureSystem.getTexture("bullet"),120, 0.9f, "Breakdown");
-        rifle = new Weapon("Rifle", 3, 20,1,1, TextureSystem.getTexture("bullet"), 60, 0.2f,"Breakdown");
-        shotgun = new Weapon("Shotgun", 30, 20,5,4, TextureSystem.getTexture("bullet"), 400, 0.1f,"Breakdown");
+        new Weapon("Pistol", 3, 20,1,1, TextureSystem.getTexture("bullet"),120, 0.9f, "Breakdown");
+        new Weapon("Rifle", 3, 20,1,1, TextureSystem.getTexture("bullet"), 60, 0.2f,"Breakdown");
+        new Weapon("Shotgun", 30, 20,5,4, TextureSystem.getTexture("bullet"), 400, 0.1f,"Breakdown");
     }
 
     public static void loadNPC(){

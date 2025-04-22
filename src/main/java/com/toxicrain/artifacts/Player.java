@@ -1,6 +1,7 @@
 package com.toxicrain.artifacts;
 
 import com.toxicrain.core.AABB;
+import com.toxicrain.core.registries.WeaponRegistry;
 import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.core.interfaces.IArtifact;
 import com.toxicrain.core.json.GameInfoParser;
@@ -137,13 +138,13 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         getMouse();
         processInput(deltaTime);
 
-        if (isWeaponEquipped(GameFactory.pistol)){
+        if (isWeaponEquipped(WeaponRegistry.get("Pistol"))){
             selectedTexture = TextureSystem.getTexture("playerTexturePistol");
         }
-        if (isWeaponEquipped(GameFactory.rifle)){
+        if (isWeaponEquipped(WeaponRegistry.get("Rifle"))){
             selectedTexture = TextureSystem.getTexture("playerTextureRifle");
         }
-        if (isWeaponEquipped(GameFactory.shotgun)){
+        if (isWeaponEquipped(WeaponRegistry.get("Shotgun"))){
             selectedTexture = TextureSystem.getTexture("playerTextureShotgun");
         }
         else {
@@ -167,7 +168,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
                 openglMousePos[1], 1, 1, Color.toFloatArray(Color.WHITE));
     }
 
-    private void handleCollisions() {
+    private void handleCollisions(float deltaTime) {
         float halfSize = GameInfoParser.playerSize / 2.0f; //TODO Size
 
         // Update npc's AABB based on its position and size
@@ -184,19 +185,19 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         switch (collisionDirection) {
             case 'u':
                 // Colliding from below
-                cameraY += 0.02f;
+                cameraY += 9.3f*deltaTime;
                 break;
             case 'd':
                 // Colliding from above
-                cameraY -= 0.02f;
+                cameraY -= 9.3f*deltaTime;
                 break;
             case 'l':
                 // Colliding from the left
-                cameraX += 0.02f;
+                cameraX += 9.3f*deltaTime;
                 break;
             case 'r':
                 // Colliding from the right
-                cameraX -= 0.02f;
+                cameraX -= 9.3f*deltaTime;
                 break;
         }
 
@@ -204,7 +205,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
 
     private void processInput(float deltaTime) {
         handleSprinting();
-        handleCollisions();
+        handleCollisions(deltaTime);
         handleMovement(deltaTime);
         handleAttack();
 
@@ -228,7 +229,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkRight"))) forward(false, -1,deltaTime);
         if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkForward"))) forward(true, 1,deltaTime);
         if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkBackward"))) forward(true, -1,deltaTime);
-        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWeaponOne"))) equipWeapon(GameFactory.shotgun);
+        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWeaponOne"))) equipWeapon(WeaponRegistry.get("Shotgun"));
         if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyReloadTextures"))) TextureSystem.reloadTextures();
     }
 

@@ -3,6 +3,7 @@ package com.toxicrain.core;
 import com.github.strubium.windowmanager.window.WindowManager;
 import com.toxicrain.core.json.*;
 import com.toxicrain.core.lua.LuaManager;
+import com.toxicrain.core.registries.WeaponRegistry;
 import com.toxicrain.core.render.BatchRenderer;
 import com.toxicrain.artifacts.Tile;
 import com.toxicrain.factories.GameFactory;
@@ -120,7 +121,7 @@ public class GameEngine {
         RainLogger.RAIN_LOGGER.info("Loading Shaders");
         GameFactory.loadShaders();
 
-        GameFactory.player.addWeapon(GameFactory.shotgun);
+        GameFactory.player.addWeapon(WeaponRegistry.get("Shotgun"));
 
         LuaManager.executePostInitScripts();
 

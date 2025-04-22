@@ -1,6 +1,7 @@
 package com.toxicrain.artifacts;
 
 import com.toxicrain.core.RainLogger;
+import com.toxicrain.core.registries.WeaponRegistry;
 import com.toxicrain.factories.GameFactory;
 import com.toxicrain.sound.SoundInfo;
 import com.toxicrain.sound.SoundSystem;
@@ -39,6 +40,7 @@ public class Weapon {
         this.soundInfo = SoundSystem.getSound(soundInfo);
 
         RainLogger.gameLogger.info("Building Weapon: {}", this.name);
+        WeaponRegistry.register(this);
     }
 
     public void equip() {
