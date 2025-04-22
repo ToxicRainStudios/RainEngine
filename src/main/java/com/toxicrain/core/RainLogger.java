@@ -1,5 +1,6 @@
 package com.toxicrain.core;
 
+import com.toxicrain.core.json.GameInfoParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,8 +11,15 @@ import org.slf4j.LoggerFactory;
  */
 public class RainLogger {
 
-    public static final Logger rainLogger = LoggerFactory.getLogger("RainEngine");
-    public static final Logger luaLogger = LoggerFactory.getLogger("RainLua");
+    public static final Logger RAIN_LOGGER = LoggerFactory.getLogger("RainEngine");
+    public static final Logger LUA_LOGGER = LoggerFactory.getLogger("RainLua");
+
+    /**The logger for this game. Use for everything related to your game*/
+    public static Logger gameLogger = null;
+
+    public static void buildLoggers(){
+        gameLogger = LoggerFactory.getLogger(GameInfoParser.gameName);
+    }
 
     /**
      * Prints a log message to the console if a condition
@@ -22,7 +30,7 @@ public class RainLogger {
      */
     @Deprecated
     public static void printLOGConditional(String input, boolean bool){
-        if(bool) rainLogger.info(input);
+        if(bool) RAIN_LOGGER.info(input);
     }
 
 

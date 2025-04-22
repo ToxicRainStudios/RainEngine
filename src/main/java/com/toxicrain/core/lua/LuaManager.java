@@ -37,7 +37,7 @@ public class LuaManager {
         globals.set("log", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue arg) {
-                RainLogger.luaLogger.info(arg.tojstring());
+                RainLogger.LUA_LOGGER.info(arg.tojstring());
                 return arg;
             }
         });
@@ -45,7 +45,7 @@ public class LuaManager {
         globals.set("error", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue arg) {
-                RainLogger.rainLogger.error(arg.tojstring());
+                RainLogger.RAIN_LOGGER.error(arg.tojstring());
                 return arg;
             }
         });
@@ -118,7 +118,7 @@ public class LuaManager {
             @Override
             public LuaValue call(LuaValue arg) {
                 try {
-                    RainLogger.luaLogger.info("Loading Map Data");
+                    RainLogger.LUA_LOGGER.info("Loading Map Data");
                     MapInfoParser.parseMapFile(String.valueOf(arg));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -405,7 +405,7 @@ public class LuaManager {
      */
     public static void executeInitScripts() {
         for (String script : initScripts) {
-            RainLogger.luaLogger.info("Executing init script: " + script);
+            RainLogger.LUA_LOGGER.info("Executing init script: " + script);
             loadScript(script, "resources/scripts/");
         }
     }
@@ -415,7 +415,7 @@ public class LuaManager {
      */
     public static void executePostInitScripts() {
         for (String script : postInitScripts) {
-            RainLogger.luaLogger.info("Executing postinit script: " + script);
+            RainLogger.LUA_LOGGER.info("Executing postinit script: " + script);
             loadScript(script, "resources/scripts/");
         }
     }
@@ -435,7 +435,7 @@ public class LuaManager {
     public static void executeMapScript(String mapName) {
         for (String script : mapAutorunScripts) {
             if(script.endsWith(mapName + ".lua")){
-                RainLogger.luaLogger.info("Loading: " + script);
+                RainLogger.LUA_LOGGER.info("Loading: " + script);
                 loadScript(script, "resources/scripts/");
             }
 
@@ -473,7 +473,7 @@ public class LuaManager {
             LuaValue chunk = globals.load(script, scriptPath);  // Load the script from content
             chunk.call();  // Execute the script
         } catch (FileNotFoundException e) {
-            RainLogger.rainLogger.error("Error loading Script! FileNotFound");
+            RainLogger.RAIN_LOGGER.error("Error loading Script! FileNotFound");
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();

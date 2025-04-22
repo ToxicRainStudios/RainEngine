@@ -44,7 +44,7 @@ public class MusicManager {
                 playCurrentTrack(); // Play next track immediately
             });
 
-            RainLogger.rainLogger.info("Now playing: {}", currentTrack);
+            RainLogger.RAIN_LOGGER.info("Now playing: {}", currentTrack);
         } catch (IllegalStateException e) {
             stop();
         }
@@ -62,7 +62,7 @@ public class MusicManager {
      */
     public void setNextTrack(String trackName) {
         if (!soundMap.containsKey(trackName)) {
-            RainLogger.rainLogger.warn("Tried to set unknown track as next: {}", trackName);
+            RainLogger.RAIN_LOGGER.warn("Tried to set unknown track as next: {}", trackName);
             return;
         }
 
@@ -73,7 +73,7 @@ public class MusicManager {
         int insertIndex = Math.min(currentTrackIndex + 1, trackOrder.size());
         trackOrder.add(insertIndex, trackName);
 
-        RainLogger.rainLogger.info("Inserted track '{}' to play next (after index {}).", trackName, currentTrackIndex);
+        RainLogger.RAIN_LOGGER.info("Inserted track '{}' to play next (after index {}).", trackName, currentTrackIndex);
     }
 
     /**
@@ -83,7 +83,7 @@ public class MusicManager {
      */
     public void setStartingSound(String trackName) {
         if (!soundMap.containsKey(trackName)) {
-            RainLogger.rainLogger.warn("Tried to set unknown track as starting sound: {}", trackName);
+            RainLogger.RAIN_LOGGER.warn("Tried to set unknown track as starting sound: {}", trackName);
             return;
         }
 
@@ -91,7 +91,7 @@ public class MusicManager {
         trackOrder.add(0, trackName); // Insert at the beginning
         currentTrackIndex = 0;        // Reset index to start with this track
 
-        RainLogger.rainLogger.info("Set starting track to '{}'", trackName);
+        RainLogger.RAIN_LOGGER.info("Set starting track to '{}'", trackName);
     }
 
     /**

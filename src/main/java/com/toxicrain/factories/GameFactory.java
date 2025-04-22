@@ -124,13 +124,13 @@ public class GameFactory {
 
     public static void loadLang(){
         String langTag = SettingsInfoParser.getInstance().getLanguage();
-        RainLogger.rainLogger.info("Using Lang: {}", langTag);
+        RainLogger.RAIN_LOGGER.info("Using Lang: {}", langTag);
 
         //We need to replace "_" with a "-" so it loads correctly
         String languageTag = langTag.replace('_', '-');
 
         langHelper = new LangHelper("raiengine", Locale.forLanguageTag(languageTag));
-        RainLogger.rainLogger.info(langHelper.get("greeting"));
+        RainLogger.RAIN_LOGGER.info(langHelper.get("greeting"));
     }
 
     public static void setupGUIs() {

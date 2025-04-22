@@ -37,6 +37,8 @@ public class Weapon {
         this.lastAttackTime = 0;
         this.spread = spread;
         this.soundInfo = SoundSystem.getSound(soundInfo);
+
+        RainLogger.gameLogger.info("Building Weapon: {}", this.name);
     }
 
     public void equip() {
@@ -51,7 +53,7 @@ public class Weapon {
         if (isEquipped) {
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastAttackTime < cooldown) {
-                RainLogger.rainLogger.debug("Weapon is on cooldown. Wait {} ms.", cooldown - (currentTime - lastAttackTime));
+                RainLogger.RAIN_LOGGER.debug("Weapon is on cooldown. Wait {} ms.", cooldown - (currentTime - lastAttackTime));
                 return;
             }
 
@@ -59,23 +61,23 @@ public class Weapon {
             GameFactory.soundSystem.play(this.soundInfo);
 
             lastAttackTime = currentTime; // Update last attack time
-            RainLogger.rainLogger.debug("Attacking with {} for {} damage!", name, damage);
+            RainLogger.RAIN_LOGGER.debug("Attacking with {} for {} damage!", name, damage);
 
             // Get a random number of projectiles to fire based on the weapon's shot range
             int shotsToFire = MathUtils.getRandomIntBetween(minShot, maxShot);
-            RainLogger.rainLogger.debug("Firing {} projectiles!", shotsToFire);
+            RainLogger.RAIN_LOGGER.debug("Firing {} projectiles!", shotsToFire);
 
             for (int i = 0; i < shotsToFire; i++) {
                 // Add slight random variation to the angle (converted to radians if needed)
                 float angleVariation = (float) Math.toRadians(MathUtils.getRandomFloatBetween(-spread, spread));
                 float randomizedAngle = playerAngle + angleVariation;
 
-                RainLogger.rainLogger.debug("Projectile {} fired at angle: {} degrees.", i + 1, Math.toDegrees(randomizedAngle));
+                RainLogger.RAIN_LOGGER.debug("Projectile {} fired at angle: {} degrees.", i + 1, Math.toDegrees(randomizedAngle));
 
                 createProjectile(playerPosX, playerPosY, randomizedAngle);
             }
         } else {
-            RainLogger.rainLogger.debug("No weapon equipped.");
+            RainLogger.RAIN_LOGGER.debug("No weapon equipped.");
         }
     }
 
@@ -91,6 +93,6 @@ public class Weapon {
         // Spawn the projectile
         new Projectile(xpos, ypos, velocityX, velocityY, projectileTexture);
 
-        RainLogger.rainLogger.debug("Projectile created at ({}, {}) with velocity ({}, {}) and angle: {} degrees", xpos, ypos, velocityX, velocityY, Math.toDegrees(playerAngle));
+        RainLogger.RAIN_LOGGER.debug("Projectile created at ({}, {}) with velocity ({}, {}) and angle: {} degrees", xpos, ypos, velocityX, velocityY, Math.toDegrees(playerAngle));
     }
 }

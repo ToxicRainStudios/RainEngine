@@ -43,16 +43,16 @@ public class TextureSystem {
                             // Store the texture with its file name (without extension) as the key
                             String textureName = path.getFileName().toString().replaceFirst("[.][^.]+$", ""); // remove extension
                             textures.put(textureName, texture);
-                            RainLogger.rainLogger.info("Loaded texture: {}", textureName);
+                            RainLogger.RAIN_LOGGER.info("Loaded texture: {}", textureName);
                         } else {
-                            RainLogger.rainLogger.error("Failed to load texture: {}", path.getFileName());
+                            RainLogger.RAIN_LOGGER.error("Failed to load texture: {}", path.getFileName());
                         }
                     });
         } catch (IOException e) {
             throw new RuntimeException("Failed to load textures from directory: " + textureDirectory, e);
         }
 
-        RainLogger.rainLogger.info("Loaded {} textures.", textures.size());
+        RainLogger.RAIN_LOGGER.info("Loaded {} textures.", textures.size());
     }
 
     /**
@@ -63,7 +63,7 @@ public class TextureSystem {
      */
     public static TextureInfo getTexture(String textureName) {
         if (!textures.containsKey(textureName)) {
-            RainLogger.rainLogger.error("Texture not found: {}", textureName);
+            RainLogger.RAIN_LOGGER.error("Texture not found: {}", textureName);
             return getTexture("missing");  // Return null or throw an exception if texture is not found
         }
         return textures.get(textureName);
@@ -93,7 +93,7 @@ public class TextureSystem {
             width = widthBuffer.get();
             height = heightBuffer.get();
             long fileSize = FileUtils.getFileSize(filePath);
-            RainLogger.rainLogger.debug("Loaded texture: {} (Width: {}, Height: {}, File Size: {} bytes)", filePath, width, height, fileSize);
+            RainLogger.RAIN_LOGGER.debug("Loaded texture: {} (Width: {}, Height: {}, File Size: {} bytes)", filePath, width, height, fileSize);
         } catch (Exception e) {
             throw new RuntimeException("Error loading texture: " + filePath, e);
         }
@@ -161,12 +161,12 @@ public class TextureSystem {
         // Clear the textures map
         textures.clear();
 
-        RainLogger.rainLogger.info("Cleared all textures. Reloading...");
+        RainLogger.RAIN_LOGGER.info("Cleared all textures. Reloading...");
 
         // Re-initialize textures
         initTextures();
 
-        RainLogger.rainLogger.info("Reload complete.");
+        RainLogger.RAIN_LOGGER.info("Reload complete.");
     }
 
 }

@@ -93,13 +93,13 @@ public class GameInfoParser {
             }
         }
         catch (FileNotFoundException e) {
-            RainLogger.rainLogger.error("File not found: {}", filePath);
+            RainLogger.RAIN_LOGGER.error("File not found: {}", filePath);
         }
         catch (IOException e) {
-            RainLogger.rainLogger.error("Error reading file: {}", filePath);
+            RainLogger.RAIN_LOGGER.error("Error reading file: {}", filePath);
             e.printStackTrace();
         } catch (Exception e) {
-            RainLogger.rainLogger.error("Error parsing JSON: {}", e.getMessage());
+            RainLogger.RAIN_LOGGER.error("Error parsing JSON: {}", e.getMessage());
             e.printStackTrace();
         }
     }

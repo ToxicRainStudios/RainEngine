@@ -43,8 +43,8 @@ public class MapInfoParser {
 
             // Check for required keys
             if (!part.has("type") || !part.has("xsize") || !part.has("ysize") || !part.has("slices") || !part.has("lighting")) {
-                RainLogger.rainLogger.error("Missing keys in JSON object at index {}", i);
-                RainLogger.rainLogger.error(part.toString(4));
+                RainLogger.RAIN_LOGGER.error("Missing keys in JSON object at index {}", i);
+                RainLogger.RAIN_LOGGER.error(part.toString(4));
                 continue;
             }
 
@@ -52,11 +52,11 @@ public class MapInfoParser {
             playery = part.getInt("playery");
 
             if (doExtraLogs) {
-                RainLogger.rainLogger.info("type: {}", part.getString("type"));
+                RainLogger.RAIN_LOGGER.info("type: {}", part.getString("type"));
                 xsize = part.getInt("xsize");
                 ysize = part.getInt("ysize");
-                RainLogger.rainLogger.info("xsize: {}", xsize);
-                RainLogger.rainLogger.info("ysize: {}", ysize);
+                RainLogger.RAIN_LOGGER.info("xsize: {}", xsize);
+                RainLogger.RAIN_LOGGER.info("ysize: {}", ysize);
             }
 
             try {
@@ -110,22 +110,22 @@ public class MapInfoParser {
                             // Recursively load sub-maps too
                             parseMap(subMapName, offsetX + subMapOffsetX, offsetY + subMapOffsetY);
                         } else {
-                            RainLogger.rainLogger.error("Submap name :{} matches current map name: {}", subMapName, mapName);
+                            RainLogger.RAIN_LOGGER.error("Submap name :{} matches current map name: {}", subMapName, mapName);
                         }
                     }
                 }
 
             } catch (JSONException e) {
-                RainLogger.rainLogger.error("Error parsing map data: {}", e.getMessage());
+                RainLogger.RAIN_LOGGER.error("Error parsing map data: {}", e.getMessage());
                 e.printStackTrace();
             }
         }
 
         // Log the final map data
         if (doExtraLogs) {
-            RainLogger.rainLogger.info("mapDataX: {}", mapDataX);
-            RainLogger.rainLogger.info("mapDataY: {}", mapDataY);
-            RainLogger.rainLogger.info("Lighting sources: {}", LightSystem.getLightSources());
+            RainLogger.RAIN_LOGGER.info("mapDataX: {}", mapDataX);
+            RainLogger.RAIN_LOGGER.info("mapDataY: {}", mapDataY);
+            RainLogger.RAIN_LOGGER.info("Lighting sources: {}", LightSystem.getLightSources());
         }
     }
 }

@@ -30,8 +30,8 @@ public class ShaderUtils {
     }
 
     public int createShaderProgram(String vertexShaderPath, String fragmentShaderPath) {
-        RainLogger.rainLogger.info("Loading Vertex Shader: " + vertexShaderPath);
-        RainLogger.rainLogger.info("Loading Fragment Shader: " + fragmentShaderPath);
+        RainLogger.RAIN_LOGGER.info("Loading Vertex Shader: " + vertexShaderPath);
+        RainLogger.RAIN_LOGGER.info("Loading Fragment Shader: " + fragmentShaderPath);
 
         int vertexShader = loadShader(GL20.GL_VERTEX_SHADER, vertexShaderPath);
         int fragmentShader = loadShader(GL20.GL_FRAGMENT_SHADER, fragmentShaderPath);

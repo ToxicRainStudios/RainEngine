@@ -56,13 +56,13 @@ public class SoundSystem {
                         // Store the sound with its file name (without extension) as the key
                         String soundName = path.getFileName().toString().replaceFirst("[.][^.]+$", ""); // remove extension
                         sounds.put(soundName, sound);
-                        RainLogger.rainLogger.info("Loaded sound: {}", soundName);
+                        RainLogger.RAIN_LOGGER.info("Loaded sound: {}", soundName);
                     });
         } catch (IOException e) {
             throw new RuntimeException("Failed to load sounds from directory: " + soundDirectory, e);
         }
 
-        RainLogger.rainLogger.info("Loaded {} sounds.", sounds.size());
+        RainLogger.RAIN_LOGGER.info("Loaded {} sounds.", sounds.size());
 
     }
 
@@ -152,13 +152,13 @@ public class SoundSystem {
             alBufferData(bufferId, wavData.format, wavData.data, wavData.sampleRate);
 
             long fileSize = FileUtils.getFileSize(filePath);
-            RainLogger.rainLogger.debug("Loaded sound: {} (File Size: {} bytes, Format: {})", filePath, fileSize, wavData.format);
+            RainLogger.RAIN_LOGGER.debug("Loaded sound: {} (File Size: {} bytes, Format: {})", filePath, fileSize, wavData.format);
         } catch (FileNotFoundException e) {
-            RainLogger.rainLogger.error("File not found: {}", filePath);
+            RainLogger.RAIN_LOGGER.error("File not found: {}", filePath);
         } catch (IOException e) {
-            RainLogger.rainLogger.error("Error reading file: {}", filePath);
+            RainLogger.RAIN_LOGGER.error("Error reading file: {}", filePath);
         } catch (Exception e) {
-            RainLogger.rainLogger.error("Error processing sound file: {}", e.getMessage());
+            RainLogger.RAIN_LOGGER.error("Error processing sound file: {}", e.getMessage());
         }
 
         // Return the SoundInfo containing the WavInfo and bufferId
@@ -267,7 +267,7 @@ public class SoundSystem {
                 releaseSource(sourceId);
                 isFading = false;
             } catch (InterruptedException e) {
-                RainLogger.rainLogger.error("Fade-in interrupted.");
+                RainLogger.RAIN_LOGGER.error("Fade-in interrupted.");
             }
         }).start();
     }
@@ -287,7 +287,7 @@ public class SoundSystem {
                 stop();
                 isFading = false;
             } catch (InterruptedException e) {
-                RainLogger.rainLogger.error("Fade-out interrupted");
+                RainLogger.RAIN_LOGGER.error("Fade-out interrupted");
             }
         }).start();
     }
