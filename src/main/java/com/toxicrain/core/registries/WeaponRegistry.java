@@ -13,11 +13,15 @@ public class WeaponRegistry {
         if (WEAPONS.containsKey(weapon.getName())) {
             throw new IllegalArgumentException("Weapon '" + weapon.getName() + "' is already registered!");
         }
-        RainLogger.RAIN_LOGGER.info("Registering: " + weapon.getName());
+        RainLogger.RAIN_LOGGER.info("Registering: {}", weapon.getName());
         WEAPONS.put(weapon.getName(), weapon);
     }
 
     public static Weapon get(String name) {
+        if (!WEAPONS.containsKey(name)) {
+            throw new IllegalArgumentException("Weapon " + name + " does not exist!");
+        }
+
         return WEAPONS.get(name);
     }
 
