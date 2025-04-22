@@ -1,7 +1,6 @@
 package com.toxicrain.artifacts;
 
 import com.toxicrain.core.AABB;
-import com.toxicrain.core.RainLogger;
 import com.toxicrain.texture.TextureInfo;
 import com.toxicrain.core.interfaces.IArtifact;
 import com.toxicrain.core.json.GameInfoParser;
@@ -38,7 +37,6 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
     private TextureInfo selectedTexture;
     private boolean isSprinting;
     public float cameraX, cameraY, cameraZ = 2; // Default camera Z
-    private float prevCameraX, prevCameraY;
     public float scrollOffset;
     private float cameraSpeed = 0.02f; // Camera Speed
     private final float scrollSpeed = 0.5f; // Max scroll speed
@@ -46,7 +44,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
     @Getter
     private Weapon equippedWeapon;
     private float[] openglMousePos;
-    private AABB playerAABB;
+    private final AABB playerAABB;
 
     // New variable to hold the player's angle
     @Getter @Setter
@@ -154,10 +152,6 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
 
 
         updatePos(cameraX, cameraY, cameraZ);
-
-        // Update previous position
-        prevCameraX = cameraX;
-        prevCameraY = cameraY;
     }
 
     float[] getMouse() {

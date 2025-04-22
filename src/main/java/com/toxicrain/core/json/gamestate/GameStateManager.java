@@ -34,7 +34,7 @@ public class GameStateManager {
                 file.write(jsonObject.toString(4)); // Indent with 4 spaces for readability
             }
         } catch (IOException e) {
-            RainLogger.RAIN_LOGGER.error("Error saving game state: " + e.getMessage());
+            RainLogger.RAIN_LOGGER.error("Error saving game state: {}", e.getMessage());
             e.printStackTrace();
         }
     }
@@ -68,10 +68,10 @@ public class GameStateManager {
             // Add more fields as needed
 
         } catch (IOException e) {
-            RainLogger.RAIN_LOGGER.info("Error loading game state: " + e.getMessage());
+            RainLogger.RAIN_LOGGER.info("Error loading game state: {}", e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
-            RainLogger.RAIN_LOGGER.info("Error parsing JSON: " + e.getMessage());
+            RainLogger.RAIN_LOGGER.info("Error parsing JSON: {}", e.getMessage());
             e.printStackTrace();
         }
         return gameState;
