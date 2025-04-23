@@ -15,6 +15,7 @@ import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.light.LightSystem;
 import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.texture.TextureSystem;
+import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import lombok.experimental.UtilityClass;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
@@ -127,7 +128,6 @@ public class GameEngine {
 
 
         GameFactory.eventBus.listen(KeyPressEvent.class)
-            .filter(e -> e.action == org.lwjgl.glfw.GLFW.GLFW_PRESS)
             .subscribe(event -> {
                 int keycode = event.keyCode;
                 if (KeyMap.keyBinds.containsKey(keycode)) {
@@ -173,8 +173,6 @@ public class GameEngine {
         }
     }
 
-    private static long lastFrameTime = System.nanoTime();
-
     private static void update(float deltaTime) {
         GameFactory.player.update(deltaTime);
         for (int engineFrames = 30; engineFrames >= 0; engineFrames--) {
@@ -219,12 +217,9 @@ public class GameEngine {
     private static void loop(BatchRenderer batchRenderer) {
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!windowManager.shouldClose()) {
-            long currentTime = System.nanoTime();
-            float deltaTime = (currentTime - lastFrameTime) / 1000000000.0f; // Convert nanoseconds to seconds
-            lastFrameTime = currentTime;
+            DeltaTimeUtil.update();
 
-
-            update(deltaTime);
+            update(DeltaTimeUtil.getDeltaTime());
             render(batchRenderer);
         }
         GameFactory.imguiApp.cleanup();

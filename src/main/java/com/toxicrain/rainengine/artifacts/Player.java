@@ -17,6 +17,7 @@ import com.toxicrain.rainengine.core.json.SettingsInfoParser;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.texture.TextureSystem;
+import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import com.toxicrain.rainengine.util.MathUtils;
 import com.toxicrain.rainengine.util.InputUtils;
 import com.toxicrain.rainengine.util.WindowUtils;
@@ -66,14 +67,8 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
                 playerPos.y + playerHalfSize  // maxY
         );
 
-
-//        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkForward"))) );
-//        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkBackward"))) forward(true, -1,deltaTime);
-//        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWeaponOne"))) equipWeapon(WeaponRegistry.get("Shotgun"));
-//        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyReloadTextures"))) TextureSystem.reloadTextures();
-
-        KeyMap.registerKeyBind(KeyMap.getKeyNumber("keyWalkLeft"),  () -> forward(false, 1,1));
-        KeyMap.registerKeyBind(KeyMap.getKeyNumber("keyWalkRight"), () -> forward(true, 1,1));
+        KeyMap.registerKeyBind(KeyMap.getKeyNumber("keyWeaponOne"), () -> equipWeapon(WeaponRegistry.get("Shotgun")));
+        KeyMap.registerKeyBind(KeyMap.getKeyNumber("keyReloadTextures"), TextureSystem::reloadTextures);
     }
 
     public void addWeapon(Weapon weapon) {
@@ -130,11 +125,11 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         float angleYS = (float) Math.cos(angle);
 
         if (useMouse) {
-            playerPos.x += (openglMousePos[0] - playerPos.x) * 9.3f * direction * deltaTime;
-            playerPos.y += (openglMousePos[1] - playerPos.y) * 9.3f * direction * deltaTime;
+            playerPos.x += (openglMousePos[0] - playerPos.x) * 30.3f * direction * deltaTime;
+            playerPos.y += (openglMousePos[1] - playerPos.y) * 30.3f * direction * deltaTime;
         } else {
-            playerPos.x += angleXS * 4.2f * direction * deltaTime;
-            playerPos.y += angleYS * 4.2f * direction * deltaTime;
+            playerPos.x += angleXS * 5.2f * direction * deltaTime;
+            playerPos.y += angleYS * 5.2f * direction * deltaTime;
         }
     }
 
@@ -208,6 +203,20 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         handleSprinting();
         //handleCollisions(deltaTime);
         handleAttack();
+
+        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkForward"))) {
+            forward(true, 1, deltaTime);
+        }
+        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkBackward"))) {
+            forward(true, -1, deltaTime);
+        }
+        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkLeft"))) {
+            forward(false, 1, deltaTime);
+        }
+        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkRight"))) {
+            forward(false, -1, deltaTime);
+        }
+
 
         // Update cameraZ based on the scroll input
         playerPos.z = MathUtils.clamp(playerPos.z + scrollOffset * scrollSpeed, GameInfoParser.minZoom, GameInfoParser.maxZoom);
