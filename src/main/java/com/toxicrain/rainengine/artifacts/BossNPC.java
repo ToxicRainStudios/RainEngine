@@ -3,6 +3,7 @@ package com.toxicrain.rainengine.artifacts;
 import com.toxicrain.rainengine.core.Color;
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.RainLogger;
+import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.texture.TextureSystem;
@@ -108,7 +109,7 @@ public class BossNPC extends NPC {
     public void render(BatchRenderer batchRenderer) {
         // Boss-specific render
         batchRenderer.addTexture(TextureSystem.getTexture(bossTexture), this.X, this.Y, Constants.npcZLevel+0.1f,
-                this.rotation, 2f, 2f, Color.toFloatArray(Color.WHITE));
+                new TileParameters(this.rotation,0f,0f,1f,1f,Color.toFloatArray(Color.WHITE), null));
 
         renderHealthBar(batchRenderer);
     }

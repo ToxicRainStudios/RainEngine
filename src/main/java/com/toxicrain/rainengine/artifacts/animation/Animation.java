@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.artifacts.animation;
 
+import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.texture.TextureSystem;
@@ -98,8 +99,8 @@ public class Animation {
         if (!finished) {
             // Apply scaling factors to width and height
             float scaledWidth = width * scaleX;
-            float scaledHeight = height * scaleY;
-            batchRenderer.addTexture(frameTextures[currentFrame], x, y, 1.0f, 0, scaledWidth, scaledHeight, new float[]{1, 1, 1, 1});
+            float scaledHeight = height * scaleY; //0, scaledWidth, scaledHeight, new float[]{1, 1, 1, 1}
+            batchRenderer.addTexture(frameTextures[currentFrame], x, y, 1.0f, new TileParameters(0f, 0f,0f, scaledWidth, scaledHeight,  new float[]{1, 1, 1, 1}, null));
         }
     }
 

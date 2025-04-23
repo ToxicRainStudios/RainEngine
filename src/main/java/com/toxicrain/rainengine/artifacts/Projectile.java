@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.artifacts;
 
+import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.texture.TextureInfo;
@@ -33,6 +34,6 @@ public class Projectile implements IArtifact {
     }
 
     public void render(BatchRenderer batchRenderer) {
-        batchRenderer.addTexturePos(this.texture, this.pos.x, this.pos.y, this.pos.z, velocityX, velocityY,1, 1, Color.toFloatArray(Color.WHITE));
+        batchRenderer.addTexture(this.texture, this.pos.x, this.pos.y, this.pos.z, new TileParameters(null, velocityX, velocityY, 1,1, Color.toFloatArray(Color.WHITE),  null));
     }
 }

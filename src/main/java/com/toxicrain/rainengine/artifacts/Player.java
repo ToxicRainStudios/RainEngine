@@ -1,6 +1,7 @@
 package com.toxicrain.rainengine.artifacts;
 
 import com.toxicrain.rainengine.core.datatypes.AABB;
+import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.registries.WeaponRegistry;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
@@ -153,8 +154,8 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
 
     public void render(BatchRenderer batchRenderer) {
         Vector3f center = WindowUtils.getCenter();
-        batchRenderer.addTexturePos(selectedTexture, center.x, center.y, 1.1f, openglMousePos[0],
-                openglMousePos[1], 1, 1, Color.toFloatArray(Color.WHITE));
+        batchRenderer.addTexture(selectedTexture, center.x, center.y, 1.1f,
+                new TileParameters(null, openglMousePos[0],openglMousePos[1], 1f,1f, Color.toFloatArray(Color.WHITE), null));
     }
 
     private void handleCollisions(float deltaTime) {

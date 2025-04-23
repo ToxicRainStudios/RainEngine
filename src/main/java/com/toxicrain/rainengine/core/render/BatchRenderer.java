@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.core.render;
 
+import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
 import org.lwjgl.BufferUtils;
@@ -90,85 +91,26 @@ public class BatchRenderer {
      * @param x the x-coordinate of the texture
      * @param y the y-coordinate of the texture
      * @param z the z-coordinate of the texture
-     * @param angle the rotation angle in radians
-     * @param scaleX the scale factor along the x-axis
-     * @param scaleY the scale factor along the y-axis
-     * @param color the color tint as a float array (RGBA)
+     * @param params parameters of the texture
      */
-    public void addTexture(TextureInfo textureInfo, float x, float y, float z, float angle, float scaleX, float scaleY, float[] color) {
+    public void addTexture(TextureInfo textureInfo, float x, float y, float z, TileParameters params) {
         if (willOverflow()) {
             renderBatch();  // Flush before we overflow
             beginBatch();   // Reset state
         }
 
-        float[] rotatedVertices = createRotatedVertices(textureInfo, x, y, z, angle, scaleX, scaleY);
+        float angle = params.angle != null ? params.angle : calculateRotationAngle(x, y, params.posX, params.posY);
+        float[] rotatedVertices = createRotatedVertices(textureInfo, x, y, z, angle, params.scaleX, params.scaleY);
         float[] triangleVertices = generateTriangleVertices(rotatedVertices);
         float[] texCoords = createTexCoords();
         float[] triangleTexCoords = generateTriangleTexCoords(texCoords);
+
+        float[] color = params.color != null ? params.color : (params.lightPositions != null ? determineColorBasedOnLightLevel(calculateLightLevel(params.lightPositions, rotatedVertices)) : new float[] {1.0f, 1.0f, 1.0f, 1.0f});
         float[] triangleColors = generateTriangleColors(color);
 
         textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, triangleVertices, triangleTexCoords, triangleColors));
     }
 
-
-    /**
-     * Adds a lit texture with specified rotation and scaling to the current batch.
-     * If the batch exceeds the maximum texture count, it is rendered and a new batch is started.
-     *
-     * @param textureInfo the texture information
-     * @param x the x-coordinate of the texture
-     * @param y the y-coordinate of the texture
-     * @param z the z-coordinate of the texture
-     * @param angle the rotation angle in radians
-     * @param scaleX the scale factor along the x-axis
-     * @param scaleY the scale factor along the y-axis
-     * @param lightPositions the list of light positions
-     */
-    public void addTextureLit(TextureInfo textureInfo, float x, float y, float z, float angle, float scaleX, float scaleY, List<float[]> lightPositions) {
-        if (willOverflow()) {
-            renderBatch();  // Flush before we overflow
-            beginBatch();   // Reset state
-        }
-        float[] rotatedVertices = createRotatedVertices(textureInfo, x, y, z, angle, scaleX, scaleY);
-        float lightLevel = calculateLightLevel(lightPositions, rotatedVertices);
-        float[] color = determineColorBasedOnLightLevel(lightLevel);
-        float[] triangleVertices = generateTriangleVertices(rotatedVertices);
-        float[] texCoords = createTexCoords();
-        float[] triangleTexCoords = generateTriangleTexCoords(texCoords);
-        float[] triangleColors = generateTriangleColors(color);
-
-        textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, triangleVertices, triangleTexCoords, triangleColors));
-    }
-
-    /**
-     * Adds a texture with specified rotation and color to the current batch.
-     * If the batch exceeds the maximum texture count, it is rendered and a new batch is started.
-     *
-     * @param textureInfo the texture information
-     * @param x the x-coordinate of the texture
-     * @param y the y-coordinate of the texture
-     * @param z the z-coordinate of the texture
-     * @param posX the x-coordinate of the mouse or reference point for rotation
-     * @param posY the y-coordinate of the mouse or reference point for rotation
-     * @param scaleX a scale modifier for the x-axis
-     * @param scaleY a scale modifier for the y-axis
-     * @param color the color to apply to the texture (RGBA)
-     */
-    public void addTexturePos(TextureInfo textureInfo, float x, float y, float z, float posX, float posY, float scaleX, float scaleY, float[] color) {
-        if (willOverflow()) {
-            renderBatch();  // Flush before we overflow
-            beginBatch();   // Reset state
-        }
-
-        float angle = calculateRotationAngle(x, y, posX, posY);
-        float[] rotatedVertices = createRotatedVertices(textureInfo, x, y, z, angle, scaleX, scaleY);
-        float[] triangleVertices = generateTriangleVertices(rotatedVertices);
-        float[] texCoords = createTexCoords();
-        float[] triangleTexCoords = generateTriangleTexCoords(texCoords);
-        float[] triangleColors = generateTriangleColors(color);
-
-        textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, triangleVertices, triangleTexCoords, triangleColors));
-    }
 
     // Helper Methods
     private boolean willOverflow() {

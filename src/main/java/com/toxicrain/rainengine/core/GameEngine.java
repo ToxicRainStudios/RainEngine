@@ -1,6 +1,7 @@
 package com.toxicrain.rainengine.core;
 
 import com.github.strubium.windowmanager.window.WindowManager;
+import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.json.*;
 import com.toxicrain.rainengine.core.lua.LuaManager;
@@ -144,15 +145,13 @@ public class GameEngine {
             TextureInfo textureInfo = PaletteInfoParser.getTexture(textureChar);
 
             // Render the tile with lighting
-            batchRenderer.addTextureLit(
+            batchRenderer.addTexture(
                     textureInfo,
                     pos.x,
                     pos.y,
                     (float) pos.z,
-                    0,
-                    1,
-                    1,
-                    LightSystem.getLIGHT_SOURCES()
+                    new TileParameters(0f, 0f,0f, 1,1,null, LightSystem.getLIGHT_SOURCES())
+
             );
         }
     }

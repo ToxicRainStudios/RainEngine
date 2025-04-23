@@ -3,6 +3,7 @@ package com.toxicrain.rainengine.artifacts;
 import com.toxicrain.rainengine.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.Constants;
+import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
@@ -112,7 +113,7 @@ public class NPC implements IArtifact {
     // Render the NPC using BatchRenderer
     public void render(BatchRenderer batchRenderer) {
         batchRenderer.addTexture(TextureSystem.getTexture("playerTexture"), this.X, this.Y, Constants.npcZLevel,
-                this.rotation, 1, 1, Color.toFloatArray(Color.WHITE));
+                new TileParameters(this.rotation, 0f,0f, 1f,1f, Color.toFloatArray(Color.WHITE), null));
     }
 
     void handleCollisions() {
