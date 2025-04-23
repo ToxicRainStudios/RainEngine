@@ -1,4 +1,4 @@
-package com.toxicrain.rainengine.core;
+package com.toxicrain.rainengine.core.datatypes;
 
 import static java.util.Arrays.stream;
 

@@ -3,7 +3,10 @@ package com.toxicrain.rainengine.core;
 import com.github.strubium.windowmanager.window.WindowManager;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
+import com.toxicrain.rainengine.core.eventbus.events.KeyPressEvent;
 import com.toxicrain.rainengine.core.json.*;
+import com.toxicrain.rainengine.core.json.key.KeyInfoParser;
+import com.toxicrain.rainengine.core.json.key.KeyMap;
 import com.toxicrain.rainengine.core.lua.LuaManager;
 import com.toxicrain.rainengine.core.registries.WeaponRegistry;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
@@ -65,6 +68,9 @@ public class GameEngine {
         RainLogger.RAIN_LOGGER.info("Creating Game Window");
         windowManager.createWindow(GameInfoParser.defaultWindowName, SettingsInfoParser.getInstance().getVsync());
         windowManager.setupDefaultKeys();
+        glfwSetKeyCallback(windowManager.window, (windowHandle, key, scancode, action, mods) -> {
+            GameFactory.eventBus.post(new KeyPressEvent(key, action));
+        });
 
         // Create and set the scroll callback
         glfwSetScrollCallback(windowManager.window, new GLFWScrollCallback() {
@@ -118,6 +124,12 @@ public class GameEngine {
 
         GameFactory.loadNPC();
 
+
+        GameFactory.eventBus.listen(KeyPressEvent.class).subscribe(event -> {
+            RainLogger.gameLogger.info("Received: " + KeyMap.getKeyString(event.keyCode));
+        });
+
+
         RainLogger.RAIN_LOGGER.info("Loading Lang");
         GameFactory.loadLang();
 
@@ -149,7 +161,7 @@ public class GameEngine {
                     textureInfo,
                     pos.x,
                     pos.y,
-                    (float) pos.z,
+                    pos.z,
                     new TileParameters(0f, 0f,0f, 1,1,null, LightSystem.getLightSources())
 
             );

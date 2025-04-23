@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine.artifacts;
 
-import com.toxicrain.rainengine.core.Color;
+import com.toxicrain.rainengine.core.datatypes.Color;
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.RainLogger;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
@@ -57,7 +57,7 @@ public class BossNPC extends NPC {
 
     private void die() {
         System.out.println("Boss defeated!");
-        // Remove boss from NPC manager, spawn loot, trigger events, etc.
+
         GameFactory.npcManager.removeNPC(this);
     }
 
@@ -97,27 +97,16 @@ public class BossNPC extends NPC {
 
     private void basicAttack() {
         System.out.println("Boss performs a basic attack!");
-        // Logic for dealing damage to the player (e.g., melee attack)
     }
 
     private void areaAttack() {
         System.out.println("Boss performs a powerful area attack!");
-        // You can spawn projectiles, deal area damage, etc.
     }
 
     @Override
     public void render(BatchRenderer batchRenderer) {
-        // Boss-specific render
         batchRenderer.addTexture(TextureSystem.getTexture(bossTexture), this.X, this.Y, Constants.npcZLevel+0.1f,
                 new TileParameters(this.rotation,0f,0f,1f,1f,Color.toFloatArray(Color.WHITE), null));
-
-        renderHealthBar(batchRenderer);
-    }
-
-    private void renderHealthBar(BatchRenderer batchRenderer) {
-        float healthBarWidth = 100f;
-        float healthBarHeight = 10f;
-        float healthRatio = currentHealth / maxHealth;
     }
 }
 

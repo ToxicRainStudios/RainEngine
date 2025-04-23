@@ -8,7 +8,7 @@ import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.factories.GameFactory;
-import com.toxicrain.rainengine.core.Color;
+import com.toxicrain.rainengine.core.datatypes.Color;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import lombok.Getter;
 import lombok.Setter;

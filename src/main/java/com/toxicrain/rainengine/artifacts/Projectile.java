@@ -7,7 +7,6 @@ import com.toxicrain.rainengine.light.LightSystem;
 import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
-import com.toxicrain.rainengine.core.Color;
 import lombok.Getter;
 
 public class Projectile implements IArtifact {

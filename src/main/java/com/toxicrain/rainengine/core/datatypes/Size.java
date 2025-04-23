@@ -1,4 +1,4 @@
-package com.toxicrain.rainengine.artifacts;
+package com.toxicrain.rainengine.core.datatypes;
 
 import lombok.Getter;
 

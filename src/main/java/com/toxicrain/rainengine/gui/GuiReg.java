@@ -2,7 +2,7 @@ package com.toxicrain.rainengine.gui;
 
 import com.github.strubium.windowmanager.imgui.GuiBuilder;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
-import com.toxicrain.rainengine.core.json.KeyInfoParser;
+import com.toxicrain.rainengine.core.json.key.KeyInfoParser;
 import com.toxicrain.rainengine.core.json.SettingsInfoParser;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.sound.SoundSystem;
