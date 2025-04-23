@@ -2,7 +2,10 @@
   {
     "type": "setup",
     "values": [
-	  {
+      {
+        "gameMainClass": "com.toxicrain.rainengine.Spider"
+      },
+      {
         "engineVersion": "1.0.0"
       },
       {

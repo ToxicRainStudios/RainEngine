@@ -17,12 +17,12 @@ import com.toxicrain.rainengine.util.FileUtils;
 public class GameInfoParser {
     public static String defaultWindowName = null;
     public static String engineVersion = null;
+    public static String gameMainClass = null;
     public static String gameName = null;
     public static String gameMakers = null;
     public static String gameVersion = null;
     public static String gameWebsite = null;
     public static float playerSize= 0.0f;
-    public static boolean useIMGUI = true;
     public static int maxTexturesPerBatch = 100; //Safety, don't crash if we forget to add this to gameinfo.json
     public static int minZoom = 3;
     public static int maxZoom = 25;
@@ -72,8 +72,8 @@ public class GameInfoParser {
                             case "gameWebsite":
                                 gameWebsite = value;
                                 break;
-                            case "useIMGUI":
-                                useIMGUI = Boolean.parseBoolean(value);
+                            case "gameMainClass":
+                                gameMainClass = value;
                                 break;
                             case "playerSize":
                                 playerSize = Float.parseFloat(value) / 10;

@@ -3,6 +3,8 @@ package com.toxicrain.rainengine.core;
 import com.github.strubium.windowmanager.window.WindowManager;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
+import com.toxicrain.rainengine.core.eventbus.events.DrawMapEvent;
+import com.toxicrain.rainengine.core.eventbus.events.GameUpdateEvent;
 import com.toxicrain.rainengine.core.eventbus.events.KeyPressEvent;
 import com.toxicrain.rainengine.core.json.*;
 import com.toxicrain.rainengine.core.json.key.KeyInfoParser;
@@ -44,6 +46,8 @@ public class GameEngine {
         RainLogger.RAIN_LOGGER.info("Version: {}", GameInfoParser.gameVersion);
         doVersionCheck();
 
+        GameLoader.loadAndInitGame(GameInfoParser.gameMainClass);
+
         RainLogger.RAIN_LOGGER.info("Loading Lua");
         GameFactory.loadLua();
         LuaManager.categorizeScripts("resources/scripts/");
@@ -53,6 +57,8 @@ public class GameEngine {
         windowManager = new WindowManager((int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight(), true);
 
         init();
+
+
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
 
@@ -135,6 +141,28 @@ public class GameEngine {
                 }
             });
 
+        GameFactory.eventBus.listen(GameUpdateEvent.class)
+                .subscribe(event -> {
+
+                    float deltaTime = DeltaTimeUtil.getDeltaTime();
+
+                    GameFactory.player.update(deltaTime);
+
+                    for (int engineFrames = 30; engineFrames >= 0; engineFrames--) {
+
+                        GameFactory.npcManager.update(deltaTime);
+
+                        GameFactory.projectileManager.update(deltaTime);
+
+                    }
+                    LuaManager.executeTickScripts();
+                });
+
+        GameFactory.eventBus.listen(DrawMapEvent.class)
+                .subscribe(event -> {
+                    drawMap(event.getBatchRenderer());
+                });
+
         RainLogger.RAIN_LOGGER.info("Loading Lang");
         GameFactory.loadLang();
 
@@ -173,16 +201,6 @@ public class GameEngine {
         }
     }
 
-    private static void update(float deltaTime) {
-        GameFactory.player.update(deltaTime);
-        for (int engineFrames = 30; engineFrames >= 0; engineFrames--) {
-            GameFactory.npcManager.update(deltaTime);
-
-            GameFactory.projectileManager.update(deltaTime);
-        }
-        LuaManager.executeTickScripts();
-    }
-
     private static void render(BatchRenderer batchRenderer) {
         // Clear the color and depth buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -195,7 +213,8 @@ public class GameEngine {
         // Begin the batch
         batchRenderer.beginBatch();
 
-        drawMap(batchRenderer);
+        GameFactory.eventBus.post(new DrawMapEvent(batchRenderer));
+
         GameFactory.npcManager.render(batchRenderer);
         GameFactory.projectileManager.render(batchRenderer);
         GameFactory.player.render(batchRenderer);
@@ -219,7 +238,8 @@ public class GameEngine {
         while (!windowManager.shouldClose()) {
             DeltaTimeUtil.update();
 
-            update(DeltaTimeUtil.getDeltaTime());
+            GameFactory.eventBus.post(new GameUpdateEvent());
+
             render(batchRenderer);
         }
         GameFactory.imguiApp.cleanup();
