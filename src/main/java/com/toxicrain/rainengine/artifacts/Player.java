@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine.artifacts;
 
-import com.toxicrain.rainengine.core.AABB;
+import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.registries.WeaponRegistry;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
@@ -34,7 +34,6 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
     private TextureInfo selectedTexture;
     private boolean isSprinting;
     public TilePos playerPos;
-    public float cameraX, cameraY, cameraZ = 2; // Default camera Z
     public float scrollOffset;
     private float cameraSpeed = 0.02f; // Camera Speed
     private final float scrollSpeed = 0.5f; // Max scroll speed
@@ -48,22 +47,20 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
     @Getter @Setter
     private float angle;
 
-    public Player(float posX, float posY, float posZ, TextureInfo defaultTexture, boolean isSprinting) {
-        this.playerPos = new TilePos(posX, posY, posZ);
+    public Player(TextureInfo defaultTexture, boolean isSprinting) {
+        this.playerPos = new TilePos(MapInfoParser.playerx, MapInfoParser.playery, 5);
         this.defaultTexture = defaultTexture;
         this.isSprinting = isSprinting;
         this.weapons = new ArrayList<>();
-        this.cameraX = MapInfoParser.playerx;
-        this.cameraY = MapInfoParser.playery;
 
         float playerHalfSize = Size.AVERAGE.getSize();
 
         // Create player's AABB based on its position and size
         this.playerAABB = new AABB(
-                cameraX - playerHalfSize, // minX
-                cameraY - playerHalfSize, // minY
-                cameraX + playerHalfSize, // maxX
-                cameraY + playerHalfSize  // maxY
+                playerPos.x - playerHalfSize, // minX
+                playerPos.y - playerHalfSize, // minY
+                playerPos.x + playerHalfSize, // maxX
+                playerPos.y + playerHalfSize  // maxY
         );
     }
 
@@ -97,8 +94,8 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
             );
 
             // Convert to world coordinates by factoring in the camera position
-            float worldMouseX = openglMousePos[0] + cameraX;
-            float worldMouseY = openglMousePos[1] + cameraY;
+            float worldMouseX = openglMousePos[0] + playerPos.x;
+            float worldMouseY = openglMousePos[1] + playerPos.y;
 
             // Use the same angle as rendering
             float playerAngle = getAngle(worldMouseX, worldMouseY);
@@ -121,11 +118,11 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         float angleYS = (float) Math.cos(angle);
 
         if (useMouse) {
-            cameraX += (openglMousePos[0] - playerPos.x) * 9.3f * direction * deltaTime;
-            cameraY += (openglMousePos[1] - playerPos.y) * 9.3f * direction * deltaTime;
+            playerPos.x += (openglMousePos[0] - playerPos.x) * 9.3f * direction * deltaTime;
+            playerPos.y += (openglMousePos[1] - playerPos.y) * 9.3f * direction * deltaTime;
         } else {
-            cameraX += angleXS * 4.2f * direction * deltaTime;
-            cameraY += angleYS * 4.2f * direction * deltaTime;
+            playerPos.x += angleXS * 4.2f * direction * deltaTime;
+            playerPos.y += angleYS * 4.2f * direction * deltaTime;
         }
     }
 
@@ -145,15 +142,12 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         else {
             selectedTexture = defaultTexture;
         }
-
-
-       playerPos.update(cameraX, cameraY, cameraZ);
     }
 
     float[] getMouse() {
         float[] mousePos = GameFactory.inputUtils.getMousePosition();
         openglMousePos = InputUtils.convertToOpenGLCoordinatesOffset(mousePos[0], mousePos[1],
-                (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight(), cameraX, cameraY);
+                (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight(), playerPos.x, playerPos.y);
         return openglMousePos;
     }
 
@@ -168,10 +162,10 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
 
         // Update npc's AABB based on its position and size
         this.playerAABB.update(
-                cameraX - halfSize,
-                cameraY - halfSize,
-                cameraX + halfSize,
-                cameraY + halfSize
+                playerPos.x - halfSize,
+                playerPos.y - halfSize,
+                playerPos.x + halfSize,
+                playerPos.x + halfSize
         );
 
         char collisionDirection = Collisions.collideWorld(this.playerAABB);
@@ -180,19 +174,19 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         switch (collisionDirection) {
             case 'u':
                 // Colliding from below
-                cameraY += 9.3f*deltaTime;
+                playerPos.y += 9.3f*deltaTime;
                 break;
             case 'd':
                 // Colliding from above
-                cameraY -= 9.3f*deltaTime;
+                playerPos.y -= 9.3f*deltaTime;
                 break;
             case 'l':
                 // Colliding from the left
-                cameraX += 9.3f*deltaTime;
+                playerPos.x += 9.3f*deltaTime;
                 break;
             case 'r':
                 // Colliding from the right
-                cameraX -= 9.3f*deltaTime;
+                playerPos.x -= 9.3f*deltaTime;
                 break;
         }
 
@@ -200,12 +194,12 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
 
     private void processInput(float deltaTime) {
         handleSprinting();
-        handleCollisions(deltaTime);
+        //handleCollisions(deltaTime);
         handleMovement(deltaTime);
         handleAttack();
 
         // Update cameraZ based on the scroll input
-        cameraZ = MathUtils.clamp(cameraZ + scrollOffset * scrollSpeed, GameInfoParser.minZoom, GameInfoParser.maxZoom);
+        playerPos.z = MathUtils.clamp(playerPos.z + scrollOffset * scrollSpeed, GameInfoParser.minZoom, GameInfoParser.maxZoom);
         scrollOffset = 0.0f;
     }
 

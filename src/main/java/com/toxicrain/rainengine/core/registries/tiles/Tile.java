@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine.core.registries.tiles;
 
-import com.toxicrain.rainengine.core.AABB;
+import com.toxicrain.rainengine.core.datatypes.AABB;
 
 import java.util.ArrayList;
 

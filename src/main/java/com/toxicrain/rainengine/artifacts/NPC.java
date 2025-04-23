@@ -1,7 +1,7 @@
 package com.toxicrain.rainengine.artifacts;
 
 import com.toxicrain.rainengine.artifacts.behavior.BehaviorSequence;
-import com.toxicrain.rainengine.core.AABB;
+import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;

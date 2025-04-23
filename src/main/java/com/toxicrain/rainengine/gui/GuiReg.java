@@ -279,6 +279,8 @@ public class GuiReg {
                 // OpenGL Version
                 .addText(GameFactory.langHelper.get("gui.debug.text.opengl") + ": " + GL11.glGetString(GL11.GL_VERSION))
 
+                .addText("playerPos" + ": " + GameFactory.player.playerPos.toString())
+
                 .addText(GameFactory.langHelper.get("gui.debug.text.music_track") + ": " + GameFactory.musicManager.getCurrentTrackName())
 
 

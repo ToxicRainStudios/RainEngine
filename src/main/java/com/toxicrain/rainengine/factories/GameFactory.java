@@ -50,7 +50,7 @@ public class GameFactory {
     public static BossNPC bossNPC;
 
     public static void load(){
-        player = new Player(5, 5, 5, TextureSystem.getTexture("playerTexture"), false);
+        player = new Player(TextureSystem.getTexture("playerTexture"), false);
 
         projectileManager = new ProjectileManager();
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0, TextureSystem.getTexture("playerTexture"));

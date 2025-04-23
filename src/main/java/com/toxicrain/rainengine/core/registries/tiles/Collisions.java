@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine.core.registries.tiles;
 
-import com.toxicrain.rainengine.core.AABB;
+import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
 
 //TODO I dont like this class, if we are gonna handle collisions with should fully do it here -strubium

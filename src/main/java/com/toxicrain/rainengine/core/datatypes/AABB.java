@@ -1,4 +1,4 @@
-package com.toxicrain.rainengine.core;
+package com.toxicrain.rainengine.core.datatypes;
 
 /**
  * The Axis Aligned Bounding Box

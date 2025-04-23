@@ -18,7 +18,7 @@ public class WindowUtils{
         projectionMatrix.set(projMatrixBuffer);
 
         // Set up the view matrix
-        Matrix4f viewMatrix = new Matrix4f().identity().translate(-GameFactory.player.cameraX, -GameFactory.player.cameraY, -GameFactory.player.cameraZ);
+        Matrix4f viewMatrix = new Matrix4f().identity().translate(-GameFactory.player.playerPos.x, -GameFactory.player.playerPos.y, -GameFactory.player.playerPos.z);
 
         // Calculate the combined projection and view matrix
         Matrix4f projectionViewMatrix = new Matrix4f(projectionMatrix).mul(viewMatrix);

@@ -3,7 +3,7 @@
 
     "type": "map",
     "playerx": 5,
-    "playery": -10,
+    "playery": -20,
     "xsize": 16,
     "ysize": 16,
     "slices": [
