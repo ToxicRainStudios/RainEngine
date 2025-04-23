@@ -14,8 +14,8 @@ public class FollowPlayerSeeingBehavior extends Behavior {
     public boolean execute(NPC npc) {
         if (npc.canSeePlayer()) {
             // Get the current position of the NPC and the Player
-            float deltaX = GameFactory.player.getPosX() - npc.getX();
-            float deltaY = GameFactory.player.getPosY() - npc.getY();
+            float deltaX = GameFactory.player.playerPos.x - npc.getX();
+            float deltaY = GameFactory.player.playerPos.y - npc.getY();
             float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
             // If the NPC is too far from the Player, move towards them

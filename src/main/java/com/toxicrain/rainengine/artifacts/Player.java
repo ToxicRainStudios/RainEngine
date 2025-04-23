@@ -1,6 +1,7 @@
 package com.toxicrain.rainengine.artifacts;
 
 import com.toxicrain.rainengine.core.AABB;
+import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.registries.WeaponRegistry;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
 import com.toxicrain.rainengine.texture.TextureInfo;
@@ -29,15 +30,10 @@ import java.util.List;
 public class Player implements IArtifact { //TODO this needs a de-spaghettification
 
     @Getter @Setter
-    private float posX;
-    @Setter @Getter
-    private float posY;
-    @Setter @Getter
-    private float posZ;
-    @Getter @Setter
     private TextureInfo defaultTexture;
     private TextureInfo selectedTexture;
     private boolean isSprinting;
+    public TilePos playerPos;
     public float cameraX, cameraY, cameraZ = 2; // Default camera Z
     public float scrollOffset;
     private float cameraSpeed = 0.02f; // Camera Speed
@@ -53,9 +49,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
     private float angle;
 
     public Player(float posX, float posY, float posZ, TextureInfo defaultTexture, boolean isSprinting) {
-        this.posX = posX;
-        this.posY = posY;
-        this.posZ = posZ;
+        this.playerPos = new TilePos(posX, posY, posZ);
         this.defaultTexture = defaultTexture;
         this.isSprinting = isSprinting;
         this.weapons = new ArrayList<>();
@@ -109,13 +103,13 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
             // Use the same angle as rendering
             float playerAngle = getAngle(worldMouseX, worldMouseY);
 
-            equippedWeapon.attack(playerAngle, posX, posY);
+            equippedWeapon.attack(playerAngle, playerPos.x, playerPos.y);
         }
     }
 
     private float getAngle(float targetX, float targetY) {
-        float dx = targetX - posX;
-        float dy = targetY - posY;
+        float dx = targetX - playerPos.x;
+        float dy = targetY - playerPos.y;
         this.angle = (float) Math.atan2(dy, dx);
         return this.angle;
     }
@@ -127,8 +121,8 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         float angleYS = (float) Math.cos(angle);
 
         if (useMouse) {
-            cameraX += (openglMousePos[0] - posX) * 9.3f * direction * deltaTime;
-            cameraY += (openglMousePos[1] - posY) * 9.3f * direction * deltaTime;
+            cameraX += (openglMousePos[0] - playerPos.x) * 9.3f * direction * deltaTime;
+            cameraY += (openglMousePos[1] - playerPos.y) * 9.3f * direction * deltaTime;
         } else {
             cameraX += angleXS * 4.2f * direction * deltaTime;
             cameraY += angleYS * 4.2f * direction * deltaTime;
@@ -153,7 +147,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         }
 
 
-        updatePos(cameraX, cameraY, cameraZ);
+       playerPos.update(cameraX, cameraY, cameraZ);
     }
 
     float[] getMouse() {
@@ -239,12 +233,4 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
             attack();
         }
     }
-
-    // Method to update position of the player
-    private void updatePos(float x, float y, float z) {
-        this.posX = x;
-        this.posY = y;
-        this.posZ = z;
-    }
-
 }

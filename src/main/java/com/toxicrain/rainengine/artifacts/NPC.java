@@ -57,8 +57,8 @@ public class NPC implements IArtifact {
 
     public boolean canSeePlayer() {
         // Calculate the direction to the player
-        float deltaX = GameFactory.player.getPosX() - this.X;
-        float deltaY = GameFactory.player.getPosY() - this.Y;
+        float deltaX = GameFactory.player.playerPos.x  - this.X;
+        float deltaY = GameFactory.player.playerPos.y  - this.Y;
 
         // Distance to the player
         float distanceToPlayer = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -97,8 +97,8 @@ public class NPC implements IArtifact {
 
     // Method to move towards the player gradually
     public void moveTowardsPlayer(float speed) {
-        float deltaX = GameFactory.player.getPosX() - this.X;
-        float deltaY = GameFactory.player.getPosY() - this.Y;
+        float deltaX = GameFactory.player.playerPos.x - this.X;
+        float deltaY = GameFactory.player.playerPos.y - this.Y;
         handleCollisions();
 
         // Normalize direction

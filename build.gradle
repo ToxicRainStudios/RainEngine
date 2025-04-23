@@ -61,7 +61,7 @@ dependencies {
 }
 
 application {
-    mainClassName = 'com.toxicrain.Application'
+    mainClassName = 'com.toxicrain.rainengine.Application'
 }
 
 jar {
