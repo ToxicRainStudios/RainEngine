@@ -18,6 +18,7 @@ import com.toxicrain.rainengine.texture.TextureSystem;
 import lombok.experimental.UtilityClass;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWScrollCallback;
 
 import java.nio.FloatBuffer;
@@ -125,10 +126,14 @@ public class GameEngine {
         GameFactory.loadNPC();
 
 
-        GameFactory.eventBus.listen(KeyPressEvent.class).subscribe(event -> {
-            RainLogger.gameLogger.info("Received: " + KeyMap.getKeyString(event.keyCode));
-        });
-
+        GameFactory.eventBus.listen(KeyPressEvent.class)
+            .filter(e -> e.action == org.lwjgl.glfw.GLFW.GLFW_PRESS)
+            .subscribe(event -> {
+                int keycode = event.keyCode;
+                if (KeyMap.keyBinds.containsKey(keycode)) {
+                KeyMap.keyBinds.get(keycode).run();
+                }
+            });
 
         RainLogger.RAIN_LOGGER.info("Loading Lang");
         GameFactory.loadLang();

@@ -65,6 +65,15 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
                 playerPos.x + playerHalfSize, // maxX
                 playerPos.y + playerHalfSize  // maxY
         );
+
+
+//        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkForward"))) );
+//        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkBackward"))) forward(true, -1,deltaTime);
+//        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWeaponOne"))) equipWeapon(WeaponRegistry.get("Shotgun"));
+//        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyReloadTextures"))) TextureSystem.reloadTextures();
+
+        KeyMap.registerKeyBind(KeyMap.getKeyNumber("keyWalkLeft"),  () -> forward(false, 1,1));
+        KeyMap.registerKeyBind(KeyMap.getKeyNumber("keyWalkRight"), () -> forward(true, 1,1));
     }
 
     public void addWeapon(Weapon weapon) {
@@ -198,7 +207,6 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
     private void processInput(float deltaTime) {
         handleSprinting();
         //handleCollisions(deltaTime);
-        handleMovement(deltaTime);
         handleAttack();
 
         // Update cameraZ based on the scroll input
@@ -216,14 +224,6 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         }
     }
 
-    private void handleMovement(float deltaTime) {
-        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkLeft"))) forward(false, 1,deltaTime);
-        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkRight"))) forward(false, -1,deltaTime);
-        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkForward"))) forward(true, 1,deltaTime);
-        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkBackward"))) forward(true, -1,deltaTime);
-        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWeaponOne"))) equipWeapon(WeaponRegistry.get("Shotgun"));
-        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyReloadTextures"))) TextureSystem.reloadTextures();
-    }
 
     private void handleAttack() {
         if (GameFactory.inputUtils.isMouseButtonPressed(0)) {

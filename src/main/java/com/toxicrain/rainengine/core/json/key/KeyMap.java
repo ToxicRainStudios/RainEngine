@@ -8,6 +8,7 @@ import java.util.Map;
 public class KeyMap {
     private static final Map<String, Integer> nameToCode = new HashMap<>();
     private static final Map<Integer, String> codeToName = new HashMap<>();
+    public static final Map<Integer, Runnable> keyBinds = new HashMap<>();
 
     static {
         register("key_space", GLFW.GLFW_KEY_SPACE);
@@ -149,6 +150,10 @@ public class KeyMap {
     private static void register(String name, int keyCode) {
         nameToCode.put(name, keyCode);
         codeToName.put(keyCode, name);
+    }
+
+    public static void registerKeyBind(int keyCode, Runnable runnable) {
+        keyBinds.put(keyCode, runnable);
     }
 
     public static int getKeyNumber(String keyBindname) {
