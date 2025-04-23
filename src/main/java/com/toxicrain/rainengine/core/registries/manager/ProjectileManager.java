@@ -61,7 +61,7 @@ public class ProjectileManager {
     // A method to check if a projectile should be removed
     private boolean shouldRemove(Projectile projectile) {
         if (projectile.getLifeTime() > 10.0f) {
-            RainLogger.RAIN_LOGGER.debug("Removing projectile: " + projectile);
+            RainLogger.RAIN_LOGGER.debug("Removing projectile: {}", projectile);
             return true;
         }
         return false;

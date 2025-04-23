@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.artifacts;
 
+import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
@@ -9,7 +10,7 @@ import lombok.Getter;
 
 public class Projectile implements IArtifact {
     @Getter
-    private float x, y;
+    private TilePos pos;
     private final float velocityX, velocityY;
     @Getter
     private float lifeTime;
@@ -17,21 +18,21 @@ public class Projectile implements IArtifact {
 
 
     public Projectile(float xpos, float ypos, float veloX, float veloY, TextureInfo texture) {
-        this.x = xpos;
-        this.y = ypos;
+        this.pos = new TilePos(xpos, ypos, 1.02f);
         this.velocityX = veloX;
         this.velocityY = veloY;
         this.texture = texture;
+
         GameFactory.projectileManager.addProjectile(this);
     }
 
     public void update() {
-        this.x += this.velocityX;
-        this.y += this.velocityY;
+        this.pos.x += this.velocityX;
+        this.pos.y += this.velocityY;
         this.lifeTime += 0.0001f;
     }
 
     public void render(BatchRenderer batchRenderer) {
-        batchRenderer.addTexturePos(this.texture, this.x, this.y, 1.02f, velocityX, velocityY,1, 1, Color.toFloatArray(Color.WHITE));
+        batchRenderer.addTexturePos(this.texture, this.pos.x, this.pos.y, this.pos.z, velocityX, velocityY,1, 1, Color.toFloatArray(Color.WHITE));
     }
 }

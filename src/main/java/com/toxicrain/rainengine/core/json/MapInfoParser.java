@@ -108,6 +108,7 @@ public class MapInfoParser {
                             parseMap(subMapName, offsetX + subMapOffsetX, offsetY + subMapOffsetY);
                         } else {
                             RainLogger.RAIN_LOGGER.error("Submap name :{} matches current map name: {}", subMapName, mapName);
+                            return;
                         }
                     }
                 }
