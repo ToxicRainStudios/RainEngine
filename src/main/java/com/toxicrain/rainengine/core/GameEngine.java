@@ -1,6 +1,7 @@
 package com.toxicrain.rainengine.core;
 
 import com.github.strubium.windowmanager.window.WindowManager;
+import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.json.*;
 import com.toxicrain.rainengine.core.lua.LuaManager;
 import com.toxicrain.rainengine.core.registries.WeaponRegistry;
@@ -132,28 +133,27 @@ public class GameEngine {
             throw new IllegalStateException("Texture mappings not loaded! Call PaletteInfoParser.loadTextureMappings() first.");
         }
 
-        int sizeX = MapInfoParser.mapDataX.size();  // Get the size once
-        int sizeY = MapInfoParser.mapDataY.size();
-        int sizeZ = MapInfoParser.mapDataZ.size();
+        int size = MapInfoParser.mapData.size();  // Get the size once
 
-        for (int k = sizeX - 1; k >= 0; k--) {
-            if (k < sizeY && k < sizeZ) {  // Only check bounds once
-                char textureChar = Tile.mapDataType.get(k);  // Get the character representing the texture
-                TextureInfo textureInfo = PaletteInfoParser.getTexture(textureChar);  // Get the TextureInfo from TextureLoader
+        for (int k = size - 1; k >= 0; k--) {
+            // Get the TilePos object
+            TilePos pos = MapInfoParser.mapData.get(k);
 
-                batchRenderer.addTextureLit(
-                        textureInfo,
-                        MapInfoParser.mapDataX.get(k),
-                        MapInfoParser.mapDataY.get(k),
-                        MapInfoParser.mapDataZ.get(k).floatValue(),
-                        0,
-                        1,
-                        1,
-                        LightSystem.getLIGHT_SOURCES()
-                );
-            } else {
-                RainLogger.RAIN_LOGGER.info("Index out of bounds: space={}", k);
-            }
+            // Get the character representing the texture
+            char textureChar = Tile.mapDataType.get(k);
+            TextureInfo textureInfo = PaletteInfoParser.getTexture(textureChar);
+
+            // Render the tile with lighting
+            batchRenderer.addTextureLit(
+                    textureInfo,
+                    pos.x,
+                    pos.y,
+                    (float) pos.z,
+                    0,
+                    1,
+                    1,
+                    LightSystem.getLIGHT_SOURCES()
+            );
         }
     }
 

@@ -1,6 +1,7 @@
 package com.toxicrain.rainengine.core.json;
 
 import com.toxicrain.rainengine.core.RainLogger;
+import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.lua.LuaManager;
 import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.util.FileUtils;
@@ -22,9 +23,7 @@ public class MapInfoParser {
     public static int playerx;
     public static int playery;
     public static int tiles = 0;
-    public static ArrayList<Integer> mapDataX = new ArrayList<>();
-    public static ArrayList<Integer> mapDataY = new ArrayList<>();
-    public static ArrayList<Double> mapDataZ = new ArrayList<>();
+    public static ArrayList<TilePos> mapData = new ArrayList<>();
 
     public static void parseMapFile(String mapName) throws IOException {
         parseMap(mapName, 0, 0);  // Main map at position (0, 0)
@@ -86,9 +85,7 @@ public class MapInfoParser {
                                 ypos = k + offsetY;  // Apply offset for sub-maps
 
                                 // Add tile data
-                                mapDataX.add(xpos * 2);
-                                mapDataY.add(ypos * -2);
-                                mapDataZ.add(0.0001);
+                                mapData.add(new TilePos(xpos * 2, ypos * -2, 0.0001f));
                                 tiles++;
                                 Tile.mapDataType.add(row.charAt(l));
                                 Tile.addCollision(ypos, xpos);
@@ -119,13 +116,6 @@ public class MapInfoParser {
                 RainLogger.RAIN_LOGGER.error("Error parsing map data: {}", e.getMessage());
                 e.printStackTrace();
             }
-        }
-
-        // Log the final map data
-        if (doExtraLogs) {
-            RainLogger.RAIN_LOGGER.info("mapDataX: {}", mapDataX);
-            RainLogger.RAIN_LOGGER.info("mapDataY: {}", mapDataY);
-            RainLogger.RAIN_LOGGER.info("Lighting sources: {}", LightSystem.getLIGHT_SOURCES());
         }
     }
 }
