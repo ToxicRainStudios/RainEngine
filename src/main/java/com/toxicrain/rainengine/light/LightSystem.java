@@ -8,8 +8,13 @@ import java.util.List;
 
 @UtilityClass
 public class LightSystem {
-    @Getter
+
     private static final List<float[]> LIGHT_SOURCES = new ArrayList<>();
+
+    public static List<float[]> getLightSources(){
+        return LIGHT_SOURCES;
+    }
+
 
     /**
      * Adds a light source to a position with a strength

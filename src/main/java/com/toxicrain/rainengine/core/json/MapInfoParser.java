@@ -63,7 +63,7 @@ public class MapInfoParser {
                 JSONArray lighting = part.getJSONArray("lighting");
 
                 // Clear existing lighting data
-                LightSystem.getLIGHT_SOURCES().clear();
+                LightSystem.getLightSources().clear();
 
                 // Process lighting data
                 for (int j = 0; j < lighting.length(); j++) {

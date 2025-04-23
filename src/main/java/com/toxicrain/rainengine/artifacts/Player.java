@@ -5,6 +5,7 @@ import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.registries.WeaponRegistry;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
+import com.toxicrain.rainengine.light.LightSystem;
 import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
@@ -155,7 +156,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
     public void render(BatchRenderer batchRenderer) {
         Vector3f center = WindowUtils.getCenter();
         batchRenderer.addTexture(selectedTexture, center.x, center.y, 1.1f,
-                new TileParameters(null, openglMousePos[0],openglMousePos[1], 1f,1f, Color.toFloatArray(Color.WHITE), null));
+                new TileParameters(null, openglMousePos[0],openglMousePos[1], 1f,1f, null, LightSystem.getLightSources()));
     }
 
     private void handleCollisions(float deltaTime) {

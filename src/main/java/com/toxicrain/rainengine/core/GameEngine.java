@@ -150,7 +150,7 @@ public class GameEngine {
                     pos.x,
                     pos.y,
                     (float) pos.z,
-                    new TileParameters(0f, 0f,0f, 1,1,null, LightSystem.getLIGHT_SOURCES())
+                    new TileParameters(0f, 0f,0f, 1,1,null, LightSystem.getLightSources())
 
             );
         }
