@@ -1,6 +1,7 @@
 package com.toxicrain.rainengine.artifacts;
 
 import com.toxicrain.rainengine.core.datatypes.AABB;
+import com.toxicrain.rainengine.core.datatypes.Size;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.registries.WeaponRegistry;
@@ -14,7 +15,6 @@ import com.toxicrain.rainengine.core.json.MapInfoParser;
 import com.toxicrain.rainengine.core.json.SettingsInfoParser;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.factories.GameFactory;
-import com.toxicrain.rainengine.core.Color;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.util.MathUtils;
 import com.toxicrain.rainengine.util.InputUtils;

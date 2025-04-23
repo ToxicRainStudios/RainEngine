@@ -4,21 +4,20 @@ import com.toxicrain.rainengine.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
+import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.factories.GameFactory;
-import com.toxicrain.rainengine.core.Color;
+import com.toxicrain.rainengine.core.datatypes.Color;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import lombok.Getter;
 import lombok.Setter;
 
 
 public class NPC implements IArtifact {
-    @Getter @Setter
-    float X; // Current X position
-    @Getter @Setter
-    float Y; // Current Y position
+    public TilePos npcPos;
+
     @Getter @Setter
     private float directionX; // Direction vector X
     @Getter @Setter
@@ -35,8 +34,8 @@ public class NPC implements IArtifact {
 
 
     public NPC(float startingXpos, float startingYpos, float rotation, float size) {
-        this.X = startingXpos;
-        this.Y = startingYpos;
+        this.npcPos = new TilePos(startingXpos,startingYpos, 1);
+
         this.directionX = (float) Math.cos(rotation);
         this.directionY = (float) Math.sin(rotation);
         this.rotation = rotation; // Set initial rotation
@@ -48,18 +47,18 @@ public class NPC implements IArtifact {
         float halfSize = this.size / 2.0f;
 
         this.npcAABB = new AABB(
-                getX() - halfSize, // minX
-                getY() - halfSize, // minY
-                getX() + halfSize, // maxX
-                getY() + halfSize  // maxY
+                npcPos.x - halfSize, // minX
+                npcPos.y - halfSize, // minY
+                npcPos.x + halfSize, // maxX
+                npcPos.y + halfSize  // maxY
         );
 
     }
 
     public boolean canSeePlayer() {
         // Calculate the direction to the player
-        float deltaX = GameFactory.player.playerPos.x  - this.X;
-        float deltaY = GameFactory.player.playerPos.y  - this.Y;
+        float deltaX = GameFactory.player.playerPos.x  - this.npcPos.x;
+        float deltaY = GameFactory.player.playerPos.y  - this.npcPos.y;
 
         // Distance to the player
         float distanceToPlayer = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -98,21 +97,21 @@ public class NPC implements IArtifact {
 
     // Method to move towards the player gradually
     public void moveTowardsPlayer(float speed) {
-        float deltaX = GameFactory.player.playerPos.x - this.X;
-        float deltaY = GameFactory.player.playerPos.y - this.Y;
+        float deltaX = GameFactory.player.playerPos.x - this.npcPos.x;
+        float deltaY = GameFactory.player.playerPos.y - this.npcPos.y;
         handleCollisions();
 
         // Normalize direction
         float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         if (distance > 0) { // Prevent division by zero
-            this.X += (deltaX / distance) * speed; // Update position smoothly
-            this.Y += (deltaY / distance) * speed;
+            this.npcPos.x += (deltaX / distance) * speed; // Update position smoothly
+            this.npcPos.y += (deltaY / distance) * speed;
         }
     }
 
     // Render the NPC using BatchRenderer
     public void render(BatchRenderer batchRenderer) {
-        batchRenderer.addTexture(TextureSystem.getTexture("playerTexture"), this.X, this.Y, Constants.npcZLevel,
+        batchRenderer.addTexture(TextureSystem.getTexture("playerTexture"), this.npcPos.x, this.npcPos.y, Constants.npcZLevel,
                 new TileParameters(this.rotation, 0f,0f, 1f,1f, Color.toFloatArray(Color.WHITE), null));
     }
 
@@ -121,10 +120,10 @@ public class NPC implements IArtifact {
 
         // Update npc's AABB based on its position and size
          this.npcAABB.update(
-                getX() - halfSize,
-                getY() - halfSize,
-                getX() + halfSize,
-                getY() + halfSize
+                 npcPos.x - halfSize,
+                 npcPos.y - halfSize,
+                 npcPos.x + halfSize,
+                 npcPos.y + halfSize
         );
 
         char collisionDirection = Collisions.collideWorld(this.npcAABB);
@@ -133,19 +132,19 @@ public class NPC implements IArtifact {
         switch (collisionDirection) {
             case 'u':
                 // Colliding from below
-                this.Y += 0.002f;
+                this.npcPos.y += 0.002f;
                 break;
             case 'd':
                 // Colliding from above
-                this.Y -= 0.002f;
+                this.npcPos.y -= 0.002f;
                 break;
             case 'l':
                 // Colliding from the left
-                this.X += 0.002f;
+                this.npcPos.x += 0.002f;
                 break;
             case 'r':
                 // Colliding from the right
-                this.X -= 0.002f;
+                this.npcPos.y -= 0.002f;
                 break;
         }
     }

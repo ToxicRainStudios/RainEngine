@@ -6,6 +6,7 @@ import com.toxicrain.rainengine.artifacts.*;
 import com.toxicrain.rainengine.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.rainengine.artifacts.behavior.FollowPlayerSeeingBehavior;
 import com.toxicrain.rainengine.artifacts.behavior.LookAtPlayerSeeingBehavior;
+import com.toxicrain.rainengine.core.datatypes.Size;
 import com.toxicrain.rainengine.core.registries.manager.NPCManager;
 import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
 import com.toxicrain.rainengine.core.LangHelper;
