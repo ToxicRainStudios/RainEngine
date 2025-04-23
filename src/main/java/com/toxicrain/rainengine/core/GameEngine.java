@@ -6,6 +6,7 @@ import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.eventbus.events.DrawMapEvent;
 import com.toxicrain.rainengine.core.eventbus.events.GameUpdateEvent;
 import com.toxicrain.rainengine.core.eventbus.events.KeyPressEvent;
+import com.toxicrain.rainengine.core.eventbus.events.ScrollEvent;
 import com.toxicrain.rainengine.core.json.*;
 import com.toxicrain.rainengine.core.json.key.KeyInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
@@ -21,7 +22,6 @@ import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import lombok.experimental.UtilityClass;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWScrollCallback;
 
 import java.nio.FloatBuffer;
@@ -84,7 +84,7 @@ public class GameEngine {
         glfwSetScrollCallback(windowManager.window, new GLFWScrollCallback() {
             @Override
             public void invoke(long window, double xoffset, double yoffset) {
-                GameFactory.player.scrollOffset = (float) yoffset;
+                GameFactory.eventBus.post(new ScrollEvent((float) yoffset));
             }
         });
 
@@ -161,6 +161,11 @@ public class GameEngine {
         GameFactory.eventBus.listen(DrawMapEvent.class)
                 .subscribe(event -> {
                     drawMap(event.getBatchRenderer());
+                });
+
+        GameFactory.eventBus.listen(ScrollEvent.class)
+                .subscribe(event -> {
+                    GameFactory.player.scrollOffset = event.yOffeset;
                 });
 
         RainLogger.RAIN_LOGGER.info("Loading Lang");
