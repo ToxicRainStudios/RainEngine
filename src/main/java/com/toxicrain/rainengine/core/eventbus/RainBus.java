@@ -11,8 +11,6 @@ public class RainBus {
     private final PublishSubject<Object> bus = PublishSubject.create();
 
     public void post(Object event) {
-        RainLogger.RAIN_LOGGER.info("Event posted: " + event.getClass().getName());
-
         bus.onNext(event);
     }
 

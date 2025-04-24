@@ -1,6 +1,7 @@
 package com.toxicrain.rainengine.artifacts;
 
 import com.toxicrain.rainengine.core.GameEngine;
+import com.toxicrain.rainengine.core.RainLogger;
 import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.datatypes.Size;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
@@ -71,7 +72,6 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         );
 
         KeyMap.registerKeyBind(KeyMap.getKeyNumber("keyPause"), () ->  glfwSetWindowShouldClose(GameEngine.windowManager.window, true));
-        KeyMap.registerKeyBind(KeyMap.getKeyNumber("keyWeaponOne"), () -> equipWeapon(WeaponRegistry.get("Shotgun")));
         KeyMap.registerKeyBind(KeyMap.getKeyNumber("keyReloadTextures"), TextureSystem::reloadTextures);
     }
 
@@ -156,6 +156,9 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
             Vector3f center = WindowUtils.getCenter();
             batchRenderer.addTexture(selectedTexture, center.x, center.y, 1.1f,
                     new TileParameters(null, openglMousePos[0],openglMousePos[1], 1f,1f, null, LightSystem.getLightSources()));
+        }
+        else{
+            RainLogger.RAIN_LOGGER.info("null selectedTexture!");
         }
     }
 
