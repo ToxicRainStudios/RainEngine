@@ -123,10 +123,10 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
 
         float angleXS = (float) Math.sin(angle) * -1;
         float angleYS = (float) Math.cos(angle);
-
+        double distanceOfMouse = Math.sqrt(Math.pow(openglMousePos[0] - playerPos.x,2)+Math.pow(openglMousePos[1] - playerPos.y,2));
         if (useMouse) {
-            playerPos.x += (openglMousePos[0] - playerPos.x) * 30.3f * direction * deltaTime;
-            playerPos.y += (openglMousePos[1] - playerPos.y) * 30.3f * direction * deltaTime;
+            playerPos.x += ((openglMousePos[0] - playerPos.x)/distanceOfMouse) * 9.3f * direction * deltaTime;
+            playerPos.y += ((openglMousePos[1] - playerPos.y)/distanceOfMouse) * 9.3f * direction * deltaTime;
         } else {
             playerPos.x += angleXS * 5.2f * direction * deltaTime;
             playerPos.y += angleYS * 5.2f * direction * deltaTime;
