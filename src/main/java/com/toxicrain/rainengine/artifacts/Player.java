@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.artifacts;
 
+import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.datatypes.Size;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
@@ -27,6 +28,8 @@ import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 
 /**
  * The Player class provides information about the player
@@ -67,6 +70,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
                 playerPos.y + playerHalfSize  // maxY
         );
 
+        KeyMap.registerKeyBind(KeyMap.getKeyNumber("keyPause"), () ->  glfwSetWindowShouldClose(GameEngine.windowManager.window, true));
         KeyMap.registerKeyBind(KeyMap.getKeyNumber("keyWeaponOne"), () -> equipWeapon(WeaponRegistry.get("Shotgun")));
         KeyMap.registerKeyBind(KeyMap.getKeyNumber("keyReloadTextures"), TextureSystem::reloadTextures);
     }

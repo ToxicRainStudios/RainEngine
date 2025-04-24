@@ -18,6 +18,9 @@
         "keyWalkRight": "key_d"
       },
       {
+        "keyPause": "key_escape"
+      },
+      {
         "keyWeaponOne": "key_1"
       },
       {

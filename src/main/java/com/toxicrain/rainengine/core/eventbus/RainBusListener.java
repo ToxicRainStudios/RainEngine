@@ -63,7 +63,8 @@ public class RainBusListener {
 
                     RainLogger.RAIN_LOGGER.info("Creating Game Window");
                     GameEngine.windowManager.createWindow(GameInfoParser.defaultWindowName, SettingsInfoParser.getInstance().getVsync());
-                    GameEngine.windowManager.setupDefaultKeys();
+
+                    // Fire the KeyPressEvent when a key is pressed
                     glfwSetKeyCallback(GameEngine.windowManager.window, (windowHandle, key, scancode, action, mods) -> {
                         GameFactory.eventBus.post(new KeyPressEvent(key, action));
                     });
