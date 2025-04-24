@@ -49,12 +49,12 @@ public class GameFactory {
 
     public static NPCManager npcManager;
 
-    public static void load(){
+    public static void loadEventBus(){
         eventBus = new RainBus();
-        
-        player = new Player(TextureSystem.getTexture("playerTexture"), false);
+    }
 
-        projectileManager = new ProjectileManager();
+    public static void load(){
+        player = new Player(TextureSystem.getTexture("playerTexture"), false);
 
         inputUtils = new InputUtils(windowManager);
     }
@@ -83,17 +83,12 @@ public class GameFactory {
     }
 
     public static void loadImgui(){
-        guiManager = new GuiManager();
         imguiApp = new ImguiHandler(windowManager);
         imguiApp.initialize("#version 130");
     }
 
     public static void loadFonts(){
         //GuiBuilder.setFont("dos", FileUtils.getCurrentWorkingDirectory("resources/fonts/Perfect DOS VGA 437.ttf"), 30);
-    }
-
-    public static void loadNPC(){
-        npcManager = new NPCManager();
     }
 
     public static void loadShaders(){

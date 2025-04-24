@@ -1,8 +1,11 @@
 package com.toxicrain.rainengine.core.render;
 
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
+import com.toxicrain.rainengine.core.eventbus.events.render.batchrenderer.BuildBatchRendererEvent;
+import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
+import lombok.NonNull;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
@@ -46,6 +49,8 @@ public class BatchRenderer {
         vertexVboId = glGenBuffers();
         texCoordVboId = glGenBuffers();
         colorVboId = glGenBuffers();
+
+        GameFactory.eventBus.post(new BuildBatchRendererEvent(this));
     }
 
     private static class TextureVertexInfo {
@@ -93,7 +98,7 @@ public class BatchRenderer {
      * @param z the z-coordinate of the texture
      * @param params parameters of the texture
      */
-    public void addTexture(TextureInfo textureInfo, float x, float y, float z, TileParameters params) {
+    public void addTexture(@NonNull TextureInfo textureInfo, float x, float y, float z, TileParameters params) {
         if (willOverflow()) {
             renderBatch();  // Flush before we overflow
             beginBatch();   // Reset state

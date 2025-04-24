@@ -137,18 +137,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         getMouse();
         processInput(deltaTime);
 
-        if (isWeaponEquipped(WeaponRegistry.get("Pistol"))){
-            selectedTexture = TextureSystem.getTexture("playerTexturePistol");
-        }
-        if (isWeaponEquipped(WeaponRegistry.get("Rifle"))){
-            selectedTexture = TextureSystem.getTexture("playerTextureRifle");
-        }
-        if (isWeaponEquipped(WeaponRegistry.get("Shotgun"))){
-            selectedTexture = TextureSystem.getTexture("playerTextureShotgun");
-        }
-        else {
-            selectedTexture = defaultTexture;
-        }
+        selectedTexture = defaultTexture;
     }
 
     float[] getMouse() {

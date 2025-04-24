@@ -3,27 +3,26 @@ package com.toxicrain.rainengine.core;
 import com.github.strubium.windowmanager.window.WindowManager;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
+import com.toxicrain.rainengine.core.eventbus.RainBusListener;
 import com.toxicrain.rainengine.core.eventbus.events.*;
+import com.toxicrain.rainengine.core.eventbus.events.load.InitLoadEvent;
+import com.toxicrain.rainengine.core.eventbus.events.load.ManagerLoadEvent;
+import com.toxicrain.rainengine.core.eventbus.events.load.PostInitLoadEvent;
+import com.toxicrain.rainengine.core.eventbus.events.load.PreInitLoadEvent;
+import com.toxicrain.rainengine.core.eventbus.events.render.RenderGuiEvent;
 import com.toxicrain.rainengine.core.json.*;
-import com.toxicrain.rainengine.core.json.key.KeyInfoParser;
-import com.toxicrain.rainengine.core.json.key.KeyMap;
-import com.toxicrain.rainengine.core.lua.LuaManager;
-import com.toxicrain.rainengine.core.registries.WeaponRegistry;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.light.LightSystem;
 import com.toxicrain.rainengine.texture.TextureInfo;
-import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import lombok.experimental.UtilityClass;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
-import org.lwjgl.glfw.GLFWScrollCallback;
 
 import java.nio.FloatBuffer;
 
-import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 
@@ -43,18 +42,17 @@ public class GameEngine {
         RainLogger.RAIN_LOGGER.info("Version: {}", GameInfoParser.gameVersion);
         doVersionCheck();
 
-        GameLoader.loadAndInitGame(GameInfoParser.gameMainClass);
+        RainLogger.RAIN_LOGGER.info("Loading Event Bus");
+        GameFactory.loadEventBus();
+        RainBusListener.addEventListeners();
 
-        RainLogger.RAIN_LOGGER.info("Loading Lua");
-        GameFactory.loadLua();
-        LuaManager.categorizeScripts("resources/scripts/");
-        LuaManager.executeInitScripts();
-        Tile.combineTouchingAABBs();
+        GameFactory.eventBus.post(new PreInitLoadEvent());
 
-        windowManager = new WindowManager((int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight(), true);
+        GameFactory.eventBus.post(new InitLoadEvent());
 
-        init();
+        GameFactory.eventBus.post(new ManagerLoadEvent());
 
+        GameFactory.eventBus.post(new PostInitLoadEvent());
 
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
@@ -65,117 +63,7 @@ public class GameEngine {
         windowManager.destroy();
     }
 
-    /**
-     * Does all the loading for RainEngine.
-     */
-    private static void init() {
-
-        RainLogger.RAIN_LOGGER.info("Creating Game Window");
-        windowManager.createWindow(GameInfoParser.defaultWindowName, SettingsInfoParser.getInstance().getVsync());
-        windowManager.setupDefaultKeys();
-        glfwSetKeyCallback(windowManager.window, (windowHandle, key, scancode, action, mods) -> {
-            GameFactory.eventBus.post(new KeyPressEvent(key, action));
-        });
-
-        // Create and set the scroll callback
-        glfwSetScrollCallback(windowManager.window, new GLFWScrollCallback() {
-            @Override
-            public void invoke(long window, double xoffset, double yoffset) {
-                GameFactory.eventBus.post(new ScrollEvent((float) yoffset));
-            }
-        });
-
-        RainLogger.RAIN_LOGGER.info("Creating Textures");
-        TextureSystem.initTextures();
-
-        RainLogger.RAIN_LOGGER.info("Loading Keybinds");
-        KeyInfoParser.loadKeyInfo();
-
-        // Set the "background" color
-        glClearColor(0, 0, 0, 0);
-
-        // Set up the projection matrix with FOV of 90 degrees
-        glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(createPerspectiveProjectionMatrix(SettingsInfoParser.getInstance().getFOV(), SettingsInfoParser.getInstance().getWindowWidth() / SettingsInfoParser.getInstance().getWindowHeight(), 1.0f, 100.0f));
-
-        GameFactory.load();
-
-        RainLogger.RAIN_LOGGER.info("Loading ImGUI");
-        GameFactory.loadImgui();
-
-        RainLogger.RAIN_LOGGER.info("Loading Fonts");
-        GameFactory.loadFonts();
-
-        RainLogger.RAIN_LOGGER.info("Loading Map Palette");
-        PaletteInfoParser.loadTextureMappings();
-
-        // Set the viewport size
-        glViewport(0, 0, (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight());
-
-        RainLogger.RAIN_LOGGER.info("Initializing SoundSystem");
-        GameFactory.loadSounds();
-
-        // Weapons must be loaded after sounds have been loaded
-        GameFactory.loadWeapons();
-
-        RainLogger.RAIN_LOGGER.info("Loading Shaders");
-        GameFactory.loadShaders();
-
-        GameFactory.player.addWeapon(WeaponRegistry.get("Shotgun"));
-
-        LuaManager.executePostInitScripts();
-
-        GameFactory.setupGUIs();
-
-        GameFactory.loadNPC();
-
-
-        GameFactory.eventBus.listen(KeyPressEvent.class)
-            .subscribe(event -> {
-                int keycode = event.keyCode;
-                if (KeyMap.keyBinds.containsKey(keycode)) {
-                KeyMap.keyBinds.get(keycode).run();
-                }
-            });
-
-        GameFactory.eventBus.listen(GameUpdateEvent.class)
-                .subscribe(event -> {
-
-                    float deltaTime = DeltaTimeUtil.getDeltaTime();
-
-                    GameFactory.player.update(deltaTime);
-
-                    for (int engineFrames = 30; engineFrames >= 0; engineFrames--) {
-
-                        GameFactory.npcManager.update(deltaTime);
-
-                        GameFactory.projectileManager.update(deltaTime);
-
-                    }
-                    LuaManager.executeTickScripts();
-                });
-
-        GameFactory.eventBus.listen(DrawMapEvent.class)
-                .subscribe(event -> {
-                    drawMap(event.getBatchRenderer());
-                });
-
-        GameFactory.eventBus.listen(ScrollEvent.class)
-                .subscribe(event -> {
-                    GameFactory.player.scrollOffset = event.yOffeset;
-                });
-
-        RainLogger.RAIN_LOGGER.info("Loading Lang");
-        GameFactory.loadLang();
-
-
-        //"COMBAT" is the normal track, "PANIC" is the low health track, "CALM" is the quiet track
-        GameFactory.musicManager.setStartingSound("CALM0");
-        GameFactory.musicManager.start();
-        GameFactory.musicManager.setNextTrack("CALM1");
-    }
-
-    private static void drawMap(BatchRenderer batchRenderer) {
+    public static void drawMap(BatchRenderer batchRenderer) {
         // Ensure the texture mappings have been loaded
         if (PaletteInfoParser.textureMappings == null) {
             throw new IllegalStateException("Texture mappings not loaded! Call PaletteInfoParser.loadTextureMappings() first.");
@@ -227,9 +115,11 @@ public class GameEngine {
 
         GameFactory.imguiApp.handleInput(windowManager.window);
         GameFactory.imguiApp.newFrame();
-        GameFactory.guiManager.render();
-        LuaManager.executeAllImguiScripts();
+
+        GameFactory.eventBus.post(new RenderGuiEvent());
+
         GameFactory.imguiApp.render();
+
         // Swap buffers and poll events
         windowManager.swapAndPoll();
 
@@ -271,7 +161,7 @@ public class GameEngine {
      * @param far the distance to the far clipping plane
      * @return a FloatBuffer containing the perspective projection matrix
      */
-    private static FloatBuffer createPerspectiveProjectionMatrix(float fov, float aspectRatio, float near, float far) {
+    public static FloatBuffer createPerspectiveProjectionMatrix(float fov, float aspectRatio, float near, float far) {
         float f = (float) (1.0f / Math.tan(Math.toRadians(fov) / 2.0));
         float[] projectionMatrix = new float[16];
 

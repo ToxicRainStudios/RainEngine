@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.core.eventbus;
 
+import com.toxicrain.rainengine.core.RainLogger;
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
@@ -10,6 +11,8 @@ public class RainBus {
     private final PublishSubject<Object> bus = PublishSubject.create();
 
     public void post(Object event) {
+        RainLogger.RAIN_LOGGER.info("Event posted: " + event.getClass().getName());
+
         bus.onNext(event);
     }
 
