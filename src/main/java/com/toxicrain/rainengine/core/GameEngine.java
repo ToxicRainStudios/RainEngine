@@ -3,7 +3,10 @@ package com.toxicrain.rainengine.core;
 import com.github.strubium.windowmanager.window.WindowManager;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
+import com.toxicrain.rainengine.core.eventbus.events.*;
 import com.toxicrain.rainengine.core.json.*;
+import com.toxicrain.rainengine.core.json.key.KeyInfoParser;
+import com.toxicrain.rainengine.core.json.key.KeyMap;
 import com.toxicrain.rainengine.core.lua.LuaManager;
 import com.toxicrain.rainengine.core.registries.WeaponRegistry;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
@@ -12,6 +15,7 @@ import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.light.LightSystem;
 import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.texture.TextureSystem;
+import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import lombok.experimental.UtilityClass;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
@@ -39,6 +43,8 @@ public class GameEngine {
         RainLogger.RAIN_LOGGER.info("Version: {}", GameInfoParser.gameVersion);
         doVersionCheck();
 
+        GameLoader.loadAndInitGame(GameInfoParser.gameMainClass);
+
         RainLogger.RAIN_LOGGER.info("Loading Lua");
         GameFactory.loadLua();
         LuaManager.categorizeScripts("resources/scripts/");
@@ -48,6 +54,8 @@ public class GameEngine {
         windowManager = new WindowManager((int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight(), true);
 
         init();
+
+
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
 
@@ -65,12 +73,15 @@ public class GameEngine {
         RainLogger.RAIN_LOGGER.info("Creating Game Window");
         windowManager.createWindow(GameInfoParser.defaultWindowName, SettingsInfoParser.getInstance().getVsync());
         windowManager.setupDefaultKeys();
+        glfwSetKeyCallback(windowManager.window, (windowHandle, key, scancode, action, mods) -> {
+            GameFactory.eventBus.post(new KeyPressEvent(key, action));
+        });
 
         // Create and set the scroll callback
         glfwSetScrollCallback(windowManager.window, new GLFWScrollCallback() {
             @Override
             public void invoke(long window, double xoffset, double yoffset) {
-                GameFactory.player.scrollOffset = (float) yoffset;
+                GameFactory.eventBus.post(new ScrollEvent((float) yoffset));
             }
         });
 
@@ -118,6 +129,42 @@ public class GameEngine {
 
         GameFactory.loadNPC();
 
+
+        GameFactory.eventBus.listen(KeyPressEvent.class)
+            .subscribe(event -> {
+                int keycode = event.keyCode;
+                if (KeyMap.keyBinds.containsKey(keycode)) {
+                KeyMap.keyBinds.get(keycode).run();
+                }
+            });
+
+        GameFactory.eventBus.listen(GameUpdateEvent.class)
+                .subscribe(event -> {
+
+                    float deltaTime = DeltaTimeUtil.getDeltaTime();
+
+                    GameFactory.player.update(deltaTime);
+
+                    for (int engineFrames = 30; engineFrames >= 0; engineFrames--) {
+
+                        GameFactory.npcManager.update(deltaTime);
+
+                        GameFactory.projectileManager.update(deltaTime);
+
+                    }
+                    LuaManager.executeTickScripts();
+                });
+
+        GameFactory.eventBus.listen(DrawMapEvent.class)
+                .subscribe(event -> {
+                    drawMap(event.getBatchRenderer());
+                });
+
+        GameFactory.eventBus.listen(ScrollEvent.class)
+                .subscribe(event -> {
+                    GameFactory.player.scrollOffset = event.yOffeset;
+                });
+
         RainLogger.RAIN_LOGGER.info("Loading Lang");
         GameFactory.loadLang();
 
@@ -149,23 +196,11 @@ public class GameEngine {
                     textureInfo,
                     pos.x,
                     pos.y,
-                    (float) pos.z,
+                    pos.z,
                     new TileParameters(0f, 0f,0f, 1,1,null, LightSystem.getLightSources())
 
             );
         }
-    }
-
-    private static long lastFrameTime = System.nanoTime();
-
-    private static void update(float deltaTime) {
-        GameFactory.player.update(deltaTime);
-        for (int engineFrames = 30; engineFrames >= 0; engineFrames--) {
-            GameFactory.npcManager.update(deltaTime);
-
-            GameFactory.projectileManager.update(deltaTime);
-        }
-        LuaManager.executeTickScripts();
     }
 
     private static void render(BatchRenderer batchRenderer) {
@@ -180,7 +215,8 @@ public class GameEngine {
         // Begin the batch
         batchRenderer.beginBatch();
 
-        drawMap(batchRenderer);
+        GameFactory.eventBus.post(new DrawMapEvent(batchRenderer));
+
         GameFactory.npcManager.render(batchRenderer);
         GameFactory.projectileManager.render(batchRenderer);
         GameFactory.player.render(batchRenderer);
@@ -202,12 +238,10 @@ public class GameEngine {
     private static void loop(BatchRenderer batchRenderer) {
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!windowManager.shouldClose()) {
-            long currentTime = System.nanoTime();
-            float deltaTime = (currentTime - lastFrameTime) / 1000000000.0f; // Convert nanoseconds to seconds
-            lastFrameTime = currentTime;
+            DeltaTimeUtil.update();
 
+            GameFactory.eventBus.post(new GameUpdateEvent());
 
-            update(deltaTime);
             render(batchRenderer);
         }
         GameFactory.imguiApp.cleanup();

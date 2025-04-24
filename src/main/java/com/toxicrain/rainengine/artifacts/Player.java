@@ -4,18 +4,20 @@ import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.datatypes.Size;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
+import com.toxicrain.rainengine.core.json.key.KeyMap;
 import com.toxicrain.rainengine.core.registries.WeaponRegistry;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
 import com.toxicrain.rainengine.light.LightSystem;
 import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
-import com.toxicrain.rainengine.core.json.KeyInfoParser;
+import com.toxicrain.rainengine.core.json.key.KeyInfoParser;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
 import com.toxicrain.rainengine.core.json.SettingsInfoParser;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.texture.TextureSystem;
+import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import com.toxicrain.rainengine.util.MathUtils;
 import com.toxicrain.rainengine.util.InputUtils;
 import com.toxicrain.rainengine.util.WindowUtils;
@@ -64,6 +66,9 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
                 playerPos.x + playerHalfSize, // maxX
                 playerPos.y + playerHalfSize  // maxY
         );
+
+        KeyMap.registerKeyBind(KeyMap.getKeyNumber("keyWeaponOne"), () -> equipWeapon(WeaponRegistry.get("Shotgun")));
+        KeyMap.registerKeyBind(KeyMap.getKeyNumber("keyReloadTextures"), TextureSystem::reloadTextures);
     }
 
     public void addWeapon(Weapon weapon) {
@@ -123,8 +128,8 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
             playerPos.x += ((openglMousePos[0] - playerPos.x)/distanceOfMouse) * 9.3f * direction * deltaTime;
             playerPos.y += ((openglMousePos[1] - playerPos.y)/distanceOfMouse) * 9.3f * direction * deltaTime;
         } else {
-            playerPos.x += angleXS * 4.2f * direction * deltaTime;
-            playerPos.y += angleYS * 4.2f * direction * deltaTime;
+            playerPos.x += angleXS * 5.2f * direction * deltaTime;
+            playerPos.y += angleYS * 5.2f * direction * deltaTime;
         }
     }
 
@@ -197,8 +202,21 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
     private void processInput(float deltaTime) {
         handleSprinting();
         //handleCollisions(deltaTime);
-        handleMovement(deltaTime);
         handleAttack();
+
+        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkForward"))) {
+            forward(true, 1, deltaTime);
+        }
+        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkBackward"))) {
+            forward(true, -1, deltaTime);
+        }
+        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkLeft"))) {
+            forward(false, 1, deltaTime);
+        }
+        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkRight"))) {
+            forward(false, -1, deltaTime);
+        }
+
 
         // Update cameraZ based on the scroll input
         playerPos.z = MathUtils.clamp(playerPos.z + scrollOffset * scrollSpeed, GameInfoParser.minZoom, GameInfoParser.maxZoom);
@@ -206,7 +224,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
     }
 
     private void handleSprinting() {
-        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keySprint"))) {
+        if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keySprint"))) {
             cameraSpeed = 0.1f;
             isSprinting = true;
         } else {
@@ -215,14 +233,6 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         }
     }
 
-    private void handleMovement(float deltaTime) {
-        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkLeft"))) forward(false, 1,deltaTime);
-        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkRight"))) forward(false, -1,deltaTime);
-        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkForward"))) forward(true, 1,deltaTime);
-        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWalkBackward"))) forward(true, -1,deltaTime);
-        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyWeaponOne"))) equipWeapon(WeaponRegistry.get("Shotgun"));
-        if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.getKeyAsGLWFBind("keyReloadTextures"))) TextureSystem.reloadTextures();
-    }
 
     private void handleAttack() {
         if (GameFactory.inputUtils.isMouseButtonPressed(0)) {

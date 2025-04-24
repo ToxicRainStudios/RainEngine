@@ -7,6 +7,7 @@ import com.toxicrain.rainengine.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.rainengine.artifacts.behavior.FollowPlayerSeeingBehavior;
 import com.toxicrain.rainengine.artifacts.behavior.LookAtPlayerSeeingBehavior;
 import com.toxicrain.rainengine.core.datatypes.Size;
+import com.toxicrain.rainengine.core.eventbus.RainBus;
 import com.toxicrain.rainengine.core.registries.manager.NPCManager;
 import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
 import com.toxicrain.rainengine.core.LangHelper;
@@ -31,6 +32,7 @@ import static com.toxicrain.rainengine.core.GameEngine.windowManager;
 
 public class GameFactory {
 
+    public static RainBus eventBus;
     public static ImguiHandler imguiApp;
     public static GuiReg guiReg;
     public static SoundSystem soundSystem;
@@ -51,12 +53,15 @@ public class GameFactory {
     public static BossNPC bossNPC;
 
     public static void load(){
+        eventBus = new RainBus();
+
+
         player = new Player(TextureSystem.getTexture("playerTexture"), false);
 
         projectileManager = new ProjectileManager();
         projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0, TextureSystem.getTexture("playerTexture"));
 
-        inputUtils = new InputUtils(windowManager.window);
+        inputUtils = new InputUtils(windowManager);
     }
 
     public static void loadSounds(){

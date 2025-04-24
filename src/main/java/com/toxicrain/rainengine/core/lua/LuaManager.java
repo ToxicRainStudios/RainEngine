@@ -2,8 +2,9 @@ package com.toxicrain.rainengine.core.lua;
 
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.RainLogger;
-import com.toxicrain.rainengine.core.json.KeyInfoParser;
+import com.toxicrain.rainengine.core.json.key.KeyInfoParser;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
+import com.toxicrain.rainengine.core.json.key.KeyMap;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.sound.SoundSystem;
 import com.toxicrain.rainengine.util.FileUtils;
@@ -130,7 +131,7 @@ public class LuaManager {
         globals.set("isKeyPressed", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue arg) {
-                if (GameFactory.inputUtils.isKeyPressed(KeyInfoParser.convertToGLFWBind(arg.toString()))) {
+                if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber(arg.toString()))) {
                     return LuaValue.TRUE;
                 }
                 return LuaValue.FALSE;

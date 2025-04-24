@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.util;
 
+import com.github.strubium.windowmanager.window.WindowManager;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -10,12 +11,12 @@ public class InputUtils {
     private final long window;
 
     /**
-     * Constructs a MouseUtils object with the specified window handle.
+     * Constructs a InputUtils object with the specified window handle.
      *
      * @param window The window handle
      */
-    public InputUtils(long window) {
-        this.window = window;
+    public InputUtils(WindowManager window) {
+        this.window = window.window;
     }
 
 
