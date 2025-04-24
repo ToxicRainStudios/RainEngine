@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.toxicrain'
-version 'Dev-2'
+version 'Dev-3'
 
 sourceCompatibility = 1.8
 
