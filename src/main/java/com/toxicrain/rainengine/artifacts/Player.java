@@ -5,6 +5,7 @@ import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.datatypes.Size;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
+import com.toxicrain.rainengine.core.eventbus.events.ArtifactUpdateEvent;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
 import com.toxicrain.rainengine.core.registries.WeaponRegistry;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
@@ -12,13 +13,11 @@ import com.toxicrain.rainengine.light.LightSystem;
 import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
-import com.toxicrain.rainengine.core.json.key.KeyInfoParser;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
 import com.toxicrain.rainengine.core.json.SettingsInfoParser;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.texture.TextureSystem;
-import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import com.toxicrain.rainengine.util.MathUtils;
 import com.toxicrain.rainengine.util.InputUtils;
 import com.toxicrain.rainengine.util.WindowUtils;
@@ -38,6 +37,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
 
     @Getter @Setter
     private TextureInfo defaultTexture;
+    @Getter @Setter
     private TextureInfo selectedTexture;
     private boolean isSprinting;
     public TilePos playerPos;
@@ -141,7 +141,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         getMouse();
         processInput(deltaTime);
 
-        selectedTexture = defaultTexture;
+        GameFactory.eventBus.post(new ArtifactUpdateEvent("player"));
     }
 
     float[] getMouse() {
@@ -152,9 +152,11 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
     }
 
     public void render(BatchRenderer batchRenderer) {
-        Vector3f center = WindowUtils.getCenter();
-        batchRenderer.addTexture(selectedTexture, center.x, center.y, 1.1f,
-                new TileParameters(null, openglMousePos[0],openglMousePos[1], 1f,1f, null, LightSystem.getLightSources()));
+        if (selectedTexture != null){
+            Vector3f center = WindowUtils.getCenter();
+            batchRenderer.addTexture(selectedTexture, center.x, center.y, 1.1f,
+                    new TileParameters(null, openglMousePos[0],openglMousePos[1], 1f,1f, null, LightSystem.getLightSources()));
+        }
     }
 
     private void handleCollisions(float deltaTime) {
