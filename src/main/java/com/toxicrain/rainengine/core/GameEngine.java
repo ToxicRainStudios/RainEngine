@@ -109,7 +109,6 @@ public class GameEngine {
         GameFactory.projectileManager.render(batchRenderer);
         GameFactory.player.render(batchRenderer);
 
-
         // Render the batch
         batchRenderer.renderBatch();
 

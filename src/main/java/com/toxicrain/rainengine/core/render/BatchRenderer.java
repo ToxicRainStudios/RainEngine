@@ -2,6 +2,7 @@ package com.toxicrain.rainengine.core.render;
 
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.eventbus.events.render.batchrenderer.BuildBatchRendererEvent;
+import com.toxicrain.rainengine.core.eventbus.events.render.batchrenderer.RenderBatchRendererEvent;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
@@ -264,6 +265,8 @@ public class BatchRenderer {
         vertexBuffer.clear();
         texCoordBuffer.clear();
         colorBuffer.clear();
+
+        GameFactory.eventBus.post(new RenderBatchRendererEvent(this));
 
         for (TextureVertexInfo info : textureVertexInfos) {
             // Check if we need to switch to a new texture

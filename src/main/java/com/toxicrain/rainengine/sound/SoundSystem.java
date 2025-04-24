@@ -1,6 +1,9 @@
 package com.toxicrain.rainengine.sound;
 
 import com.toxicrain.rainengine.core.RainLogger;
+import com.toxicrain.rainengine.core.eventbus.events.load.sound.SoundInfoLoadEvent;
+import com.toxicrain.rainengine.core.eventbus.events.load.sound.SoundSystemLoadEvent;
+import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.util.FileUtils;
 import lombok.Getter;
 import org.lwjgl.openal.AL;
@@ -30,6 +33,10 @@ public class SoundSystem {
     private static final int MAX_SOURCES = 32;  // Max number of sources allowed
     private float currentVolume = 1.0f;  // Default volume (full)
     private boolean isFading = false;
+
+    public SoundSystem(){
+        GameFactory.eventBus.post(new SoundSystemLoadEvent(this));
+    }
 
     // Map to store all loaded sounds with file names
     private static final Map<String, SoundInfo> sounds = new HashMap<>();
@@ -161,8 +168,12 @@ public class SoundSystem {
             RainLogger.RAIN_LOGGER.error("Error processing sound file: {}", e.getMessage());
         }
 
+        SoundInfo soundInfo = new SoundInfo(wavData, bufferId);
+
         // Return the SoundInfo containing the WavInfo and bufferId
-        return new SoundInfo(wavData, bufferId);
+        GameFactory.eventBus.post(new SoundInfoLoadEvent(soundInfo));
+
+        return soundInfo;
     }
 
     public void play(SoundInfo soundInfo) {
