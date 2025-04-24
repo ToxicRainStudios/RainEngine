@@ -41,7 +41,6 @@ public class GameFactory {
     public static Player player;
     public static GuiManager guiManager;
     public static ProjectileManager projectileManager;
-    public static Projectile projectile;
     public static InputUtils inputUtils;
     public static LuaEngine luaEngine;
     public static GuiLuaWrapper guiLuaWrapper;
@@ -49,17 +48,13 @@ public class GameFactory {
     public static LangHelper langHelper;
 
     public static NPCManager npcManager;
-    public static NPC character;
-    public static BossNPC bossNPC;
 
     public static void load(){
         eventBus = new RainBus();
-
-
+        
         player = new Player(TextureSystem.getTexture("playerTexture"), false);
 
         projectileManager = new ProjectileManager();
-        projectile = new Projectile(MapInfoParser.playerx,MapInfoParser.playery,0.001f,0, TextureSystem.getTexture("playerTexture"));
 
         inputUtils = new InputUtils(windowManager);
     }
@@ -97,21 +92,8 @@ public class GameFactory {
         //GuiBuilder.setFont("dos", FileUtils.getCurrentWorkingDirectory("resources/fonts/Perfect DOS VGA 437.ttf"), 30);
     }
 
-    public static void loadWeapons(){
-        new Weapon("Pistol", 3, 20,1,1, TextureSystem.getTexture("bullet"),120, 0.9f, "Breakdown");
-        new Weapon("Rifle", 3, 20,1,1, TextureSystem.getTexture("bullet"), 60, 0.2f,"Breakdown");
-        new Weapon("Shotgun", 30, 20,5,4, TextureSystem.getTexture("bullet"), 400, 0.1f,"Breakdown");
-    }
-
     public static void loadNPC(){
         npcManager = new NPCManager();
-
-        character = new NPC(12,-4,1, Size.AVERAGE.getSize());
-        bossNPC = new BossNPC(12,-4, 10,  Size.AVERAGE.getSize(), 1000);
-        LookAtPlayerSeeingBehavior lookAtPlayerSeeingBehavior = new LookAtPlayerSeeingBehavior();
-        bossNPC.setBehaviorSequence(new BehaviorSequence(lookAtPlayerSeeingBehavior));
-        character.setBehaviorSequence(new BehaviorSequence(new FollowPlayerSeeingBehavior(00.1f), lookAtPlayerSeeingBehavior));
-
     }
 
     public static void loadShaders(){
