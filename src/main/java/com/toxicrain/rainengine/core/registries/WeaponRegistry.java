@@ -2,6 +2,8 @@ package com.toxicrain.rainengine.core.registries;
 
 import com.toxicrain.rainengine.artifacts.Weapon;
 import com.toxicrain.rainengine.core.RainLogger;
+import com.toxicrain.rainengine.core.eventbus.events.WeaponRegisterEvent;
+import com.toxicrain.rainengine.factories.GameFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +15,8 @@ public class WeaponRegistry {
         if (WEAPONS.containsKey(weapon.getName())) {
             throw new IllegalArgumentException("Weapon '" + weapon.getName() + "' is already registered!");
         }
+        GameFactory.eventBus.post(new WeaponRegisterEvent(weapon));
+
         RainLogger.RAIN_LOGGER.info("Registering: {}", weapon.getName());
         WEAPONS.put(weapon.getName(), weapon);
     }
