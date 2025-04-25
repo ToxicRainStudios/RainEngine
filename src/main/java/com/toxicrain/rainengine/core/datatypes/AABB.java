@@ -39,4 +39,13 @@ public class AABB {
         this.maxX = maxX;
         this.maxY = maxY;
     }
+
+    public boolean contains(float x, float y) {
+        return x >= minX && x <= maxX &&
+                y >= minY && y <= maxY;
+    }
+
+    public boolean contains(TilePos pos) {
+        return contains(pos.x, pos.y);
+    }
 }

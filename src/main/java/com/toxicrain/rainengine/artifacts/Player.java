@@ -157,9 +157,6 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
             batchRenderer.addTexture(selectedTexture, center.x, center.y, 1.1f,
                     new TileParameters(null, openglMousePos[0],openglMousePos[1], 1f,1f, null, LightSystem.getLightSources()));
         }
-        else{
-            RainLogger.RAIN_LOGGER.info("null selectedTexture!");
-        }
     }
 
     private void handleCollisions(float deltaTime) {
