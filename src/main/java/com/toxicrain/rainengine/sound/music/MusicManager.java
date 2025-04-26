@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine.sound.music;
 
-import com.toxicrain.rainengine.core.RainLogger;
+import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.sound.SoundInfo;
 import com.toxicrain.rainengine.sound.SoundSystem;
 

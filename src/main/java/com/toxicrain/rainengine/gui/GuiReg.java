@@ -4,10 +4,12 @@ import com.github.strubium.windowmanager.imgui.GuiBuilder;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyInfoParser;
 import com.toxicrain.rainengine.core.json.SettingsInfoParser;
+import com.toxicrain.rainengine.core.logging.RainConsoleAppender;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.sound.SoundSystem;
 import com.toxicrain.rainengine.util.FileUtils;
 import imgui.ImGui;
+import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiInputTextFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
@@ -249,6 +251,37 @@ public class GuiReg {
         }
 
         // End Window
+        builder.endWindow();
+    }
+
+    public void drawConsole() {
+        GuiBuilder builder = new GuiBuilder();
+
+        builder.beginWindow("Engine Console");
+
+        for (RainConsoleAppender.LogEntry log : RainConsoleAppender.getLogLines()) {
+            switch (log.level.levelStr) {
+                case "ERROR":
+                    ImGui.pushStyleColor(ImGuiCol.Text, 1.0f, 0.3f, 0.3f, 1.0f); break;
+                case "WARN":
+                    ImGui.pushStyleColor(ImGuiCol.Text, 1.0f, 0.8f, 0.3f, 1.0f); break;
+                case "INFO":
+                    ImGui.pushStyleColor(ImGuiCol.Text, 0.6f, 0.9f, 1.0f, 1.0f); break;
+                case "DEBUG":
+                    ImGui.pushStyleColor(ImGuiCol.Text, 0.5f, 1.0f, 0.5f, 1.0f); break;
+                default:
+                    ImGui.pushStyleColor(ImGuiCol.Text, 1.0f, 1.0f, 1.0f, 1.0f);
+            }
+
+            ImGui.textWrapped(log.message);
+            ImGui.popStyleColor();
+        }
+
+        // Auto-scroll if near bottom
+        if (ImGui.getScrollY() >= ImGui.getScrollMaxY()) {
+            ImGui.setScrollHereY(1.0f);
+        }
+
         builder.endWindow();
     }
 

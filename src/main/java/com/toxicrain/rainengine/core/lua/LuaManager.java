@@ -1,8 +1,7 @@
 package com.toxicrain.rainengine.core.lua;
 
 import com.toxicrain.rainengine.core.GameEngine;
-import com.toxicrain.rainengine.core.RainLogger;
-import com.toxicrain.rainengine.core.json.key.KeyInfoParser;
+import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
 import com.toxicrain.rainengine.factories.GameFactory;

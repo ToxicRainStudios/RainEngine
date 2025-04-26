@@ -11,6 +11,7 @@ import com.toxicrain.rainengine.core.eventbus.events.load.PostInitLoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.load.PreInitLoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.render.RenderGuiEvent;
 import com.toxicrain.rainengine.core.json.*;
+import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.factories.GameFactory;

@@ -1,7 +1,7 @@
 package com.toxicrain.rainengine.core.registries.manager;
 
 import com.toxicrain.rainengine.artifacts.Projectile;
-import com.toxicrain.rainengine.core.RainLogger;
+import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine;
 
-import com.toxicrain.rainengine.core.RainLogger;
+import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
 import com.toxicrain.rainengine.core.GameEngine;
 

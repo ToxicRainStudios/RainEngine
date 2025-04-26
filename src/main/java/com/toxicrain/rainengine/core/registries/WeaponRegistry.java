@@ -1,7 +1,7 @@
 package com.toxicrain.rainengine.core.registries;
 
 import com.toxicrain.rainengine.artifacts.Weapon;
-import com.toxicrain.rainengine.core.RainLogger;
+import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.eventbus.events.WeaponRegisterEvent;
 import com.toxicrain.rainengine.factories.GameFactory;
 

@@ -6,12 +6,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.toxicrain.rainengine.core.RainLogger;
+import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.util.FileUtils;
 import lombok.Getter;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.lwjgl.glfw.GLFW;
 
 /**
  * KeyInfoParser parsers the keybinds.json file

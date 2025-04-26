@@ -4,7 +4,7 @@ import com.github.strubium.windowmanager.imgui.GuiManager;
 import com.github.strubium.windowmanager.window.WindowManager;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.GameLoader;
-import com.toxicrain.rainengine.core.RainLogger;
+import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.eventbus.events.DrawMapEvent;
 import com.toxicrain.rainengine.core.eventbus.events.GameUpdateEvent;
 import com.toxicrain.rainengine.core.eventbus.events.KeyPressEvent;

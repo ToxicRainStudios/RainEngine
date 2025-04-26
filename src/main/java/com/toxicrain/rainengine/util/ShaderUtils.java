@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine.util;
 
-import com.toxicrain.rainengine.core.RainLogger;
+import com.toxicrain.rainengine.core.logging.RainLogger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 

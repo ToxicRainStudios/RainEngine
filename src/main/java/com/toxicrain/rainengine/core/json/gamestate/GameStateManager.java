@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine.core.json.gamestate;
 
-import com.toxicrain.rainengine.core.RainLogger;
+import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
 import org.json.JSONObject;
 import java.io.BufferedReader;

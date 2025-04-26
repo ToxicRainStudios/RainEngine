@@ -1,5 +1,7 @@
 package com.toxicrain.rainengine.core;
 
+import com.toxicrain.rainengine.core.logging.RainLogger;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;

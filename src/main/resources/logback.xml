@@ -6,6 +6,11 @@
         </encoder>
     </appender>
 
+    <appender name="RAIN" class="com.toxicrain.rainengine.core.logging.RainConsoleAppender" />
+    <root level="debug">
+        <appender-ref ref="RAIN" />
+    </root>
+
     <root level="INFO">
         <appender-ref ref="Console"/>
     </root>

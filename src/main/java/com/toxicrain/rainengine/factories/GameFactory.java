@@ -3,18 +3,13 @@ package com.toxicrain.rainengine.factories;
 import com.github.strubium.windowmanager.imgui.GuiManager;
 import com.github.strubium.windowmanager.imgui.ImguiHandler;
 import com.toxicrain.rainengine.artifacts.*;
-import com.toxicrain.rainengine.artifacts.behavior.BehaviorSequence;
-import com.toxicrain.rainengine.artifacts.behavior.FollowPlayerSeeingBehavior;
-import com.toxicrain.rainengine.artifacts.behavior.LookAtPlayerSeeingBehavior;
-import com.toxicrain.rainengine.core.datatypes.Size;
 import com.toxicrain.rainengine.core.eventbus.RainBus;
 import com.toxicrain.rainengine.core.registries.manager.NPCManager;
 import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
 import com.toxicrain.rainengine.core.LangHelper;
-import com.toxicrain.rainengine.core.RainLogger;
+import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.json.SettingsInfoParser;
 import com.toxicrain.rainengine.core.lua.LuaManager;
-import com.toxicrain.rainengine.core.json.MapInfoParser;
 import com.toxicrain.rainengine.core.lua.LuaEngine;
 import com.toxicrain.rainengine.gui.GuiLuaWrapper;
 import com.toxicrain.rainengine.gui.GuiReg;
@@ -120,6 +115,7 @@ public class GameFactory {
         guiManager.registerGUI("Keybinds", (v) -> guiReg.drawKeyBindingInfo());
         guiManager.registerGUI("Inventory", (v) -> guiReg.drawInventory());
         guiManager.registerGUI("FileEditor", (v) -> guiReg.drawFileEditorUI());
+        guiManager.registerGUI("Console", (v) -> guiReg.drawConsole());
         guiManager.registerGUI("Debug", (v) -> guiReg.drawDebugInfo());
 
         guiManager.addActiveGUI("Inventory");

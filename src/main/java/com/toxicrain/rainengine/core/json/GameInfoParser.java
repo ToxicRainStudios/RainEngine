@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine.core.json;
 
-import com.toxicrain.rainengine.core.RainLogger;
+import com.toxicrain.rainengine.core.logging.RainLogger;
 import org.json.JSONObject;
 import org.json.JSONArray;
 

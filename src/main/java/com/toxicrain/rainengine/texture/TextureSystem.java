@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine.texture;
 
-import com.toxicrain.rainengine.core.RainLogger;
+import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.util.FileUtils;
 import org.lwjgl.system.MemoryStack;
 

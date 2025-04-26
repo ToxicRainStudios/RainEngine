@@ -1,4 +1,4 @@
-package com.toxicrain.rainengine.core;
+package com.toxicrain.rainengine.core.logging;
 
 import com.toxicrain.rainengine.core.json.GameInfoParser;
 import org.slf4j.Logger;
