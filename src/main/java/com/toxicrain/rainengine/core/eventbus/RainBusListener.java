@@ -26,6 +26,7 @@ import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
+import com.toxicrain.rainengine.util.FileUtils;
 import org.lwjgl.glfw.GLFWScrollCallback;
 
 import static com.toxicrain.rainengine.core.GameEngine.drawMap;

@@ -257,7 +257,7 @@ public class GuiReg {
     public void drawConsole() {
         GuiBuilder builder = new GuiBuilder();
 
-        builder.beginWindow("Engine Console");
+        builder.beginWindow("Engine Console", windowFlags);
 
         for (RainConsoleAppender.LogEntry log : RainConsoleAppender.getLogLines()) {
             switch (log.level.levelStr) {
