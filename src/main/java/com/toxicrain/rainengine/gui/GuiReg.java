@@ -205,6 +205,35 @@ public class GuiReg {
                 // End window context
                 .endWindow();
     }
+    public void drawDeathScreen() {
+
+        // Initialize the builder and use it for fluent window building
+        GuiBuilder builder = new GuiBuilder();
+
+        // Begin window with flags (transparent, immovable, etc.)
+        builder.beginWindow("Death Screen", windowFlags)
+
+                // Add the centered welcome text
+                .addTextCentered(GameFactory.langHelper.get("gui.deathscreen.death"), 50)
+
+                // Add the centered "Play" button
+                .pushFont("dos")
+                .addButtonCentered(GameFactory.langHelper.get("gui.deathscreen.exit"),  () -> runBoth(() ->GameFactory.guiManager.removeActiveGUI("DeathScreen"), () ->GameFactory.soundSystem.play(SoundSystem.getSound("removeMeClick"))), ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
+
+
+
+                // Add the centered "Exit" button
+                .addButtonCentered(GameFactory.langHelper.get("gui.deathscreen.quit"), () -> System.exit(0), ImGui.getIO().getDisplaySizeY() / 2 + 80, 20, 5)
+                .popFont()
+
+                // Add version info at the bottom-right corner
+                .addTextAtPosition("© 2024 " + GameInfoParser.gameMakers + " - " + GameInfoParser.gameVersion,
+                        ImGui.getIO().getDisplaySizeX() - ImGui.calcTextSize("© 2024 " + GameInfoParser.gameMakers + " - " + GameInfoParser.gameVersion).x - 10,
+                        ImGui.getIO().getDisplaySizeY() - ImGui.calcTextSize("© 2024 " + GameInfoParser.gameMakers + " - " + GameInfoParser.gameVersion).y - 10)
+
+                // End window context
+                .endWindow();
+    }
 
     public void drawInventory(){
         GuiBuilder builder = new GuiBuilder();

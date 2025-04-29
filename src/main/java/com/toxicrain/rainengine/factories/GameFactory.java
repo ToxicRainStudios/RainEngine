@@ -117,7 +117,7 @@ public class GameFactory {
         guiManager.registerGUI("FileEditor", (v) -> guiReg.drawFileEditorUI());
         guiManager.registerGUI("Console", (v) -> guiReg.drawConsole());
         guiManager.registerGUI("Debug", (v) -> guiReg.drawDebugInfo());
-
+        guiManager.registerGUI("DeathScreen", (v) -> guiReg.drawDeathScreen());
         guiManager.addActiveGUI("Inventory");
         guiManager.addActiveGUI("Debug");
         guiManager.addActiveGUI("Keybinds");
