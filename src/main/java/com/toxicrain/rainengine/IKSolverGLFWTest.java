@@ -1,6 +1,7 @@
 package com.toxicrain.rainengine;
 
 import com.toxicrain.rainengine.core.render.FabrikRenderer;
+import com.toxicrain.rainengine.texture.TextureSystem;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
@@ -112,7 +113,7 @@ public class IKSolverGLFWTest {
         // Create solver with the root joint
         solver = new FabrikSolver(torso);
         solver.setAllowStretching(true);
-        solver.setMaxIterations(100);
+        solver.setMaxIterations(25000);
         solver.setTolerance(0.5f);
 
         // Set joint stiffness for realism
@@ -146,6 +147,7 @@ public class IKSolverGLFWTest {
         leftWrist.maxStretchFactor = 1.3f;
         rightWrist.maxStretchFactor = 1.3f;
         head.maxStretchFactor = 1.2f;
+        TextureSystem.initTextures();
     }
 
     private void loop() {
