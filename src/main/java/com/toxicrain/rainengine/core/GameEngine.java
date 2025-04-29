@@ -125,12 +125,19 @@ public class GameEngine {
 
     }
 
+    public static boolean gamePaused = true;
+
     private static void loop(BatchRenderer batchRenderer) {
         // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
         while (!windowManager.shouldClose()) {
             DeltaTimeUtil.update();
 
-            GameFactory.eventBus.post(new GameUpdateEvent());
+            if(!gamePaused){
+                GameFactory.eventBus.post(new GameUpdateEvent());
+            }
+            else {
+                GameFactory.eventBus.post(new GamePausedUpdateEvent());
+            }
 
             render(batchRenderer);
         }

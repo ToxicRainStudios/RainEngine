@@ -1,6 +1,7 @@
 package com.toxicrain.rainengine.gui;
 
 import com.github.strubium.windowmanager.imgui.GuiBuilder;
+import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyInfoParser;
 import com.toxicrain.rainengine.core.json.SettingsInfoParser;
@@ -51,9 +52,12 @@ public class GuiReg {
             ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar |
             ImGuiWindowFlags.NoBackground;
 
-    public void runBoth(Runnable first, Runnable second) {
-        if (first != null) first.run();
-        if (second != null) second.run();
+    public void runAll(Runnable... tasks) {
+        for (Runnable task : tasks) {
+            if (task != null) {
+                task.run();
+            }
+        }
     }
 
 
@@ -185,7 +189,8 @@ public class GuiReg {
 
                 // Add the centered "Play" button
                 .pushFont("dos")
-                .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.play"),  () -> runBoth(() ->GameFactory.guiManager.removeActiveGUI("MainMenu"), () ->GameFactory.soundSystem.play(SoundSystem.getSound("removeMeClick"))), ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
+                .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.play"),  () -> runAll(() ->GameFactory.guiManager.removeActiveGUI("MainMenu"), () -> GameFactory.soundSystem.play(SoundSystem.getSound("removeMeClick"), () -> GameEngine.gamePaused = false)), ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
+
 
                 // Add the centered "Settings" button
                 .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.settings"), () -> {
@@ -218,7 +223,7 @@ public class GuiReg {
 
                 // Add the centered "Play" button
                 .pushFont("dos")
-                .addButtonCentered(GameFactory.langHelper.get("gui.deathscreen.exit"),  () -> runBoth(() ->GameFactory.guiManager.removeActiveGUI("DeathScreen"), () ->GameFactory.soundSystem.play(SoundSystem.getSound("removeMeClick"))), ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
+                .addButtonCentered(GameFactory.langHelper.get("gui.deathscreen.exit"),  () -> runAll(() ->GameFactory.guiManager.removeActiveGUI("DeathScreen"), () ->GameFactory.soundSystem.play(SoundSystem.getSound("removeMeClick"))), ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
 
 
 
