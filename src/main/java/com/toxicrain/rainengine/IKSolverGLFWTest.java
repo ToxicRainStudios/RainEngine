@@ -1,27 +1,30 @@
 package com.toxicrain.rainengine;
 
+import com.github.strubium.windowmanager.window.WindowManager;
 import com.toxicrain.rainengine.core.render.FabrikRenderer;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.stb.STBEasyFont;
 
 import java.nio.ByteBuffer;
 
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class IKSolverGLFWTest {
 
-    private long window;
+    public static WindowManager windowManager;
+
     private FabrikSolver solver;
     private FabrikSolver.Joint endEffector;
     private float mouseX = 0, mouseY = 0;
     private int width = 800, height = 600;
 
     public static void main(String[] args) {
+        windowManager = new WindowManager(800, 600, true);
+        windowManager.createWindow("IK Solver (GLFW)", true);
         new IKSolverGLFWTest().run();
     }
 
@@ -32,39 +35,28 @@ public class IKSolverGLFWTest {
     }
 
     private void init() {
-        if (!GLFW.glfwInit()) {
-            throw new IllegalStateException("Unable to initialize GLFW");
-        }
-
-        window = GLFW.glfwCreateWindow(width, height, "IK Solver (GLFW)", 0, 0);
-        if (window == 0) {
-            throw new RuntimeException("Failed to create GLFW window");
-        }
-
-        GLFW.glfwMakeContextCurrent(window);
-        GLFW.glfwSwapInterval(1); // Enable V-Sync
+        long window = windowManager.window;
         GL.createCapabilities();
 
-        // Get actual framebuffer size on creation
-        int[] fbWidth = new int[1];
-        int[] fbHeight = new int[1];
-        GLFW.glfwGetFramebufferSize(window, fbWidth, fbHeight);
-        width = fbWidth[0];
-        height = fbHeight[0];
+        // 1) Set your clear color once
+        glClearColor(0f, 0f, 0f, 1f);
 
-        // Resize callback
-        GLFW.glfwSetFramebufferSizeCallback(window, (win, w, h) -> {
+        // 2) Disable depth test since you're doing pure 2D text + lines
+        glDisable(GL_DEPTH_TEST);
+
+        // Get actual framebuffer size
+        int[] fbW = new int[1], fbH = new int[1];
+        glfwGetFramebufferSize(window, fbW, fbH);
+        width = fbW[0];
+        height = fbH[0];
+
+        glfwSetFramebufferSizeCallback(window, (win, w, h) -> {
             width = w;
             height = h;
         });
-
-        // Center window
-        GLFW.glfwSetWindowPos(window, 100, 100);
-
-        // Mouse position callback
-        GLFW.glfwSetCursorPosCallback(window, (window, xpos, ypos) -> {
-            mouseX = (float)xpos;
-            mouseY = (float)ypos;
+        glfwSetCursorPosCallback(window, (win, x, y) -> {
+            mouseX = (float) x;
+            mouseY = (float) y;
         });
 
         // Build solver for a more detailed human-like rig with multiple joints
@@ -115,6 +107,7 @@ public class IKSolverGLFWTest {
         solver.setAllowStretching(true);
         solver.setMaxIterations(25000);
         solver.setTolerance(0.5f);
+        // … set stiffness & stretch …
 
         // Set joint stiffness for realism
         root.stiffness = 1f;
@@ -151,63 +144,52 @@ public class IKSolverGLFWTest {
     }
 
     private void loop() {
-        while (!GLFW.glfwWindowShouldClose(window)) {
-            // Update
+        while (!windowManager.shouldClose()) {
             update();
-
-            // Render
             render();
-
-            GLFW.glfwSwapBuffers(window);
-            GLFW.glfwPollEvents();
+            windowManager.swapAndPoll();
         }
     }
 
     private void update() {
-
+        // your IK target / mouse → solver update
+        solver.solve(endEffector, new Vector2f(mouseX - width * 0.5f, height * 0.5f - mouseY));
     }
 
     private void render() {
+        // 3) Clear both color AND depth buffers
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Set up orthographic projection
         glViewport(0, 0, width, height);
-        glClear(GL_COLOR_BUFFER_BIT);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(-width/2.0, width/2.0, -height/2.0, height/2.0, -1, 1);
+        glOrtho(-width / 2.0, width / 2.0, -height / 2.0, height / 2.0, -1, 1);
 
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
-        // Draw IK chain
+        // Draw your chain
         FabrikRenderer.render(solver);
-
         traverseAndLabel(solver.getRoot());
     }
 
     private void cleanup() {
-        GLFW.glfwDestroyWindow(window);
-        GLFW.glfwTerminate();
+        windowManager.destroy();
     }
 
     private void traverseAndLabel(FabrikSolver.Joint joint) {
-        // Position of the joint in world coords:
-        float x = joint.position.x;
-        float y = joint.position.y;
-
-
-        // Render its name just above/right of it
+        float x = joint.position.x, y = joint.position.y;
         renderText(joint == endEffector ? "endEffector" : joint.toString(), x + 5, y + 5);
-
-        // Recurse children
-        for (FabrikSolver.Joint child : joint.children) {
-            traverseAndLabel(child);
-        }
+        for (FabrikSolver.Joint c : joint.children)
+            traverseAndLabel(c);
     }
+
     private void renderText(String text, float worldX, float worldY) {
-        // 1) Convert your world coords (-w/2..+w/2, -h/2..+h/2) → pixel coords (0..w, 0..h)
+        // Convert to pixel coords
         float px = worldX + width * 0.5f;
         float py = height * 0.5f - worldY;
 
-        // 2) Push a 2D pixel projection
         glMatrixMode(GL_PROJECTION);
         glPushMatrix();
         glLoadIdentity();
@@ -217,28 +199,22 @@ public class IKSolverGLFWTest {
         glPushMatrix();
         glLoadIdentity();
 
-        // (Optional) enable blending if you want antialiased font edges
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        // 3) Print into a ByteBuffer
-        ByteBuffer charBuffer = BufferUtils.createByteBuffer(text.length() * 270);
-        int quads = STBEasyFont.stb_easy_font_print(px, py, text, null, charBuffer);
+        ByteBuffer buf = BufferUtils.createByteBuffer(text.length() * 270);
+        int quads = STBEasyFont.stb_easy_font_print(px, py, text, null, buf);
 
-        // 4) Draw them
         glEnableClientState(GL_VERTEX_ARRAY);
-        glVertexPointer(2, GL_FLOAT, 16, charBuffer);
+        glVertexPointer(2, GL_FLOAT, 16, buf);
         glDrawArrays(GL_QUADS, 0, quads * 4);
         glDisableClientState(GL_VERTEX_ARRAY);
 
         glDisable(GL_BLEND);
 
-        // 5) Pop back to your old projection / modelview
-        glPopMatrix();                 // MODELVIEW
+        glPopMatrix();                        // MODELVIEW
         glMatrixMode(GL_PROJECTION);
-        glPopMatrix();                 // PROJECTION
-        glMatrixMode(GL_MODELVIEW);    // restore to modelview for subsequent draws
+        glPopMatrix();                        // PROJECTION
+        glMatrixMode(GL_MODELVIEW);
     }
-
-
 }
