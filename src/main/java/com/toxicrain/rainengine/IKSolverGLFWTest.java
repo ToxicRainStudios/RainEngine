@@ -1,7 +1,13 @@
 package com.toxicrain.rainengine;
 
+import com.github.strubium.windowmanager.imgui.GuiManager;
+import com.github.strubium.windowmanager.imgui.ImguiHandler;
 import com.github.strubium.windowmanager.window.WindowManager;
+import com.toxicrain.rainengine.core.eventbus.events.render.RenderGuiEvent;
 import com.toxicrain.rainengine.core.render.FabrikRenderer;
+import com.toxicrain.rainengine.factories.GameFactory;
+import com.toxicrain.rainengine.gui.GuiReg;
+import com.toxicrain.rainengine.gui.SolverGuiReg;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
@@ -10,12 +16,16 @@ import org.lwjgl.stb.STBEasyFont;
 
 import java.nio.ByteBuffer;
 
+import static com.toxicrain.rainengine.core.GameEngine.windowManager;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class IKSolverGLFWTest {
 
     public static WindowManager windowManager;
+    public static ImguiHandler imguiApp;
+    public static GuiManager guiManager;
+    public static SolverGuiReg guiReg;
 
     private FabrikSolver solver;
     private FabrikSolver.Joint endEffector;
@@ -25,6 +35,14 @@ public class IKSolverGLFWTest {
     public static void main(String[] args) {
         windowManager = new WindowManager(800, 600, true);
         windowManager.createWindow("IK Solver (GLFW)", true);
+        imguiApp = new ImguiHandler(windowManager);
+        imguiApp.initialize("#version 130");
+        guiManager = new GuiManager();
+        guiReg = new SolverGuiReg();
+        guiManager.registerGUI("Debug", (v) -> guiReg.drawDebugInfo());
+        guiManager.addActiveGUI("Debug");
+
+
         new IKSolverGLFWTest().run();
     }
 
@@ -172,6 +190,12 @@ public class IKSolverGLFWTest {
         // Draw your chain
         FabrikRenderer.render(solver);
         traverseAndLabel(solver.getRoot());
+
+        imguiApp.handleInput(windowManager.window);
+        imguiApp.newFrame();
+        guiManager.render();
+
+        imguiApp.render();
     }
 
     private void cleanup() {
