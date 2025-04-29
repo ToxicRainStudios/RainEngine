@@ -15,15 +15,27 @@ public class FabrikSolver {
         public float stiffness = 1.0f; // 1 = fully rigid, 0 = very floppy
         public float maxStretchFactor = 1.0f; // 1 = no stretch, 1.2 = 20% stretch allowed
 
-        public Joint(Vector2f position) {
+        // New properties
+        public float minAngle = -180f; // degrees, relative to parent
+        public float maxAngle = 180f;  // degrees, relative to parent
+        public float mass = 1.0f; // 1.0 = normal weight
+        private String name;
+
+        public Joint(Vector2f position, String name) {
             this.position = new Vector2f(position);
             this.restPosition = new Vector2f(position);
+            this.name = name;
         }
 
         public void addChild(Joint child) {
             child.parent = this;
             child.lengthToParent = child.position.distance(this.position);
             children.add(child);
+        }
+
+        @Override
+        public String toString() {
+            return this.name;
         }
     }
 
@@ -59,7 +71,6 @@ public class FabrikSolver {
     }
 
     private void forward(Joint joint, Vector2f target) {
-        // Move end effector to target
         joint.position.set(target);
 
         if (joint.parent != null) {
@@ -67,7 +78,6 @@ public class FabrikSolver {
             float distance = dir.length();
             dir.normalize();
 
-            // Determine target length
             float desiredLength = joint.lengthToParent;
             if (allowStretching) {
                 desiredLength *= joint.maxStretchFactor;
@@ -75,15 +85,20 @@ public class FabrikSolver {
 
             Vector2f newParentPos = new Vector2f(joint.position).add(dir.mul(desiredLength));
 
-            // Stiffness interpolation
-            joint.parent.position.lerp(newParentPos, 1.0f - joint.parent.stiffness);
+            // Mass influences stiffness (heavier = slower interpolation)
+            float effectiveStiffness = joint.parent.stiffness / joint.parent.mass;
+            effectiveStiffness = Math.min(Math.max(effectiveStiffness, 0f), 1f);
+
+            joint.parent.position.lerp(newParentPos, 1.0f - effectiveStiffness);
+
+            // Apply constraint
+            applyConstraints(joint.parent);
 
             forward(joint.parent, joint.parent.position);
         }
     }
 
     private void backward(Joint joint, Vector2f position) {
-        // Move joint to position
         joint.position.set(position);
 
         for (Joint child : joint.children) {
@@ -98,11 +113,54 @@ public class FabrikSolver {
 
             Vector2f newChildPos = new Vector2f(joint.position).add(dir.mul(desiredLength));
 
-            // Stiffness interpolation
-            child.position.lerp(newChildPos, 1.0f - child.stiffness);
+            // Mass influences stiffness
+            float effectiveStiffness = child.stiffness / child.mass;
+            effectiveStiffness = Math.min(Math.max(effectiveStiffness, 0f), 1f);
+
+            child.position.lerp(newChildPos, 1.0f - effectiveStiffness);
+
+            // Apply constraint
+            applyConstraints(child);
 
             backward(child, child.position);
         }
+    }
+
+    private void applyConstraints(Joint joint) {
+        if (joint.parent == null) return;
+
+        Vector2f parentDir = new Vector2f(joint.position).sub(joint.parent.position).normalize();
+        Vector2f restDir = new Vector2f(joint.restPosition).sub(joint.parent.restPosition).normalize();
+
+        float angle = (float) Math.toDegrees(Math.atan2(parentDir.y, parentDir.x) - Math.atan2(restDir.y, restDir.x));
+        angle = normalizeAngle(angle);
+
+        if (angle < joint.minAngle) {
+            rotateAroundParent(joint, joint.minAngle - angle);
+        } else if (angle > joint.maxAngle) {
+            rotateAroundParent(joint, joint.maxAngle - angle);
+        }
+    }
+
+    private void rotateAroundParent(Joint joint, float angleDegrees) {
+        Vector2f dir = new Vector2f(joint.position).sub(joint.parent.position);
+        float length = dir.length();
+        double angleRad = Math.toRadians(angleDegrees);
+
+        float cos = (float) Math.cos(angleRad);
+        float sin = (float) Math.sin(angleRad);
+
+        float rotatedX = dir.x * cos - dir.y * sin;
+        float rotatedY = dir.x * sin + dir.y * cos;
+
+        Vector2f rotatedDir = new Vector2f(rotatedX, rotatedY).normalize().mul(length);
+        joint.position.set(joint.parent.position.x + rotatedDir.x, joint.parent.position.y + rotatedDir.y);
+    }
+
+    private float normalizeAngle(float angle) {
+        while (angle > 180f) angle -= 360f;
+        while (angle < -180f) angle += 360f;
+        return angle;
     }
 
     public void resetPose() {
