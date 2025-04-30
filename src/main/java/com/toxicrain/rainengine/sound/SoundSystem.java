@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.sound;
 
+import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.eventbus.events.load.sound.SoundInfoLoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.load.sound.SoundSystemLoadEvent;
@@ -35,7 +36,7 @@ public class SoundSystem {
     private boolean isFading = false;
 
     public SoundSystem(){
-        GameFactory.eventBus.post(new SoundSystemLoadEvent(this));
+        SmeagleBus.getInstance().post(new SoundSystemLoadEvent(this));
     }
 
     // Map to store all loaded sounds with file names
@@ -171,7 +172,7 @@ public class SoundSystem {
         SoundInfo soundInfo = new SoundInfo(wavData, bufferId);
 
         // Return the SoundInfo containing the WavInfo and bufferId
-        GameFactory.eventBus.post(new SoundInfoLoadEvent(soundInfo));
+        SmeagleBus.getInstance().post(new SoundInfoLoadEvent(soundInfo));
 
         return soundInfo;
     }

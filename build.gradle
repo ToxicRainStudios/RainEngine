@@ -58,6 +58,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.28' // Necessary for annotation processing
 
     implementation 'com.github.strubium:JavaWindowManager:1.0.2'
+    implementation 'com.github.strubium:SmeagleBus:1.0.0'
 
     implementation "io.reactivex.rxjava3:rxjava:3.1.10"
 

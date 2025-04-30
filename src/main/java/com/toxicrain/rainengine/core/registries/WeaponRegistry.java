@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.core.registries;
 
+import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.artifacts.Weapon;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.eventbus.events.WeaponRegisterEvent;
@@ -15,7 +16,7 @@ public class WeaponRegistry {
         if (WEAPONS.containsKey(weapon.getName())) {
             throw new IllegalArgumentException("Weapon '" + weapon.getName() + "' is already registered!");
         }
-        GameFactory.eventBus.post(new WeaponRegisterEvent(weapon));
+        SmeagleBus.getInstance().post(new WeaponRegisterEvent(weapon));
 
         RainLogger.RAIN_LOGGER.info("Registering: {}", weapon.getName());
         WEAPONS.put(weapon.getName(), weapon);

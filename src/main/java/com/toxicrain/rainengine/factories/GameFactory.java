@@ -3,7 +3,6 @@ package com.toxicrain.rainengine.factories;
 import com.github.strubium.windowmanager.imgui.GuiManager;
 import com.github.strubium.windowmanager.imgui.ImguiHandler;
 import com.toxicrain.rainengine.artifacts.*;
-import com.toxicrain.rainengine.core.eventbus.RainBus;
 import com.toxicrain.rainengine.core.registries.manager.NPCManager;
 import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
 import com.toxicrain.rainengine.core.LangHelper;
@@ -27,7 +26,6 @@ import static com.toxicrain.rainengine.core.GameEngine.windowManager;
 
 public class GameFactory {
 
-    public static RainBus eventBus;
     public static ImguiHandler imguiApp;
     public static GuiReg guiReg;
     public static SoundSystem soundSystem;
@@ -43,10 +41,6 @@ public class GameFactory {
     public static LangHelper langHelper;
 
     public static NPCManager npcManager;
-
-    public static void loadEventBus(){
-        eventBus = new RainBus();
-    }
 
     public static void load(){
         player = new Player(TextureSystem.getTexture("playerTexture"), false);

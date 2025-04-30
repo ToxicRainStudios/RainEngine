@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.core;
 
+import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.github.strubium.windowmanager.window.WindowManager;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
@@ -44,16 +45,15 @@ public class GameEngine {
         doVersionCheck();
 
         RainLogger.RAIN_LOGGER.info("Loading Event Bus");
-        GameFactory.loadEventBus();
         RainBusListener.addEventListeners();
 
-        GameFactory.eventBus.post(new PreInitLoadEvent());
+        SmeagleBus.getInstance().post(new PreInitLoadEvent());
 
-        GameFactory.eventBus.post(new InitLoadEvent());
+        SmeagleBus.getInstance().post(new InitLoadEvent());
 
-        GameFactory.eventBus.post(new ManagerLoadEvent());
+        SmeagleBus.getInstance().post(new ManagerLoadEvent());
 
-        GameFactory.eventBus.post(new PostInitLoadEvent());
+        SmeagleBus.getInstance().post(new PostInitLoadEvent());
 
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
@@ -104,7 +104,7 @@ public class GameEngine {
         // Begin the batch
         batchRenderer.beginBatch();
 
-        GameFactory.eventBus.post(new DrawMapEvent(batchRenderer));
+        SmeagleBus.getInstance().post(new DrawMapEvent(batchRenderer));
 
         GameFactory.npcManager.render(batchRenderer);
         GameFactory.projectileManager.render(batchRenderer);
@@ -116,7 +116,7 @@ public class GameEngine {
         GameFactory.imguiApp.handleInput(windowManager.window);
         GameFactory.imguiApp.newFrame();
 
-        GameFactory.eventBus.post(new RenderGuiEvent());
+        SmeagleBus.getInstance().post(new RenderGuiEvent());
 
         GameFactory.imguiApp.render();
 
@@ -133,10 +133,10 @@ public class GameEngine {
             DeltaTimeUtil.update();
 
             if(!gamePaused){
-                GameFactory.eventBus.post(new GameUpdateEvent());
+                SmeagleBus.getInstance().post(new GameUpdateEvent());
             }
             else {
-                GameFactory.eventBus.post(new GamePausedUpdateEvent());
+                SmeagleBus.getInstance().post(new GamePausedUpdateEvent());
             }
 
             render(batchRenderer);

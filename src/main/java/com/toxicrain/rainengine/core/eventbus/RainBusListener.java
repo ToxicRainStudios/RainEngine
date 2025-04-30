@@ -2,6 +2,7 @@ package com.toxicrain.rainengine.core.eventbus;
 
 import com.github.strubium.windowmanager.imgui.GuiManager;
 import com.github.strubium.windowmanager.window.WindowManager;
+import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.GameLoader;
 import com.toxicrain.rainengine.core.logging.RainLogger;
@@ -26,7 +27,6 @@ import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
-import com.toxicrain.rainengine.util.FileUtils;
 import org.lwjgl.glfw.GLFWScrollCallback;
 
 import static com.toxicrain.rainengine.core.GameEngine.drawMap;
@@ -43,14 +43,14 @@ public class RainBusListener {
 
     public static void addEventListeners(){
 
-        GameFactory.eventBus.listen(PreInitLoadEvent.class)
+        SmeagleBus.getInstance().listen(PreInitLoadEvent.class)
                 .subscribe(event -> {
                     RainLogger.RAIN_LOGGER.debug("Looking for: {}", GameInfoParser.gameMainClass);
                     GameLoader.loadAndInitGame(GameInfoParser.gameMainClass);
                 });
 
 
-        GameFactory.eventBus.listen(InitLoadEvent.class)
+        SmeagleBus.getInstance().listen(InitLoadEvent.class)
                 .subscribe(event -> {
                     RainLogger.RAIN_LOGGER.info("Loading Lua");
                     GameFactory.loadLua();
@@ -67,14 +67,14 @@ public class RainBusListener {
 
                     // Fire the KeyPressEvent when a key is pressed
                     glfwSetKeyCallback(GameEngine.windowManager.window, (windowHandle, key, scancode, action, mods) -> {
-                        GameFactory.eventBus.post(new KeyPressEvent(key, action));
+                        SmeagleBus.getInstance().post(new KeyPressEvent(key, action));
                     });
 
                     // Create and set the scroll callback
                     glfwSetScrollCallback(GameEngine.windowManager.window, new GLFWScrollCallback() {
                         @Override
                         public void invoke(long window, double xoffset, double yoffset) {
-                            GameFactory.eventBus.post(new ScrollEvent((float) yoffset));
+                            SmeagleBus.getInstance().post(new ScrollEvent((float) yoffset));
                         }
                     });
 
@@ -106,7 +106,7 @@ public class RainBusListener {
                     glViewport(0, 0, (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight());
                 });
 
-        GameFactory.eventBus.listen(PostInitLoadEvent.class)
+        SmeagleBus.getInstance().listen(PostInitLoadEvent.class)
                 .subscribe(event -> {
                     RainLogger.RAIN_LOGGER.info("Initializing SoundSystem");
                     GameFactory.loadSounds();
@@ -128,14 +128,14 @@ public class RainBusListener {
                     GameFactory.musicManager.setNextTrack("CALM1");
                 });
 
-        GameFactory.eventBus.listen(ManagerLoadEvent.class)
+        SmeagleBus.getInstance().listen(ManagerLoadEvent.class)
                 .subscribe(event -> {
                     GameFactory.projectileManager = new ProjectileManager();
                     GameFactory.npcManager = new NPCManager();
                     GameFactory.guiManager = new GuiManager();
                 });
 
-        GameFactory.eventBus.listen(KeyPressEvent.class)
+        SmeagleBus.getInstance().listen(KeyPressEvent.class)
                 .subscribe(event -> {
                     int keycode = event.keyCode;
                     if (KeyMap.keyBinds.containsKey(keycode)) {
@@ -143,7 +143,7 @@ public class RainBusListener {
                     }
                 });
 
-        GameFactory.eventBus.listen(GameUpdateEvent.class)
+        SmeagleBus.getInstance().listen(GameUpdateEvent.class)
                 .subscribe(event -> {
 
                     float deltaTime = DeltaTimeUtil.getDeltaTime();
@@ -160,18 +160,18 @@ public class RainBusListener {
                     LuaManager.executeTickScripts();
                 });
 
-        GameFactory.eventBus.listen(DrawMapEvent.class)
+        SmeagleBus.getInstance().listen(DrawMapEvent.class)
                 .subscribe(event -> {
                     drawMap(event.getBatchRenderer());
                 });
 
-        GameFactory.eventBus.listen(RenderGuiEvent.class)
+        SmeagleBus.getInstance().listen(RenderGuiEvent.class)
                 .subscribe(event -> {
                     GameFactory.guiManager.render();
                     LuaManager.executeAllImguiScripts();
                 });
 
-        GameFactory.eventBus.listen(ScrollEvent.class)
+        SmeagleBus.getInstance().listen(ScrollEvent.class)
                 .subscribe(event -> {
                     GameFactory.player.scrollOffset = event.yOffeset;
                 });

@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.core.render;
 
+import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.eventbus.events.render.batchrenderer.BuildBatchRendererEvent;
 import com.toxicrain.rainengine.core.eventbus.events.render.batchrenderer.RenderBatchRendererEvent;
@@ -51,7 +52,7 @@ public class BatchRenderer {
         texCoordVboId = glGenBuffers();
         colorVboId = glGenBuffers();
 
-        GameFactory.eventBus.post(new BuildBatchRendererEvent(this));
+        SmeagleBus.getInstance().post(new BuildBatchRendererEvent(this));
     }
 
     private static class TextureVertexInfo {
@@ -266,7 +267,7 @@ public class BatchRenderer {
         texCoordBuffer.clear();
         colorBuffer.clear();
 
-        GameFactory.eventBus.post(new RenderBatchRendererEvent(this));
+        SmeagleBus.getInstance().post(new RenderBatchRendererEvent(this));
 
         for (TextureVertexInfo info : textureVertexInfos) {
             // Check if we need to switch to a new texture

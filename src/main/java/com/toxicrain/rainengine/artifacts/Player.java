@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.artifacts;
 
+import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.datatypes.Size;
@@ -139,7 +140,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         getMouse();
         processInput(deltaTime);
 
-        GameFactory.eventBus.post(new ArtifactUpdateEvent("player"));
+        SmeagleBus.getInstance().post(new ArtifactUpdateEvent("player"));
     }
 
     float[] getMouse() {
