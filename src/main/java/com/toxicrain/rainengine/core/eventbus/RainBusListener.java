@@ -24,7 +24,11 @@ import com.toxicrain.rainengine.core.lua.LuaManager;
 import com.toxicrain.rainengine.core.registries.manager.NPCManager;
 import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
 import com.toxicrain.rainengine.core.registries.tiles.Tile;
+import com.toxicrain.rainengine.core.resources.ResourceManager;
 import com.toxicrain.rainengine.factories.GameFactory;
+import com.toxicrain.rainengine.sound.SoundInfo;
+import com.toxicrain.rainengine.sound.SoundSystem;
+import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import org.lwjgl.glfw.GLFWScrollCallback;
@@ -58,9 +62,10 @@ public class RainBusListener {
                     LuaManager.executeInitScripts();
                     Tile.combineTouchingAABBs();
 
+                    ResourceManager.register(TextureInfo.class, TextureSystem::loadTexture);
+                    ResourceManager.register(SoundInfo.class, SoundSystem::loadSound);
+
                     GameEngine.windowManager = new WindowManager((int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight(), true);
-
-
 
                     RainLogger.RAIN_LOGGER.info("Creating Game Window");
                     GameEngine.windowManager.createWindow(GameInfoParser.defaultWindowName, SettingsInfoParser.getInstance().getVsync());
@@ -74,7 +79,7 @@ public class RainBusListener {
                     glfwSetScrollCallback(GameEngine.windowManager.window, new GLFWScrollCallback() {
                         @Override
                         public void invoke(long window, double xoffset, double yoffset) {
-                            SmeagleBus.getInstance().post(new ScrollEvent((float) yoffset));
+                            SmeagleBus.getInstance().post(new ScrollEvent((float) xoffset, (float) yoffset));
                         }
                     });
 

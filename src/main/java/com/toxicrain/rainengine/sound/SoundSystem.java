@@ -1,10 +1,11 @@
 package com.toxicrain.rainengine.sound;
 
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
-import com.toxicrain.rainengine.core.logging.RainLogger;
+import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.eventbus.events.load.sound.SoundInfoLoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.load.sound.SoundSystemLoadEvent;
-import com.toxicrain.rainengine.factories.GameFactory;
+import com.toxicrain.rainengine.core.logging.RainLogger;
+import com.toxicrain.rainengine.core.resources.ResourceManager;
 import com.toxicrain.rainengine.util.FileUtils;
 import lombok.Getter;
 import org.lwjgl.openal.AL;
@@ -16,11 +17,10 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
 import java.util.LinkedList;
+import java.util.Queue;
 
 import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.ALC10.*;
@@ -30,61 +30,59 @@ public class SoundSystem {
     private long device;
     private long context;
 
-    @Getter private Queue<Integer> availableSources;
-    private static final int MAX_SOURCES = 32;  // Max number of sources allowed
-    private float currentVolume = 1.0f;  // Default volume (full)
+    @Getter
+    private Queue<Integer> availableSources;
+    private static final int MAX_SOURCES = 32;
+    private float currentVolume = 1.0f;
     private boolean isFading = false;
 
-    public SoundSystem(){
+    public SoundSystem() {
         SmeagleBus.getInstance().post(new SoundSystemLoadEvent(this));
     }
 
-    // Map to store all loaded sounds with file names
-    private static final Map<String, SoundInfo> sounds = new HashMap<>();
-
     /**
-     * Init the sounds by dynamically loading all images from the /sound folder
+     * Loads all sounds from the /sound directory into ResourceManager
      */
     public static void initSounds() {
-        String soundDirectory = FileUtils.getCurrentWorkingDirectory("resources/sound"); // Directory containing sounds
+        String soundDirectory = FileUtils.getCurrentWorkingDirectory("resources/sound");
 
         try {
-            // Get all files in the images directory
             Files.walk(Paths.get(soundDirectory))
-                    .filter(Files::isRegularFile) // Only regular files, not directories
-                    .filter(path -> {
-                        // Filter out files that are images (png, jpg, jpeg)
-                        String fileName = path.getFileName().toString().toLowerCase();
-                        return fileName.endsWith(".wav");
-                    })
+                    .filter(Files::isRegularFile)
+                    .filter(path -> path.getFileName().toString().toLowerCase().endsWith(".wav"))
                     .forEach(path -> {
-                        // Load each sound
                         String filePath = path.toString();
-                        SoundInfo sound = loadSound(filePath);
-                        // Store the sound with its file name (without extension) as the key
-                        String soundName = path.getFileName().toString().replaceFirst("[.][^.]+$", ""); // remove extension
-                        sounds.put(soundName, sound);
-                        RainLogger.RAIN_LOGGER.info("Loaded sound: {}", soundName);
+                        Resource location = computeResourceLocation(soundDirectory, path);
+
+                        try {
+                            ResourceManager.load(SoundInfo.class, location, filePath);
+                        } catch (Exception e) {
+                            RainLogger.RAIN_LOGGER.error("Failed to load sound: {}", path.getFileName(), e);
+                        }
                     });
         } catch (IOException e) {
             throw new RuntimeException("Failed to load sounds from directory: " + soundDirectory, e);
         }
 
-        RainLogger.RAIN_LOGGER.info("Loaded {} sounds.", sounds.size());
-
+        RainLogger.RAIN_LOGGER.info("Sound loading complete.");
     }
 
     /**
-     * Retrieve a sound by its name (without extension)
-     *
-     * @param soundName Name of the sound file (without extension)
-     * @return SoundInfo object for the corresponding sound, or null if not found
+     * Retrieve a sound by Resource
      */
-    public static SoundInfo getSound(String soundName) {
-        if (!sounds.containsKey(soundName)) {
-            throw new IllegalStateException("Cannot find sound: " + soundName);
+    public static SoundInfo getSound(Resource location) {
+        SoundInfo sound = ResourceManager.get(SoundInfo.class, location);
+        if (sound == null) {
+            throw new IllegalStateException("Cannot find sound: " + location);
         }
-        return sounds.get(soundName);
+        return sound;
+    }
+
+    /**
+     * Retrieve a sound by string path
+     */
+    public static SoundInfo getSound(String location) {
+        return getSound(new Resource(location));
     }
 
     public void init() {
@@ -93,31 +91,26 @@ public class SoundSystem {
     }
 
     private void initOpenAL() {
-        // Open the default device
         device = alcOpenDevice((ByteBuffer) null);
         if (device == NULL) {
             throw new IllegalStateException("Failed to open the default OpenAL device.");
         }
 
-        // Create the OpenAL context
         context = alcCreateContext(device, (IntBuffer) null);
         if (context == NULL) {
             throw new IllegalStateException("Failed to create OpenAL context.");
         }
 
-        // Make the context current
         if (!alcMakeContextCurrent(context)) {
             throw new IllegalStateException("Failed to make OpenAL context current.");
         }
 
-        // Create OpenAL capabilities
         ALCCapabilities alcCapabilities = ALC.createCapabilities(device);
         AL.createCapabilities(alcCapabilities);
     }
 
     private void initializeSourcePool() {
         availableSources = new LinkedList<>();
-        // Pre-generate a pool of sources
         for (int i = 0; i < MAX_SOURCES; i++) {
             int sourceId = alGenSources();
             if (sourceId == 0) {
@@ -127,11 +120,6 @@ public class SoundSystem {
         }
     }
 
-    /**
-     * Get an available source from the pool
-     *
-     * @return sourceId
-     */
     private int getAvailableSource() {
         Integer sourceId = availableSources.poll();
         if (sourceId == null) {
@@ -140,9 +128,6 @@ public class SoundSystem {
         return sourceId;
     }
 
-    /**
-     * Return the source to the pool once it's no longer needed
-     */
     public void releaseSource(int sourceId) {
         availableSources.offer(sourceId);
     }
@@ -170,18 +155,12 @@ public class SoundSystem {
         }
 
         SoundInfo soundInfo = new SoundInfo(wavData, bufferId);
-
-        // Return the SoundInfo containing the WavInfo and bufferId
         SmeagleBus.getInstance().post(new SoundInfoLoadEvent(soundInfo));
-
         return soundInfo;
     }
 
     public void play(SoundInfo soundInfo) {
-        // Get an available source from the pool
         int sourceId = getAvailableSource();
-
-        // Set the buffer for the source and play the sound
         alSourcei(sourceId, AL_BUFFER, soundInfo.bufferId);
         alSourcePlay(sourceId);
     }
@@ -199,17 +178,16 @@ public class SoundSystem {
         alSourcei(sourceId, AL_BUFFER, soundInfo.bufferId);
         alSourcePlay(sourceId);
 
-        // Start a thread to monitor the sound playback
         new Thread(() -> {
             int state;
             do {
                 state = alGetSourcei(sourceId, AL_SOURCE_STATE);
                 try {
-                    Thread.sleep(10); // check every 10ms
-                } catch (InterruptedException ignored) {}
+                    Thread.sleep(10);
+                } catch (InterruptedException ignored) {
+                }
             } while (state == AL_PLAYING);
 
-            // Cleanup after playback finishes
             releaseSource(sourceId);
             if (onEnd != null) {
                 onEnd.run();
@@ -217,14 +195,12 @@ public class SoundSystem {
         }, "SoundPlaybackMonitor").start();
     }
 
-
     public void stop() {
-        // Stop all active sounds
         for (Integer sourceId : availableSources) {
             int state = alGetSourcei(sourceId, AL_SOURCE_STATE);
             if (state == AL_PLAYING) {
                 alSourceStop(sourceId);
-                releaseSource(sourceId);  // Return the source to the pool after stopping
+                releaseSource(sourceId);
             }
         }
     }
@@ -264,16 +240,16 @@ public class SoundSystem {
             try {
                 int sourceId = getAvailableSource();
                 alSourcei(sourceId, AL_BUFFER, soundInfo.bufferId);
-                setVolume(0.0f);  // Start at zero volume
+                setVolume(0.0f);
                 alSourcePlay(sourceId);
                 isFading = true;
 
-                float increment = 1.0f / (duration * 1000 / 10);  // Every 10ms, increase volume
+                float increment = 1.0f / (duration * 1000 / 10);
 
                 while (currentVolume < 1.0f && isFading) {
                     currentVolume = Math.min(1.0f, currentVolume + increment);
                     setVolume(currentVolume);
-                    Thread.sleep(10);  // Update volume every 10ms
+                    Thread.sleep(10);
                 }
 
                 releaseSource(sourceId);
@@ -288,18 +264,18 @@ public class SoundSystem {
         new Thread(() -> {
             try {
                 isFading = true;
-                float decrement = currentVolume / (duration * 1000 / 10);  // Every 10ms, decrease volume
+                float decrement = currentVolume / (duration * 1000 / 10);
 
                 while (currentVolume > 0.0f && isFading) {
                     currentVolume = Math.max(0.0f, currentVolume - decrement);
                     setVolume(currentVolume);
-                    Thread.sleep(10);  // Update volume every 10ms
+                    Thread.sleep(10);
                 }
 
                 stop();
                 isFading = false;
             } catch (InterruptedException e) {
-                RainLogger.RAIN_LOGGER.error("Fade-out interrupted");
+                RainLogger.RAIN_LOGGER.error("Fade-out interrupted.");
             }
         }).start();
     }
@@ -313,5 +289,23 @@ public class SoundSystem {
 
     public float getVolume() {
         return currentVolume;
+    }
+
+    private static Resource computeResourceLocation(String baseDirectory, Path path) {
+        Path relativePath = Paths.get(baseDirectory).relativize(path);
+        String[] pathParts = relativePath.toString().replace("\\", "/").split("/");
+
+        String namespace;
+        String resourcePath;
+
+        if (pathParts.length >= 2) {
+            namespace = pathParts[0];
+            resourcePath = String.join("/", pathParts).substring(namespace.length() + 1).replaceFirst("[.][^.]+$", "");
+        } else {
+            namespace = "rainengine";
+            resourcePath = relativePath.toString().replace("\\", "/").replaceFirst("[.][^.]+$", "");
+        }
+
+        return new Resource(namespace, resourcePath);
     }
 }

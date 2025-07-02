@@ -1,6 +1,8 @@
 package com.toxicrain.rainengine.texture;
 
+import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.logging.RainLogger;
+import com.toxicrain.rainengine.core.resources.ResourceManager;
 import com.toxicrain.rainengine.util.FileUtils;
 import org.lwjgl.system.MemoryStack;
 
@@ -8,8 +10,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.file.*;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
@@ -17,63 +17,58 @@ import static org.lwjgl.stb.STBImage.*;
 
 public class TextureSystem {
 
-    // Map to store all loaded textures with file names
-    private static final Map<String, TextureInfo> TEXTURE_INFO_MAP = new HashMap<>();
 
     /**
-     * Init the textures by dynamically loading all images from the /images folder
+     * Load all textures from the /images folder into the ResourceManager
      */
     public static void initTextures() {
-        String textureDirectory = FileUtils.getCurrentWorkingDirectory("resources/images"); // Directory containing textures
+        String textureDirectory = FileUtils.getCurrentWorkingDirectory("resources/images");
 
         try {
-            // Get all files in the images directory
             Files.walk(Paths.get(textureDirectory))
-                    .filter(Files::isRegularFile) // Only regular files, not directories
+                    .filter(Files::isRegularFile)
                     .filter(path -> {
-                        // Filter out files that are images (png, jpg, jpeg)
                         String fileName = path.getFileName().toString().toLowerCase();
                         return fileName.endsWith(".png") || fileName.endsWith(".jpg") || fileName.endsWith(".jpeg");
                     })
                     .forEach(path -> {
-                        // Load each texture
                         String filePath = path.toString();
-                        TextureInfo texture = loadTexture(filePath);
-                        if (texture != null) {
-                            // Store the texture with its file name (without extension) as the key
-                            String textureName = path.getFileName().toString().replaceFirst("[.][^.]+$", ""); // remove extension
-                            TEXTURE_INFO_MAP.put(textureName, texture);
-                            RainLogger.RAIN_LOGGER.info("Loaded texture: {}", textureName);
-                        } else {
-                            RainLogger.RAIN_LOGGER.error("Failed to load texture: {}", path.getFileName());
+                        Resource location = computeResourceLocation(textureDirectory, path);
+
+                        try {
+                            ResourceManager.load(TextureInfo.class, location, filePath);
+                        } catch (Exception e) {
+                            RainLogger.RAIN_LOGGER.error("Failed to load texture: {}", path.getFileName(), e);
                         }
                     });
         } catch (IOException e) {
             throw new RuntimeException("Failed to load textures from directory: " + textureDirectory, e);
         }
 
-        RainLogger.RAIN_LOGGER.info("Loaded {} textures.", TEXTURE_INFO_MAP.size());
+        RainLogger.RAIN_LOGGER.info("Texture loading complete.");
     }
 
     /**
-     * Retrieve a texture by its name (without extension)
-     *
-     * @param textureName Name of the texture file (without extension)
-     * @return TextureInfo object for the corresponding texture, or null if not found
+     * Retrieve a texture by its Resource
      */
-    public static TextureInfo getTexture(String textureName) {
-        if (!TEXTURE_INFO_MAP.containsKey(textureName)) {
-            RainLogger.RAIN_LOGGER.error("Texture not found: {}", textureName);
-            return getTexture("missing");  // Return null or throw an exception if texture is not found
+    public static TextureInfo getTexture(Resource location) {
+        TextureInfo texture = ResourceManager.get(TextureInfo.class, location);
+        if (texture == null) {
+            RainLogger.RAIN_LOGGER.error("Texture not found: {}", location);
+            return ResourceManager.get(TextureInfo.class, new Resource("rainengine:missing")); // Fallback texture
         }
-        return TEXTURE_INFO_MAP.get(textureName);
+        return texture;
     }
 
     /**
-     * Load a texture from a file path
-     *
-     * @param filePath Path to the image file
-     * @return TextureInfo containing texture data
+     * Retrieve a texture by its string path (like "core:textures/brick")
+     */
+    public static TextureInfo getTexture(String location) {
+        return getTexture(new Resource(location));
+    }
+
+    /**
+     * Loads a texture from file
      */
     public static TextureInfo loadTexture(String filePath) {
         int width, height;
@@ -84,7 +79,6 @@ public class TextureSystem {
             IntBuffer heightBuffer = stack.mallocInt(1);
             IntBuffer channelsBuffer = stack.mallocInt(1);
 
-            // Load the image with RGBA channels (4 channels)
             image = stbi_load(filePath, widthBuffer, heightBuffer, channelsBuffer, 4);
             if (image == null) {
                 throw new RuntimeException("Failed to load texture file: " + filePath + " - " + stbi_failure_reason());
@@ -98,29 +92,23 @@ public class TextureSystem {
             throw new RuntimeException("Error loading texture: " + filePath, e);
         }
 
-        // Detect transparency in the texture
         boolean hasTransparency = checkTransparency(image, width, height);
 
-        // Generate and configure the texture
         int textureId = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, textureId);
 
         try {
-            // Upload the texture data
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
             glGenerateMipmap(GL_TEXTURE_2D);
 
-            // Set texture parameters
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         } finally {
-            // Free the image memory
             stbi_image_free(image);
         }
 
-        // Return the TextureInfo with the transparency information
         return new TextureInfo(textureId, width, height, hasTransparency);
     }
 
@@ -137,36 +125,37 @@ public class TextureSystem {
         int pixelCount = width * height;
 
         for (int i = 0; i < pixelCount; i++) {
-            // The pixel data is stored in RGBA format, so we access the 4th byte for each pixel.
-            // We use & 0xFF to convert signed byte to unsigned int (0-255).
-            int alpha = image.get(i * 4 + 3) & 0xFF;  // 4th byte of each pixel (alpha channel)
-
-            if (alpha < 255) {  // Check if alpha is less than fully opaque
-                return true;  // Texture contains transparency
+            int alpha = image.get(i * 4 + 3) & 0xFF;
+            if (alpha < 255) {
+                return true;
             }
         }
 
-        return false;  // No transparency detected
+        return false;
     }
 
-    /**
-     * Reloads all textures by clearing current textures and reinitializing.
-     */
-    public static void reloadTextures() {
-        // Delete all currently loaded OpenGL textures
-        for (TextureInfo texture : TEXTURE_INFO_MAP.values()) {
-            glDeleteTextures(texture.textureId);
+    private static Resource computeResourceLocation(String textureDirectory, Path path) {
+        Path relativePath = Paths.get(textureDirectory).relativize(path);
+        String[] pathParts = relativePath.toString().replace("\\", "/").split("/");
+
+        String namespace;
+        String resourcePath;
+
+        if (pathParts.length >= 2) {
+            namespace = pathParts[0];
+            resourcePath = String.join("/", pathParts).substring(namespace.length() + 1).replaceFirst("[.][^.]+$", "");
+        } else {
+            namespace = "rainengine";
+            resourcePath = relativePath.toString().replace("\\", "/").replaceFirst("[.][^.]+$", "");
         }
 
-        // Clear the textures map
-        TEXTURE_INFO_MAP.clear();
+        return new Resource(namespace, resourcePath);
+    }
 
-        RainLogger.RAIN_LOGGER.info("Cleared all textures. Reloading...");
-
-        // Re-initialize textures
-        initTextures();
-
-        RainLogger.RAIN_LOGGER.info("Reload complete.");
+    public static void reloadTextures() {
+        RainLogger.RAIN_LOGGER.info("Texture reload requested.");
+        ResourceManager.reload(TextureInfo.class);
+        RainLogger.RAIN_LOGGER.info("Texture reload complete.");
     }
 
 }
