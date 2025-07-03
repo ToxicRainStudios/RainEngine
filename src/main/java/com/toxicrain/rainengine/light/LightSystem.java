@@ -1,6 +1,5 @@
 package com.toxicrain.rainengine.light;
 
-import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;

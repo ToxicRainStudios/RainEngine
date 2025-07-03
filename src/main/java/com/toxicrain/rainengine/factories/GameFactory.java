@@ -16,8 +16,10 @@ import com.toxicrain.rainengine.sound.SoundInfo;
 import com.toxicrain.rainengine.sound.SoundSystem;
 import com.toxicrain.rainengine.sound.music.MusicManager;
 import com.toxicrain.rainengine.texture.TextureSystem;
+import com.toxicrain.rainengine.util.FileUtils;
 import com.toxicrain.rainengine.util.InputUtils;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -91,14 +93,15 @@ public class GameFactory {
 
     }
 
-    public static void loadLang(){
+    public static void loadLang() {
         String langTag = SettingsInfoParser.getInstance().getLanguage();
         RainLogger.RAIN_LOGGER.info("Using Lang: {}", langTag);
 
         //We need to replace "_" with a "-" so it loads correctly
         String languageTag = langTag.replace('_', '-');
 
-        langHelper = new LangHelper("raiengine", Locale.forLanguageTag(languageTag));
+        langHelper = new LangHelper("raiengine", Path.of(FileUtils.getCurrentWorkingDirectory("resources/lang")), Locale.forLanguageTag(languageTag));
+
         RainLogger.RAIN_LOGGER.info(langHelper.get("greeting"));
     }
 

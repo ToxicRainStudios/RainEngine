@@ -1,7 +1,12 @@
 package com.toxicrain.rainengine.core.datatypes;
 
+import lombok.Getter;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
+@Getter
 public class Resource {
 
     private final String namespace;
@@ -29,12 +34,27 @@ public class Resource {
         }
     }
 
-    public String getNamespace() {
-        return namespace;
-    }
+    /**
+     * Compute a Resource from a base directory and file path.
+     */
+    public static Resource fromFile(String textureDirectory, Path path) {
+        Path relativePath = Paths.get(textureDirectory).relativize(path);
+        String[] pathParts = relativePath.toString().replace("\\", "/").split("/");
 
-    public String getPath() {
-        return path;
+        String namespace;
+        String resourcePath;
+
+        if (pathParts.length >= 2) {
+            namespace = pathParts[0];
+            resourcePath = String.join("/", pathParts).substring(namespace.length() + 1)
+                    .replaceFirst("[.][^.]+$", ""); // Remove file extension
+        } else {
+            namespace = "rainengine";
+            resourcePath = relativePath.toString().replace("\\", "/")
+                    .replaceFirst("[.][^.]+$", ""); // Remove file extension
+        }
+
+        return new Resource(namespace, resourcePath);
     }
 
     /**

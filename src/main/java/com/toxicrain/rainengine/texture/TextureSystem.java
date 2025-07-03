@@ -17,7 +17,6 @@ import static org.lwjgl.stb.STBImage.*;
 
 public class TextureSystem {
 
-
     /**
      * Load all textures from the /images folder into the ResourceManager
      */
@@ -33,7 +32,7 @@ public class TextureSystem {
                     })
                     .forEach(path -> {
                         String filePath = path.toString();
-                        Resource location = computeResourceLocation(textureDirectory, path);
+                        Resource location = Resource.fromFile(textureDirectory, path);
 
                         try {
                             ResourceManager.load(TextureInfo.class, location, filePath);
@@ -134,28 +133,9 @@ public class TextureSystem {
         return false;
     }
 
-    private static Resource computeResourceLocation(String textureDirectory, Path path) {
-        Path relativePath = Paths.get(textureDirectory).relativize(path);
-        String[] pathParts = relativePath.toString().replace("\\", "/").split("/");
-
-        String namespace;
-        String resourcePath;
-
-        if (pathParts.length >= 2) {
-            namespace = pathParts[0];
-            resourcePath = String.join("/", pathParts).substring(namespace.length() + 1).replaceFirst("[.][^.]+$", "");
-        } else {
-            namespace = "rainengine";
-            resourcePath = relativePath.toString().replace("\\", "/").replaceFirst("[.][^.]+$", "");
-        }
-
-        return new Resource(namespace, resourcePath);
-    }
-
     public static void reloadTextures() {
         RainLogger.RAIN_LOGGER.info("Texture reload requested.");
         ResourceManager.reload(TextureInfo.class);
         RainLogger.RAIN_LOGGER.info("Texture reload complete.");
     }
-
 }

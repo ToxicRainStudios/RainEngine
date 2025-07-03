@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -52,7 +51,7 @@ public class SoundSystem {
                     .filter(path -> path.getFileName().toString().toLowerCase().endsWith(".wav"))
                     .forEach(path -> {
                         String filePath = path.toString();
-                        Resource location = computeResourceLocation(soundDirectory, path);
+                        Resource location = Resource.fromFile(soundDirectory, path);
 
                         try {
                             ResourceManager.load(SoundInfo.class, location, filePath);
@@ -289,23 +288,5 @@ public class SoundSystem {
 
     public float getVolume() {
         return currentVolume;
-    }
-
-    private static Resource computeResourceLocation(String baseDirectory, Path path) {
-        Path relativePath = Paths.get(baseDirectory).relativize(path);
-        String[] pathParts = relativePath.toString().replace("\\", "/").split("/");
-
-        String namespace;
-        String resourcePath;
-
-        if (pathParts.length >= 2) {
-            namespace = pathParts[0];
-            resourcePath = String.join("/", pathParts).substring(namespace.length() + 1).replaceFirst("[.][^.]+$", "");
-        } else {
-            namespace = "rainengine";
-            resourcePath = relativePath.toString().replace("\\", "/").replaceFirst("[.][^.]+$", "");
-        }
-
-        return new Resource(namespace, resourcePath);
     }
 }
