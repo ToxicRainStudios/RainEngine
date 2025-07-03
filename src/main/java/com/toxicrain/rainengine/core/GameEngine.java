@@ -66,7 +66,7 @@ public class GameEngine {
 
     public static void drawMap(BatchRenderer batchRenderer) {
         // Ensure the texture mappings have been loaded
-        if (PaletteInfoParser.textureMappings == null) {
+        if (PaletteInfoParser.tileMappings == null) {
             throw new IllegalStateException("Texture mappings not loaded! Call PaletteInfoParser.loadTextureMappings() first.");
         }
 
@@ -78,7 +78,7 @@ public class GameEngine {
 
             // Get the character representing the texture
             char textureChar = Tile.mapDataType.get(k);
-            TextureInfo textureInfo = PaletteInfoParser.getTexture(textureChar);
+            TextureInfo textureInfo = PaletteInfoParser.getTileInfo(textureChar).getTexture();
 
             // Render the tile with lighting
             batchRenderer.addTexture(

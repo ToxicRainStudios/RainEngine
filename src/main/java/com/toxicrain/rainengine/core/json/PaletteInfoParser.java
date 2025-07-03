@@ -1,5 +1,8 @@
 package com.toxicrain.rainengine.core.json;
 
+import com.toxicrain.rainengine.core.datatypes.Resource;
+import com.toxicrain.rainengine.core.datatypes.TileInfo;
+import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.util.FileUtils;
@@ -8,10 +11,11 @@ import org.json.JSONTokener;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.*;
 
 public class PaletteInfoParser {
 
-    public static JSONObject textureMappings;
+    public static Map<Character, TileInfo> tileMappings = new HashMap<>();
 
     public static void loadTextureMappings() {
         String filePath = FileUtils.getCurrentWorkingDirectory("resources/custom/palette.json", "resources/json/palette.json");
@@ -19,40 +23,67 @@ public class PaletteInfoParser {
         try (FileReader reader = new FileReader(filePath)) {
             JSONTokener tokener = new JSONTokener(reader);
             JSONObject jsonObject = new JSONObject(tokener);
-            textureMappings = jsonObject.getJSONObject("textures");
+            JSONObject textureMappings = jsonObject.getJSONObject("textures");
 
-            // Iterate through all the texture keys and check for collision
             for (String key : textureMappings.keySet()) {
-                if (hasCollision(key.charAt(0))) {
-                   MapInfoParser.doCollide.add(key.charAt(0));  // Add the character to the list if it has collision
-                }
+                char textureMapChar = key.charAt(0);
+                JSONObject textureData = textureMappings.getJSONObject(key);
+
+                String textureLocation = textureData.optString("name", "rainengine:missing");
+                boolean collision = textureData.optBoolean("collision", false);
+
+                Resource textureResource = new Resource(textureLocation);
+                TextureInfo texture = TextureSystem.getTexture(textureResource);
+                TileInfo tileInfo = new TileInfo(textureResource, texture, collision);
+
+                RainLogger.RAIN_LOGGER.info("Loaded TileInfo: {} ({})", tileInfo.getTextureName(), textureMapChar);
+
+                tileMappings.put(textureMapChar, tileInfo);
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            RainLogger.RAIN_LOGGER.error("Failed to load palette.json", e);
         }
     }
 
-    public static TextureInfo getTexture(char textureMapChar) {
-        String textureKey = String.valueOf(textureMapChar);
-        JSONObject textureData = textureMappings.optJSONObject(textureKey);
-
-        // If the textureData is found, return the corresponding texture
-        String textureName = textureData.optString("name", "missingTexture");
-        return TextureSystem.getTexture(textureName);
+    public static TileInfo getTileInfo(char textureMapChar) {
+        return tileMappings.getOrDefault(
+                textureMapChar,
+                new TileInfo(new Resource("rainengine:missing"), TextureSystem.getTexture("rainengine:missing"), false)
+        );
     }
 
-    // Method to check if a tile has collision
+    public static TileInfo getTileInfo(String textureName) {
+        for (TileInfo tileInfo : tileMappings.values()) {
+            if (tileInfo.getTextureName().equals(textureName)) {
+                return tileInfo;
+            }
+        }
+        return new TileInfo(new Resource("rainengine:missing"), TextureSystem.getTexture("rainengine:missing"), false);
+    }
+
+    public static TileInfo getTileInfo(Resource textureResource) {
+        for (TileInfo tileInfo : tileMappings.values()) {
+            if (tileInfo.getTextureResource().equals(textureResource)) {
+                return tileInfo;
+            }
+        }
+        return new TileInfo(new Resource("rainengine:missing"), TextureSystem.getTexture("rainengine:missing"), false);
+    }
+
+
     public static boolean hasCollision(char textureMapChar) {
-        String textureKey = String.valueOf(textureMapChar);
-        JSONObject textureData = textureMappings.optJSONObject(textureKey);
+        TileInfo tileInfo = tileMappings.get(textureMapChar);
+        return tileInfo != null && tileInfo.isCollision();
+    }
 
-        // If texture data is found, return the collision flag
-        if (textureData != null) {
-            return textureData.optBoolean("collision", false);  // Default to false if not present
+    public static Iterable<Character> getCollisionTiles() {
+        List<Character> collisionTiles = new ArrayList<>();
+        for (Map.Entry<Character, TileInfo> entry : tileMappings.entrySet()) {
+            if (entry.getValue().isCollision()) {
+                collisionTiles.add(entry.getKey());
+            }
         }
-
-        // Default to no collision if no data is found
-        return false;
+        return collisionTiles;
     }
 }

@@ -16,7 +16,6 @@ import java.util.Objects;
 
 public class MapInfoParser {
 
-    public static final ArrayList<Character> doCollide = new ArrayList<>();
     public static boolean doExtraLogs = false;
     public static int xpos, ypos;
     public static int xsize, ysize;
@@ -31,7 +30,7 @@ public class MapInfoParser {
 
     private static void parseMap(String mapName, int offsetX, int offsetY) throws IOException {
         LuaManager.executeMapScript(mapName);
-        // Read JSON file as String
+
         String jsonString = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory("resources/json/" + mapName + ".json"));
 
         // Parse JSON string
@@ -80,15 +79,19 @@ public class MapInfoParser {
                     for (int k = 0; k < sliceLayer.length(); k++) {
                         String row = sliceLayer.getString(k);
                         for (int l = 0; l < row.length(); l++) {
-                            if (row.charAt(l) != ' ') {
-                                xpos = l + offsetX;  // Apply offset for sub-maps
-                                ypos = k + offsetY;  // Apply offset for sub-maps
+                            char tileChar = row.charAt(l);
+                            if (tileChar != ' ') {
+                                xpos = l + offsetX;
+                                ypos = k + offsetY;
 
-                                // Add tile data
                                 mapData.add(new TilePos(xpos * 2, ypos * -2, 0.0001f));
                                 tiles++;
-                                Tile.mapDataType.add(row.charAt(l));
-                                Tile.addCollision(ypos, xpos);
+                                Tile.mapDataType.add(tileChar);
+
+                                // Use PaletteInfoParser to check for collision
+                                if (PaletteInfoParser.hasCollision(tileChar)) {
+                                    Tile.addCollision(ypos, xpos);
+                                }
                             }
                         }
                     }
