@@ -121,7 +121,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         return this.angle;
     }
 
-    private void forward(boolean useMouse, int direction, float deltaTime) {
+    private void forward(boolean useMouse, int direction, double deltaTime) {
         getMouse();
 
         float angleXS = (float) Math.sin(angle) * -1;
@@ -136,7 +136,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         }
     }
 
-    public void update(float deltaTime) {
+    public void update(double deltaTime) {
         getMouse();
         processInput(deltaTime);
 
@@ -193,7 +193,7 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
 
     }
 
-    private void processInput(float deltaTime) {
+    private void processInput(double deltaTime) {
         handleSprinting();
         //handleCollisions(deltaTime);
         handleAttack();

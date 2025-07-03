@@ -3,7 +3,7 @@ package com.toxicrain.rainengine.util;
 public class DeltaTimeUtil {
 
     private static long lastFrameTime = System.nanoTime();
-    private static float deltaTime = 0f;
+    private static double deltaTime = 0;
 
     /**
      * Call this once per frame to update the delta time.
@@ -19,7 +19,7 @@ public class DeltaTimeUtil {
      *
      * @return delta time in seconds
      */
-    public static float getDeltaTime() {
+    public static double getDeltaTime() {
         return deltaTime;
     }
 

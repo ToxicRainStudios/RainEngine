@@ -151,7 +151,7 @@ public class RainBusListener {
         SmeagleBus.getInstance().listen(GameUpdateEvent.class)
                 .subscribe(event -> {
 
-                    float deltaTime = DeltaTimeUtil.getDeltaTime();
+                    double deltaTime = DeltaTimeUtil.getDeltaTime();
 
                     GameFactory.player.update(deltaTime);
 
