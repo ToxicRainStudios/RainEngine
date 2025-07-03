@@ -1,7 +1,7 @@
 {
   "textures": {
     ":": {
-      "name": "floorTextur2e",
+      "name": "floorTexture",
       "collision": true
     },
     "+": {

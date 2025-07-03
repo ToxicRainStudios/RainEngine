@@ -11,8 +11,8 @@ public class LookAtPlayerSeeingBehavior extends Behavior {
     public boolean execute(NPC npc) {
         if (npc.canSeePlayer()) {
             // Get the current position of the NPC and the Player
-            float npcX = npc.npcPos.x;
-            float npcY = npc.npcPos.y;
+            float npcX = npc.getNpcPos().x;
+            float npcY = npc.getNpcPos().y;
             float playerX = GameFactory.player.playerPos.x;
             float playerY = GameFactory.player.playerPos.y;
 
