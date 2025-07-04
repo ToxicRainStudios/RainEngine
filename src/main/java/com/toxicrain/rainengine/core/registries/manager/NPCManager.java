@@ -1,6 +1,5 @@
 package com.toxicrain.rainengine.core.registries.manager;
 
-import com.toxicrain.rainengine.artifacts.BaseNPC;
 import com.toxicrain.rainengine.artifacts.NPC;
 import com.toxicrain.rainengine.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.rainengine.core.render.BatchRenderer;

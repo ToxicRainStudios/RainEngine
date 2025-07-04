@@ -2,10 +2,6 @@ package com.toxicrain.rainengine.core.datatypes;
 
 import lombok.AllArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 @AllArgsConstructor
 public class TilePos {
 

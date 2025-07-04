@@ -6,6 +6,7 @@ import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.datatypes.Color;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
+import com.toxicrain.rainengine.core.datatypes.vector.Vector2;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
@@ -19,10 +20,7 @@ public class BaseNPC implements IArtifact {
     protected TilePos npcPos;
 
     @Getter @Setter
-    protected float directionX;
-
-    @Getter @Setter
-    protected float directionY;
+    protected Vector2 direction;
 
     @Getter @Setter
     protected float rotation;
@@ -46,8 +44,7 @@ public class BaseNPC implements IArtifact {
         this.rotation = rotation;
         this.size = size;
 
-        this.directionX = (float) Math.cos(rotation);
-        this.directionY = (float) Math.sin(rotation);
+        this.direction = new Vector2((float) Math.cos(rotation), (float) Math.sin(rotation));
 
         float halfSize = size / 2f;
         this.npcAABB = new AABB(
@@ -65,13 +62,10 @@ public class BaseNPC implements IArtifact {
         float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         if (distance > visionDistance) return false;
 
-        float directionToTargetX = deltaX / distance;
-        float directionToTargetY = deltaY / distance;
+        Vector2 directionToTarget = new Vector2(deltaX / distance, deltaY / distance);
+        Vector2 npcDirection = new Vector2((float) Math.cos(rotation), (float) Math.sin(rotation));
 
-        float npcDirectionX = (float) Math.cos(rotation);
-        float npcDirectionY = (float) Math.sin(rotation);
-
-        float dotProduct = npcDirectionX * directionToTargetX + npcDirectionY * directionToTargetY;
+        float dotProduct = npcDirection.x * directionToTarget.x + npcDirection.y * directionToTarget.y;
         dotProduct = Math.max(-1, Math.min(1, dotProduct));
 
         float angle = (float) Math.acos(dotProduct);
@@ -95,8 +89,7 @@ public class BaseNPC implements IArtifact {
 
     public void lookAt(float angle) {
         this.rotation = angle;
-        this.directionX = (float) Math.cos(angle);
-        this.directionY = (float) Math.sin(angle);
+        this.direction.set((float) Math.cos(angle), (float) Math.sin(angle));
     }
 
     public void handleCollisions() {
