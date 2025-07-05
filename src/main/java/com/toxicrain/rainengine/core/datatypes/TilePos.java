@@ -1,28 +1,11 @@
 package com.toxicrain.rainengine.core.datatypes;
 
-import lombok.AllArgsConstructor;
+import com.toxicrain.rainengine.core.datatypes.vector.Vector3;
 
-@AllArgsConstructor
-public class TilePos {
+public class TilePos extends Vector3 {
 
-    public float x,y,z;
-
-    public void update(float x, float y, float z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-
-    @Override
-    public String toString() {
-        return "x: " + x + " y: " + y + " z: " + z;
-    }
-
-    public float distanceTo(TilePos other) {
-        float dx = other.x - this.x;
-        float dy = other.y - this.y;
-        float dz = other.z - this.z;
-        return (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
+    public TilePos(float x, float y, float z) {
+        super(x, y, z);
     }
 
     @Override
