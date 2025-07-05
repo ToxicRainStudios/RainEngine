@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.core.json;
 
+import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import org.json.JSONObject;
 
@@ -16,7 +17,6 @@ import com.toxicrain.rainengine.util.FileUtils;
  */
 public class SettingsInfoParser {
     private static SettingsInfoParser instance = null;
-    private static final String SETTINGS_PATH = "resources/json/settings.json";
     private JSONObject settingsJson;
     private final Map<String, Object> settings = new HashMap<>();
 
@@ -32,7 +32,7 @@ public class SettingsInfoParser {
     }
 
     private void loadSettings() {
-        String filePath = FileUtils.getCurrentWorkingDirectory(SETTINGS_PATH);
+        String filePath = FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.SETTINGS_PATH);
 
         try {
             String jsonString = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -61,7 +61,7 @@ public class SettingsInfoParser {
     }
 
     private void saveSettings() {
-        String filePath = FileUtils.getCurrentWorkingDirectory(SETTINGS_PATH);
+        String filePath = FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.SETTINGS_PATH);
         try {
             Files.write(Paths.get(filePath), settingsJson.toString(4).getBytes());
         } catch (IOException e) {

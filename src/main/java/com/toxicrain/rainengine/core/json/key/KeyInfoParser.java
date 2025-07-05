@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.util.FileUtils;
 import lombok.Getter;
@@ -25,7 +26,7 @@ public class KeyInfoParser {
      * Loads the keybinds.json and parses it into the {@link HashMap}
      */
     public static void loadKeyInfo() {
-        String filePath = FileUtils.getCurrentWorkingDirectory("resources/json/keybinds.json");
+        String filePath = FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.KEYBINDS_PATH);
 
         try {
             // Read the file content into a string

@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.core.json;
 
+import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.lua.LuaManager;
@@ -31,7 +32,7 @@ public class MapInfoParser {
     private static void parseMap(String mapName, int offsetX, int offsetY) throws IOException {
         LuaManager.executeMapScript(mapName);
 
-        String jsonString = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory("resources/json/" + mapName + ".json"));
+        String jsonString = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.MAP_PATH + mapName + ".json"));
 
         // Parse JSON string
         JSONArray jsonArray = new JSONArray(jsonString);

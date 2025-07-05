@@ -25,7 +25,7 @@ public class NPC extends BaseNPC {
 
     @Override
     public void render(BatchRenderer batchRenderer) {
-        batchRenderer.addTexture(TextureSystem.getTexture("playerTexture"), npcPos.x, npcPos.y, Constants.npcZLevel,
+        batchRenderer.addTexture(TextureSystem.getTexture("playerTexture"), npcPos.x, npcPos.y, Constants.NPC_ZLEVEL,
                 new TileParameters(rotation, 0f, 0f, 1f, 1f, Color.toFloatArray(Color.WHITE), null));
     }
 

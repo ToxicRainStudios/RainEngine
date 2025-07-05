@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.core.json;
 
+import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -31,7 +32,7 @@ public class GameInfoParser {
      * Loads the gameinfo.json and parsers it into variables
      */
     public static void loadGameInfo() {
-        String filePath = FileUtils.getCurrentWorkingDirectory("resources/json/gameinfo.json");
+        String filePath = FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.GAMEINFO_PATH);
 
         try {
             // Read the file content into a string

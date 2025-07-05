@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.artifacts;
 
+import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.datatypes.vector.Vector2;
@@ -24,7 +25,7 @@ public class Projectile implements IArtifact {
     private final TextureInfo texture;
 
     public Projectile(float xpos, float ypos, float veloX, float veloY, TextureInfo texture) {
-        this.pos = new TilePos(xpos, ypos, 1.02f);
+        this.pos = new TilePos(xpos, ypos, Constants.PROJECTILE_ZLEVEL);
         this.velocity = new Vector2(veloX, veloY);
         this.texture = texture;
 

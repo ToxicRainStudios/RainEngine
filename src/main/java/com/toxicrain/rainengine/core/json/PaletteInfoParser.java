@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.core.json;
 
+import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.datatypes.TileInfo;
 import com.toxicrain.rainengine.core.logging.RainLogger;
@@ -18,7 +19,7 @@ public class PaletteInfoParser {
     public static Map<Character, TileInfo> tileMappings = new HashMap<>();
 
     public static void loadTextureMappings() {
-        String filePath = FileUtils.getCurrentWorkingDirectory("resources/custom/palette.json", "resources/json/palette.json");
+        String filePath = FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.PALETTE_CUSTOM_PATH, Constants.FileConstants.PALETTE_DEFAULT_PATH);
 
         try (FileReader reader = new FileReader(filePath)) {
             JSONTokener tokener = new JSONTokener(reader);
