@@ -34,7 +34,7 @@ public class PaletteInfoParser {
                 boolean collision = textureData.optBoolean("collision", false);
 
                 Resource textureResource = new Resource(textureLocation);
-                TextureInfo texture = TextureSystem.getTexture(textureResource);
+                TextureInfo texture = TextureSystem.getRegion(textureResource).getTextureInfo();
                 TileInfo tileInfo = new TileInfo(textureResource, texture, collision);
 
                 RainLogger.RAIN_LOGGER.info("Loaded TileInfo: {} ({})", tileInfo.getTextureName(), textureMapChar);
@@ -50,7 +50,7 @@ public class PaletteInfoParser {
     public static TileInfo getTileInfo(char textureMapChar) {
         return tileMappings.getOrDefault(
                 textureMapChar,
-                new TileInfo(new Resource("rainengine:missing"), TextureSystem.getTexture("rainengine:missing"), false)
+                new TileInfo(new Resource("rainengine:missing"), TextureSystem.getRegion( new Resource("rainengine:missing")).getTextureInfo(), false)
         );
     }
 
@@ -60,7 +60,7 @@ public class PaletteInfoParser {
                 return tileInfo;
             }
         }
-        return new TileInfo(new Resource("rainengine:missing"), TextureSystem.getTexture("rainengine:missing"), false);
+        return new TileInfo(new Resource("rainengine:missing"), TextureSystem.getRegion(new Resource("rainengine:missing")).getTextureInfo(), false);
     }
 
     public static TileInfo getTileInfo(Resource textureResource) {
@@ -69,7 +69,7 @@ public class PaletteInfoParser {
                 return tileInfo;
             }
         }
-        return new TileInfo(new Resource("rainengine:missing"), TextureSystem.getTexture("rainengine:missing"), false);
+        return new TileInfo(new Resource("rainengine:missing"), TextureSystem.getRegion(new Resource("rainengine:missing")).getTextureInfo(), false);
     }
 
 

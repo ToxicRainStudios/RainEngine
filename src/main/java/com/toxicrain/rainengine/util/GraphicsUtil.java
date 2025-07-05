@@ -21,17 +21,17 @@ public class GraphicsUtil {
     }
 
     // Converts BufferedImage to TextureInfo for rendering
-    public static TextureInfo convertToTextureInfo(BufferedImage image) {
-        try {
-            File tempFile = File.createTempFile("texture", ".png");
-            ImageIO.write(image, "png", tempFile);
-            TextureInfo textureInfo = TextureSystem.loadTexture(tempFile.getAbsolutePath());
-            tempFile.deleteOnExit(); // Clean up temp file on exit
-            return textureInfo;
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to convert BufferedImage to TextureInfo", e);
-        }
-    }
+//    public static TextureInfo convertToTextureInfo(BufferedImage image) {
+//        try {
+//            File tempFile = File.createTempFile("texture", ".png");
+//            ImageIO.write(image, "png", tempFile);
+//            TextureInfo textureInfo = TextureSystem.loadTexture(tempFile.getAbsolutePath());
+//            tempFile.deleteOnExit(); // Clean up temp file on exit
+//            return textureInfo;
+//        } catch (IOException e) {
+//            throw new RuntimeException("Failed to convert BufferedImage to TextureInfo", e);
+//        }
+//    }
 
     // Measures the width of a text with a given font
     public static float getTextWidth(String text, Font font) {

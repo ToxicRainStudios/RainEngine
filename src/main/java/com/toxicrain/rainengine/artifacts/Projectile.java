@@ -39,7 +39,7 @@ public class Projectile implements IArtifact {
     }
 
     public void render(BatchRenderer batchRenderer) {
-        batchRenderer.addTexture(this.texture, this.pos.x, this.pos.y, this.pos.z,
-                new TileParameters(null, velocity.x, velocity.y, 1, 1, null, LightSystem.getLightSources()));
+        //batchRenderer.addTexture(this.texture, this.pos.x, this.pos.y, this.pos.z,
+        //        new TileParameters(null, velocity.x, velocity.y, 1, 1, null, LightSystem.getLightSources()));
     }
 }

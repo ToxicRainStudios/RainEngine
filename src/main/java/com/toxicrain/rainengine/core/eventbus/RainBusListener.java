@@ -62,7 +62,6 @@ public class RainBusListener {
                     LuaManager.executeInitScripts();
                     Tile.combineTouchingAABBs();
 
-                    ResourceManager.register(TextureInfo.class, TextureSystem::loadTexture);
                     ResourceManager.register(SoundInfo.class, SoundSystem::loadSound);
 
                     GameEngine.windowManager = new WindowManager((int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight(), true);

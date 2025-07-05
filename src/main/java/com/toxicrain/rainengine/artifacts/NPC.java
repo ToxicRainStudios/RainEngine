@@ -1,8 +1,10 @@
 package com.toxicrain.rainengine.artifacts;
 
 import com.toxicrain.rainengine.core.Constants;
+import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.factories.GameFactory;
+import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.Color;
@@ -25,7 +27,12 @@ public class NPC extends BaseNPC {
 
     @Override
     public void render(BatchRenderer batchRenderer) {
-        batchRenderer.addTexture(TextureSystem.getTexture("playerTexture"), npcPos.x, npcPos.y, Constants.NPC_ZLEVEL,
+        TextureRegion region = GameFactory.textureAtlas.getRegion( new Resource("npcTexture"));
+        if (region == null) {
+            throw new RuntimeException("TextureRegion not found for: npcTexture");
+        }
+
+        batchRenderer.addTexture(region, npcPos.x, npcPos.y, Constants.NPC_ZLEVEL,
                 new TileParameters(rotation, 0f, 0f, 1f, 1f, Color.toFloatArray(Color.WHITE), null));
     }
 

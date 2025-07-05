@@ -1,5 +1,5 @@
 {
-    "vSync": true,
+    "vSync": false,
     "windowHeight": 1080,
     "language": "en_US",
     "fov": 90,

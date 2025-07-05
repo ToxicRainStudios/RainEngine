@@ -18,6 +18,7 @@ import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.light.LightSystem;
 import com.toxicrain.rainengine.texture.TextureInfo;
+import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import lombok.experimental.UtilityClass;
 import org.lwjgl.BufferUtils;
@@ -78,11 +79,12 @@ public class GameEngine {
 
             // Get the character representing the texture
             char textureChar = Tile.mapDataType.get(k);
-            TextureInfo textureInfo = PaletteInfoParser.getTileInfo(textureChar).getTexture();
+
+            TextureRegion region =  GameFactory.textureAtlas.getRegion(PaletteInfoParser.getTileInfo(textureChar).getTextureResource());
 
             // Render the tile with lighting
             batchRenderer.addTexture(
-                    textureInfo,
+                    region,
                     pos.x,
                     pos.y,
                     pos.z,

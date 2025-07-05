@@ -2,10 +2,7 @@ package com.toxicrain.rainengine.artifacts;
 
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.core.GameEngine;
-import com.toxicrain.rainengine.core.datatypes.AABB;
-import com.toxicrain.rainengine.core.datatypes.Size;
-import com.toxicrain.rainengine.core.datatypes.TileParameters;
-import com.toxicrain.rainengine.core.datatypes.TilePos;
+import com.toxicrain.rainengine.core.datatypes.*;
 import com.toxicrain.rainengine.core.eventbus.events.ArtifactUpdateEvent;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
@@ -17,6 +14,7 @@ import com.toxicrain.rainengine.core.json.MapInfoParser;
 import com.toxicrain.rainengine.core.json.SettingsInfoParser;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.factories.GameFactory;
+import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.util.MathUtils;
 import com.toxicrain.rainengine.util.InputUtils;
@@ -36,7 +34,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 public class Player implements IArtifact { //TODO this needs a de-spaghettification
 
     @Getter @Setter
-    private TextureInfo defaultTexture;
+    private TextureRegion defaultTexture;
     @Getter @Setter
     private TextureInfo selectedTexture;
     private boolean isSprinting;
@@ -54,9 +52,9 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
     @Getter @Setter
     private float angle;
 
-    public Player(TextureInfo defaultTexture, boolean isSprinting) {
+    public Player(Resource defaultTexture, boolean isSprinting) {
         this.playerPos = new TilePos(MapInfoParser.playerx, MapInfoParser.playery, 5);
-        this.defaultTexture = defaultTexture;
+        this.defaultTexture = GameFactory.textureAtlas.getRegion(defaultTexture);
         this.isSprinting = isSprinting;
         this.weapons = new ArrayList<>();
 
@@ -71,7 +69,6 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
         );
 
         KeyMap.registerKeyBind(KeyMap.getKeyNumber("keyPause"), () ->  glfwSetWindowShouldClose(GameEngine.windowManager.window, true));
-        KeyMap.registerKeyBind(KeyMap.getKeyNumber("keyReloadTextures"), TextureSystem::reloadTextures);
     }
 
     public void addWeapon(Weapon weapon) {
@@ -151,9 +148,9 @@ public class Player implements IArtifact { //TODO this needs a de-spaghettificat
     }
 
     public void render(BatchRenderer batchRenderer) {
-        if (selectedTexture != null){
+        if (defaultTexture != null & openglMousePos != null){
             Vector3f center = WindowUtils.getCenter();
-            batchRenderer.addTexture(selectedTexture, center.x, center.y, 1.1f,
+            batchRenderer.addTexture(defaultTexture, center.x, center.y, 1.1f,
                     new TileParameters(null, openglMousePos[0],openglMousePos[1], 1f,1f, null, LightSystem.getLightSources()));
         }
     }

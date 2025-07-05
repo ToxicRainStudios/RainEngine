@@ -2,14 +2,13 @@ package com.toxicrain.rainengine.artifacts;
 
 import com.toxicrain.rainengine.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.rainengine.core.Constants;
-import com.toxicrain.rainengine.core.datatypes.AABB;
-import com.toxicrain.rainengine.core.datatypes.Color;
-import com.toxicrain.rainengine.core.datatypes.TileParameters;
-import com.toxicrain.rainengine.core.datatypes.TilePos;
+import com.toxicrain.rainengine.core.datatypes.*;
 import com.toxicrain.rainengine.core.datatypes.vector.Vector2;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
+import com.toxicrain.rainengine.factories.GameFactory;
+import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import lombok.Getter;
 import lombok.Setter;
@@ -121,9 +120,18 @@ public class BaseNPC implements IArtifact {
     }
 
     public void render(BatchRenderer batchRenderer) {
-        batchRenderer.addTexture(TextureSystem.getTexture("npcTexture"), npcPos.x, npcPos.y, Constants.NPC_ZLEVEL,
-                new TileParameters(rotation, 0f, 0f, 1f, 1f, Color.toFloatArray(Color.WHITE), null));
+        TextureRegion region = GameFactory.textureAtlas.getRegion( new Resource("npcTexture"));
+        if (region == null) {
+            throw new RuntimeException("TextureRegion not found for: npcTexture");
+        }
+
+        batchRenderer.addTexture(
+                region,
+                npcPos.x, npcPos.y, Constants.NPC_ZLEVEL,
+                new TileParameters(rotation, region.getU0(), region.getV0(), 1f, 1f, Color.toFloatArray(Color.WHITE), null)
+        );
     }
+
 
     // Optional hooks for specialized NPCs
     public void update(float deltaTime) {}
