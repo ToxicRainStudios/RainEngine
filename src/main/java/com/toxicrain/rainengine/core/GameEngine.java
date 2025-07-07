@@ -101,7 +101,7 @@ public class GameEngine {
         // Set up the view matrix
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        glTranslatef(-GameFactory.player.playerPos.x, -GameFactory.player.playerPos.y, -GameFactory.player.playerPos.z);
+        glTranslatef(-GameFactory.player.getPosition().x, -GameFactory.player.getPosition().y, -GameFactory.player.getPosition().z);
 
         // Begin the batch
         batchRenderer.beginBatch();

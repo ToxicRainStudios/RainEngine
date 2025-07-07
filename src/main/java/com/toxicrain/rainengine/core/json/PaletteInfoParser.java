@@ -50,7 +50,7 @@ public class PaletteInfoParser {
     public static TileInfo getTileInfo(char textureMapChar) {
         return tileMappings.getOrDefault(
                 textureMapChar,
-                new TileInfo(new Resource("rainengine:missing"), TextureSystem.getRegion( new Resource("rainengine:missing")).getTextureInfo(), false)
+                new TileInfo(new Resource("rainengine:missing"), false)
         );
     }
 
@@ -60,7 +60,7 @@ public class PaletteInfoParser {
                 return tileInfo;
             }
         }
-        return new TileInfo(new Resource("rainengine:missing"), TextureSystem.getRegion(new Resource("rainengine:missing")).getTextureInfo(), false);
+        return new TileInfo(new Resource("rainengine:missing"),false);
     }
 
     public static TileInfo getTileInfo(Resource textureResource) {
@@ -69,7 +69,7 @@ public class PaletteInfoParser {
                 return tileInfo;
             }
         }
-        return new TileInfo(new Resource("rainengine:missing"), TextureSystem.getRegion(new Resource("rainengine:missing")).getTextureInfo(), false);
+        return new TileInfo(new Resource("rainengine:missing"), false);
     }
 
 

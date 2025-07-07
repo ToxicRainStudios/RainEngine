@@ -79,7 +79,6 @@ public class GameFactory {
 
         musicManager = new MusicManager(sounds, soundSystem);
 
-        textureAtlas.saveAtlasAsImage(FileUtils.getCurrentWorkingDirectory("resources/images/atlas.png"));
     }
 
     public static void loadImgui() {

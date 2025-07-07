@@ -1,39 +1,22 @@
 package com.toxicrain.rainengine.artifacts;
 
-import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.datatypes.Resource;
-import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.factories.GameFactory;
-import com.toxicrain.rainengine.texture.TextureRegion;
-import com.toxicrain.rainengine.texture.TextureSystem;
-import com.toxicrain.rainengine.core.datatypes.TileParameters;
-import com.toxicrain.rainengine.core.datatypes.Color;
 
 public class NPC extends BaseNPC {
 
     public NPC(float startingXpos, float startingYpos, float rotation, float size) {
-        super(startingXpos, startingYpos, rotation, size);
+        super(new Resource("npcTexture"), startingXpos, startingYpos, rotation, size);
 
         GameFactory.npcManager.addNPC(this, behaviorSequence);
     }
 
     public boolean canSeePlayer() {
-        return canSeeTarget(GameFactory.player.playerPos);
+        return canSeeTarget(GameFactory.player.position);
     }
 
     public void moveTowardsPlayer(float speed) {
-        moveTowardsTarget(GameFactory.player.playerPos, speed);
-    }
-
-    @Override
-    public void render(BatchRenderer batchRenderer) {
-        TextureRegion region = GameFactory.textureAtlas.getRegion( new Resource("npcTexture"));
-        if (region == null) {
-            throw new RuntimeException("TextureRegion not found for: npcTexture");
-        }
-
-        batchRenderer.addTexture(region, npcPos.x, npcPos.y, Constants.NPC_ZLEVEL,
-                new TileParameters(rotation, 0f, 0f, 1f, 1f, Color.toFloatArray(Color.WHITE), null));
+        moveTowardsTarget(GameFactory.player.position, speed);
     }
 
     @Override

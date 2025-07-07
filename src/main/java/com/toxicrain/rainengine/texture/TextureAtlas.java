@@ -2,6 +2,7 @@ package com.toxicrain.rainengine.texture;
 
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.logging.RainLogger;
+import lombok.Getter;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL30;
@@ -20,8 +21,8 @@ import static org.lwjgl.stb.STBImage.*;
 public class TextureAtlas {
 
     private final Map<Resource, TextureRegion> regionMap = new HashMap<>();
-    private final int atlasTextureId;
-    private final int atlasSize;
+    @Getter private final int atlasTextureId;
+    @Getter private final int atlasSize;
 
     private ByteBuffer atlasBuffer; // Store the atlas buffer for saving
 
@@ -40,13 +41,11 @@ public class TextureAtlas {
                     })
                     .toList();
 
-            int imageCount = imagePaths.size();
-            int gridSize = (int) Math.ceil(Math.sqrt(imageCount)); // Simple grid
-            int cellSize = atlasSize / gridSize;
-
             atlasBuffer = BufferUtils.createByteBuffer(atlasSize * atlasSize * 4);
 
-            int index = 0;
+            int shelfY = 0;
+            int shelfHeight = 0;
+            int shelfX = 0;
 
             for (Path path : imagePaths) {
                 String filePath = path.toString();
@@ -65,25 +64,33 @@ public class TextureAtlas {
                     int imageWidth = widthBuffer.get();
                     int imageHeight = heightBuffer.get();
 
-                    int row = index / gridSize;
-                    int col = index % gridSize;
+                    // New shelf if image doesn't fit in current row
+                    if (shelfX + imageWidth > atlasSize) {
+                        shelfY += shelfHeight;
+                        shelfX = 0;
+                        shelfHeight = 0;
+                    }
 
-                    int xOffset = col * cellSize;
-                    int yOffset = row * cellSize;
+                    // Check if atlas is overfilled
+                    if (shelfY + imageHeight > atlasSize) {
+                        throw new RuntimeException("Texture atlas overflow. Consider using a larger atlas size.");
+                    }
 
-                    copyImageToAtlas(atlasBuffer, atlasSize, image, imageWidth, imageHeight, xOffset, yOffset);
+                    copyImageToAtlas(atlasBuffer, atlasSize, image, imageWidth, imageHeight, shelfX, shelfY);
 
-                    float u0 = (float) xOffset / atlasSize;
-                    float v0 = (float) yOffset / atlasSize;
-                    float u1 = (float) (xOffset + imageWidth) / atlasSize;
-                    float v1 = (float) (yOffset + imageHeight) / atlasSize;
+                    float u0 = (float) shelfX / atlasSize;
+                    float v0 = (float) shelfY / atlasSize;
+                    float u1 = (float) (shelfX + imageWidth) / atlasSize;
+                    float v1 = (float) (shelfY + imageHeight) / atlasSize;
 
                     TextureInfo textureInfo = new TextureInfo(atlasTextureId, atlasSize, atlasSize, checkTransparency(image, imageWidth, imageHeight));
                     TextureRegion region = new TextureRegion(textureInfo, u0, v0, u1, v1);
                     regionMap.put(resource, region);
 
+                    shelfX += imageWidth;
+                    shelfHeight = Math.max(shelfHeight, imageHeight);
+
                     stbi_image_free(image);
-                    index++;
                 }
             }
 
@@ -142,10 +149,6 @@ public class TextureAtlas {
 
     public TextureRegion getRegion(Resource resource) {
         return regionMap.get(resource);
-    }
-
-    public int getAtlasTextureId() {
-        return atlasTextureId;
     }
 
     /**
