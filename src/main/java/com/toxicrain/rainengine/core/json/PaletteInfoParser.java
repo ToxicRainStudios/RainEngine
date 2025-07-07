@@ -34,8 +34,7 @@ public class PaletteInfoParser {
                 boolean collision = textureData.optBoolean("collision", false);
 
                 Resource textureResource = new Resource(textureLocation);
-                TextureInfo texture = TextureSystem.getRegion(textureResource).getTextureInfo();
-                TileInfo tileInfo = new TileInfo(textureResource, texture, collision);
+                TileInfo tileInfo = new TileInfo(textureResource, collision);
 
                 RainLogger.RAIN_LOGGER.info("Loaded TileInfo: {} ({})", tileInfo.getTextureName(), textureMapChar);
 

@@ -80,7 +80,7 @@ public class GameEngine {
             // Get the character representing the texture
             char textureChar = Tile.mapDataType.get(k);
 
-            TextureRegion region =  GameFactory.textureAtlas.getRegion(PaletteInfoParser.getTileInfo(textureChar).getTextureResource());
+            TextureRegion region = PaletteInfoParser.getTileInfo(textureChar).getTextureRegion();
 
             // Render the tile with lighting
             batchRenderer.addTexture(
