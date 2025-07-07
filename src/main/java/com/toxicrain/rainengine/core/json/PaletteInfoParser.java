@@ -1,12 +1,13 @@
 package com.toxicrain.rainengine.core.json;
 
+import com.toxicrain.rainengine.core.BaseInstanceable;
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.datatypes.TileInfo;
 import com.toxicrain.rainengine.core.logging.RainLogger;
-import com.toxicrain.rainengine.texture.TextureInfo;
-import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.util.FileUtils;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -14,11 +15,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class PaletteInfoParser {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class PaletteInfoParser extends BaseInstanceable<PaletteInfoParser> {
 
     public static Map<Character, TileInfo> tileMappings = new HashMap<>();
 
-    public static void loadTextureMappings() {
+    public static PaletteInfoParser getInstance() {
+        return BaseInstanceable.getInstance(PaletteInfoParser.class);
+    }
+
+    public void loadTextureMappings() {
         String filePath = FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.PALETTE_CUSTOM_PATH, Constants.FileConstants.PALETTE_DEFAULT_PATH);
 
         try (FileReader reader = new FileReader(filePath)) {
@@ -46,14 +52,14 @@ public class PaletteInfoParser {
         }
     }
 
-    public static TileInfo getTileInfo(char textureMapChar) {
+    public TileInfo getTileInfo(char textureMapChar) {
         return tileMappings.getOrDefault(
                 textureMapChar,
                 new TileInfo(new Resource("rainengine:missing"), false)
         );
     }
 
-    public static TileInfo getTileInfo(String textureName) {
+    public TileInfo getTileInfo(String textureName) {
         for (TileInfo tileInfo : tileMappings.values()) {
             if (tileInfo.getTextureName().equals(textureName)) {
                 return tileInfo;
@@ -62,7 +68,7 @@ public class PaletteInfoParser {
         return new TileInfo(new Resource("rainengine:missing"),false);
     }
 
-    public static TileInfo getTileInfo(Resource textureResource) {
+    public TileInfo getTileInfo(Resource textureResource) {
         for (TileInfo tileInfo : tileMappings.values()) {
             if (tileInfo.getTextureResource().equals(textureResource)) {
                 return tileInfo;
@@ -72,12 +78,12 @@ public class PaletteInfoParser {
     }
 
 
-    public static boolean hasCollision(char textureMapChar) {
+    public boolean hasCollision(char textureMapChar) {
         TileInfo tileInfo = tileMappings.get(textureMapChar);
         return tileInfo != null && tileInfo.isCollision();
     }
 
-    public static Iterable<Character> getCollisionTiles() {
+    public Iterable<Character> getCollisionTiles() {
         List<Character> collisionTiles = new ArrayList<>();
         for (Map.Entry<Character, TileInfo> entry : tileMappings.entrySet()) {
             if (entry.getValue().isCollision()) {

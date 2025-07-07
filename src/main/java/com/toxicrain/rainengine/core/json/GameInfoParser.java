@@ -1,7 +1,10 @@
 package com.toxicrain.rainengine.core.json;
 
+import com.toxicrain.rainengine.core.BaseInstanceable;
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.logging.RainLogger;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
@@ -15,23 +18,28 @@ import com.toxicrain.rainengine.util.FileUtils;
  * GameInfoParser parsers the gameinfo.json file
  * needed for game functionality
  */
-public class GameInfoParser {
-    public static String defaultWindowName = null;
-    public static String engineVersion = null;
-    public static String gameMainClass = null;
-    public static String gameName = null;
-    public static String gameMakers = null;
-    public static String gameVersion = null;
-    public static String gameWebsite = null;
-    public static float playerSize= 0.0f;
-    public static int maxTexturesPerBatch = 100; //Safety, don't crash if we forget to add this to gameinfo.json
-    public static int minZoom = 3;
-    public static int maxZoom = 25;
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class GameInfoParser extends BaseInstanceable<GameInfoParser> {
+    public String defaultWindowName = null;
+    public String engineVersion = null;
+    public String gameMainClass = null;
+    public String gameName = null;
+    public String gameMakers = null;
+    public String gameVersion = null;
+    public String gameWebsite = null;
+    public float playerSize= 0.0f;
+    public int maxTexturesPerBatch = 100; //Safety, don't crash if we forget to add this to gameinfo.json
+    public int minZoom = 3;
+    public int maxZoom = 25;
+
+    public static GameInfoParser getInstance() {
+        return BaseInstanceable.getInstance(GameInfoParser.class);
+    }
 
     /**
      * Loads the gameinfo.json and parsers it into variables
      */
-    public static void loadGameInfo() {
+    public void loadGameInfo() {
         String filePath = FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.GAMEINFO_PATH);
 
         try {

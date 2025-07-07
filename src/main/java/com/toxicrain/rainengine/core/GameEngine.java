@@ -41,8 +41,8 @@ public class GameEngine {
 
         RainLogger.RAIN_LOGGER.info("Hello LWJGL {}!", Version.getVersion());
         RainLogger.RAIN_LOGGER.info("Hello RainEngine " + Constants.engineVersion + "!");
-        RainLogger.RAIN_LOGGER.info("Running: {} by {}", GameInfoParser.gameName, GameInfoParser.gameMakers);
-        RainLogger.RAIN_LOGGER.info("Version: {}", GameInfoParser.gameVersion);
+        RainLogger.RAIN_LOGGER.info("Running: {} by {}", GameInfoParser.getInstance().gameName, GameInfoParser.getInstance().gameMakers);
+        RainLogger.RAIN_LOGGER.info("Version: {}", GameInfoParser.getInstance().gameVersion);
         doVersionCheck();
 
         RainLogger.RAIN_LOGGER.info("Loading Event Bus");
@@ -71,16 +71,16 @@ public class GameEngine {
             throw new IllegalStateException("Texture mappings not loaded! Call PaletteInfoParser.loadTextureMappings() first.");
         }
 
-        int size = MapInfoParser.mapData.size();  // Get the size once
+        int size = MapInfoParser.getInstance().mapData.size();  // Get the size once
 
         for (int k = size - 1; k >= 0; k--) {
             // Get the TilePos object
-            TilePos pos = MapInfoParser.mapData.get(k);
+            TilePos pos = MapInfoParser.getInstance().mapData.get(k);
 
             // Get the character representing the texture
             char textureChar = Tile.mapDataType.get(k);
 
-            TextureRegion region = PaletteInfoParser.getTileInfo(textureChar).getTextureRegion();
+            TextureRegion region = PaletteInfoParser.getInstance().getTileInfo(textureChar).getTextureRegion();
 
             // Render the tile with lighting
             batchRenderer.addTexture(
@@ -151,7 +151,7 @@ public class GameEngine {
      * Checks the internal engine version with what gameinfo.json is asking for
      */
     private static void doVersionCheck() {
-        if (Constants.engineVersion.equals(GameInfoParser.engineVersion)) {
+        if (Constants.engineVersion.equals(GameInfoParser.getInstance().engineVersion)) {
             RainLogger.RAIN_LOGGER.info("Engine Version check: Pass");
         } else {
             RainLogger.RAIN_LOGGER.error("Engine Version check: FAIL");

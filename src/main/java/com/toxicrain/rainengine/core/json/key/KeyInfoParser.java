@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.toxicrain.rainengine.core.BaseInstanceable;
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.util.FileUtils;
@@ -17,15 +18,18 @@ import org.json.JSONObject;
  * KeyInfoParser parsers the keybinds.json file
  * needed for game functionality
  */
-public class KeyInfoParser {
+public class KeyInfoParser extends BaseInstanceable<KeyInfoParser> {
     // A Map to hold the key bindings
-    @Getter
-    private static final Map<String, String> keyBindings = new HashMap<>();
+    @Getter private final Map<String, String> keyBindings = new HashMap<>();
+
+    public static KeyInfoParser getInstance() {
+        return BaseInstanceable.getInstance(KeyInfoParser.class);
+    }
 
     /**
      * Loads the keybinds.json and parses it into the {@link HashMap}
      */
-    public static void loadKeyInfo() {
+    public void loadKeyInfo() {
         String filePath = FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.KEYBINDS_PATH);
 
         try {
@@ -75,7 +79,7 @@ public class KeyInfoParser {
      * @param key   The keybinding to update
      * @param value The new value for the keybinding
      */
-    public static void updateKeyBinding(String key, String value) {
+    public void updateKeyBinding(String key, String value) {
         if (keyBindings.containsKey(key)) {
             keyBindings.put(key, value);
             saveKeyBindings();
@@ -88,7 +92,7 @@ public class KeyInfoParser {
     /**
      * Saves the current key bindings to keybinds.json
      */
-    private static void saveKeyBindings() {
+    private void saveKeyBindings() {
         String filePath = FileUtils.getCurrentWorkingDirectory("resources/json/keybinds.json");
 
         JSONArray jsonArray = new JSONArray();
@@ -119,7 +123,7 @@ public class KeyInfoParser {
      *
      * @param key The keybinding to get
      */
-    public static String getKeyBind(String key) {
+    public String getKeyBind(String key) {
         return keyBindings.getOrDefault(key, "undefined");
     }
 

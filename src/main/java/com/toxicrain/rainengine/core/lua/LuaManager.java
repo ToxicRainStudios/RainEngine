@@ -119,7 +119,7 @@ public class LuaManager {
             public LuaValue call(LuaValue arg) {
                 try {
                     RainLogger.LUA_LOGGER.info("Loading Map Data");
-                    MapInfoParser.parseMapFile(String.valueOf(arg));
+                    MapInfoParser.getInstance().parseMapFile(String.valueOf(arg));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

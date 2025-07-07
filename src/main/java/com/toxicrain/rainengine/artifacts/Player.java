@@ -48,7 +48,7 @@ public class Player extends RenderableArtifact implements IArtifact {
     @Getter @Setter private float angle;
 
     public Player(Resource defaultTexture, boolean isSprinting) {
-        super(defaultTexture, MapInfoParser.playerx, MapInfoParser.playery, 0f, 1f);
+        super(defaultTexture, MapInfoParser.getInstance().playerSpawnPos.x, MapInfoParser.getInstance().playerSpawnPos.y, 0f, 1f);
         this.position.z = 5; // Player z-level
         this.defaultTexture = GameFactory.textureAtlas.getRegion(defaultTexture);
         this.isSprinting = isSprinting;
@@ -153,7 +153,7 @@ public class Player extends RenderableArtifact implements IArtifact {
     }
 
     private void handleCollisions(float deltaTime) {
-        float halfSize = GameInfoParser.playerSize / 2.0f;
+        float halfSize = GameInfoParser.getInstance().playerSize / 2.0f;
 
         this.playerAABB.update(
                 position.x - halfSize,
@@ -197,7 +197,7 @@ public class Player extends RenderableArtifact implements IArtifact {
             forward(false, -1, deltaTime);
         }
 
-        position.z = MathUtils.clamp(position.z + scrollOffset * scrollSpeed, GameInfoParser.minZoom, GameInfoParser.maxZoom);
+        position.z = MathUtils.clamp(position.z + scrollOffset * scrollSpeed, GameInfoParser.getInstance().minZoom, GameInfoParser.getInstance().maxZoom);
         scrollOffset = 0.0f;
     }
 

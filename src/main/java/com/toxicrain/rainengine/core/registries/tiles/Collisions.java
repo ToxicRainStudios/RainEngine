@@ -30,7 +30,7 @@ public class Collisions {
                 char mapType = Tile.mapDataType.get(i);
 
                 // Directly check if this tile type is collidable
-                if (PaletteInfoParser.hasCollision(mapType)) {
+                if (PaletteInfoParser.getInstance().hasCollision(mapType)) {
                     if (isCollidingBelow(colideeAABB, tileAABB)) {
                         return 'u';
                     } else if (isCollidingAbove(colideeAABB, tileAABB)) {

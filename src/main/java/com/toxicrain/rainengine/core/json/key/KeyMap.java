@@ -157,7 +157,7 @@ public class KeyMap {
     }
 
     public static int getKeyNumber(String keyBindname) {
-        String name = KeyInfoParser.getKeyBind(keyBindname);
+        String name = KeyInfoParser.getInstance().getKeyBind(keyBindname);
 
         return nameToCode.getOrDefault(name, GLFW.GLFW_KEY_UNKNOWN);
     }

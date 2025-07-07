@@ -1,12 +1,16 @@
 package com.toxicrain.rainengine.core.json;
 
+import com.toxicrain.rainengine.core.BaseInstanceable;
 import com.toxicrain.rainengine.core.Constants;
+import com.toxicrain.rainengine.core.datatypes.vector.Vector2;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.lua.LuaManager;
 import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.util.FileUtils;
 import com.toxicrain.rainengine.light.LightSystem;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,21 +19,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class MapInfoParser {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class MapInfoParser extends BaseInstanceable<MapInfoParser> {
 
-    public static boolean doExtraLogs = false;
-    public static int xpos, ypos;
-    public static int xsize, ysize;
-    public static int playerx;
-    public static int playery;
-    public static int tiles = 0;
-    public static ArrayList<TilePos> mapData = new ArrayList<>();
+    public Vector2 mapPos = new Vector2(0, 0);
+    public Vector2 mapSize = new Vector2(0, 0);
+    public Vector2 playerSpawnPos = new Vector2(0, 0);
+    public int tiles = 0;
+    public ArrayList<TilePos> mapData = new ArrayList<>();
 
-    public static void parseMapFile(String mapName) throws IOException {
+    public static MapInfoParser getInstance() {
+        return BaseInstanceable.getInstance(MapInfoParser.class);
+    }
+
+    public void parseMapFile(String mapName) throws IOException {
         parseMap(mapName, 0, 0);  // Main map at position (0, 0)
     }
 
-    private static void parseMap(String mapName, int offsetX, int offsetY) throws IOException {
+    private void parseMap(String mapName, int offsetX, int offsetY) throws IOException {
         LuaManager.executeMapScript(mapName);
 
         String jsonString = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.MAP_PATH + mapName + ".json"));
@@ -47,16 +54,15 @@ public class MapInfoParser {
                 continue;
             }
 
-            playerx = part.getInt("playerx");
-            playery = part.getInt("playery");
+            playerSpawnPos.x = part.getInt("playerx");
+            playerSpawnPos.y = part.getInt("playery");
 
-            if (doExtraLogs) {
-                RainLogger.RAIN_LOGGER.info("type: {}", part.getString("type"));
-                xsize = part.getInt("xsize");
-                ysize = part.getInt("ysize");
-                RainLogger.RAIN_LOGGER.info("xsize: {}", xsize);
-                RainLogger.RAIN_LOGGER.info("ysize: {}", ysize);
+            if (!part.getString("type").equals("map")){
+                throw new IllegalStateException("Map: '" + mapName + "' was loaded without the map type!");
             }
+
+            mapSize.x = part.getInt("xsize");
+            mapSize.y = part.getInt("ysize");
 
             try {
                 JSONArray slices = part.getJSONArray("slices");
@@ -82,16 +88,16 @@ public class MapInfoParser {
                         for (int l = 0; l < row.length(); l++) {
                             char tileChar = row.charAt(l);
                             if (tileChar != ' ') {
-                                xpos = l + offsetX;
-                                ypos = k + offsetY;
+                                mapPos.x = l + offsetX;
+                                mapPos.y = k + offsetY;
 
-                                mapData.add(new TilePos(xpos * 2, ypos * -2, 0.0001f));
+                                mapData.add(new TilePos(mapPos.x * 2, mapPos.y * -2, 0.0001f));
                                 tiles++;
                                 Tile.mapDataType.add(tileChar);
 
                                 // Use PaletteInfoParser to check for collision
-                                if (PaletteInfoParser.hasCollision(tileChar)) {
-                                    Tile.addCollision(ypos, xpos);
+                                if (PaletteInfoParser.getInstance().hasCollision(tileChar)) {
+                                    Tile.addCollision((int) mapPos.x, (int) mapPos.y);
                                 }
                             }
                         }

@@ -21,7 +21,7 @@ import static org.lwjgl.opengl.GL15.*;
  */
 public class BatchRenderer {
 
-    private static final int MAX_TEXTURES = GameInfoParser.maxTexturesPerBatch;
+    private static final int MAX_TEXTURES = GameInfoParser.getInstance().maxTexturesPerBatch;
     private static final int VERTICES_PER_QUAD = 6;
 
     private final FloatBuffer vertexBuffer;

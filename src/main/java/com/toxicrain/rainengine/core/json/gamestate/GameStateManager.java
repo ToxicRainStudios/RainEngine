@@ -62,8 +62,8 @@ public class GameStateManager {
 
             // Extract the values and set them in the GameState object
             gameState.playerName = jsonObject.optString("playerName", "DefaultName");
-            gameState.playerX = jsonObject.optInt("playerX", MapInfoParser.playerx);
-            gameState.playerY = jsonObject.optInt("playerY", MapInfoParser.playery);
+            gameState.playerX = jsonObject.optInt("playerX", (int) MapInfoParser.getInstance().playerSpawnPos.x);
+            gameState.playerY = jsonObject.optInt("playerY", (int) MapInfoParser.getInstance().playerSpawnPos.y);
             gameState.playerHealth = (float) jsonObject.optDouble("playerHealth", 100.0);
             // Add more fields as needed
 

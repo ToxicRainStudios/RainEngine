@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.core.json;
 
+import com.toxicrain.rainengine.core.BaseInstanceable;
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import org.json.JSONObject;
@@ -15,8 +16,7 @@ import com.toxicrain.rainengine.util.FileUtils;
 /**
  * SettingsInfoParser dynamically loads and manages settings.json file
  */
-public class SettingsInfoParser {
-    private static SettingsInfoParser instance = null;
+public class SettingsInfoParser extends BaseInstanceable<SettingsInfoParser> {
     private JSONObject settingsJson;
     private final Map<String, Object> settings = new HashMap<>();
 
@@ -25,10 +25,7 @@ public class SettingsInfoParser {
     }
 
     public static SettingsInfoParser getInstance() {
-        if (instance == null) {
-            instance = new SettingsInfoParser();
-        }
-        return instance;
+        return BaseInstanceable.getInstance(SettingsInfoParser.class);
     }
 
     private void loadSettings() {

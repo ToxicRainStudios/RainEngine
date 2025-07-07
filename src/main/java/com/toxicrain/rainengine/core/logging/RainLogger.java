@@ -18,7 +18,7 @@ public class RainLogger {
     public static Logger gameLogger = null;
 
     public static void buildLoggers(){
-        gameLogger = LoggerFactory.getLogger(GameInfoParser.gameName);
+        gameLogger = LoggerFactory.getLogger(GameInfoParser.getInstance().gameName);
     }
 
     /**
