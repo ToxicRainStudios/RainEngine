@@ -19,6 +19,23 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
+tasks.register('generateJavadoc', Javadoc) {
+    description = 'Generates Javadoc API documentation'
+    group = 'Documentation'
+
+    source = sourceSets.main.allJava
+    classpath = sourceSets.main.compileClasspath
+    destinationDir = file("$buildDir/docs/javadoc")
+
+    options {
+        encoding = 'UTF-8'
+        charSet = 'UTF-8'
+        links 'https://docs.oracle.com/javase/8/docs/api/'
+        memberLevel = JavadocMemberLevel.PUBLIC
+    }
+}
+
+
 dependencies {
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
