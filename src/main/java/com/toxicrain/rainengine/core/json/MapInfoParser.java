@@ -22,7 +22,6 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MapInfoParser extends BaseInstanceable<MapInfoParser> {
 
-    public Vector2 mapPos = new Vector2(0, 0);
     public Vector2 mapSize = new Vector2(0, 0);
     public Vector2 playerSpawnPos = new Vector2(0, 0);
     public int tiles = 0;
@@ -33,49 +32,54 @@ public class MapInfoParser extends BaseInstanceable<MapInfoParser> {
     }
 
     public void parseMapFile(String mapName) throws IOException {
-        parseMap(mapName, 0, 0);  // Main map at position (0, 0)
+        // Clear all previous data for a fresh load
+        mapSize = new Vector2(0, 0);
+        playerSpawnPos = new Vector2(0, 0);
+        tiles = 0;
+        mapData.clear();
+        Tile.mapDataType.clear();
+        Tile.clearCollision();
+        LightSystem.getLightSources().clear();
+
+        parseMap(mapName, 0, 0, true);
     }
 
-    private void parseMap(String mapName, int offsetX, int offsetY) throws IOException {
+    private void parseMap(String mapName, int offsetX, int offsetY, boolean isMainMap) throws IOException {
         LuaManager.executeMapScript(mapName);
 
         String jsonString = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.MAP_PATH + mapName + ".json"));
-
-        // Parse JSON string
         JSONArray jsonArray = new JSONArray(jsonString);
 
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject part = jsonArray.getJSONObject(i);
 
-            // Check for required keys
             if (!part.has("type") || !part.has("xsize") || !part.has("ysize") || !part.has("slices") || !part.has("lighting")) {
                 RainLogger.RAIN_LOGGER.error("Missing keys in JSON object at index {}", i);
                 RainLogger.RAIN_LOGGER.error(part.toString(4));
                 continue;
             }
 
-            playerSpawnPos.x = part.getInt("playerx");
-            playerSpawnPos.y = part.getInt("playery");
-
-            if (!part.getString("type").equals("map")){
+            if (!part.getString("type").equals("map")) {
                 throw new IllegalStateException("Map: '" + mapName + "' was loaded without the map type!");
             }
 
-            mapSize.x = part.getInt("xsize");
-            mapSize.y = part.getInt("ysize");
+            // Only update map size and player spawn for the main map
+            if (isMainMap) {
+                mapSize.x = part.getInt("xsize");
+                mapSize.y = part.getInt("ysize");
+                playerSpawnPos.x = part.getInt("playerx");
+                playerSpawnPos.y = part.getInt("playery");
+            }
 
             try {
                 JSONArray slices = part.getJSONArray("slices");
                 JSONArray lighting = part.getJSONArray("lighting");
 
-                // Clear existing lighting data
-                LightSystem.getLightSources().clear();
-
-                // Process lighting data
+                // Process lighting with offset
                 for (int j = 0; j < lighting.length(); j++) {
                     JSONObject lightSource = lighting.getJSONObject(j);
-                    float x = (float) lightSource.getDouble("x");
-                    float y = (float) lightSource.getDouble("y");
+                    float x = (float) lightSource.getDouble("x") + offsetX * 2;
+                    float y = (float) lightSource.getDouble("y") + offsetY * -2;
                     float strength = (float) lightSource.getDouble("strength");
                     LightSystem.addLightSource(x, y, strength);
                 }
@@ -88,23 +92,22 @@ public class MapInfoParser extends BaseInstanceable<MapInfoParser> {
                         for (int l = 0; l < row.length(); l++) {
                             char tileChar = row.charAt(l);
                             if (tileChar != ' ') {
-                                mapPos.x = l + offsetX;
-                                mapPos.y = k + offsetY;
+                                int tileX = l + offsetX;
+                                int tileY = k + offsetY;
 
-                                mapData.add(new TilePos(mapPos.x * 2, mapPos.y * -2, 0.0001f));
+                                mapData.add(new TilePos(tileX * 2, tileY * -2, 0.0001f));
                                 tiles++;
                                 Tile.mapDataType.add(tileChar);
 
-                                // Use PaletteInfoParser to check for collision
                                 if (PaletteInfoParser.getInstance().hasCollision(tileChar)) {
-                                    Tile.addCollision((int) mapPos.x, (int) mapPos.y);
+                                    Tile.addCollision(tileX, tileY);
                                 }
                             }
                         }
                     }
                 }
 
-                // Check if there are sub-maps to load
+                // Recursively load submaps
                 if (part.has("subMaps")) {
                     JSONArray subMaps = part.getJSONArray("subMaps");
                     for (int subMapIndex = 0; subMapIndex < subMaps.length(); subMapIndex++) {
@@ -114,8 +117,7 @@ public class MapInfoParser extends BaseInstanceable<MapInfoParser> {
                             int subMapOffsetX = subMap.getInt("offsetX");
                             int subMapOffsetY = subMap.getInt("offsetY");
 
-                            // Recursively load sub-maps too
-                            parseMap(subMapName, offsetX + subMapOffsetX, offsetY + subMapOffsetY);
+                            parseMap(subMapName, offsetX + subMapOffsetX, offsetY + subMapOffsetY, false);
                         } else {
                             RainLogger.RAIN_LOGGER.error("Submap name :{} matches current map name: {}", subMapName, mapName);
                             return;

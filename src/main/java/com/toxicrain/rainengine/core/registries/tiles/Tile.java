@@ -84,4 +84,8 @@ public class Tile {
         AABB newAABB = new AABB(extentLeft, extentBottom, extentRight, extentTop);
         aabbs.add(newAABB);
     }
+
+    public static void clearCollision() {
+        aabbs.clear();
+    }
 }
