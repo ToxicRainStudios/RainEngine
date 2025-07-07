@@ -18,6 +18,7 @@ import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.light.LightSystem;
 import com.toxicrain.rainengine.texture.TextureInfo;
+import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import lombok.experimental.UtilityClass;
 import org.lwjgl.BufferUtils;
@@ -40,8 +41,8 @@ public class GameEngine {
 
         RainLogger.RAIN_LOGGER.info("Hello LWJGL {}!", Version.getVersion());
         RainLogger.RAIN_LOGGER.info("Hello RainEngine " + Constants.engineVersion + "!");
-        RainLogger.RAIN_LOGGER.info("Running: {} by {}", GameInfoParser.gameName, GameInfoParser.gameMakers);
-        RainLogger.RAIN_LOGGER.info("Version: {}", GameInfoParser.gameVersion);
+        RainLogger.RAIN_LOGGER.info("Running: {} by {}", GameInfoParser.getInstance().gameName, GameInfoParser.getInstance().gameMakers);
+        RainLogger.RAIN_LOGGER.info("Version: {}", GameInfoParser.getInstance().gameVersion);
         doVersionCheck();
 
         RainLogger.RAIN_LOGGER.info("Loading Event Bus");
@@ -66,23 +67,24 @@ public class GameEngine {
 
     public static void drawMap(BatchRenderer batchRenderer) {
         // Ensure the texture mappings have been loaded
-        if (PaletteInfoParser.textureMappings == null) {
+        if (PaletteInfoParser.tileMappings == null) {
             throw new IllegalStateException("Texture mappings not loaded! Call PaletteInfoParser.loadTextureMappings() first.");
         }
 
-        int size = MapInfoParser.mapData.size();  // Get the size once
+        int size = MapInfoParser.getInstance().mapData.size();  // Get the size once
 
         for (int k = size - 1; k >= 0; k--) {
             // Get the TilePos object
-            TilePos pos = MapInfoParser.mapData.get(k);
+            TilePos pos = MapInfoParser.getInstance().mapData.get(k);
 
             // Get the character representing the texture
             char textureChar = Tile.mapDataType.get(k);
-            TextureInfo textureInfo = PaletteInfoParser.getTexture(textureChar);
+
+            TextureRegion region = PaletteInfoParser.getInstance().getTileInfo(textureChar).getTextureRegion();
 
             // Render the tile with lighting
             batchRenderer.addTexture(
-                    textureInfo,
+                    region,
                     pos.x,
                     pos.y,
                     pos.z,
@@ -99,7 +101,7 @@ public class GameEngine {
         // Set up the view matrix
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        glTranslatef(-GameFactory.player.playerPos.x, -GameFactory.player.playerPos.y, -GameFactory.player.playerPos.z);
+        glTranslatef(-GameFactory.player.getPosition().x, -GameFactory.player.getPosition().y, -GameFactory.player.getPosition().z);
 
         // Begin the batch
         batchRenderer.beginBatch();
@@ -149,7 +151,7 @@ public class GameEngine {
      * Checks the internal engine version with what gameinfo.json is asking for
      */
     private static void doVersionCheck() {
-        if (Constants.engineVersion.equals(GameInfoParser.engineVersion)) {
+        if (Constants.engineVersion.equals(GameInfoParser.getInstance().engineVersion)) {
             RainLogger.RAIN_LOGGER.info("Engine Version check: Pass");
         } else {
             RainLogger.RAIN_LOGGER.error("Engine Version check: FAIL");

@@ -26,7 +26,7 @@ public class ProjectileManager {
     }
 
     // Update all projectiles
-    public void update(float deltaTime) {
+    public void update(double deltaTime) {
         for (int i = 0; i < projectiles.size(); i++) {
             Projectile projectile = projectiles.get(i);
 

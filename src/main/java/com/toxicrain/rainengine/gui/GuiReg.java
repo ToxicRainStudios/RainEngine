@@ -203,9 +203,9 @@ public class GuiReg {
                 .popFont()
 
                 // Add version info at the bottom-right corner
-                .addTextAtPosition("© 2024 " + GameInfoParser.gameMakers + " - " + GameInfoParser.gameVersion,
-                        ImGui.getIO().getDisplaySizeX() - ImGui.calcTextSize("© 2024 " + GameInfoParser.gameMakers + " - " + GameInfoParser.gameVersion).x - 10,
-                        ImGui.getIO().getDisplaySizeY() - ImGui.calcTextSize("© 2024 " + GameInfoParser.gameMakers + " - " + GameInfoParser.gameVersion).y - 10)
+                .addTextAtPosition("© 2024 " + GameInfoParser.getInstance().gameMakers + " - " + GameInfoParser.getInstance().gameVersion,
+                        ImGui.getIO().getDisplaySizeX() - ImGui.calcTextSize("© 2024 " + GameInfoParser.getInstance().gameMakers + " - " + GameInfoParser.getInstance().gameVersion).x - 10,
+                        ImGui.getIO().getDisplaySizeY() - ImGui.calcTextSize("© 2024 " + GameInfoParser.getInstance().gameMakers + " - " + GameInfoParser.getInstance().gameVersion).y - 10)
 
                 // End window context
                 .endWindow();
@@ -232,9 +232,9 @@ public class GuiReg {
                 .popFont()
 
                 // Add version info at the bottom-right corner
-                .addTextAtPosition("© 2024 " + GameInfoParser.gameMakers + " - " + GameInfoParser.gameVersion,
-                        ImGui.getIO().getDisplaySizeX() - ImGui.calcTextSize("© 2024 " + GameInfoParser.gameMakers + " - " + GameInfoParser.gameVersion).x - 10,
-                        ImGui.getIO().getDisplaySizeY() - ImGui.calcTextSize("© 2024 " + GameInfoParser.gameMakers + " - " + GameInfoParser.gameVersion).y - 10)
+                .addTextAtPosition("© 2024 " + GameInfoParser.getInstance().gameMakers + " - " + GameInfoParser.getInstance().gameVersion,
+                        ImGui.getIO().getDisplaySizeX() - ImGui.calcTextSize("© 2024 " + GameInfoParser.getInstance().gameMakers + " - " + GameInfoParser.getInstance().gameVersion).x - 10,
+                        ImGui.getIO().getDisplaySizeY() - ImGui.calcTextSize("© 2024 " + GameInfoParser.getInstance().gameMakers + " - " + GameInfoParser.getInstance().gameVersion).y - 10)
 
                 // End window context
                 .endWindow();
@@ -274,7 +274,7 @@ public class GuiReg {
         float yOffset = 90.0f;
 
         // Loop through key bindings and display them centered
-        for (Map.Entry<String, String> entry : KeyInfoParser.getKeyBindings().entrySet()) {
+        for (Map.Entry<String, String> entry : KeyInfoParser.getInstance().getKeyBindings().entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
             String displayText = GameFactory.langHelper.get("gui.keybinds." + key) + ": " + value;
@@ -346,7 +346,7 @@ public class GuiReg {
                 // OpenGL Version
                 .addText(GameFactory.langHelper.get("gui.debug.text.opengl") + ": " + GL11.glGetString(GL11.GL_VERSION))
 
-                .addText("Player XYZ" + ": " + GameFactory.player.playerPos.toString())
+                .addText("Player XYZ" + ": " + GameFactory.player.getPosition().toString())
 
                 .addText(GameFactory.langHelper.get("gui.debug.text.music_track") + ": " + GameFactory.musicManager.getCurrentTrackName())
 

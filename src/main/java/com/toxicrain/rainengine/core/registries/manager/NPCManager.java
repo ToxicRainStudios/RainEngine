@@ -22,7 +22,7 @@ public class NPCManager {
     }
 
     // Update all NPCs and their behaviors
-    public void update(float deltaTime) {
+    public void update(double deltaTime) {
         // Loop through all NPCs and update their behavior
         for (NPC npc : npcs) {
             // Execute the NPC's behavior sequence if it's defined

@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.artifacts.behavior;
 
+import com.toxicrain.rainengine.artifacts.BaseNPC;
 import com.toxicrain.rainengine.artifacts.NPC;
 
 /**

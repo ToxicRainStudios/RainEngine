@@ -4,8 +4,7 @@ import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.eventbus.events.render.batchrenderer.BuildBatchRendererEvent;
 import com.toxicrain.rainengine.core.eventbus.events.render.batchrenderer.RenderBatchRendererEvent;
-import com.toxicrain.rainengine.factories.GameFactory;
-import com.toxicrain.rainengine.texture.TextureInfo;
+import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
 import lombok.NonNull;
 import org.lwjgl.BufferUtils;
@@ -18,36 +17,30 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 
 /**
- * The BatchRenderer class handles rendering multiple textures in a batch
- * to improve performance by reducing the number of draw calls.
- *
- * @author strubium
+ * BatchRenderer optimized for single texture atlas rendering.
  */
 public class BatchRenderer {
 
-    /** The maximum number of textures per batch */
-    private static final int MAX_TEXTURES = GameInfoParser.maxTexturesPerBatch;
+    private static final int MAX_TEXTURES = GameInfoParser.getInstance().maxTexturesPerBatch;
     private static final int VERTICES_PER_QUAD = 6;
+
     private final FloatBuffer vertexBuffer;
     private final FloatBuffer texCoordBuffer;
     private final FloatBuffer colorBuffer;
     private final List<TextureVertexInfo> textureVertexInfos;
+
     private final int vertexVboId;
     private final int texCoordVboId;
     private final int colorVboId;
 
+    private int atlasTextureId = -1; // Store atlas texture ID after first addTexture call
 
-    /**
-     * Constructs a BatchRenderer and initializes the vertex, texture coordinate, and color buffers
-     * as well as the Vertex Buffer Objects (VBOs).
-     */
     public BatchRenderer() {
-        vertexBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * VERTICES_PER_QUAD * 3); // 2 triangles per quad, 3 vertices per triangle
-        texCoordBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * VERTICES_PER_QUAD * 2); // 2 triangles per quad, 2 coords per vertex
-        colorBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * VERTICES_PER_QUAD * 4); // 2 triangles per quad, 4 colors per vertex
+        vertexBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * VERTICES_PER_QUAD * 3);
+        texCoordBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * VERTICES_PER_QUAD * 2);
+        colorBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * VERTICES_PER_QUAD * 4);
         textureVertexInfos = new ArrayList<>(MAX_TEXTURES);
 
-        // Generate VBOs
         vertexVboId = glGenBuffers();
         texCoordVboId = glGenBuffers();
         colorVboId = glGenBuffers();
@@ -56,21 +49,11 @@ public class BatchRenderer {
     }
 
     private static class TextureVertexInfo {
-        int textureId;
         float[] vertices;
         float[] texCoords;
         float[] colors;
 
-        /**
-         * Constructs a TextureVertexInfo with the specified texture ID, vertices, texture coordinates, and colors.
-         *
-         * @param textureId the ID of the texture
-         * @param vertices the vertex coordinates of the texture
-         * @param texCoords the texture coordinates
-         * @param colors the color data for the vertices
-         */
-        TextureVertexInfo(int textureId, float[] vertices, float[] texCoords, float[] colors) {
-            this.textureId = textureId;
+        TextureVertexInfo(float[] vertices, float[] texCoords, float[] colors) {
             this.vertices = vertices;
             this.texCoords = texCoords;
             this.colors = colors;
@@ -78,7 +61,6 @@ public class BatchRenderer {
     }
 
     public void beginBatch() {
-        // Enable necessary OpenGL states
         glEnable(GL_TEXTURE_2D);
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -88,50 +70,48 @@ public class BatchRenderer {
         vertexBuffer.clear();
         texCoordBuffer.clear();
         colorBuffer.clear();
+
+        atlasTextureId = -1;
     }
 
-    /**
-     * Adds a texture with specified rotation, scaling, and color to the current batch.
-     * If the batch exceeds the maximum texture count, it is rendered and a new batch is started.
-     *
-     * @param textureInfo the texture information
-     * @param x the x-coordinate of the texture
-     * @param y the y-coordinate of the texture
-     * @param z the z-coordinate of the texture
-     * @param params parameters of the texture
-     */
-    public void addTexture(@NonNull TextureInfo textureInfo, float x, float y, float z, TileParameters params) {
+    public void addTexture(@NonNull TextureRegion region, float x, float y, float z, TileParameters params) {
         if (willOverflow()) {
-            renderBatch();  // Flush before we overflow
-            beginBatch();   // Reset state
+            renderBatch();
+            beginBatch();
+        }
+
+        // Capture atlas texture ID on first add
+        if (atlasTextureId == -1) {
+            atlasTextureId = region.getTextureInfo().textureId;
         }
 
         float angle = params.angle != null ? params.angle : calculateRotationAngle(x, y, params.posX, params.posY);
-        float[] rotatedVertices = createRotatedVertices(textureInfo, x, y, z, angle, params.scaleX, params.scaleY);
+        float[] rotatedVertices = createRotatedVertices(region.getTextureInfo(), x, y, z, angle, params.scaleX, params.scaleY);
         float[] triangleVertices = generateTriangleVertices(rotatedVertices);
-        float[] texCoords = createTexCoords();
+        float[] texCoords = createTexCoords(region);
         float[] triangleTexCoords = generateTriangleTexCoords(texCoords);
 
-        float[] color = params.color != null ? params.color : (params.lightPositions != null ? determineColorBasedOnLightLevel(calculateLightLevel(params.lightPositions, rotatedVertices)) : new float[] {1.0f, 1.0f, 1.0f, 1.0f});
+        float[] color = params.color != null ? params.color : (params.lightPositions != null
+                ? determineColorBasedOnLightLevel(calculateLightLevel(params.lightPositions, rotatedVertices))
+                : new float[]{1f, 1f, 1f, 1f});
         float[] triangleColors = generateTriangleColors(color);
 
-        textureVertexInfos.add(new TextureVertexInfo(textureInfo.textureId, triangleVertices, triangleTexCoords, triangleColors));
+        textureVertexInfos.add(new TextureVertexInfo(triangleVertices, triangleTexCoords, triangleColors));
     }
 
-
-    // Helper Methods
     private boolean willOverflow() {
         int requiredVertices = (textureVertexInfos.size() + 1) * VERTICES_PER_QUAD;
         return requiredVertices > MAX_TEXTURES * VERTICES_PER_QUAD;
     }
 
-    private float[] createRotatedVertices(TextureInfo textureInfo, float x, float y, float z, float angle, float scaleX, float scaleY) {
+    private float[] createRotatedVertices(com.toxicrain.rainengine.texture.TextureInfo textureInfo, float x, float y, float z,
+                                          float angle, float scaleX, float scaleY) {
         float aspectRatio = (float) textureInfo.width / textureInfo.height;
         float[] originalVertices = {
-                -aspectRatio * scaleX, -scaleY, 0.0f,
-                aspectRatio * scaleX, -scaleY, 0.0f,
-                aspectRatio * scaleX, scaleY, 0.0f,
-                -aspectRatio * scaleX, scaleY, 0.0f
+                -aspectRatio * scaleX, -scaleY, 0f,
+                aspectRatio * scaleX, -scaleY, 0f,
+                aspectRatio * scaleX, scaleY, 0f,
+                -aspectRatio * scaleX, scaleY, 0f
         };
 
         float cosTheta = (float) Math.cos(angle);
@@ -139,18 +119,18 @@ public class BatchRenderer {
 
         float[] rotatedVertices = new float[12];
         for (int i = 0; i < 4; i++) {
-            int index = i * 3;
-            float vx = originalVertices[index];
-            float vy = originalVertices[index + 1];
-            rotatedVertices[index] = x + (vx * cosTheta - vy * sinTheta);
-            rotatedVertices[index + 1] = y + (vx * sinTheta + vy * cosTheta);
-            rotatedVertices[index + 2] = z;
+            int idx = i * 3;
+            float vx = originalVertices[idx];
+            float vy = originalVertices[idx + 1];
+            rotatedVertices[idx] = x + (vx * cosTheta - vy * sinTheta);
+            rotatedVertices[idx + 1] = y + (vx * sinTheta + vy * cosTheta);
+            rotatedVertices[idx + 2] = z;
         }
         return rotatedVertices;
     }
 
     private float[] generateTriangleVertices(float[] rotatedVertices) {
-        return new float[] {
+        return new float[]{
                 rotatedVertices[0], rotatedVertices[1], rotatedVertices[2],
                 rotatedVertices[3], rotatedVertices[4], rotatedVertices[5],
                 rotatedVertices[6], rotatedVertices[7], rotatedVertices[8],
@@ -161,17 +141,17 @@ public class BatchRenderer {
         };
     }
 
-    private float[] createTexCoords() {
-        return new float[] {
-                0.0f, 0.0f,
-                1.0f, 0.0f,
-                1.0f, 1.0f,
-                0.0f, 1.0f
+    private float[] createTexCoords(TextureRegion region) {
+        return new float[]{
+                region.getU0(), region.getV0(),
+                region.getU1(), region.getV0(),
+                region.getU1(), region.getV1(),
+                region.getU0(), region.getV1()
         };
     }
 
     private float[] generateTriangleTexCoords(float[] texCoords) {
-        return new float[] {
+        return new float[]{
                 texCoords[0], texCoords[1],
                 texCoords[2], texCoords[3],
                 texCoords[4], texCoords[5],
@@ -195,141 +175,81 @@ public class BatchRenderer {
     }
 
     private float[] determineColorBasedOnLightLevel(float lightLevel) {
-        float[] minLightColor = {0.03f, 0.03f, 0.03f, 1.0f}; // Color for minimum light level
-        float[] maxLightColor = {1.0f, 1.0f, 1.0f, 1.0f}; // Color for maximum light level
-
-        // Clamp lightLevel to the range [0, 1].
-        lightLevel = Math.max(0.0f, Math.min(lightLevel, 1.0f));
-
-        // Interpolate each color component based on the light level.
-        float[] interpolatedColor = new float[4]; // Store the RGBA result
+        float[] minLight = {0.03f, 0.03f, 0.03f, 1f};
+        float[] maxLight = {1f, 1f, 1f, 1f};
+        lightLevel = Math.max(0f, Math.min(lightLevel, 1f));
+        float[] result = new float[4];
         for (int i = 0; i < 4; i++) {
-            interpolatedColor[i] = minLightColor[i] + (maxLightColor[i] - minLightColor[i]) * lightLevel;
+            result[i] = minLight[i] + (maxLight[i] - minLight[i]) * lightLevel;
         }
-
-        return interpolatedColor;
+        return result;
     }
 
-
-
-    /**
-     * Calculates the total light level at vertices based on the positions of lights and their maximum distances.
-     *
-     * <p>This method computes the light intensity at each vertex from multiple light sources. Each light source is
-     * defined by its position (x, y) and a maximum distance that determines how far its light can reach. The intensity
-     * of light at a vertex is calculated using the inverse of the distance between the vertex and the light source, with
-     * the maximum value determined by the light's range. The total light level is then averaged across all vertices and
-     * normalized to ensure it falls within the range [0.0, 1.0].</p>
-     *
-     * @param lightPositions A list of light sources, where each light source is represented by a float array
-     *                       with three elements: x position, y position, and maximum distance of the light.
-     * @param vertices An array of vertex coordinates, where each vertex is represented by three consecutive floats
-     *                 (x, y, z). Only the x and y coordinates are used for light intensity calculation.
-     *
-     * @return The normalized light level at the vertices, within the range [0.0, 1.0].
-     */
     private float calculateLightLevel(List<float[]> lightPositions, float[] vertices) {
-        float totalLightLevel = 0.0f;
-        for (float[] lightPos : lightPositions) {
-            float lightX = lightPos[0];
-            float lightY = lightPos[1];
-            float maxDistance = lightPos[2]; // Max distance for this light
+        float totalLight = 0f;
+        for (float[] light : lightPositions) {
+            float lx = light[0];
+            float ly = light[1];
+            float maxDist = light[2];
 
-            // Calculate the light intensity for each vertex
             for (int i = 0; i < vertices.length; i += 3) {
-                float vertexX = vertices[i];
-                float vertexY = vertices[i + 1];
-                float dx = lightX - vertexX;
-                float dy = lightY - vertexY;
-                float distance = (float) Math.sqrt(dx * dx + dy * dy);
-                float intensity = Math.max(0, 1 - distance / maxDistance);
-                totalLightLevel += intensity;
+                float vx = vertices[i];
+                float vy = vertices[i + 1];
+                float dx = lx - vx;
+                float dy = ly - vy;
+                float dist = (float) Math.sqrt(dx * dx + dy * dy);
+                float intensity = Math.max(0, 1 - dist / maxDist);
+                totalLight += intensity;
             }
         }
-
-        // Normalize the total light level
-        int vertexCount = vertices.length / 3;
-        return Math.min(1.0f, totalLightLevel / vertexCount);
+        int vertCount = vertices.length / 3;
+        return Math.min(1f, totalLight / vertCount);
     }
 
-    /**
-     * Renders the current batch of textures by uploading vertex, texture coordinate, and color data
-     * to the GPU and issuing draw calls.
-     */
     public void renderBatch() {
-        // Early exit if there are no textures to render
-        if (textureVertexInfos.isEmpty()) return;
+        if (textureVertexInfos.isEmpty() || atlasTextureId == -1) return;
 
-        int currentTextureId = -1;
-
-        // Clear buffers to start fresh
         vertexBuffer.clear();
         texCoordBuffer.clear();
         colorBuffer.clear();
 
         SmeagleBus.getInstance().post(new RenderBatchRendererEvent(this));
 
+        // Bind the atlas texture once
+        glBindTexture(GL_TEXTURE_2D, atlasTextureId);
+
         for (TextureVertexInfo info : textureVertexInfos) {
-            // Check if we need to switch to a new texture
-            if (info.textureId != currentTextureId) {
-                // Render the current batch if it exists
-                if (currentTextureId != -1) {
-                    // Prepare buffers for rendering
-                    vertexBuffer.flip();
-                    texCoordBuffer.flip();
-                    colorBuffer.flip();
-                    renderCurrentBatch(); // Render the batch
-
-                    // Clear buffers for the next batch
-                    vertexBuffer.clear();
-                    texCoordBuffer.clear();
-                    colorBuffer.clear();
-                }
-                // Bind the new texture
-                glBindTexture(GL_TEXTURE_2D, info.textureId);
-                currentTextureId = info.textureId;
-            }
-
-            // Add current texture data to buffers
             vertexBuffer.put(info.vertices);
             texCoordBuffer.put(info.texCoords);
             colorBuffer.put(info.colors);
         }
 
-        // Render the last batch if it exists
-        if (currentTextureId != -1) {
-            vertexBuffer.flip();
-            texCoordBuffer.flip();
-            colorBuffer.flip();
-            renderCurrentBatch();
-        }
+        vertexBuffer.flip();
+        texCoordBuffer.flip();
+        colorBuffer.flip();
 
-        // Disable OpenGL states and clean up
+        renderCurrentBatch();
+
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         glDisableClientState(GL_COLOR_ARRAY);
         glDisable(GL_TEXTURE_2D);
 
-        // Unbind any buffers
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
     private void renderCurrentBatch() {
-        // Make sure transparency works
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        // Upload vertex data to VBO
         glBindBuffer(GL_ARRAY_BUFFER, vertexVboId);
         glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_DYNAMIC_DRAW);
         glVertexPointer(3, GL_FLOAT, 0, 0);
 
-        // Upload texture coordinate data to VBO
         glBindBuffer(GL_ARRAY_BUFFER, texCoordVboId);
         glBufferData(GL_ARRAY_BUFFER, texCoordBuffer, GL_DYNAMIC_DRAW);
         glTexCoordPointer(2, GL_FLOAT, 0, 0);
 
-        // Upload color data to VBO
         glBindBuffer(GL_ARRAY_BUFFER, colorVboId);
         glBufferData(GL_ARRAY_BUFFER, colorBuffer, GL_DYNAMIC_DRAW);
         glColorPointer(4, GL_FLOAT, 0, 0);

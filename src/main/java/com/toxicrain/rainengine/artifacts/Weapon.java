@@ -1,43 +1,40 @@
 package com.toxicrain.rainengine.artifacts;
 
+import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.registries.WeaponRegistry;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.sound.SoundInfo;
 import com.toxicrain.rainengine.sound.SoundSystem;
-import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.util.MathUtils;
 import lombok.Getter;
 
 public class Weapon {
-    @Getter
-    private final String name;
-    @Getter
-    private final int damage;
-    @Getter
-    private final float range;
-    @Getter
-    private boolean isEquipped;
+
+    @Getter Resource imageLocation;
+    @Getter private final String name;
+    @Getter private final int damage;
+    @Getter private final float range;
+    @Getter private boolean isEquipped;
     private final int maxShot;
     private final int minShot;
-    private final TextureInfo projectileTexture;
     private long lastAttackTime; // Tracks the last time the weapon was used
     private final long cooldown; // Cooldown duration in milliseconds
     private final float spread;
     private final SoundInfo soundInfo;
 
-    public Weapon(String name, int damage, float range, int maxShot, int minShot, TextureInfo projectileTexture, long cooldown, float spread, String soundInfo) {
+    public Weapon(String name, Resource imageLocation, Resource firingSoundLocation, int damage, float range, int maxShot, int minShot, long cooldown, float spread) {
         this.name = name;
         this.damage = damage;
         this.range = range;
         this.isEquipped = false;
         this.maxShot = maxShot;
         this.minShot = minShot;
-        this.projectileTexture = projectileTexture;
+        this.imageLocation = imageLocation;
         this.cooldown = cooldown;
         this.lastAttackTime = 0;
         this.spread = spread;
-        this.soundInfo = SoundSystem.getSound(soundInfo);
+        this.soundInfo = SoundSystem.getSound(firingSoundLocation);
 
         RainLogger.gameLogger.info("Building Weapon: {}", this.name);
         WeaponRegistry.register(this);
@@ -93,7 +90,7 @@ public class Weapon {
         float velocityY = (float) Math.sin(playerAngle) * speed;
 
         // Spawn the projectile
-        new Projectile(xpos, ypos, velocityX, velocityY, projectileTexture);
+        new Projectile(imageLocation, xpos, ypos, velocityX, velocityY);
 
         RainLogger.RAIN_LOGGER.debug("Projectile created at ({}, {}) with velocity ({}, {}) and angle: {} degrees", xpos, ypos, velocityX, velocityY, Math.toDegrees(playerAngle));
     }

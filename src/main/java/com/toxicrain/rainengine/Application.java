@@ -15,7 +15,7 @@ public class Application {
     public static void main(String[] args) {
         RainLogger.RAIN_LOGGER.info("Starting with args: {}", Arrays.toString(args));
 
-        GameInfoParser.loadGameInfo();
+        GameInfoParser.getInstance().loadGameInfo();
         GameEngine.run();
     }
 

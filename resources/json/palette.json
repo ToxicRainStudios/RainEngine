@@ -8,6 +8,10 @@
       "name": "concreteTexture1",
       "collision": true
     },
+    "5": {
+      "name": "example:bullet2",
+      "collision": true
+    },
     "-": {
       "name": "concreteTexture2",
       "collision": true
@@ -29,7 +33,7 @@
       "collision": false
     },
     "~": {
-      "name": "splatterTexture",
+      "name": "splatter",
       "collision": false
     }
   }

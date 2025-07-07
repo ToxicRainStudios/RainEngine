@@ -1,5 +1,7 @@
 package com.toxicrain.rainengine.core.json;
 
+import com.toxicrain.rainengine.core.BaseInstanceable;
+import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import org.json.JSONObject;
 
@@ -14,9 +16,7 @@ import com.toxicrain.rainengine.util.FileUtils;
 /**
  * SettingsInfoParser dynamically loads and manages settings.json file
  */
-public class SettingsInfoParser {
-    private static SettingsInfoParser instance = null;
-    private static final String SETTINGS_PATH = "resources/json/settings.json";
+public class SettingsInfoParser extends BaseInstanceable<SettingsInfoParser> {
     private JSONObject settingsJson;
     private final Map<String, Object> settings = new HashMap<>();
 
@@ -25,14 +25,11 @@ public class SettingsInfoParser {
     }
 
     public static SettingsInfoParser getInstance() {
-        if (instance == null) {
-            instance = new SettingsInfoParser();
-        }
-        return instance;
+        return BaseInstanceable.getInstance(SettingsInfoParser.class);
     }
 
     private void loadSettings() {
-        String filePath = FileUtils.getCurrentWorkingDirectory(SETTINGS_PATH);
+        String filePath = FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.SETTINGS_PATH);
 
         try {
             String jsonString = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -61,7 +58,7 @@ public class SettingsInfoParser {
     }
 
     private void saveSettings() {
-        String filePath = FileUtils.getCurrentWorkingDirectory(SETTINGS_PATH);
+        String filePath = FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.SETTINGS_PATH);
         try {
             Files.write(Paths.get(filePath), settingsJson.toString(4).getBytes());
         } catch (IOException e) {
