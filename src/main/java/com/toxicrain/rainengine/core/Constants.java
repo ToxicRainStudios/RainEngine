@@ -30,6 +30,8 @@ public class Constants {
 
         public static final String MAP_PATH = BASE_PATH + "/json/";
 
+        public static final String IMAGES_PATH = BASE_PATH + "/images";
+
         public static final String KEYBINDS_PATH = BASE_PATH + "/json/keybinds.json";
 
     }

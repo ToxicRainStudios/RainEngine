@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.texture;
 
+import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.util.FileUtils;
@@ -9,8 +10,8 @@ public class TextureSystem {
     private static TextureAtlas textureAtlas;
 
     public static void initTextures() {
-        String textureDirectory = FileUtils.getCurrentWorkingDirectory("resources/images");
-        textureAtlas = new TextureAtlas(2048); // or 4096 depending on your max texture size
+        String textureDirectory = FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.IMAGES_PATH);
+        textureAtlas = new TextureAtlas(2048);
         textureAtlas.buildAtlas(textureDirectory);
         RainLogger.RAIN_LOGGER.info("Texture atlas built.");
     }
