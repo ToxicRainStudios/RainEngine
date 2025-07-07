@@ -10,10 +10,10 @@ public class LookAtPlayerBehavior extends Behavior {
     @Override
     public boolean execute(NPC npc) {
         // Get the current position of the NPC and the Player
-        float npcX = npc.getNpcPos().x;
-        float npcY = npc.getNpcPos().y;
-        float playerX = GameFactory.player.playerPos.x;
-        float playerY = GameFactory.player.playerPos.y;
+        float npcX = npc.getPosition().x;
+        float npcY = npc.getPosition().y;
+        float playerX = GameFactory.player.getPosition().x;
+        float playerY = GameFactory.player.getPosition().y;
 
         // Calculate the direction to the player
         float deltaX = playerX - npcX;

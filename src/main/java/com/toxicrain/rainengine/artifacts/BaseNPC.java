@@ -1,63 +1,40 @@
 package com.toxicrain.rainengine.artifacts;
 
 import com.toxicrain.rainengine.artifacts.behavior.BehaviorSequence;
-import com.toxicrain.rainengine.core.Constants;
-import com.toxicrain.rainengine.core.datatypes.AABB;
-import com.toxicrain.rainengine.core.datatypes.Color;
-import com.toxicrain.rainengine.core.datatypes.TileParameters;
-import com.toxicrain.rainengine.core.datatypes.TilePos;
+import com.toxicrain.rainengine.core.datatypes.*;
 import com.toxicrain.rainengine.core.datatypes.vector.Vector2;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
-import com.toxicrain.rainengine.core.render.BatchRenderer;
-import com.toxicrain.rainengine.texture.TextureSystem;
+
 import lombok.Getter;
 import lombok.Setter;
 
-public class BaseNPC implements IArtifact {
+public class BaseNPC extends RenderableArtifact implements IArtifact {
 
-    @Getter @Setter
-    protected TilePos npcPos;
-
-    @Getter @Setter
-    protected Vector2 direction;
-
-    @Getter @Setter
-    protected float rotation;
-
-    @Getter @Setter
-    protected float fieldOfViewAngle = 90f;
-
-    @Getter @Setter
-    protected float visionDistance = 300f;
-
-    @Getter @Setter
-    protected float size;
-
-    @Getter @Setter
-    protected BehaviorSequence behaviorSequence;
+    @Getter @Setter protected Vector2 direction;
+    @Getter @Setter protected float fieldOfViewAngle = 90f;
+    @Getter @Setter protected float visionDistance = 300f;
+    @Getter @Setter protected BehaviorSequence behaviorSequence;
 
     protected AABB npcAABB;
 
-    public BaseNPC(float startingXpos, float startingYpos, float rotation, float size) {
-        this.npcPos = new TilePos(startingXpos, startingYpos, 1);
-        this.rotation = rotation;
-        this.size = size;
+    public BaseNPC(Resource imageLocation, float startingXpos, float startingYpos, float rotation, float size) {
+        super(imageLocation, startingXpos, startingYpos, rotation, size);
 
         this.direction = new Vector2((float) Math.cos(rotation), (float) Math.sin(rotation));
 
         float halfSize = size / 2f;
         this.npcAABB = new AABB(
-                npcPos.x - halfSize,
-                npcPos.y - halfSize,
-                npcPos.x + halfSize,
-                npcPos.y + halfSize
+                position.x - halfSize,
+                position.y - halfSize,
+                position.x + halfSize,
+                position.y + halfSize
         );
     }
 
     public boolean canSeeTarget(TilePos targetPos) {
-        float deltaX = targetPos.x - npcPos.x;
-        float deltaY = targetPos.y - npcPos.y;
+        float deltaX = targetPos.x - position.x;
+        float deltaY = targetPos.y - position.y;
 
         float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         if (distance > visionDistance) return false;
@@ -75,13 +52,13 @@ public class BaseNPC implements IArtifact {
     }
 
     public void moveTowardsTarget(TilePos targetPos, float speed) {
-        float deltaX = targetPos.x - npcPos.x;
-        float deltaY = targetPos.y - npcPos.y;
+        float deltaX = targetPos.x - position.x;
+        float deltaY = targetPos.y - position.y;
 
         float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         if (distance > 0) {
-            npcPos.x += (deltaX / distance) * speed;
-            npcPos.y += (deltaY / distance) * speed;
+            position.x += (deltaX / distance) * speed;
+            position.y += (deltaY / distance) * speed;
         }
 
         handleCollisions();
@@ -96,33 +73,28 @@ public class BaseNPC implements IArtifact {
         float halfSize = this.size / 2f;
 
         npcAABB.update(
-                npcPos.x - halfSize,
-                npcPos.y - halfSize,
-                npcPos.x + halfSize,
-                npcPos.y + halfSize
+                position.x - halfSize,
+                position.y - halfSize,
+                position.x + halfSize,
+                position.y + halfSize
         );
 
         char collisionDirection = Collisions.collideWorld(npcAABB);
 
         switch (collisionDirection) {
             case 'u':
-                npcPos.y += 0.002f;
+                position.y += 0.002f;
                 break;
             case 'd':
-                npcPos.y -= 0.002f;
+                position.y -= 0.002f;
                 break;
             case 'l':
-                npcPos.x += 0.002f;
+                position.x += 0.002f;
                 break;
             case 'r':
-                npcPos.x -= 0.002f;
+                position.x -= 0.002f;
                 break;
         }
-    }
-
-    public void render(BatchRenderer batchRenderer) {
-        batchRenderer.addTexture(TextureSystem.getTexture("npcTexture"), npcPos.x, npcPos.y, Constants.NPC_ZLEVEL,
-                new TileParameters(rotation, 0f, 0f, 1f, 1f, Color.toFloatArray(Color.WHITE), null));
     }
 
     // Optional hooks for specialized NPCs
