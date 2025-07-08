@@ -3,8 +3,10 @@ package com.toxicrain.rainengine.core.eventbus;
 import com.github.strubium.windowmanager.imgui.GuiManager;
 import com.github.strubium.windowmanager.window.WindowManager;
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
+import com.toxicrain.rainengine.artifacts.trigger.Trigger;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.GameLoader;
+import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.eventbus.events.DrawMapEvent;
 import com.toxicrain.rainengine.core.eventbus.events.GameUpdateEvent;
@@ -23,6 +25,7 @@ import com.toxicrain.rainengine.core.json.key.KeyMap;
 import com.toxicrain.rainengine.core.lua.LuaManager;
 import com.toxicrain.rainengine.core.registries.manager.NPCManager;
 import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
+import com.toxicrain.rainengine.core.registries.manager.TriggerManager;
 import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.core.resources.ResourceManager;
 import com.toxicrain.rainengine.factories.GameFactory;
@@ -56,6 +59,9 @@ public class RainBusListener {
 
         SmeagleBus.getInstance().listen(InitLoadEvent.class)
                 .subscribe(event -> {
+
+                    GameFactory.triggerManager = new TriggerManager();
+
                     RainLogger.RAIN_LOGGER.info("Loading Lua");
                     GameFactory.loadLua();
                     LuaManager.categorizeScripts("resources/scripts/");
@@ -94,6 +100,7 @@ public class RainBusListener {
                     // Set up the projection matrix with FOV of 90 degrees
                     glMatrixMode(GL_PROJECTION);
                     glLoadMatrixf(GameEngine.createPerspectiveProjectionMatrix(SettingsInfoParser.getInstance().getFOV(), SettingsInfoParser.getInstance().getWindowWidth() / SettingsInfoParser.getInstance().getWindowHeight(), 1.0f, 100.0f));
+
 
                     GameFactory.load();
 
@@ -154,11 +161,16 @@ public class RainBusListener {
 
                     GameFactory.player.update(deltaTime);
 
+                    GameFactory.triggerManager.update(GameFactory.player.getPosition());
+
+
                     for (int engineFrames = 30; engineFrames >= 0; engineFrames--) {
 
                         GameFactory.npcManager.update(deltaTime);
 
                         GameFactory.projectileManager.update(deltaTime);
+
+
 
                     }
                     LuaManager.executeTickScripts();

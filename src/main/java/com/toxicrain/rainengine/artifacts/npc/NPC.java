@@ -1,4 +1,4 @@
-package com.toxicrain.rainengine.artifacts;
+package com.toxicrain.rainengine.artifacts.npc;
 
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.factories.GameFactory;
@@ -12,11 +12,11 @@ public class NPC extends BaseNPC {
     }
 
     public boolean canSeePlayer() {
-        return canSeeTarget(GameFactory.player.position);
+        return canSeeTarget(GameFactory.player.getPosition());
     }
 
     public void moveTowardsPlayer(float speed) {
-        moveTowardsTarget(GameFactory.player.position, speed);
+        moveTowardsTarget(GameFactory.player.getPosition(), speed);
     }
 
     @Override

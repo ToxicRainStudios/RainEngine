@@ -43,7 +43,7 @@ public class Player extends RenderableArtifact implements IArtifact {
 
     private float[] openglMousePos;
 
-    private final AABB playerAABB;
+    @Getter private final AABB playerAABB;
 
     @Getter @Setter private float angle;
 

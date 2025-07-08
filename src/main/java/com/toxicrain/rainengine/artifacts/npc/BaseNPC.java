@@ -1,5 +1,6 @@
-package com.toxicrain.rainengine.artifacts;
+package com.toxicrain.rainengine.artifacts.npc;
 
+import com.toxicrain.rainengine.artifacts.RenderableArtifact;
 import com.toxicrain.rainengine.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.rainengine.core.datatypes.*;
 import com.toxicrain.rainengine.core.datatypes.vector.Vector2;

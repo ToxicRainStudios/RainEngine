@@ -1,7 +1,6 @@
 package com.toxicrain.rainengine.artifacts.behavior;
 
-import com.toxicrain.rainengine.artifacts.BaseNPC;
-import com.toxicrain.rainengine.artifacts.NPC;
+import com.toxicrain.rainengine.artifacts.npc.NPC;
 
 /**
  * Base class for behavior trees

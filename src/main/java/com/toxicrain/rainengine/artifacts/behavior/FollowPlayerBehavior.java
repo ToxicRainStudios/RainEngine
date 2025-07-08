@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine.artifacts.behavior;
 
-import com.toxicrain.rainengine.artifacts.NPC;
+import com.toxicrain.rainengine.artifacts.npc.NPC;
 import com.toxicrain.rainengine.factories.GameFactory;
 
 public class FollowPlayerBehavior extends Behavior {

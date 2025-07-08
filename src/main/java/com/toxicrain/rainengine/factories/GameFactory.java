@@ -11,6 +11,7 @@ import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.json.SettingsInfoParser;
 import com.toxicrain.rainengine.core.lua.LuaManager;
 import com.toxicrain.rainengine.core.lua.LuaEngine;
+import com.toxicrain.rainengine.core.registries.manager.TriggerManager;
 import com.toxicrain.rainengine.gui.GuiLuaWrapper;
 import com.toxicrain.rainengine.gui.GuiReg;
 import com.toxicrain.rainengine.sound.SoundInfo;
@@ -47,6 +48,7 @@ public class GameFactory {
     public static NPCManager npcManager;
 
     public static TextureAtlas textureAtlas;
+    public static TriggerManager triggerManager;
 
     public static void load() {
         // Load the texture atlas

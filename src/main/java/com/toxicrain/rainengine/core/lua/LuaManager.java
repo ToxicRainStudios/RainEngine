@@ -1,6 +1,8 @@
 package com.toxicrain.rainengine.core.lua;
 
+import com.toxicrain.rainengine.artifacts.trigger.Trigger;
 import com.toxicrain.rainengine.core.GameEngine;
+import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
@@ -8,6 +10,7 @@ import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.sound.SoundSystem;
 import com.toxicrain.rainengine.util.FileUtils;
 import org.luaj.vm2.*;
+import org.luaj.vm2.lib.VarArgFunction;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -119,6 +122,7 @@ public class LuaManager {
             public LuaValue call(LuaValue arg) {
                 try {
                     RainLogger.LUA_LOGGER.info("Loading Map Data");
+                    GameFactory.triggerManager.clearTriggers();
                     MapInfoParser.getInstance().parseMapFile(String.valueOf(arg));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -126,6 +130,27 @@ public class LuaManager {
                 return arg;
             }
         });
+
+        globals.set("createTrigger", new VarArgFunction() {
+            @Override
+            public Varargs invoke(Varargs args) {
+                float minX = (float) args.arg(1).todouble();
+                float minY = (float) args.arg(2).todouble();
+                float maxX = (float) args.arg(3).todouble();
+                float maxY = (float) args.arg(4).todouble();
+                boolean oneTime = args.arg(5).toboolean();
+                LuaFunction callback = args.arg(6).checkfunction();
+
+                Trigger trigger = new Trigger(
+                        new AABB(minX, minY, maxX, maxY),
+                        () -> callback.call(), // call the Lua callback
+                        oneTime
+                );
+
+                return LuaValue.TRUE;
+            }
+        });
+
 
         globals.set("isKeyPressed", new LuaFunction() {
             @Override

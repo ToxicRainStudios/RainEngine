@@ -48,4 +48,10 @@ public class AABB {
     public boolean contains(TilePos pos) {
         return contains(pos.x, pos.y);
     }
+
+    @Override
+    public String toString() {
+        return "AABB[minX=" + minX + ", minY=" + minY + ", maxX=" + maxX + ", maxY=" + maxY + "]";
+    }
+
 }
