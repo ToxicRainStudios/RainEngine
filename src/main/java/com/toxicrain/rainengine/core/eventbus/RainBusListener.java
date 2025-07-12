@@ -3,10 +3,8 @@ package com.toxicrain.rainengine.core.eventbus;
 import com.github.strubium.windowmanager.imgui.GuiManager;
 import com.github.strubium.windowmanager.window.WindowManager;
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
-import com.toxicrain.rainengine.artifacts.trigger.Trigger;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.GameLoader;
-import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.eventbus.events.DrawMapEvent;
 import com.toxicrain.rainengine.core.eventbus.events.GameUpdateEvent;
@@ -31,7 +29,6 @@ import com.toxicrain.rainengine.core.resources.ResourceManager;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.sound.SoundInfo;
 import com.toxicrain.rainengine.sound.SoundSystem;
-import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import org.lwjgl.glfw.GLFWScrollCallback;
@@ -189,7 +186,7 @@ public class RainBusListener {
 
         SmeagleBus.getInstance().listen(ScrollEvent.class)
                 .subscribe(event -> {
-                    GameFactory.player.scrollOffset = event.yOffeset;
+                    GameFactory.player.scrollOffset = event.yOffset;
                 });
     }
 
