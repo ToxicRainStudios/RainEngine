@@ -67,7 +67,7 @@ public class BaseNPC extends RenderableArtifact implements IArtifact {
 
     public void lookAt(float angle) {
         this.rotation = angle;
-        this.direction.set((float) Math.cos(angle), (float) Math.sin(angle));
+        this.direction.update((float) Math.cos(angle), (float) Math.sin(angle));
     }
 
     public void handleCollisions() {

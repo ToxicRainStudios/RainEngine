@@ -1,15 +1,13 @@
 package com.toxicrain.rainengine.core.datatypes.vector;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class Vector2 {
     public float x;
     public float y;
 
-    public Vector2(float x, float y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public Vector2 set(float x, float y){
+    public Vector2 update(float x, float y){
         this.x = x;
         this.y = y;
         return this;
