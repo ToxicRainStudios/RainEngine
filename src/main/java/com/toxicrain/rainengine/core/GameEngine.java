@@ -6,10 +6,7 @@ import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.eventbus.RainBusListener;
 import com.toxicrain.rainengine.core.eventbus.events.*;
-import com.toxicrain.rainengine.core.eventbus.events.load.InitLoadEvent;
-import com.toxicrain.rainengine.core.eventbus.events.load.ManagerLoadEvent;
-import com.toxicrain.rainengine.core.eventbus.events.load.PostInitLoadEvent;
-import com.toxicrain.rainengine.core.eventbus.events.load.PreInitLoadEvent;
+import com.toxicrain.rainengine.core.eventbus.events.load.LoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.render.RenderGuiEvent;
 import com.toxicrain.rainengine.core.json.*;
 import com.toxicrain.rainengine.core.logging.RainLogger;
@@ -17,7 +14,6 @@ import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.light.LightSystem;
-import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import lombok.experimental.UtilityClass;
@@ -48,13 +44,13 @@ public class GameEngine {
         RainLogger.RAIN_LOGGER.info("Loading Event Bus");
         RainBusListener.addEventListeners();
 
-        SmeagleBus.getInstance().post(new PreInitLoadEvent());
+        SmeagleBus.getInstance().post(new LoadEvent(LoadEvent.LoadEventStage.PRE));
 
-        SmeagleBus.getInstance().post(new InitLoadEvent());
+        SmeagleBus.getInstance().post(new LoadEvent(LoadEvent.LoadEventStage.ININT));
 
-        SmeagleBus.getInstance().post(new ManagerLoadEvent());
+        SmeagleBus.getInstance().post(new LoadEvent(LoadEvent.LoadEventStage.MANAGER));
 
-        SmeagleBus.getInstance().post(new PostInitLoadEvent());
+        SmeagleBus.getInstance().post(new LoadEvent(LoadEvent.LoadEventStage.POST));
 
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();

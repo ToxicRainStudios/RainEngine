@@ -5,15 +5,12 @@ import com.github.strubium.windowmanager.window.WindowManager;
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.GameLoader;
+import com.toxicrain.rainengine.core.eventbus.events.load.LoadEvent;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.eventbus.events.DrawMapEvent;
 import com.toxicrain.rainengine.core.eventbus.events.GameUpdateEvent;
 import com.toxicrain.rainengine.core.eventbus.events.KeyPressEvent;
 import com.toxicrain.rainengine.core.eventbus.events.ScrollEvent;
-import com.toxicrain.rainengine.core.eventbus.events.load.InitLoadEvent;
-import com.toxicrain.rainengine.core.eventbus.events.load.ManagerLoadEvent;
-import com.toxicrain.rainengine.core.eventbus.events.load.PostInitLoadEvent;
-import com.toxicrain.rainengine.core.eventbus.events.load.PreInitLoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.render.RenderGuiEvent;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
 import com.toxicrain.rainengine.core.json.PaletteInfoParser;
@@ -47,100 +44,108 @@ public class RainBusListener {
 
     public static void addEventListeners(){
 
-        SmeagleBus.getInstance().listen(PreInitLoadEvent.class)
+        SmeagleBus.getInstance().listen(LoadEvent.class)
                 .subscribe(event -> {
-                    RainLogger.RAIN_LOGGER.debug("Looking for: {}", GameInfoParser.getInstance().gameMainClass);
-                    GameLoader.loadAndInitGame(GameInfoParser.getInstance().gameMainClass);
+                    if(event.loadEventStage == LoadEvent.LoadEventStage.PRE){
+                        RainLogger.RAIN_LOGGER.debug("Looking for: {}", GameInfoParser.getInstance().gameMainClass);
+                        GameLoader.loadAndInitGame(GameInfoParser.getInstance().gameMainClass);
+                    }
                 });
 
 
-        SmeagleBus.getInstance().listen(InitLoadEvent.class)
+        SmeagleBus.getInstance().listen(LoadEvent.class)
                 .subscribe(event -> {
+                    if(event.loadEventStage == LoadEvent.LoadEventStage.ININT){
 
-                    GameFactory.triggerManager = new TriggerManager();
+                        GameFactory.triggerManager = new TriggerManager();
 
-                    RainLogger.RAIN_LOGGER.info("Loading Lua");
-                    GameFactory.loadLua();
-                    LuaManager.categorizeScripts("resources/scripts/");
-                    LuaManager.executeInitScripts();
-                    Tile.combineTouchingAABBs();
+                        RainLogger.RAIN_LOGGER.info("Loading Lua");
+                        GameFactory.loadLua();
+                        LuaManager.categorizeScripts("resources/scripts/");
+                        LuaManager.executeInitScripts();
+                        Tile.combineTouchingAABBs();
 
-                    ResourceManager.register(SoundInfo.class, SoundSystem::loadSound);
+                        ResourceManager.register(SoundInfo.class, SoundSystem::loadSound);
 
-                    GameEngine.windowManager = new WindowManager((int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight(), true);
+                        GameEngine.windowManager = new WindowManager((int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight(), true);
 
-                    RainLogger.RAIN_LOGGER.info("Creating Game Window");
-                    GameEngine.windowManager.createWindow(GameInfoParser.getInstance().defaultWindowName, SettingsInfoParser.getInstance().getVsync());
+                        RainLogger.RAIN_LOGGER.info("Creating Game Window");
+                        GameEngine.windowManager.createWindow(GameInfoParser.getInstance().defaultWindowName, SettingsInfoParser.getInstance().getVsync());
 
-                    // Fire the KeyPressEvent when a key is pressed
-                    glfwSetKeyCallback(GameEngine.windowManager.window, (windowHandle, key, scancode, action, mods) -> {
-                        SmeagleBus.getInstance().post(new KeyPressEvent(key, action));
+                        // Fire the KeyPressEvent when a key is pressed
+                        glfwSetKeyCallback(GameEngine.windowManager.window, (windowHandle, key, scancode, action, mods) -> {
+                            SmeagleBus.getInstance().post(new KeyPressEvent(key, action));
+                        });
+
+                        // Create and set the scroll callback
+                        glfwSetScrollCallback(GameEngine.windowManager.window, new GLFWScrollCallback() {
+                            @Override
+                            public void invoke(long window, double xoffset, double yoffset) {
+                                SmeagleBus.getInstance().post(new ScrollEvent((float) xoffset, (float) yoffset));
+                            }
+                        });
+
+                        RainLogger.RAIN_LOGGER.info("Creating Textures");
+                        TextureSystem.initTextures();
+
+                        RainLogger.RAIN_LOGGER.info("Loading Keybinds");
+                        KeyInfoParser.getInstance().loadKeyInfo();
+
+                        // Set the "background" color
+                        glClearColor(0, 0, 0, 0);
+
+                        // Set up the projection matrix with FOV of 90 degrees
+                        glMatrixMode(GL_PROJECTION);
+                        glLoadMatrixf(GameEngine.createPerspectiveProjectionMatrix(SettingsInfoParser.getInstance().getFOV(), SettingsInfoParser.getInstance().getWindowWidth() / SettingsInfoParser.getInstance().getWindowHeight(), 1.0f, 100.0f));
+
+
+                        GameFactory.load();
+
+                        RainLogger.RAIN_LOGGER.info("Loading ImGUI");
+                        GameFactory.loadImgui();
+
+                        RainLogger.RAIN_LOGGER.info("Loading Fonts");
+                        GameFactory.loadFonts();
+
+                        RainLogger.RAIN_LOGGER.info("Loading Map Palette");
+                        PaletteInfoParser.getInstance().loadTextureMappings();
+
+                        // Set the viewport size
+                        glViewport(0, 0, (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight());
+                    }
                     });
 
-                    // Create and set the scroll callback
-                    glfwSetScrollCallback(GameEngine.windowManager.window, new GLFWScrollCallback() {
-                        @Override
-                        public void invoke(long window, double xoffset, double yoffset) {
-                            SmeagleBus.getInstance().post(new ScrollEvent((float) xoffset, (float) yoffset));
-                        }
-                    });
+        SmeagleBus.getInstance().listen(LoadEvent.class)
+                .subscribe(event -> {
+                    if (event.loadEventStage == LoadEvent.LoadEventStage.POST) {
+                        RainLogger.RAIN_LOGGER.info("Initializing SoundSystem");
+                        GameFactory.loadSounds();
 
-                    RainLogger.RAIN_LOGGER.info("Creating Textures");
-                    TextureSystem.initTextures();
+                        RainLogger.RAIN_LOGGER.info("Loading Shaders");
+                        GameFactory.loadShaders();
 
-                    RainLogger.RAIN_LOGGER.info("Loading Keybinds");
-                    KeyInfoParser.getInstance().loadKeyInfo();
+                        LuaManager.executePostInitScripts();
 
-                    // Set the "background" color
-                    glClearColor(0, 0, 0, 0);
+                        GameFactory.setupGUIs();
 
-                    // Set up the projection matrix with FOV of 90 degrees
-                    glMatrixMode(GL_PROJECTION);
-                    glLoadMatrixf(GameEngine.createPerspectiveProjectionMatrix(SettingsInfoParser.getInstance().getFOV(), SettingsInfoParser.getInstance().getWindowWidth() / SettingsInfoParser.getInstance().getWindowHeight(), 1.0f, 100.0f));
+                        RainLogger.RAIN_LOGGER.info("Loading Lang");
+                        GameFactory.loadLang();
 
 
-                    GameFactory.load();
-
-                    RainLogger.RAIN_LOGGER.info("Loading ImGUI");
-                    GameFactory.loadImgui();
-
-                    RainLogger.RAIN_LOGGER.info("Loading Fonts");
-                    GameFactory.loadFonts();
-
-                    RainLogger.RAIN_LOGGER.info("Loading Map Palette");
-                    PaletteInfoParser.getInstance().loadTextureMappings();
-
-                    // Set the viewport size
-                    glViewport(0, 0, (int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight());
+                        //"COMBAT" is the normal track, "PANIC" is the low health track, "CALM" is the quiet track
+                        GameFactory.musicManager.setStartingSound("CALM0");
+                        GameFactory.musicManager.start();
+                        GameFactory.musicManager.setNextTrack("CALM1");
+                    }
                 });
 
-        SmeagleBus.getInstance().listen(PostInitLoadEvent.class)
+        SmeagleBus.getInstance().listen(LoadEvent.class)
                 .subscribe(event -> {
-                    RainLogger.RAIN_LOGGER.info("Initializing SoundSystem");
-                    GameFactory.loadSounds();
-
-                    RainLogger.RAIN_LOGGER.info("Loading Shaders");
-                    GameFactory.loadShaders();
-
-                    LuaManager.executePostInitScripts();
-
-                    GameFactory.setupGUIs();
-
-                    RainLogger.RAIN_LOGGER.info("Loading Lang");
-                    GameFactory.loadLang();
-
-
-                    //"COMBAT" is the normal track, "PANIC" is the low health track, "CALM" is the quiet track
-                    GameFactory.musicManager.setStartingSound("CALM0");
-                    GameFactory.musicManager.start();
-                    GameFactory.musicManager.setNextTrack("CALM1");
-                });
-
-        SmeagleBus.getInstance().listen(ManagerLoadEvent.class)
-                .subscribe(event -> {
-                    GameFactory.projectileManager = new ProjectileManager();
-                    GameFactory.npcManager = new NPCManager();
-                    GameFactory.guiManager = new GuiManager();
+                    if (event.loadEventStage == LoadEvent.LoadEventStage.MANAGER) {
+                        GameFactory.projectileManager = new ProjectileManager();
+                        GameFactory.npcManager = new NPCManager();
+                        GameFactory.guiManager = new GuiManager();
+                }
                 });
 
         SmeagleBus.getInstance().listen(KeyPressEvent.class)
