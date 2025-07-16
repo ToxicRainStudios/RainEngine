@@ -1,8 +1,10 @@
 package com.toxicrain.rainengine.core.json;
 
+import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.core.BaseInstanceable;
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.datatypes.vector.Vector2;
+import com.toxicrain.rainengine.core.eventbus.events.load.MapLoadEvent;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.lua.LuaManager;
@@ -124,6 +126,9 @@ public class MapInfoParser extends BaseInstanceable<MapInfoParser> {
                         }
                     }
                 }
+
+                SmeagleBus.getInstance().post(new MapLoadEvent(mapName, tiles, playerSpawnPos));
+
 
             } catch (JSONException e) {
                 RainLogger.RAIN_LOGGER.error("Error parsing map data: {}", e.getMessage());

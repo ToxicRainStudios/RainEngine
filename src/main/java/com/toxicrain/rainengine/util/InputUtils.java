@@ -1,6 +1,7 @@
 package com.toxicrain.rainengine.util;
 
 import com.github.strubium.windowmanager.window.WindowManager;
+import com.toxicrain.rainengine.core.json.key.MouseTracker;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -11,14 +12,18 @@ public class InputUtils {
     private final long window;
 
     /**
-     * Constructs a InputUtils object with the specified window handle.
+     * Global MouseTracker instance for OpenGL mouse tracking.
+     */
+    public static final MouseTracker mouseTracker = MouseTracker.getInstance();
+
+    /**
+     * Constructs an InputUtils object with the specified window handle.
      *
      * @param window The window handle
      */
     public InputUtils(WindowManager window) {
         this.window = window.window;
     }
-
 
     /**
      * Gets the mouse position relative to the window.
@@ -42,7 +47,11 @@ public class InputUtils {
      * @param screenHeight The height of the screen or window
      * @return A float array containing [openglMouseX, openglMouseY] coordinates
      */
-    public static float[] convertToOpenGLCoordinatesOffset(float mouseX, float mouseY, int screenWidth, int screenHeight, float offsetX, float offsetY) {
+    public static float[] convertToOpenGLCoordinatesOffset(
+            float mouseX, float mouseY,
+            int screenWidth, int screenHeight,
+            float offsetX, float offsetY
+    ) {
         float openglMouseX = mouseX / screenWidth * 2 - 1;
         float openglMouseY = 1 - mouseY / screenHeight * 2;
 
@@ -58,7 +67,10 @@ public class InputUtils {
      * @param screenHeight The height of the screen or window
      * @return A float array containing [openglMouseX, openglMouseY] coordinates
      */
-    public static float[] convertToOpenGLCoordinates(float mouseX, float mouseY, int screenWidth, int screenHeight) {
+    public static float[] convertToOpenGLCoordinates(
+            float mouseX, float mouseY,
+            int screenWidth, int screenHeight
+    ) {
         float openglMouseX = mouseX / screenWidth * 2 - 1;
         float openglMouseY = 1 - mouseY / screenHeight * 2;
 
@@ -72,5 +84,4 @@ public class InputUtils {
     public boolean isKeyPressed(int button) {
         return GLFW.glfwGetKey(window, button) == GLFW.GLFW_PRESS;
     }
-
 }

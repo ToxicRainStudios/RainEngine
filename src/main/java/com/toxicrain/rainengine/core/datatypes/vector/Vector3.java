@@ -18,6 +18,11 @@ public class Vector3 {
         this.z = z;
     }
 
+    public void update(Vector2 vector2) {
+        this.x = vector2.x;
+        this.y = vector2.y;
+    }
+
     public void add(Vector3 other) {
         this.x += other.x;
         this.y += other.y;
@@ -53,7 +58,7 @@ public class Vector3 {
         return new Vector3(this);
     }
 
-    public float distanceTo(TilePos other) {
+    public float distanceTo(Vector3 other) {
         float dx = other.x - this.x;
         float dy = other.y - this.y;
         float dz = other.z - this.z;

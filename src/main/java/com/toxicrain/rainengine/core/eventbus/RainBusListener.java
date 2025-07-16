@@ -6,6 +6,7 @@ import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.GameLoader;
 import com.toxicrain.rainengine.core.eventbus.events.load.LoadEvent;
+import com.toxicrain.rainengine.core.eventbus.events.load.MapLoadEvent;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.eventbus.events.DrawMapEvent;
 import com.toxicrain.rainengine.core.eventbus.events.GameUpdateEvent;

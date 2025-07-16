@@ -4,11 +4,12 @@ import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.datatypes.*;
 import com.toxicrain.rainengine.core.eventbus.events.ArtifactUpdateEvent;
+import com.toxicrain.rainengine.core.eventbus.events.load.MapLoadEvent;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
-import com.toxicrain.rainengine.core.json.SettingsInfoParser;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
+import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.factories.GameFactory;
@@ -65,6 +66,12 @@ public class Player extends RenderableArtifact implements IArtifact {
 
         KeyMap.registerKeyBind(KeyMap.getKeyNumber("keyPause"),
                 () -> glfwSetWindowShouldClose(GameEngine.windowManager.window, true));
+
+
+        SmeagleBus.getInstance().listen(MapLoadEvent.class)
+                .subscribe(event -> {
+                    this.position.update(event.playerSpawnPos);
+                });
     }
 
     public void addWeapon(Weapon weapon) {
@@ -87,15 +94,10 @@ public class Player extends RenderableArtifact implements IArtifact {
 
     public void attack() {
         if (equippedWeapon != null) {
-            float[] openglMousePos = InputUtils.convertToOpenGLCoordinates(
-                    GameFactory.inputUtils.getMousePosition()[0],
-                    GameFactory.inputUtils.getMousePosition()[1],
-                    (int) SettingsInfoParser.getInstance().getWindowWidth(),
-                    (int) SettingsInfoParser.getInstance().getWindowHeight()
-            );
+            float[] mousePos = InputUtils.mouseTracker.update(position);
 
-            float worldMouseX = openglMousePos[0] + position.x;
-            float worldMouseY = openglMousePos[1] + position.y;
+            float worldMouseX = mousePos[0];
+            float worldMouseY = mousePos[1];
 
             float playerAngle = getAngle(worldMouseX, worldMouseY);
 
@@ -134,11 +136,7 @@ public class Player extends RenderableArtifact implements IArtifact {
     }
 
     float[] getMouse() {
-        float[] mousePos = GameFactory.inputUtils.getMousePosition();
-        openglMousePos = InputUtils.convertToOpenGLCoordinatesOffset(mousePos[0], mousePos[1],
-                (int) SettingsInfoParser.getInstance().getWindowWidth(),
-                (int) SettingsInfoParser.getInstance().getWindowHeight(),
-                position.x, position.y);
+        openglMousePos = InputUtils.mouseTracker.update(position);
         return openglMousePos;
     }
 

@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class LoadEvent {
 
-    public LoadEventStage loadEventStage;
+    public final LoadEventStage loadEventStage;
 
     public enum LoadEventStage{
         PRE,
