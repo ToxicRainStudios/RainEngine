@@ -130,12 +130,7 @@ public class GameEngine {
         while (!windowManager.shouldClose()) {
             DeltaTimeUtil.update();
 
-            if(!gamePaused){
-                SmeagleBus.getInstance().post(new GameUpdateEvent());
-            }
-            else {
-                SmeagleBus.getInstance().post(new GamePausedUpdateEvent());
-            }
+            SmeagleBus.getInstance().post(new GameUpdateEvent(gamePaused));
 
             render(batchRenderer);
         }
