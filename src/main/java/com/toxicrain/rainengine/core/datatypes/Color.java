@@ -1,5 +1,7 @@
 package com.toxicrain.rainengine.core.datatypes;
 
+import com.toxicrain.rainengine.core.datatypes.vector.Vector3;
+
 import static java.util.Arrays.stream;
 
 /**
@@ -62,6 +64,13 @@ public enum Color {
         this.green = green;
         this.blue = blue;
     }
+
+    Color(Vector3 color) {
+        this.red = color.x;
+        this.green = color.y;
+        this.blue = color.z;
+    }
+
 
     /**
      * Averages two colors together

@@ -1,6 +1,5 @@
 package com.toxicrain.rainengine.core.datatypes.vector;
 
-import com.toxicrain.rainengine.core.datatypes.TilePos;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

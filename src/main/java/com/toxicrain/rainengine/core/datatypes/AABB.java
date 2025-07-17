@@ -1,5 +1,7 @@
 package com.toxicrain.rainengine.core.datatypes;
 
+import com.toxicrain.rainengine.core.datatypes.vector.Vector2;
+
 /**
  * The Axis Aligned Bounding Box
  */
@@ -12,6 +14,13 @@ public class AABB {
         this.minY = minY;
         this.maxX = maxX;
         this.maxY = maxY;
+    }
+
+    public AABB(Vector2 min, Vector2 max) {
+        this.minX = min.x;
+        this.minY = min.y;
+        this.maxX = max.x;
+        this.maxY = max.y;
     }
 
     public boolean intersects(AABB other) {
