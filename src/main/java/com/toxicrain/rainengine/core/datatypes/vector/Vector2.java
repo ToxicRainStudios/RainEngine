@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.core.datatypes.vector;
 
+import imgui.ImVec2;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -7,9 +8,20 @@ public class Vector2 {
     public float x;
     public float y;
 
+    public Vector2(ImVec2 imVec2){
+        this.x = imVec2.x;
+        this.y = imVec2.y;
+    }
+
     public Vector2 update(float x, float y){
         this.x = x;
         this.y = y;
+        return this;
+    }
+
+    public Vector2 update(ImVec2 imVec2){
+        this.x = imVec2.x;
+        this.y = imVec2.y;
         return this;
     }
 

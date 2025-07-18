@@ -4,6 +4,7 @@ import com.github.strubium.windowmanager.imgui.GuiManager;
 import com.github.strubium.windowmanager.imgui.ImguiHandler;
 import com.toxicrain.rainengine.artifacts.*;
 import com.toxicrain.rainengine.core.datatypes.Resource;
+import com.toxicrain.rainengine.core.editor.ImMapEditorMenu;
 import com.toxicrain.rainengine.core.registries.manager.NPCManager;
 import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
 import com.toxicrain.rainengine.core.LangHelper;
@@ -21,6 +22,8 @@ import com.toxicrain.rainengine.texture.TextureAtlas;
 import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.util.FileUtils;
 import com.toxicrain.rainengine.util.InputUtils;
+import imgui.ImGui;
+import imgui.flag.ImGuiConfigFlags;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -33,6 +36,7 @@ public class GameFactory {
 
     public static ImguiHandler imguiApp;
     public static GuiReg guiReg;
+    public static ImMapEditorMenu mapEditorMenu;
     public static SoundSystem soundSystem;
     public static MusicManager musicManager;
 
@@ -113,7 +117,11 @@ public class GameFactory {
     }
 
     public static void setupGUIs() {
+        ImGui.getIO().setConfigFlags(ImGui.getIO().getConfigFlags() | ImGuiConfigFlags.DockingEnable);
+
+
         guiReg = new GuiReg();
+        mapEditorMenu = new ImMapEditorMenu();
         guiManager.registerGUI("MainMenu", (v) -> guiReg.drawMainMenu());
         guiManager.registerGUI("Settings", (v) -> guiReg.drawSettingsMenu());
         guiManager.registerGUI("Keybinds", (v) -> guiReg.drawKeyBindingInfo());
@@ -122,9 +130,10 @@ public class GameFactory {
         guiManager.registerGUI("Console", (v) -> guiReg.drawConsole());
         guiManager.registerGUI("Debug", (v) -> guiReg.drawDebugInfo());
         guiManager.registerGUI("DeathScreen", (v) -> guiReg.drawDeathScreen());
-        guiManager.addActiveGUI("Inventory");
-        guiManager.addActiveGUI("Debug");
-        guiManager.addActiveGUI("Keybinds");
-        guiManager.addActiveGUI("MainMenu");
+        guiManager.registerGUI("MapEditor", (v) -> mapEditorMenu.draw());
+        guiManager.addActiveGUI("MapEditor");
+        //guiManager.addActiveGUI("Debug");
+        //guiManager.addActiveGUI("Keybinds");
+        //guiManager.addActiveGUI("MainMenu");
     }
 }

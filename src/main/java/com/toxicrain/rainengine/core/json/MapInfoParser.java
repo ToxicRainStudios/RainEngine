@@ -33,6 +33,12 @@ public class MapInfoParser extends BaseInstanceable<MapInfoParser> {
         return BaseInstanceable.getInstance(MapInfoParser.class);
     }
 
+    private JSONArray currentMapJson;
+
+    public JSONArray getMapJson() {
+        return currentMapJson;
+    }
+
     public void parseMapFile(String mapName) throws IOException {
         // Clear all previous data for a fresh load
         mapSize = new Vector2(0, 0);
@@ -50,7 +56,8 @@ public class MapInfoParser extends BaseInstanceable<MapInfoParser> {
         LuaManager.executeMapScript(mapName);
 
         String jsonString = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.MAP_PATH + mapName + ".json"));
-        JSONArray jsonArray = new JSONArray(jsonString);
+        currentMapJson = new JSONArray(jsonString);
+        JSONArray jsonArray = currentMapJson;
 
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject part = jsonArray.getJSONObject(i);
