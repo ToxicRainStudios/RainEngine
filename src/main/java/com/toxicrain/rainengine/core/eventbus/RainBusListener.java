@@ -67,7 +67,7 @@ public class RainBusListener {
 
                         ResourceManager.register(SoundInfo.class, SoundSystem::loadSound);
 
-                        GameEngine.windowManager = new WindowManager((int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight(), true);
+                        GameEngine.windowManager = new WindowManager((int) SettingsInfoParser.getInstance().getWindowWidth(), (int) SettingsInfoParser.getInstance().getWindowHeight(), SettingsInfoParser.getInstance().getFullscreen());
 
                         RainLogger.RAIN_LOGGER.info("Creating Game Window");
                         GameEngine.windowManager.createWindow(GameInfoParser.getInstance().defaultWindowName, SettingsInfoParser.getInstance().getVsync());

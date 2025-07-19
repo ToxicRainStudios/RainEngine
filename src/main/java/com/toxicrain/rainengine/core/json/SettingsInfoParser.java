@@ -87,6 +87,9 @@ public class SettingsInfoParser extends BaseInstanceable<SettingsInfoParser> {
     public boolean getVsync(){
         return getBoolean("vSync", true);
     }
+    public boolean getFullscreen(){
+        return getBoolean("fullscreen", true);
+    }
     public float getWindowHeight(){
         return getFloat("windowHeight", 1080);
     }
