@@ -18,11 +18,12 @@ import lombok.Setter;
  * Artifacts that extend this class automatically gain simple rendering
  * capabilities and world positioning.
  */
+@Getter @Setter
 public abstract class RenderableArtifact {
 
-    @Getter @Setter protected TilePos position;
-    @Getter @Setter protected float rotation = 0f;
-    @Getter @Setter protected float size = 1f;
+    protected TilePos position;
+    protected float rotation;
+    protected float size;
 
     protected Resource textureResource;
 

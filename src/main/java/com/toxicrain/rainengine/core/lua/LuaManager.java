@@ -1,6 +1,8 @@
 package com.toxicrain.rainengine.core.lua;
 
 import com.toxicrain.rainengine.artifacts.trigger.Trigger;
+import com.toxicrain.rainengine.artifacts.npc.NPCBuilder;
+import com.toxicrain.rainengine.artifacts.npc.NPC;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.logging.RainLogger;
@@ -151,6 +153,33 @@ public class LuaManager {
             }
         });
 
+        globals.set("createNPC", new VarArgFunction() {
+            @Override
+            public Varargs invoke(Varargs args) {
+                // Required: x, y
+                float x = (float) args.arg(1).todouble();
+                float y = (float) args.arg(2).todouble();
+
+                // Optional
+                float rotation = args.narg() >= 3 ? (float) args.arg(3).todouble() : 0f;
+                float size = args.narg() >= 4 ? (float) args.arg(4).todouble() : 1f;
+                float fov = args.narg() >= 5 ? (float) args.arg(5).todouble() : 90f;
+                float visionDist = args.narg() >= 6 ? (float) args.arg(6).todouble() : 300f;
+                String texture = args.narg() >= 7 ? args.arg(7).tojstring() : "npcTexture";
+
+                // Create NPC with builder
+                NPC npc = new NPCBuilder()
+                        .position(x, y)
+                        .rotation(rotation)
+                        .size(size)
+                        .fieldOfView(fov)
+                        .visionDistance(visionDist)
+                        .texture(texture)
+                        .build();
+
+                return LuaValue.TRUE;
+            }
+        });
 
         globals.set("isKeyPressed", new LuaFunction() {
             @Override
