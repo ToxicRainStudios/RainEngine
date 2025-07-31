@@ -1,4 +1,4 @@
-package com.toxicrain.rainengine.core.editor;
+package com.toxicrain.rainengine.gui.editor;
 
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.datatypes.vector.Vector2;

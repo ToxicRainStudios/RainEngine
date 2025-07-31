@@ -11,10 +11,11 @@ import com.toxicrain.rainengine.light.LightSystem;
 import com.toxicrain.rainengine.texture.TextureRegion;
 import lombok.Getter;
 
+@Getter
 public class Projectile extends RenderableArtifact implements IArtifact {
 
-    @Getter private Vector2 velocity;
-    @Getter private float lifeTime;
+    private final Vector2 velocity;
+    private float lifeTime;
 
     public Projectile(Resource imageLocation, float xpos, float ypos, float veloX, float veloY) {
         super(imageLocation, xpos, ypos, 0f, 1f); // rotation = 0f, size = 1f (can adjust if needed)
