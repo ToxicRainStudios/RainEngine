@@ -1,10 +1,8 @@
 package com.toxicrain.rainengine.core.registries.manager;
 
 import com.toxicrain.rainengine.artifacts.trigger.Trigger;
-import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.logging.RainLogger;
-import com.toxicrain.rainengine.core.registries.tiles.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +23,9 @@ public class TriggerManager {
         triggers.add(trigger);
     }
 
-    public void update(TilePos playerBounds) {
+    public void update(TilePos tilePos) {
         for (Trigger trigger : new ArrayList<>(triggers)) {
-            trigger.check(playerBounds);
+            trigger.check(tilePos);
         }
     }
 
