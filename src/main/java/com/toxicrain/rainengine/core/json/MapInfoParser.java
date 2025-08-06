@@ -1,7 +1,7 @@
 package com.toxicrain.rainengine.core.json;
 
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
-import com.toxicrain.rainengine.core.BaseInstanceable;
+import com.toxicrain.instanceable.BaseInstanceable;
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.datatypes.vector.Vector2;
 import com.toxicrain.rainengine.core.eventbus.events.load.MapLoadEvent;

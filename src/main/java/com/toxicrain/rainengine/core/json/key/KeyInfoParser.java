@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.toxicrain.rainengine.core.BaseInstanceable;
+import com.toxicrain.instanceable.BaseInstanceable;
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.util.FileUtils;

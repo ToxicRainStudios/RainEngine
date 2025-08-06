@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine.core.json;
 
-import com.toxicrain.rainengine.core.BaseInstanceable;
+import com.toxicrain.instanceable.BaseInstanceable;
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.datatypes.TileInfo;

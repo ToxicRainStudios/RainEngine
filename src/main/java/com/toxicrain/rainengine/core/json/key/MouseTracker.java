@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine.core.json.key;
 
-import com.toxicrain.rainengine.core.BaseInstanceable;
+import com.toxicrain.instanceable.BaseInstanceable;
 import com.toxicrain.rainengine.core.datatypes.vector.Vector3;
 import com.toxicrain.rainengine.core.json.SettingsInfoParser;
 import com.toxicrain.rainengine.util.InputUtils;
