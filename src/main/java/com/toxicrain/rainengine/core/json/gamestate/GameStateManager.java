@@ -1,12 +1,11 @@
 package com.toxicrain.rainengine.core.json.gamestate;
 
 import com.toxicrain.rainengine.core.logging.RainLogger;
-import com.toxicrain.rainengine.core.json.MapInfoParser;
 import org.json.JSONObject;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * GameStateManager handles saving and loading of game state data.
@@ -21,17 +20,12 @@ public class GameStateManager {
      */
     public static void saveGameState(GameState gameState, String filePath) {
         try {
-            // Create a JSONObject from the GameState
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("playerName", gameState.playerName);
-            jsonObject.put("playerX", gameState.playerX);
-            jsonObject.put("playerY", gameState.playerY);
-            jsonObject.put("playerHealth", gameState.playerHealth);
-            // Add more fields as needed
+            // Dump all fields into a JSONObject
+            JSONObject jsonObject = new JSONObject(gameState.getAllFields());
 
             // Write the JSON object to a file
             try (FileWriter file = new FileWriter(filePath)) {
-                file.write(jsonObject.toString(4)); // Indent with 4 spaces for readability
+                file.write(jsonObject.toString(4));
             }
         } catch (IOException e) {
             RainLogger.RAIN_LOGGER.error("Error saving game state: {}", e.getMessage());
@@ -60,12 +54,13 @@ public class GameStateManager {
             // Parse the JSON string into a JSONObject
             JSONObject jsonObject = new JSONObject(jsonString.toString());
 
-            // Extract the values and set them in the GameState object
-            gameState.playerName = jsonObject.optString("playerName", "DefaultName");
-            gameState.playerX = jsonObject.optInt("playerX", (int) MapInfoParser.getInstance().playerSpawnPos.x);
-            gameState.playerY = jsonObject.optInt("playerY", (int) MapInfoParser.getInstance().playerSpawnPos.y);
-            gameState.playerHealth = (float) jsonObject.optDouble("playerHealth", 100.0);
-            // Add more fields as needed
+            // Load all JSON key/value pairs into the GameState fields map
+            Map<String, Object> loadedFields = new HashMap<>();
+            for (String key : jsonObject.keySet()) {
+                loadedFields.put(key, jsonObject.get(key));
+            }
+
+            gameState.setAllFields(loadedFields);
 
         } catch (IOException e) {
             RainLogger.RAIN_LOGGER.info("Error loading game state: {}", e.getMessage());

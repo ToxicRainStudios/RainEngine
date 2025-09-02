@@ -15,6 +15,7 @@ public class TriggerManager {
     }
 
     public void clearTriggers(){
+        RainLogger.RAIN_LOGGER.debug("Clearing Triggers!");
         triggers.clear();
     }
 

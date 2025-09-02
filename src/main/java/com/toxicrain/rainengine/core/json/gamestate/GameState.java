@@ -1,25 +1,37 @@
 package com.toxicrain.rainengine.core.json.gamestate;
 
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * GameState represents a dynamic set of fields for saving/loading game state.
+ */
 public class GameState {
-    public String playerName;
-    public int playerX;
-    public int playerY;
-    public float playerHealth;
 
+    private final Map<String, Object> fields = new HashMap<>();
 
-    // Constructor
-    public GameState(String playerName, int playerX, int playerY, float playerHealth) {
-        this.playerName = playerName;
-        this.playerX = playerX;
-        this.playerY = playerY;
-        this.playerHealth = playerHealth;
+    public void setField(String key, Object value) {
+        fields.put(key, value);
     }
 
-    // Default constructor
-    public GameState() {
-        this.playerName = "Player1";
-        this.playerX = 1;
-        this.playerY = 1;
-        this.playerHealth = 100;
+    public Object getField(String key) {
+        return fields.get(key);
+    }
+
+    public <T> T getField(String key, Class<T> type) {
+        Object value = fields.get(key);
+        if (type.isInstance(value)) {
+            return type.cast(value);
+        }
+        return null;
+    }
+
+    public Map<String, Object> getAllFields() {
+        return fields;
+    }
+
+    public void setAllFields(Map<String, Object> newFields) {
+        fields.clear();
+        fields.putAll(newFields);
     }
 }
