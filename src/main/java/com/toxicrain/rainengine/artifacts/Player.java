@@ -15,6 +15,7 @@ import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.light.LightSystem;
 import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.texture.TextureRegion;
+import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.util.InputUtils;
 import com.toxicrain.rainengine.util.MathUtils;
 import com.toxicrain.rainengine.util.WindowUtils;
@@ -50,7 +51,7 @@ public class Player extends RenderableArtifact implements IArtifact {
     public Player(Resource defaultTexture, boolean isSprinting) {
         super(defaultTexture, MapInfoParser.getInstance().playerSpawnPos.x, MapInfoParser.getInstance().playerSpawnPos.y, 0f, 1f);
         this.position.z = 5; // Player z-level
-        this.defaultTexture = GameFactory.textureAtlas.getRegion(defaultTexture);
+        this.defaultTexture = TextureSystem.getRegion(defaultTexture);
         this.isSprinting = isSprinting;
         this.weapons = new ArrayList<>();
 

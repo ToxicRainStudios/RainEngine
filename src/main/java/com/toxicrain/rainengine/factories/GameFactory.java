@@ -50,13 +50,9 @@ public class GameFactory {
 
     public static NPCManager npcManager;
 
-    public static TextureAtlas textureAtlas;
     public static TriggerManager triggerManager;
 
     public static void load() {
-        // Load the texture atlas
-        textureAtlas = new TextureAtlas(2048); // You can adjust the atlas size as needed
-        textureAtlas.buildAtlas(FileUtils.getCurrentWorkingDirectory("resources/images"));
 
         // Load player using the atlas region
         player = new Player(new Resource("playerTexture"), false);
@@ -130,9 +126,9 @@ public class GameFactory {
         guiManager.registerGUI("Debug", (v) -> guiReg.drawDebugInfo());
         guiManager.registerGUI("DeathScreen", (v) -> guiReg.drawDeathScreen());
         guiManager.registerGUI("MapEditor", (v) -> mapEditorMenu.draw());
-        guiManager.addActiveGUI("MapEditor");
+        //guiManager.addActiveGUI("MapEditor");
         //guiManager.addActiveGUI("Debug");
         //guiManager.addActiveGUI("Keybinds");
-        //guiManager.addActiveGUI("MainMenu");
+        guiManager.addActiveGUI("MainMenu");
     }
 }

@@ -4,10 +4,11 @@ import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.util.FileUtils;
+import lombok.Getter;
 
 public class TextureSystem {
 
-    private static TextureAtlas textureAtlas;
+    @Getter private static TextureAtlas textureAtlas;
 
     public static void initTextures() {
         String textureDirectory = FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.IMAGES_PATH);

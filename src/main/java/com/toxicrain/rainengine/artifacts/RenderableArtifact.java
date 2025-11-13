@@ -8,6 +8,7 @@ import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.factories.GameFactory;
+import com.toxicrain.rainengine.texture.TextureSystem;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,7 +36,7 @@ public abstract class RenderableArtifact {
     }
 
     public void render(BatchRenderer batchRenderer) {
-        TextureRegion region = GameFactory.textureAtlas.getRegion(this.textureResource);
+        TextureRegion region = TextureSystem.getRegion(this.textureResource);
 
         batchRenderer.addTexture(
                 region,
