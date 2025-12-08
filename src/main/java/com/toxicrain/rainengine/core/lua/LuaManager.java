@@ -360,7 +360,7 @@ public class LuaManager {
         globals.set("playSound", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue sound) {
-                GameFactory.soundSystem.play(SoundSystem.getSound(String.valueOf(sound)));
+                SoundSystem.getInstance().play(SoundSystem.getSound(String.valueOf(sound)));
                 return LuaValue.valueOf(String.valueOf(sound));
             }
         });

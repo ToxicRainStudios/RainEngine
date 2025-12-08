@@ -16,6 +16,7 @@ import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.light.LightSystem;
+import com.toxicrain.rainengine.sound.SoundSystem;
 import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import lombok.experimental.UtilityClass;
@@ -137,7 +138,7 @@ public class GameEngine {
             render(batchRenderer);
         }
         GameFactory.imguiApp.cleanup();
-        GameFactory.soundSystem.cleanup();
+        SoundSystem.getInstance().cleanup();
     }
 
     /**

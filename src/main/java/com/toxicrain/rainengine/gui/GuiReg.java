@@ -189,7 +189,7 @@ public class GuiReg {
 
                 // Add the centered "Play" button
                 .pushFont("dos")
-                .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.play"),  () -> runAll(() ->GameFactory.guiManager.removeActiveGUI("MainMenu"), () -> GameFactory.soundSystem.play(SoundSystem.getSound("removeMeClick"), () -> GameEngine.gamePaused = false)), ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
+                .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.play"),  () -> runAll(() ->GameFactory.guiManager.removeActiveGUI("MainMenu"), () -> SoundSystem.getInstance().play(SoundSystem.getSound("removeMeClick"), () -> GameEngine.gamePaused = false)), ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
 
 
                 // Add the centered "Settings" button
@@ -223,7 +223,7 @@ public class GuiReg {
 
                 // Add the centered "Play" button
                 .pushFont("dos")
-                .addButtonCentered(GameFactory.langHelper.get("gui.deathscreen.exit"),  () -> runAll(() ->GameFactory.guiManager.removeActiveGUI("DeathScreen"), () ->GameFactory.soundSystem.play(SoundSystem.getSound("removeMeClick"))), ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
+                .addButtonCentered(GameFactory.langHelper.get("gui.deathscreen.exit"),  () -> runAll(() ->GameFactory.guiManager.removeActiveGUI("DeathScreen"), () -> SoundSystem.getInstance().play(SoundSystem.getSound("removeMeClick"))), ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
 
 
 

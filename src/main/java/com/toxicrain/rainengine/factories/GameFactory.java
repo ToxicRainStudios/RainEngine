@@ -32,7 +32,6 @@ public class GameFactory {
     public static ImguiHandler imguiApp;
     public static GuiReg guiReg;
     public static ImMapEditorMenu mapEditorMenu;
-    public static SoundSystem soundSystem;
     public static MusicManager musicManager;
 
     public static Player player;
@@ -52,10 +51,9 @@ public class GameFactory {
     }
 
     public static void loadSounds() {
-        soundSystem = new SoundSystem();
-        soundSystem.init();
+        SoundSystem.getInstance().init();
 
-        SoundSystem.initSounds();
+        SoundSystem.getInstance().initSounds();
 
         // All possible music clips
         Map<String, SoundInfo> sounds = new HashMap<>();
@@ -69,7 +67,7 @@ public class GameFactory {
         sounds.put("PANIC2", SoundSystem.getSound("Panic2"));
         sounds.put("PANIC3", SoundSystem.getSound("Panic3"));
 
-        musicManager = new MusicManager(sounds, soundSystem);
+        musicManager = new MusicManager(sounds, SoundSystem.getInstance());
 
     }
 

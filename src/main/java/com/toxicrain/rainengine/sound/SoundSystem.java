@@ -1,10 +1,12 @@
 package com.toxicrain.rainengine.sound;
 
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
+import com.toxicrain.instanceable.BaseInstanceable;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.eventbus.events.load.sound.SoundInfoLoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.load.sound.SoundSystemLoadEvent;
 import com.toxicrain.rainengine.core.logging.RainLogger;
+import com.toxicrain.rainengine.core.registries.manager.NPCManager;
 import com.toxicrain.rainengine.core.resources.ResourceManager;
 import com.toxicrain.rainengine.util.FileUtils;
 import lombok.Getter;
@@ -25,7 +27,7 @@ import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class SoundSystem {
+public class SoundSystem extends BaseInstanceable<SoundSystem> {
     private long device;
     private long context;
 
@@ -35,14 +37,18 @@ public class SoundSystem {
     private float currentVolume = 1.0f;
     private boolean isFading = false;
 
-    public SoundSystem() {
+    public static SoundSystem getInstance() {
+        return BaseInstanceable.getInstance(SoundSystem.class);
+    }
+
+    private SoundSystem() {
         SmeagleBus.getInstance().post(new SoundSystemLoadEvent(this));
     }
 
     /**
      * Loads all sounds from the /sound directory into ResourceManager
      */
-    public static void initSounds() {
+    public void initSounds() {
         String soundDirectory = FileUtils.getCurrentWorkingDirectory("resources/sound");
 
         try {

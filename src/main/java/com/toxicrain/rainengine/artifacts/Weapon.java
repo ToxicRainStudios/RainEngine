@@ -57,7 +57,7 @@ public class Weapon {
             }
 
             // Play weapon sound
-            GameFactory.soundSystem.play(this.soundInfo);
+            SoundSystem.getInstance().play(this.soundInfo);
 
             lastAttackTime = currentTime; // Update last attack time
             RainLogger.RAIN_LOGGER.debug("Attacking with {} for {} damage!", name, damage);

@@ -7,10 +7,7 @@ import com.toxicrain.rainengine.core.datatypes.vector.Vector2;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
-import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.light.LightSystem;
-import com.toxicrain.rainengine.texture.TextureRegion;
-import com.toxicrain.rainengine.texture.TextureSystem;
 import lombok.Getter;
 
 @Getter
