@@ -8,6 +8,7 @@ import com.toxicrain.rainengine.core.json.SettingsInfoParser;
 import com.toxicrain.rainengine.core.logging.RainConsoleAppender;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.sound.SoundSystem;
+import com.toxicrain.rainengine.sound.music.MusicManager;
 import com.toxicrain.rainengine.util.FileUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
@@ -348,7 +349,7 @@ public class GuiReg {
 
                 .addText("Player XYZ" + ": " + GameFactory.player.getPosition().toString())
 
-                .addText(GameFactory.langHelper.get("gui.debug.text.music_track") + ": " + GameFactory.musicManager.getCurrentTrackName())
+                .addText(GameFactory.langHelper.get("gui.debug.text.music_track") + ": " + MusicManager.getInstance().getCurrentTrackName())
 
 
                 // End Window

@@ -26,6 +26,7 @@ import com.toxicrain.rainengine.core.resources.ResourceManager;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.sound.SoundInfo;
 import com.toxicrain.rainengine.sound.SoundSystem;
+import com.toxicrain.rainengine.sound.music.MusicManager;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import org.lwjgl.glfw.GLFWScrollCallback;
@@ -131,9 +132,9 @@ public class RainBusListener {
 
 
                         //"COMBAT" is the normal track, "PANIC" is the low health track, "CALM" is the quiet track
-                        GameFactory.musicManager.setStartingSound("CALM0");
-                        GameFactory.musicManager.start();
-                        GameFactory.musicManager.setNextTrack("CALM1");
+                        MusicManager.getInstance().setStartingSound("CALM0");
+                        MusicManager.getInstance().start();
+                        MusicManager.getInstance().setNextTrack("CALM1");
                     }
                 });
 

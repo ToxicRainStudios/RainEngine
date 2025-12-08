@@ -1,50 +1,94 @@
 package com.toxicrain.rainengine.sound.music;
 
+import com.toxicrain.instanceable.BaseInstanceable;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.sound.SoundInfo;
 import com.toxicrain.rainengine.sound.SoundSystem;
 
 import java.util.*;
 
-public class MusicManager {
+public class MusicManager extends BaseInstanceable<MusicManager> {
 
-    private final List<String> TRACK_ORDER;
-    private final Map<String, SoundInfo> SOUND_MAP;
-    private final SoundSystem SOUND_SYSTEM;
+    private List<String> trackOrder = new ArrayList<>();
+    private Map<String, SoundInfo> soundMap = new HashMap<>();
+    private final SoundSystem soundSystem;
 
     private int currentTrackIndex = 0;
     private boolean isPlaying = false;
 
-    public MusicManager(Map<String, SoundInfo> sounds, SoundSystem soundSystem) {
-        this.SOUND_MAP = sounds;
-        this.SOUND_SYSTEM = soundSystem;
-        this.TRACK_ORDER = new ArrayList<>(sounds.keySet());
+    public static MusicManager getInstance() {
+        return BaseInstanceable.getInstance(MusicManager.class);
+    }
+
+    private MusicManager() {
+        this.soundSystem = SoundSystem.getInstance();
+    }
+
+    public void setSounds(Map<String, SoundInfo> newSounds) {
+        this.soundMap = new HashMap<>(newSounds);
+        this.trackOrder = new ArrayList<>(newSounds.keySet());
+        this.currentTrackIndex = 0;
+
+        RainLogger.RAIN_LOGGER.info("Sound map replaced at runtime.");
+    }
+
+    public void addOrUpdateSound(String name, SoundInfo info) {
+        soundMap.put(name, info);
+        if (!trackOrder.contains(name)) {
+            trackOrder.add(name);
+        }
+        RainLogger.RAIN_LOGGER.info("Added/updated sound '{}'", name);
+    }
+
+    public void removeSound(String name) {
+        soundMap.remove(name);
+        int removedIndex = trackOrder.indexOf(name);
+
+        if (removedIndex != -1) {
+            trackOrder.remove(removedIndex);
+
+            if (removedIndex <= currentTrackIndex && currentTrackIndex > 0) {
+                currentTrackIndex--;
+            }
+        }
+
+        RainLogger.RAIN_LOGGER.info("Removed sound '{}'", name);
     }
 
     /**
      * Start playing music
      */
     public void start() {
-        if (!TRACK_ORDER.isEmpty() && !isPlaying) {
+        if (!trackOrder.isEmpty() && !isPlaying) {
             playCurrentTrack();
+        } else if (trackOrder.isEmpty()) {
+            RainLogger.RAIN_LOGGER.warn("Cannot start music: track list is empty.");
         }
     }
 
     private void playCurrentTrack() {
-        if (isPlaying || currentTrackIndex >= TRACK_ORDER.size()) return;
+        if (isPlaying || currentTrackIndex >= trackOrder.size()) return;
 
-        String currentTrack = TRACK_ORDER.get(currentTrackIndex);
-        SoundInfo info = SOUND_MAP.get(currentTrack);
+        String currentTrack = trackOrder.get(currentTrackIndex);
+        SoundInfo info = soundMap.get(currentTrack);
+
+        if (info == null) {
+            RainLogger.RAIN_LOGGER.warn("Track '{}' has no SoundInfo. Skipping.", currentTrack);
+            currentTrackIndex++;
+            playCurrentTrack();
+            return;
+        }
 
         try {
             isPlaying = true;
-            SOUND_SYSTEM.play(info, () -> {
+            soundSystem.play(info, () -> {
                 isPlaying = false;
                 currentTrackIndex++;
-                playCurrentTrack(); // Play next track immediately
+                playCurrentTrack();
             });
 
             RainLogger.RAIN_LOGGER.info("Now playing: {}", currentTrack);
+
         } catch (IllegalStateException e) {
             stop();
         }
@@ -61,19 +105,15 @@ public class MusicManager {
      * @param trackName The name of the track (must exist in soundMap)
      */
     public void setNextTrack(String trackName) {
-        if (!SOUND_MAP.containsKey(trackName)) {
-            RainLogger.RAIN_LOGGER.warn("Tried to set unknown track as next: {}", trackName);
+        if (!soundMap.containsKey(trackName)) {
+            RainLogger.RAIN_LOGGER.warn("Unknown track '{}'", trackName);
             return;
         }
 
-        // Prevent duplicates by removing if it already exists in the list
-        TRACK_ORDER.remove(trackName);
+        trackOrder.remove(trackName);
+        trackOrder.add(Math.min(currentTrackIndex + 1, trackOrder.size()), trackName);
 
-        // Insert right after the current track index
-        int insertIndex = Math.min(currentTrackIndex + 1, TRACK_ORDER.size());
-        TRACK_ORDER.add(insertIndex, trackName);
-
-        RainLogger.RAIN_LOGGER.info("Inserted track '{}' to play next (after index {}).", trackName, currentTrackIndex);
+        RainLogger.RAIN_LOGGER.info("'{}' set to play next.", trackName);
     }
 
     /**
@@ -82,16 +122,34 @@ public class MusicManager {
      * @param trackName The name of the track to start with (must exist in soundMap)
      */
     public void setStartingSound(String trackName) {
-        if (!SOUND_MAP.containsKey(trackName)) {
-            RainLogger.RAIN_LOGGER.warn("Tried to set unknown track as starting sound: {}", trackName);
+        if (!soundMap.containsKey(trackName)) {
+            RainLogger.RAIN_LOGGER.warn("Unknown starting track '{}'", trackName);
             return;
         }
 
-        TRACK_ORDER.remove(trackName); // Avoid duplicate
-        TRACK_ORDER.add(0, trackName); // Insert at the beginning
-        currentTrackIndex = 0;        // Reset index to start with this track
+        trackOrder.remove(trackName);
+        trackOrder.add(0, trackName);
+        currentTrackIndex = 0;
 
-        RainLogger.RAIN_LOGGER.info("Set starting track to '{}'", trackName);
+        RainLogger.RAIN_LOGGER.info("Starting track set to '{}'", trackName);
+    }
+
+    public void setTrackOrder(List<String> newOrder) {
+        for (String name : newOrder) {
+            if (!soundMap.containsKey(name)) {
+                RainLogger.RAIN_LOGGER.warn("Track order contains unknown sound '{}'. Ignoring.", name);
+                return;
+            }
+        }
+
+        this.trackOrder = new ArrayList<>(newOrder);
+        this.currentTrackIndex = 0;
+
+        RainLogger.RAIN_LOGGER.info("Track order replaced at runtime.");
+    }
+
+    public List<String> getTrackOrder() {
+        return Collections.unmodifiableList(trackOrder);
     }
 
     /**
@@ -100,10 +158,9 @@ public class MusicManager {
      * @return The name of the track that is currently playing or null if no track is playing.
      */
     public String getCurrentTrackName() {
-        if (currentTrackIndex >= 0 && currentTrackIndex < TRACK_ORDER.size()) {
-            return TRACK_ORDER.get(currentTrackIndex);
+        if (currentTrackIndex >= 0 && currentTrackIndex < trackOrder.size()) {
+            return trackOrder.get(currentTrackIndex);
         }
-        return null; // Return null if no track is currently playing.
+        return null;
     }
-
 }

@@ -32,7 +32,6 @@ public class GameFactory {
     public static ImguiHandler imguiApp;
     public static GuiReg guiReg;
     public static ImMapEditorMenu mapEditorMenu;
-    public static MusicManager musicManager;
 
     public static Player player;
     public static GuiManager guiManager;
@@ -55,19 +54,17 @@ public class GameFactory {
 
         SoundSystem.getInstance().initSounds();
 
-        // All possible music clips
-        Map<String, SoundInfo> sounds = new HashMap<>();
-        sounds.put("CALM0", SoundSystem.getSound("Intro"));
-        sounds.put("CALM1", SoundSystem.getSound("A1"));
-        sounds.put("CALM2", SoundSystem.getSound("A2"));
-        sounds.put("CALM3", SoundSystem.getSound("A3"));
-        sounds.put("BREAKDOWN", SoundSystem.getSound("Breakdown"));
-        sounds.put("COMBAT", SoundSystem.getSound("B1"));
-        sounds.put("PANIC1", SoundSystem.getSound("Panic1"));
-        sounds.put("PANIC2", SoundSystem.getSound("Panic2"));
-        sounds.put("PANIC3", SoundSystem.getSound("Panic3"));
+        // Add sounds at runtime
+        MusicManager.getInstance().addOrUpdateSound("CALM0", SoundSystem.getSound("Intro"));
+        MusicManager.getInstance().addOrUpdateSound("CALM1", SoundSystem.getSound("A1"));
+        MusicManager.getInstance().addOrUpdateSound("CALM2", SoundSystem.getSound("A2"));
+        MusicManager.getInstance().addOrUpdateSound("CALM3", SoundSystem.getSound("A3"));
+        MusicManager.getInstance().addOrUpdateSound("BREAKDOWN", SoundSystem.getSound("Breakdown"));
+        MusicManager.getInstance().addOrUpdateSound("COMBAT", SoundSystem.getSound("B1"));
+        MusicManager.getInstance().addOrUpdateSound("PANIC1", SoundSystem.getSound("Panic1"));
+        MusicManager.getInstance().addOrUpdateSound("PANIC2", SoundSystem.getSound("Panic2"));
+        MusicManager.getInstance().addOrUpdateSound("PANIC3", SoundSystem.getSound("Panic3"));
 
-        musicManager = new MusicManager(sounds, SoundSystem.getInstance());
 
     }
 
