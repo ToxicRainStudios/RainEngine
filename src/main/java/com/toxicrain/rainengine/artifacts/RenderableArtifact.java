@@ -1,13 +1,12 @@
 package com.toxicrain.rainengine.artifacts;
 
-import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.datatypes.Color;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
-import com.toxicrain.rainengine.core.datatypes.TilePos;
+import com.toxicrain.rainengine.core.datatypes.vector.Vector3;
+import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.texture.TextureRegion;
-import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,28 +19,33 @@ import lombok.Setter;
  * capabilities and world positioning.
  */
 @Getter @Setter
-public abstract class RenderableArtifact {
+public abstract class RenderableArtifact implements IArtifact {
 
-    protected TilePos position;
+    protected Vector3 position;
     protected float rotation;
     protected float size;
 
     protected Resource textureResource;
+    protected TextureRegion textureRegion;
 
     public RenderableArtifact(Resource textureResource, float x, float y, float rotation, float size) {
         this.textureResource = textureResource;
-        this.position = new TilePos(x, y, 1);
+        this.position = new Vector3(x, y, 1);
         this.rotation = rotation;
         this.size = size;
     }
 
-    public void render(BatchRenderer batchRenderer) {
-        TextureRegion region = TextureSystem.getRegion(this.textureResource);
+    @Override
+    public void update(double deltaTime){
+        textureRegion = TextureSystem.getRegion(this.textureResource);
+    }
 
+    @Override
+    public void render(BatchRenderer batchRenderer) {
         batchRenderer.addTexture(
-                region,
-                position.x, position.y, Constants.NPC_ZLEVEL,
-                new TileParameters(rotation, region.getU0(), region.getV0(), 1f, 1f, Color.toFloatArray(Color.WHITE), null)
+                textureRegion,
+                position.x, position.y, position.z,
+                new TileParameters(rotation, textureRegion.getU0(), textureRegion.getV0(), 1f, 1f, Color.toFloatArray(Color.WHITE), null)
         );
     }
 

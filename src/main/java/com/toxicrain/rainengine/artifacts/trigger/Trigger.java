@@ -1,9 +1,8 @@
 package com.toxicrain.rainengine.artifacts.trigger;
 
 import com.toxicrain.rainengine.core.datatypes.AABB;
-import com.toxicrain.rainengine.core.datatypes.TilePos;
+import com.toxicrain.rainengine.core.datatypes.vector.Vector3;
 import com.toxicrain.rainengine.core.registries.manager.TriggerManager;
-import com.toxicrain.rainengine.factories.GameFactory;
 import lombok.Getter;
 
 public class Trigger {
@@ -20,7 +19,7 @@ public class Trigger {
         TriggerManager.getInstance().addTrigger(this);
     }
 
-    public void check(TilePos playerBounds) {
+    public void check(Vector3 playerBounds) {
         if (!triggered && bounds.contains(playerBounds)) {
             action.run();
             if (oneTime) triggered = true;

@@ -2,8 +2,7 @@ package com.toxicrain.rainengine.core.registries.manager;
 
 import com.toxicrain.instanceable.BaseInstanceable;
 import com.toxicrain.rainengine.artifacts.trigger.Trigger;
-import com.toxicrain.rainengine.core.datatypes.TilePos;
-import com.toxicrain.rainengine.core.json.key.KeyInfoParser;
+import com.toxicrain.rainengine.core.datatypes.vector.Vector3;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ public class TriggerManager extends BaseInstanceable<TriggerManager> {
         triggers.add(trigger);
     }
 
-    public void update(TilePos tilePos) {
+    public void update(Vector3 tilePos) {
         for (Trigger trigger : new ArrayList<>(triggers)) {
             trigger.check(tilePos);
         }

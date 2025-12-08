@@ -4,6 +4,7 @@ import com.toxicrain.rainengine.artifacts.RenderableArtifact;
 import com.toxicrain.rainengine.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.rainengine.core.datatypes.*;
 import com.toxicrain.rainengine.core.datatypes.vector.Vector2;
+import com.toxicrain.rainengine.core.datatypes.vector.Vector3;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
 
@@ -33,7 +34,7 @@ public class BaseNPC extends RenderableArtifact implements IArtifact {
         );
     }
 
-    public boolean canSeeTarget(TilePos targetPos) {
+    public boolean canSeeTarget(Vector3 targetPos) {
         float deltaX = targetPos.x - position.x;
         float deltaY = targetPos.y - position.y;
 
@@ -52,7 +53,7 @@ public class BaseNPC extends RenderableArtifact implements IArtifact {
         return angle <= fovInRadians;
     }
 
-    public void moveTowardsTarget(TilePos targetPos, float speed) {
+    public void moveTowardsTarget(Vector3 targetPos, float speed) {
         float deltaX = targetPos.x - position.x;
         float deltaY = targetPos.y - position.y;
 

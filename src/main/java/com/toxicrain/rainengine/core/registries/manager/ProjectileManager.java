@@ -36,7 +36,7 @@ public class ProjectileManager extends BaseInstanceable<ProjectileManager> {
             Projectile projectile = projectiles.get(i);
 
             // Update the projectile's position and age
-            projectile.update();
+            projectile.update(deltaTime);
 
             // Remove projectiles that meet removal criteria
             if (shouldRemove(projectile)) {

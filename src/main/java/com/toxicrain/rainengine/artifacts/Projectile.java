@@ -27,7 +27,10 @@ public class Projectile extends RenderableArtifact implements IArtifact {
         ProjectileManager.getInstance().addProjectile(this);
     }
 
-    public void update() {
+    @Override
+    public void update(double deltaTime) {
+        super.update(deltaTime);
+
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
         this.lifeTime += 0.0001f;
@@ -35,9 +38,7 @@ public class Projectile extends RenderableArtifact implements IArtifact {
 
     @Override
     public void render(BatchRenderer batchRenderer) {
-        TextureRegion region = TextureSystem.getRegion(this.textureResource);
-
-        batchRenderer.addTexture(region, this.position.x, this.position.y, this.position.z,
+        batchRenderer.addTexture(this.textureRegion, this.position.x, this.position.y, this.position.z,
                 new TileParameters(null, velocity.x, velocity.y, 1, 1, null, LightSystem.getLightSources()));
     }
 }

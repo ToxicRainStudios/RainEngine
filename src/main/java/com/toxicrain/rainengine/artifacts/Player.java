@@ -129,6 +129,7 @@ public class Player extends RenderableArtifact implements IArtifact {
     }
 
     public void update(double deltaTime) {
+        super.update(deltaTime);
         getMouse();
         processInput(deltaTime);
 
