@@ -5,6 +5,8 @@ import com.github.strubium.windowmanager.window.WindowManager;
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.GameLoader;
+import com.toxicrain.rainengine.core.LangHelper;
+import com.toxicrain.rainengine.core.eventbus.events.load.LangLoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.load.LoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.load.sound.SoundSystemLoadEvent;
 import com.toxicrain.rainengine.core.logging.RainLogger;
@@ -30,7 +32,11 @@ import com.toxicrain.rainengine.sound.SoundSystem;
 import com.toxicrain.rainengine.sound.music.MusicManager;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
+import com.toxicrain.rainengine.util.FileUtils;
 import org.lwjgl.glfw.GLFWScrollCallback;
+
+import java.nio.file.Path;
+import java.util.Locale;
 
 import static com.toxicrain.rainengine.core.GameEngine.drawMap;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
@@ -129,8 +135,7 @@ public class RainBusListener {
 
                         GameFactory.setupGUIs();
 
-                        RainLogger.RAIN_LOGGER.info("Loading Lang");
-                        GameFactory.loadLang();
+                        SmeagleBus.getInstance().post(new LangLoadEvent(SettingsInfoParser.getInstance().getLanguage()));
 
 
                         //"COMBAT" is the normal track, "PANIC" is the low health track, "CALM" is the quiet track
@@ -153,6 +158,15 @@ public class RainBusListener {
                     if (KeyMap.keyBinds.containsKey(keycode)) {
                         KeyMap.keyBinds.get(keycode).run();
                     }
+                });
+
+        SmeagleBus.getInstance().listen(LangLoadEvent.class)
+                .subscribe(event -> {
+                    RainLogger.RAIN_LOGGER.info("Using Lang: {}", event.langTag);
+
+                    GameFactory.langHelper = new LangHelper("raiengine", Path.of(FileUtils.getCurrentWorkingDirectory("resources/lang")), Locale.forLanguageTag(event.correctedLangTag));
+
+                    RainLogger.RAIN_LOGGER.info(GameFactory.langHelper.get("greeting"));
                 });
 
         SmeagleBus.getInstance().listen(SoundSystemLoadEvent.class)

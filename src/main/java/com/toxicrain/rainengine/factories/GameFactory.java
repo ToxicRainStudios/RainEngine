@@ -63,16 +63,6 @@ public class GameFactory {
         functionManager = new LuaManager(LuaEngine.getInstance().getGlobals());
     }
 
-    public static void loadLang() {
-        String langTag = SettingsInfoParser.getInstance().getLanguage();
-        RainLogger.RAIN_LOGGER.info("Using Lang: {}", langTag);
-
-        String languageTag = langTag.replace('_', '-');
-        langHelper = new LangHelper("raiengine", Path.of(FileUtils.getCurrentWorkingDirectory("resources/lang")), Locale.forLanguageTag(languageTag));
-
-        RainLogger.RAIN_LOGGER.info(langHelper.get("greeting"));
-    }
-
     public static void setupGUIs() {
         ImGui.getIO().setConfigFlags(ImGui.getIO().getConfigFlags() | ImGuiConfigFlags.DockingEnable);
 
