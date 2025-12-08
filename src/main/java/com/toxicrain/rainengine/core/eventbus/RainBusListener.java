@@ -6,6 +6,7 @@ import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.GameLoader;
 import com.toxicrain.rainengine.core.eventbus.events.load.LoadEvent;
+import com.toxicrain.rainengine.core.eventbus.events.load.sound.SoundSystemLoadEvent;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.eventbus.events.DrawMapEvent;
 import com.toxicrain.rainengine.core.eventbus.events.GameUpdateEvent;
@@ -118,7 +119,8 @@ public class RainBusListener {
                 .subscribe(event -> {
                     if (event.loadEventStage == LoadEvent.LoadEventStage.POST) {
                         RainLogger.RAIN_LOGGER.info("Initializing SoundSystem");
-                        GameFactory.loadSounds();
+                        SoundSystem soundSystem = SoundSystem.getInstance(); // Construct singleton
+                        soundSystem.postLoad();
 
                         RainLogger.RAIN_LOGGER.info("Loading Shaders");
                         GameFactory.loadShaders();
@@ -152,6 +154,26 @@ public class RainBusListener {
                         KeyMap.keyBinds.get(keycode).run();
                     }
                 });
+
+        SmeagleBus.getInstance().listen(SoundSystemLoadEvent.class)
+            .subscribe(event -> {
+                SoundSystem.getInstance().init();
+
+                SoundSystem.getInstance().initSounds();
+
+                // Add sounds at runtime
+                MusicManager.getInstance().addOrUpdateSound("CALM0", SoundSystem.getSound("Intro"));
+                MusicManager.getInstance().addOrUpdateSound("CALM1", SoundSystem.getSound("A1"));
+                MusicManager.getInstance().addOrUpdateSound("CALM2", SoundSystem.getSound("A2"));
+                MusicManager.getInstance().addOrUpdateSound("CALM3", SoundSystem.getSound("A3"));
+                MusicManager.getInstance().addOrUpdateSound("BREAKDOWN", SoundSystem.getSound("Breakdown"));
+                MusicManager.getInstance().addOrUpdateSound("COMBAT", SoundSystem.getSound("B1"));
+                MusicManager.getInstance().addOrUpdateSound("PANIC1", SoundSystem.getSound("Panic1"));
+                MusicManager.getInstance().addOrUpdateSound("PANIC2", SoundSystem.getSound("Panic2"));
+                MusicManager.getInstance().addOrUpdateSound("PANIC3", SoundSystem.getSound("Panic3"));
+            });
+
+
 
         SmeagleBus.getInstance().listen(GameUpdateEvent.class)
                 .subscribe(event -> {

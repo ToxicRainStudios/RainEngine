@@ -9,7 +9,9 @@ import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.registries.manager.NPCManager;
 import com.toxicrain.rainengine.core.resources.ResourceManager;
 import com.toxicrain.rainengine.util.FileUtils;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
@@ -27,6 +29,7 @@ import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SoundSystem extends BaseInstanceable<SoundSystem> {
     private long device;
     private long context;
@@ -41,7 +44,7 @@ public class SoundSystem extends BaseInstanceable<SoundSystem> {
         return BaseInstanceable.getInstance(SoundSystem.class);
     }
 
-    private SoundSystem() {
+    public void postLoad(){
         SmeagleBus.getInstance().post(new SoundSystemLoadEvent(this));
     }
 
