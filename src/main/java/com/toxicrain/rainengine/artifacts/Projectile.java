@@ -5,6 +5,7 @@ import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.vector.Vector2;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
+import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.light.LightSystem;
@@ -23,7 +24,7 @@ public class Projectile extends RenderableArtifact implements IArtifact {
         this.position.z = Constants.PROJECTILE_ZLEVEL; // Set Z-level for projectile rendering
         this.velocity = new Vector2(veloX, veloY);
 
-        GameFactory.projectileManager.addProjectile(this);
+        ProjectileManager.getInstance().addProjectile(this);
     }
 
     public void update() {

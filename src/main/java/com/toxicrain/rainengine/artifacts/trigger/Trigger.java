@@ -2,6 +2,7 @@ package com.toxicrain.rainengine.artifacts.trigger;
 
 import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
+import com.toxicrain.rainengine.core.registries.manager.TriggerManager;
 import com.toxicrain.rainengine.factories.GameFactory;
 import lombok.Getter;
 
@@ -16,7 +17,7 @@ public class Trigger {
         this.action = action;
         this.oneTime = oneTime;
 
-        GameFactory.triggerManager.addTrigger(this);
+        TriggerManager.getInstance().addTrigger(this);
     }
 
     public void check(TilePos playerBounds) {

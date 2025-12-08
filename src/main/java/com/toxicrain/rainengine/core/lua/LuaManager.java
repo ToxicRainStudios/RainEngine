@@ -8,6 +8,7 @@ import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
+import com.toxicrain.rainengine.core.registries.manager.TriggerManager;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.sound.SoundSystem;
 import com.toxicrain.rainengine.util.FileUtils;
@@ -124,7 +125,7 @@ public class LuaManager {
             public LuaValue call(LuaValue arg) {
                 try {
                     RainLogger.LUA_LOGGER.info("Loading Map Data");
-                    GameFactory.triggerManager.clearTriggers();
+                    TriggerManager.getInstance().clearTriggers();
                     MapInfoParser.getInstance().parseMapFile(String.valueOf(arg));
                 } catch (IOException e) {
                     throw new RuntimeException(e);

@@ -10,6 +10,8 @@ import com.toxicrain.rainengine.core.eventbus.events.load.LoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.render.RenderGuiEvent;
 import com.toxicrain.rainengine.core.json.*;
 import com.toxicrain.rainengine.core.logging.RainLogger;
+import com.toxicrain.rainengine.core.registries.manager.NPCManager;
+import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.factories.GameFactory;
@@ -105,7 +107,7 @@ public class GameEngine {
         SmeagleBus.getInstance().post(new DrawMapEvent(batchRenderer));
 
         NPCManager.getInstance().render(batchRenderer);
-        GameFactory.projectileManager.render(batchRenderer);
+        ProjectileManager.getInstance().render(batchRenderer);
         GameFactory.player.render(batchRenderer);
 
         // Render the batch
