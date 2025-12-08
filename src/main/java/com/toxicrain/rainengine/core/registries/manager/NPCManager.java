@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.core.registries.manager;
 
+import com.toxicrain.instanceable.BaseInstanceable;
 import com.toxicrain.rainengine.artifacts.npc.NPC;
 import com.toxicrain.rainengine.artifacts.behavior.BehaviorSequence;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
@@ -7,11 +8,15 @@ import com.toxicrain.rainengine.core.render.BatchRenderer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NPCManager {
+public class NPCManager extends BaseInstanceable<NPCManager> {
 
     private final List<NPC> npcs;
 
-    public NPCManager() {
+    public static NPCManager getInstance() {
+        return BaseInstanceable.getInstance(NPCManager.class);
+    }
+
+    private NPCManager() {
         npcs = new ArrayList<>();
     }
 

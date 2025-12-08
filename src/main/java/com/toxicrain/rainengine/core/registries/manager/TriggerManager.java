@@ -1,16 +1,22 @@
 package com.toxicrain.rainengine.core.registries.manager;
 
+import com.toxicrain.instanceable.BaseInstanceable;
 import com.toxicrain.rainengine.artifacts.trigger.Trigger;
 import com.toxicrain.rainengine.core.datatypes.TilePos;
+import com.toxicrain.rainengine.core.json.key.KeyInfoParser;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TriggerManager {
+public class TriggerManager extends BaseInstanceable<TriggerManager> {
     private final List<Trigger> triggers;
 
-    public TriggerManager() {
+    public static TriggerManager getInstance() {
+        return BaseInstanceable.getInstance(TriggerManager.class);
+    }
+
+    private TriggerManager() {
         triggers = new ArrayList<>();
     }
 

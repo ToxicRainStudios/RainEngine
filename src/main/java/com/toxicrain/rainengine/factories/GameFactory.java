@@ -41,16 +41,11 @@ public class GameFactory {
 
     public static Player player;
     public static GuiManager guiManager;
-    public static ProjectileManager projectileManager;
     public static InputUtils inputUtils;
     public static LuaEngine luaEngine;
     public static GuiLuaWrapper guiLuaWrapper;
     public static LuaManager functionManager;
     public static LangHelper langHelper;
-
-    public static NPCManager npcManager;
-
-    public static TriggerManager triggerManager;
 
     public static void load() {
 

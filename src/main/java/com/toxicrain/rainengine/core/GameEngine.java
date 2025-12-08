@@ -104,7 +104,7 @@ public class GameEngine {
 
         SmeagleBus.getInstance().post(new DrawMapEvent(batchRenderer));
 
-        GameFactory.npcManager.render(batchRenderer);
+        NPCManager.getInstance().render(batchRenderer);
         GameFactory.projectileManager.render(batchRenderer);
         GameFactory.player.render(batchRenderer);
 

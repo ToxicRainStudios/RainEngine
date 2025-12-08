@@ -57,8 +57,6 @@ public class RainBusListener {
                 .subscribe(event -> {
                     if(event.loadEventStage == LoadEvent.LoadEventStage.ININT){
 
-                        GameFactory.triggerManager = new TriggerManager();
-
                         RainLogger.RAIN_LOGGER.info("Loading Lua");
                         GameFactory.loadLua();
                         LuaManager.categorizeScripts("resources/scripts/");
@@ -142,8 +140,6 @@ public class RainBusListener {
         SmeagleBus.getInstance().listen(LoadEvent.class)
                 .subscribe(event -> {
                     if (event.loadEventStage == LoadEvent.LoadEventStage.MANAGER) {
-                        GameFactory.projectileManager = new ProjectileManager();
-                        GameFactory.npcManager = new NPCManager();
                         GameFactory.guiManager = new GuiManager();
                 }
                 });
@@ -163,16 +159,14 @@ public class RainBusListener {
 
                     GameFactory.player.update(deltaTime);
 
-                    GameFactory.triggerManager.update(GameFactory.player.getPosition());
+                    TriggerManager.getInstance().update(GameFactory.player.getPosition());
 
 
                     for (int engineFrames = 30; engineFrames >= 0; engineFrames--) {
 
-                        GameFactory.npcManager.update(deltaTime);
+                        NPCManager.getInstance().update(deltaTime);
 
-                        GameFactory.projectileManager.update(deltaTime);
-
-
+                        ProjectileManager.getInstance().update(deltaTime);
 
                     }
                     LuaManager.executeTickScripts();

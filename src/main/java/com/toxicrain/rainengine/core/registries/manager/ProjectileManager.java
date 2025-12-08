@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.core.registries.manager;
 
+import com.toxicrain.instanceable.BaseInstanceable;
 import com.toxicrain.rainengine.artifacts.Projectile;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
@@ -7,12 +8,16 @@ import com.toxicrain.rainengine.core.render.BatchRenderer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectileManager {
+public class ProjectileManager extends BaseInstanceable<ProjectileManager> {
 
     private static final int MAX_PROJECTILES = 500; // Maximum number of projectiles allowed
     private final List<Projectile> projectiles;
 
-    public ProjectileManager() {
+    public static ProjectileManager getInstance() {
+        return BaseInstanceable.getInstance(ProjectileManager.class);
+    }
+
+    private ProjectileManager() {
         projectiles = new ArrayList<>();
     }
 
