@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.toxicrain.rainengine.factories.GameFactory.luaEngine;
-
 public class LuaManager {
     private final Globals globals;
     private static final List<String> initScripts = new ArrayList<>();
@@ -523,7 +521,7 @@ public class LuaManager {
      */
     public static void loadScript(String scriptPath, String relativePath) {
         try {
-            Globals globals = luaEngine.getGlobals();
+            Globals globals = LuaEngine.getInstance().getGlobals();
             String script = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory(relativePath + scriptPath));  // Read the script content
             LuaValue chunk = globals.load(script, scriptPath);  // Load the script from content
             chunk.call();  // Execute the script

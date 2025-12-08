@@ -12,7 +12,6 @@ import com.toxicrain.rainengine.core.lua.LuaManager;
 import com.toxicrain.rainengine.core.lua.LuaEngine;
 import com.toxicrain.rainengine.gui.GuiLuaWrapper;
 import com.toxicrain.rainengine.gui.GuiReg;
-import com.toxicrain.rainengine.sound.SoundInfo;
 import com.toxicrain.rainengine.sound.SoundSystem;
 import com.toxicrain.rainengine.sound.music.MusicManager;
 import com.toxicrain.rainengine.util.FileUtils;
@@ -21,9 +20,7 @@ import imgui.ImGui;
 import imgui.flag.ImGuiConfigFlags;
 
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import static com.toxicrain.rainengine.core.GameEngine.windowManager;
 
@@ -31,12 +28,10 @@ public class GameFactory {
 
     public static ImguiHandler imguiApp;
     public static GuiReg guiReg;
-    public static ImMapEditorMenu mapEditorMenu;
 
     public static Player player;
     public static GuiManager guiManager;
     public static InputUtils inputUtils;
-    public static LuaEngine luaEngine;
     public static GuiLuaWrapper guiLuaWrapper;
     public static LuaManager functionManager;
     public static LangHelper langHelper;
@@ -82,9 +77,8 @@ public class GameFactory {
     }
 
     public static void loadLua() {
-        luaEngine = new LuaEngine();
         guiLuaWrapper = new GuiLuaWrapper();
-        functionManager = new LuaManager(luaEngine.getGlobals());
+        functionManager = new LuaManager(LuaEngine.getInstance().getGlobals());
     }
 
     public static void loadLang() {
@@ -102,7 +96,6 @@ public class GameFactory {
 
 
         guiReg = new GuiReg();
-        mapEditorMenu = new ImMapEditorMenu();
         guiManager.registerGUI("MainMenu", (v) -> guiReg.drawMainMenu());
         guiManager.registerGUI("Settings", (v) -> guiReg.drawSettingsMenu());
         guiManager.registerGUI("Keybinds", (v) -> guiReg.drawKeyBindingInfo());
@@ -111,7 +104,7 @@ public class GameFactory {
         guiManager.registerGUI("Console", (v) -> guiReg.drawConsole());
         guiManager.registerGUI("Debug", (v) -> guiReg.drawDebugInfo());
         guiManager.registerGUI("DeathScreen", (v) -> guiReg.drawDeathScreen());
-        guiManager.registerGUI("MapEditor", (v) -> mapEditorMenu.draw());
+        guiManager.registerGUI("MapEditor", (v) -> ImMapEditorMenu.getInstance().draw());
         //guiManager.addActiveGUI("MapEditor");
         //guiManager.addActiveGUI("Debug");
         //guiManager.addActiveGUI("Keybinds");

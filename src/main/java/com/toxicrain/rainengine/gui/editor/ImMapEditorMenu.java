@@ -1,5 +1,6 @@
 package com.toxicrain.rainengine.gui.editor;
 
+import com.toxicrain.instanceable.BaseInstanceable;
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.datatypes.vector.Vector2;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
@@ -14,13 +15,16 @@ import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImFloat;
 import imgui.type.ImInt;
 import imgui.type.ImString;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImMapEditorMenu {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class ImMapEditorMenu extends BaseInstanceable<ImMapEditorMenu> {
 
     private final ImString mapNameField = new ImString(256);
     private final ImInt widthField = new ImInt(10);
@@ -37,6 +41,10 @@ public class ImMapEditorMenu {
     private String currentMapName;
     private boolean openLoadMapPopup = false;
     private final ImString loadMapNameInput = new ImString(256);
+
+    public static ImMapEditorMenu getInstance() {
+        return BaseInstanceable.getInstance(ImMapEditorMenu.class);
+    }
 
     public void draw() {
         // Fullscreen dockspace window
