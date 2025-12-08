@@ -37,7 +37,7 @@ public abstract class RenderableArtifact implements IArtifact {
 
     @Override
     public void update(double deltaTime){
-        textureRegion = TextureSystem.getRegion(this.textureResource);
+        textureRegion = TextureSystem.getInstance().getRegion(this.textureResource);
     }
 
     @Override

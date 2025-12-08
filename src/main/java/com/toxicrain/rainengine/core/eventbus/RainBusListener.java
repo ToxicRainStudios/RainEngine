@@ -92,7 +92,7 @@ public class RainBusListener {
                         });
 
                         RainLogger.RAIN_LOGGER.info("Creating Textures");
-                        TextureSystem.initTextures();
+                        TextureSystem.getInstance().initTextures();
 
                         RainLogger.RAIN_LOGGER.info("Loading Keybinds");
                         KeyInfoParser.getInstance().loadKeyInfo();

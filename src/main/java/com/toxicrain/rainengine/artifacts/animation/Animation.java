@@ -48,7 +48,7 @@ public class Animation {
 
         for (int i = 0; i < frameCount; i++) {
             String frameName = frameNamePrefix + "_" + i;
-            TextureRegion region = TextureSystem.getRegion(new Resource(frameName));
+            TextureRegion region = TextureSystem.getInstance().getRegion(new Resource(frameName));
             if (region == null) {
                 throw new RuntimeException("Frame not found in texture atlas: " + frameName);
             }

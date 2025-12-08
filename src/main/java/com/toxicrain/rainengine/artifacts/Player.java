@@ -51,7 +51,7 @@ public class Player extends RenderableArtifact implements IArtifact {
     public Player(Resource defaultTexture, boolean isSprinting) {
         super(defaultTexture, MapInfoParser.getInstance().playerSpawnPos.x, MapInfoParser.getInstance().playerSpawnPos.y, 0f, 1f);
         this.position.z = 5; // Player z-level
-        this.defaultTexture = TextureSystem.getRegion(defaultTexture);
+        this.defaultTexture = TextureSystem.getInstance().getRegion(defaultTexture);
         this.isSprinting = isSprinting;
         this.weapons = new ArrayList<>();
 

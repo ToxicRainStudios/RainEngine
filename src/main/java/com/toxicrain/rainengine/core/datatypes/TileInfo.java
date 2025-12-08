@@ -13,7 +13,7 @@ public class TileInfo {
 
     public TileInfo(Resource textureResource, boolean collision) {
         this.textureResource = textureResource;
-        this.textureRegion = TextureSystem.getRegion(textureResource);
+        this.textureRegion = TextureSystem.getInstance().getRegion(textureResource);
         this.collision = collision;
     }
 
