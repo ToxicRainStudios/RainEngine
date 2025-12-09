@@ -162,7 +162,10 @@ public class ImMapEditorMenu extends BaseInstanceable<ImMapEditorMenu> {
         ImGui.begin("Tile Palette", ImGuiWindowFlags.AlwaysAutoResize);
         ImGui.text("Select Tile:");
         int tilesPerRow = 8;
+
         for (int i = 0; i < tilePalette.size(); i++) {
+            ImGui.pushID(i);  // <-- Give each button a unique ID
+
             char tileChar = tilePalette.get(i);
             TileInfo tileInfo = PaletteInfoParser.getInstance().getTileInfo(tileChar);
             TextureRegion region = TextureSystem.getInstance().getRegion(tileInfo.getTextureResource());
@@ -170,12 +173,19 @@ public class ImMapEditorMenu extends BaseInstanceable<ImMapEditorMenu> {
             if (ImGui.imageButton(
                     TextureSystem.getInstance().getAtlasTextureId(),
                     32, 32,
-                    region.getU0(), region.getV0(), region.getU1(), region.getV1(),
+                    region.getU0(), region.getV0(),
+                    region.getU1(), region.getV1(),
                     selectedTileIndex == i ? 0x88888888 : 0x00000000
-            )) selectedTileIndex = i;
+            )) {
+                selectedTileIndex = i;
+            }
 
-            if ((i + 1) % tilesPerRow != 0) ImGui.sameLine();
+            ImGui.popID();  // <-- Restore ID stack
+
+            if ((i + 1) % tilesPerRow != 0)
+                ImGui.sameLine();
         }
+
         ImGui.end();
 
         // --- Lua Script Editor ---

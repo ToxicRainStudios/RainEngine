@@ -74,7 +74,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.28' // Use the latest version available
     annotationProcessor 'org.projectlombok:lombok:1.18.28' // Necessary for annotation processing
 
-    implementation 'com.github.strubium:JavaWindowManager:1.0.5:windows'
+    implementation 'com.github.strubium:JavaWindowManager:-SNAPSHOT:windows'
     implementation 'com.github.strubium:SmeagleBus:1.0.1'
     implementation 'com.github.ToxicRainStudios:Instanceable:1.0.0'
 

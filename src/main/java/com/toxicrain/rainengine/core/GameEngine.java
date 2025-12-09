@@ -117,7 +117,6 @@ public class GameEngine {
         // Render the batch
         batchRenderer.renderBatch();
 
-        GameFactory.imguiApp.handleInput(windowManager.window);
         GameFactory.imguiApp.newFrame();
 
         SmeagleBus.getInstance().post(new RenderGuiEvent());
