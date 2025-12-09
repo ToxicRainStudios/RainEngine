@@ -10,7 +10,7 @@
     },
     "5": {
       "name": "example:bullet2",
-      "collision": true
+      "collision": false
     },
     "-": {
       "name": "concreteTexture2",

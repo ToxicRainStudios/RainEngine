@@ -1,5 +1,5 @@
 {
-    "fullscreen": true,
+    "fullscreen": false,
     "vSync": false,
     "windowHeight": 1080,
     "language": "en_US",

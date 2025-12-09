@@ -19,7 +19,7 @@ public class Constants {
     public static final float PROJECTILE_ZLEVEL = 1.02f;
 
     public static class FileConstants {
-        private static final String BASE_PATH = "resources";
+        public static final String BASE_PATH = "resources";
 
         public static final String PALETTE_DEFAULT_PATH = BASE_PATH + "/json/palette.json";
         public static final String PALETTE_CUSTOM_PATH = BASE_PATH + "/custom/palette.json";
