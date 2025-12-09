@@ -24,6 +24,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
 
 import java.nio.FloatBuffer;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -72,6 +73,8 @@ public class GameEngine {
 
         int size = MapInfoParser.getInstance().mapData.size();  // Get the size once
 
+        List<float[]> lights = LightSystem.getLightSources();
+
         for (int k = size - 1; k >= 0; k--) {
             // Get the TilePos object
             Vector3 pos = MapInfoParser.getInstance().mapData.get(k);
@@ -87,7 +90,7 @@ public class GameEngine {
                     pos.x,
                     pos.y,
                     pos.z,
-                    new TileParameters(0f, 0f,0f, 1,1,null, LightSystem.getLightSources())
+                    new TileParameters(0f, 0f,0f, 1,1,null, lights)
 
             );
         }
