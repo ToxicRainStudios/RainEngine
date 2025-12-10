@@ -198,14 +198,10 @@ public class RainBusListener {
 
                     TriggerManager.getInstance().update(GameFactory.player.getPosition());
 
+                    NPCManager.getInstance().update(deltaTime);
 
-                    for (int engineFrames = 30; engineFrames >= 0; engineFrames--) {
+                    ProjectileManager.getInstance().update(deltaTime);
 
-                        NPCManager.getInstance().update(deltaTime);
-
-                        ProjectileManager.getInstance().update(deltaTime);
-
-                    }
                     LuaManager.executeTickScripts();
                 });
 

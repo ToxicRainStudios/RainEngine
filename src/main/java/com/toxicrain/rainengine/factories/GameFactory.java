@@ -69,9 +69,9 @@ public class GameFactory {
         guiManager.registerGUI("Debug", (v) -> guiReg.drawDebugInfo());
         guiManager.registerGUI("DeathScreen", (v) -> guiReg.drawDeathScreen());
         guiManager.registerGUI("MapEditor", (v) -> ImMapEditorMenu.getInstance().draw());
-        guiManager.addActiveGUI("MapEditor");
+        //guiManager.add`ActiveGUI("MapEditor");
         //guiManager.addActiveGUI("Debug");
         //guiManager.addActiveGUI("Keybinds");
-        //guiManager.addActiveGUI("MainMenu");
+        guiManager.addActiveGUI("MainMenu");
     }
 }

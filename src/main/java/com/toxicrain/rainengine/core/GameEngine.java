@@ -2,6 +2,7 @@ package com.toxicrain.rainengine.core;
 
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.github.strubium.windowmanager.window.WindowManager;
+import com.toxicrain.rainengine.artifacts.Camera;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.datatypes.vector.Vector3;
 import com.toxicrain.rainengine.core.eventbus.RainBusListener;
@@ -20,10 +21,13 @@ import com.toxicrain.rainengine.sound.SoundSystem;
 import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import lombok.experimental.UtilityClass;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFW;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -96,52 +100,93 @@ public class GameEngine {
         }
     }
 
-    private static void render(BatchRenderer batchRenderer) {
+    private static void render(BatchRenderer batchRenderer, Camera camera) {
         // Clear the color and depth buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Set up the view matrix
+        // Set up the view matrix from the camera
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        glTranslatef(-GameFactory.player.getPosition().x, -GameFactory.player.getPosition().y, -GameFactory.player.getPosition().z);
 
-        // Begin the batch
+        // Convert the camera's view matrix to a FloatBuffer and load it
+        FloatBuffer cameraBuffer = BufferUtils.createFloatBuffer(16);
+        camera.getViewMatrix().get(cameraBuffer);
+        glLoadMatrixf(cameraBuffer);
+
+        // Begin the batch renderer
         batchRenderer.beginBatch();
 
+        // Post event to draw map tiles
         SmeagleBus.getInstance().post(new DrawMapEvent(batchRenderer));
 
+        // Render NPCs and projectiles
         NPCManager.getInstance().render(batchRenderer);
         ProjectileManager.getInstance().render(batchRenderer);
+
+        // Render the player
         GameFactory.player.render(batchRenderer);
 
         // Render the batch
         batchRenderer.renderBatch();
 
+        // Start a new GUI frame
         GameFactory.imguiApp.newFrame();
-
         SmeagleBus.getInstance().post(new RenderGuiEvent());
-
         GameFactory.imguiApp.render();
 
-        // Swap buffers and poll events
+        // Swap buffers and poll window events
         windowManager.swapAndPoll();
-
     }
 
     public static boolean gamePaused = true;
 
     private static void loop(BatchRenderer batchRenderer) {
-        // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
+        // Get initial window size
+        IntBuffer widthBuffer = BufferUtils.createIntBuffer(1);
+        IntBuffer heightBuffer = BufferUtils.createIntBuffer(1);
+        GLFW.glfwGetWindowSize(windowManager.window, widthBuffer, heightBuffer);
+        int windowWidth = widthBuffer.get(0);
+        int windowHeight = heightBuffer.get(0);
+
+        // Create camera with correct aspect ratio
+        Camera camera = new Camera(
+                70f,
+                (float) windowWidth / windowHeight,
+                0.1f,
+                1000f
+        );
+
         while (!windowManager.shouldClose()) {
             DeltaTimeUtil.update();
-
             SmeagleBus.getInstance().post(new GameUpdateEvent(gamePaused));
 
-            render(batchRenderer);
+            // Update camera with player position
+            camera.setPosition(new Vector3f(
+                    GameFactory.player.getPosition().x,
+                    GameFactory.player.getPosition().y,
+                    GameFactory.player.getPosition().z
+            ));
+            camera.setRotation(new Vector3f(0, 45, 0));
+
+            // update camera aspect if window resized
+            widthBuffer.clear();
+            heightBuffer.clear();
+            GLFW.glfwGetWindowSize(windowManager.window, widthBuffer, heightBuffer);
+            int newWidth = widthBuffer.get(0);
+            int newHeight = heightBuffer.get(0);
+            if (newWidth != windowWidth || newHeight != windowHeight) {
+                windowWidth = newWidth;
+                windowHeight = newHeight;
+                camera.setAspectRatio((float) windowWidth / windowHeight);
+            }
+
+            render(batchRenderer, camera);
         }
+
         GameFactory.imguiApp.cleanup();
         SoundSystem.getInstance().cleanup();
     }
+
 
     /**
      * Checks the internal engine version with what gameinfo.json is asking for
