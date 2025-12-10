@@ -1,6 +1,7 @@
 package com.toxicrain.rainengine.core.datatypes.vector;
 
 import lombok.AllArgsConstructor;
+import org.joml.Vector3f;
 
 @AllArgsConstructor
 public class Vector3 {
@@ -38,6 +39,10 @@ public class Vector3 {
         this.x *= scalar;
         this.y *= scalar;
         this.z *= scalar;
+    }
+
+    public Vector3f toVector3f(){
+        return new Vector3f(x,y,z);
     }
 
     public float magnitude() {
