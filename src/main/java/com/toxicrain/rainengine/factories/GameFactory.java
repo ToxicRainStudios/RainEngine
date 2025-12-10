@@ -31,7 +31,7 @@ public class GameFactory {
     public static void load() {
 
         // Load player using the atlas region
-        player = new Player(new Resource("playerTexture"), false);
+        player = new Player(new Resource("rainengine:playertexture"));
 
         inputUtils = new InputUtils(windowManager);
     }

@@ -1,7 +1,6 @@
 package com.toxicrain.rainengine.artifacts;
 
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
-import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.datatypes.*;
 import com.toxicrain.rainengine.core.eventbus.events.ArtifactUpdateEvent;
@@ -24,9 +23,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 
 public class Player extends RenderableArtifact implements IArtifact {
@@ -46,11 +42,11 @@ public class Player extends RenderableArtifact implements IArtifact {
 
     @Getter @Setter private float angle;
 
-    public Player(Resource defaultTexture, boolean isSprinting) {
+    public Player(Resource defaultTexture) {
         super(defaultTexture, MapInfoParser.getInstance().playerSpawnPos.x, MapInfoParser.getInstance().playerSpawnPos.y, 0f, 1f);
         this.position.z = 5; // Player z-level
         this.defaultTexture = TextureSystem.getInstance().getRegion(defaultTexture);
-        this.isSprinting = isSprinting;
+        this.isSprinting = false;
 
         float playerHalfSize = Size.AVERAGE.getSize();
 
