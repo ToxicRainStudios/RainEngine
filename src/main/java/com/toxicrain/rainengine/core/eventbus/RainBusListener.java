@@ -33,6 +33,7 @@ import com.toxicrain.rainengine.sound.music.MusicManager;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import com.toxicrain.rainengine.util.FileUtils;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWScrollCallback;
 
 import java.nio.file.Path;
@@ -187,6 +188,17 @@ public class RainBusListener {
                 MusicManager.getInstance().addOrUpdateSound("PANIC3", SoundSystem.getSound("Panic3"));
             });
 
+        SmeagleBus.getInstance().listen(GameUpdateEvent.class)
+                .subscribe(event -> {
+                    // Update camera with player position
+                    event.camera.setPosition(new Vector3f(
+                            GameFactory.player.getPosition().x,
+                            GameFactory.player.getPosition().y,
+                            GameFactory.player.getPosition().z
+                    ));
+                    event.camera.setRotation(new Vector3f(0, 35, 0));
+
+                    });
 
 
         SmeagleBus.getInstance().listen(GameUpdateEvent.class)

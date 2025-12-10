@@ -38,6 +38,7 @@ public class GameEngine {
 
     // The window handle
     public static WindowManager windowManager;
+    private Camera camera;
 
     public static void run() {
         Thread.setDefaultUncaughtExceptionHandler(new CrashReporter());
@@ -149,7 +150,7 @@ public class GameEngine {
         int windowHeight = heightBuffer.get(0);
 
         // Create camera with correct aspect ratio
-        Camera camera = new Camera(
+        camera = new Camera(
                 70f,
                 (float) windowWidth / windowHeight,
                 0.1f,
@@ -158,15 +159,8 @@ public class GameEngine {
 
         while (!windowManager.shouldClose()) {
             DeltaTimeUtil.update();
-            SmeagleBus.getInstance().post(new GameUpdateEvent(gamePaused));
+            SmeagleBus.getInstance().post(new GameUpdateEvent(gamePaused, camera));
 
-            // Update camera with player position
-            camera.setPosition(new Vector3f(
-                    GameFactory.player.getPosition().x,
-                    GameFactory.player.getPosition().y,
-                    GameFactory.player.getPosition().z
-            ));
-            camera.setRotation(new Vector3f(0, 45, 0));
 
             // update camera aspect if window resized
             widthBuffer.clear();
