@@ -40,9 +40,6 @@ public class Player extends RenderableArtifact implements IArtifact {
     private float cameraSpeed = 0.02f;
     private final float scrollSpeed = 0.5f;
 
-    private final List<Weapon> weapons;
-    @Getter private Weapon equippedWeapon;
-
     private float[] openglMousePos;
 
     @Getter private final AABB playerAABB;
@@ -54,7 +51,6 @@ public class Player extends RenderableArtifact implements IArtifact {
         this.position.z = 5; // Player z-level
         this.defaultTexture = TextureSystem.getInstance().getRegion(defaultTexture);
         this.isSprinting = isSprinting;
-        this.weapons = new ArrayList<>();
 
         float playerHalfSize = Size.AVERAGE.getSize();
 
@@ -73,37 +69,6 @@ public class Player extends RenderableArtifact implements IArtifact {
                 .subscribe(event -> {
                     this.position.set(event.playerSpawnPos.x,event.playerSpawnPos.y, position.z);
                 });
-    }
-
-    public void addWeapon(Weapon weapon) {
-        weapons.add(weapon);
-    }
-
-    public void equipWeapon(Weapon weapon) {
-        if (weapon != null && weapons.contains(weapon)) {
-            if (equippedWeapon != null) {
-                equippedWeapon.unequip();
-            }
-            equippedWeapon = weapon;
-            equippedWeapon.equip();
-        }
-    }
-
-    public boolean isWeaponEquipped(Weapon weapon) {
-        return equippedWeapon != null && equippedWeapon.equals(weapon);
-    }
-
-    public void attack() {
-        if (equippedWeapon != null) {
-            float[] mousePos = InputUtils.mouseTracker.update(position);
-
-            float worldMouseX = mousePos[0];
-            float worldMouseY = mousePos[1];
-
-            float playerAngle = getAngle(worldMouseX, worldMouseY);
-
-            equippedWeapon.attack(playerAngle, position.x, position.y);
-        }
     }
 
     private float getAngle(float targetX, float targetY) {
@@ -182,7 +147,6 @@ public class Player extends RenderableArtifact implements IArtifact {
 
     private void processInput(double deltaTime) {
         handleSprinting();
-        handleAttack();
 
         if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkForward"))) {
             forward(true, 1, deltaTime);
@@ -208,12 +172,6 @@ public class Player extends RenderableArtifact implements IArtifact {
         } else {
             isSprinting = false;
             cameraSpeed = 0.01f;
-        }
-    }
-
-    private void handleAttack() {
-        if (GameFactory.inputUtils.isMouseButtonPressed(0)) {
-            attack();
         }
     }
 }

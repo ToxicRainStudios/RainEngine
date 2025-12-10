@@ -63,7 +63,6 @@ public class GameFactory {
         guiManager.registerGUI("MainMenu", (v) -> guiReg.drawMainMenu());
         guiManager.registerGUI("Settings", (v) -> guiReg.drawSettingsMenu());
         guiManager.registerGUI("Keybinds", (v) -> guiReg.drawKeyBindingInfo());
-        guiManager.registerGUI("Inventory", (v) -> guiReg.drawInventory());
         guiManager.registerGUI("FileEditor", (v) -> guiReg.drawFileEditorUI());
         guiManager.registerGUI("Console", (v) -> guiReg.drawConsole());
         guiManager.registerGUI("Debug", (v) -> guiReg.drawDebugInfo());

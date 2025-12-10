@@ -241,26 +241,6 @@ public class GuiReg {
                 .endWindow();
     }
 
-    public void drawInventory(){
-        GuiBuilder builder = new GuiBuilder();
-
-        String string;
-
-        if (GameFactory.player.getEquippedWeapon() == null){
-            string = "No Weapon";
-        }
-        else {
-            string = GameFactory.player.getEquippedWeapon().getName();
-        }
-
-        builder.beginWindow("Inventory", windowFlags)
-                .pushFont("dos")
-                .addTextCentered(string, 1)
-
-                .popFont()
-                .endWindow();
-    }
-
     public void drawKeyBindingInfo() {
         // Initialize the builder
         GuiBuilder builder = new GuiBuilder();
