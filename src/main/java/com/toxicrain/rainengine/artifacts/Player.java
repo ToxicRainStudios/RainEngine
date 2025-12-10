@@ -1,6 +1,7 @@
 package com.toxicrain.rainengine.artifacts;
 
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
+import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.datatypes.*;
 import com.toxicrain.rainengine.core.eventbus.events.ArtifactUpdateEvent;
@@ -70,7 +71,7 @@ public class Player extends RenderableArtifact implements IArtifact {
 
         SmeagleBus.getInstance().listen(MapLoadEvent.class)
                 .subscribe(event -> {
-                    this.position.update(event.playerSpawnPos);
+                    this.position.set(event.playerSpawnPos.x,event.playerSpawnPos.y, position.z);
                 });
     }
 

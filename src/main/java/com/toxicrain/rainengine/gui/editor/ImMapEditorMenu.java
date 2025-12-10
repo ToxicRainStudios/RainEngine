@@ -3,7 +3,6 @@ package com.toxicrain.rainengine.gui.editor;
 import com.toxicrain.instanceable.BaseInstanceable;
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.datatypes.TileInfo;
-import com.toxicrain.rainengine.core.datatypes.vector.Vector2;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
 import com.toxicrain.rainengine.core.json.PaletteInfoParser;
 import com.toxicrain.rainengine.light.LightSystem;
@@ -21,6 +20,7 @@ import imgui.type.ImInt;
 import imgui.type.ImString;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.joml.Vector2f;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -243,7 +243,7 @@ public class ImMapEditorMenu extends BaseInstanceable<ImMapEditorMenu> {
         }
 
         // Mouse tile editing
-        Vector2 mousePos = new Vector2(ImGui.getMousePosX(), ImGui.getMousePosY());
+        Vector2f mousePos = new Vector2f(ImGui.getMousePosX(), ImGui.getMousePosY());
         boolean isHoveringCanvas = mousePos.x > originX && mousePos.x < originX + gridW * cellSize &&
                 mousePos.y > originY && mousePos.y < originY + gridH * cellSize;
 
@@ -275,8 +275,8 @@ public class ImMapEditorMenu extends BaseInstanceable<ImMapEditorMenu> {
             MapInfoParser.getInstance().parseMapFile(currentMapName);
 
             // Load basic map info
-            Vector2 size = MapInfoParser.getInstance().mapSize;
-            Vector2 spawn = MapInfoParser.getInstance().playerSpawnPos;
+            Vector2f size = MapInfoParser.getInstance().mapSize;
+            Vector2f spawn = MapInfoParser.getInstance().playerSpawnPos;
 
             widthField.set((int) size.x);
             heightField.set((int) size.y);

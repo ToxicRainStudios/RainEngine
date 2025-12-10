@@ -191,7 +191,7 @@ public class RainBusListener {
         SmeagleBus.getInstance().listen(GameUpdateEvent.class)
                 .subscribe(event -> {
                     // Update camera with player position
-                    event.camera.setPosition(GameFactory.player.getPosition().toVector3f());
+                    event.camera.setPosition(GameFactory.player.getPosition());
                     event.camera.setRotation(new Vector3f(0, 35, 0));
 
                     });

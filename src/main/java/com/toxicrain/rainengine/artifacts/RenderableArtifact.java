@@ -3,13 +3,13 @@ package com.toxicrain.rainengine.artifacts;
 import com.toxicrain.rainengine.core.datatypes.Color;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
-import com.toxicrain.rainengine.core.datatypes.vector.Vector3;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import lombok.Getter;
 import lombok.Setter;
+import org.joml.Vector3f;
 
 /**
  * A base class for all artifacts that can be rendered in the world.
@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter @Setter
 public abstract class RenderableArtifact implements IArtifact {
 
-    protected Vector3 position;
+    protected Vector3f position;
     protected float rotation;
     protected float size;
 
@@ -30,7 +30,7 @@ public abstract class RenderableArtifact implements IArtifact {
 
     public RenderableArtifact(Resource textureResource, float x, float y, float rotation, float size) {
         this.textureResource = textureResource;
-        this.position = new Vector3(x, y, 1);
+        this.position = new Vector3f(x, y, 1);
         this.rotation = rotation;
         this.size = size;
     }

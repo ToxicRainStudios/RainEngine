@@ -4,7 +4,6 @@ import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.github.strubium.windowmanager.window.WindowManager;
 import com.toxicrain.rainengine.artifacts.Camera;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
-import com.toxicrain.rainengine.core.datatypes.vector.Vector3;
 import com.toxicrain.rainengine.core.eventbus.RainBusListener;
 import com.toxicrain.rainengine.core.eventbus.events.*;
 import com.toxicrain.rainengine.core.eventbus.events.load.LoadEvent;
@@ -82,7 +81,7 @@ public class GameEngine {
 
         for (int k = size - 1; k >= 0; k--) {
             // Get the TilePos object
-            Vector3 pos = MapInfoParser.getInstance().mapData.get(k);
+            Vector3f pos = MapInfoParser.getInstance().mapData.get(k);
 
             // Get the character representing the texture
             char textureChar = Tile.mapDataType.get(k);
