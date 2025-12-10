@@ -189,7 +189,7 @@ public class ImMapEditorMenu extends BaseInstanceable<ImMapEditorMenu> {
         ImGui.end();
 
         // --- Lua Script Editor ---
-        ImGui.begin("Lua Script Editor");
+        ImGui.begin("Lua");
         ImGui.inputTextMultiline("##lua", luaScriptContent, -1, 300);
         if (ImGui.button("Save Lua")) {
             if (currentMapName != null && !currentMapName.isEmpty()) {
@@ -269,10 +269,12 @@ public class ImMapEditorMenu extends BaseInstanceable<ImMapEditorMenu> {
 
     private void onLoadMap() {
         currentMapName = mapNameField.get();
+
         try {
             LightSystem.getLightSources().clear();
             MapInfoParser.getInstance().parseMapFile(currentMapName);
 
+            // Load basic map info
             Vector2 size = MapInfoParser.getInstance().mapSize;
             Vector2 spawn = MapInfoParser.getInstance().playerSpawnPos;
 
@@ -281,34 +283,56 @@ public class ImMapEditorMenu extends BaseInstanceable<ImMapEditorMenu> {
             spawnXField.set((int) spawn.x);
             spawnYField.set((int) spawn.y);
 
-            JSONArray topArray = MapInfoParser.getInstance().getMapJson();
+            String jsonPath = FileUtils.getCurrentWorkingDirectory(
+                    Constants.FileConstants.MAP_PATH + currentMapName + ".json"
+            );
+            JSONArray topArray = new JSONArray(FileUtils.readFile(jsonPath));
             JSONObject mainMap = topArray.getJSONObject(0);
 
+            // Load slices
             JSONArray sliceArray = mainMap.getJSONArray("slices").getJSONArray(0);
             slices.clear();
-            for (int i = 0; i < sliceArray.length(); i++) slices.add(sliceArray.getString(i));
+            for (int i = 0; i < sliceArray.length(); i++) {
+                slices.add(sliceArray.getString(i));
+            }
 
+            // Load submaps (NOW WORKS)
             submaps.clear();
             JSONArray subMaps = mainMap.optJSONArray("subMaps");
             if (subMaps != null) {
                 for (int i = 0; i < subMaps.length(); i++) {
                     JSONObject sm = subMaps.getJSONObject(i);
-                    submaps.add(sm.getString("name") + " (" + sm.getInt("offsetX") + "," + sm.getInt("offsetY") + ")");
+                    submaps.add(sm.getString("name") + " (" +
+                            sm.getInt("offsetX") + "," +
+                            sm.getInt("offsetY") + ")");
                 }
             }
 
+            // Load lighting
             lights.clear();
             for (float[] light : LightSystem.getLightSources()) {
-                lights.add(new ImFloat[]{new ImFloat(light[0]), new ImFloat(light[1]), new ImFloat(light[2])});
+                lights.add(new ImFloat[]{
+                        new ImFloat(light[0]),
+                        new ImFloat(light[1]),
+                        new ImFloat(light[2])
+                });
             }
 
             // Load Lua script
-            String scriptFilePath = FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.BASE_PATH + "/scripts/" + "autorun_" + currentMapName + ".lua");
-            try { luaScriptContent.set(FileUtils.readFile(scriptFilePath)); } catch (Exception e) { luaScriptContent.set("-- Lua script not found"); }
+            String scriptFilePath = FileUtils.getCurrentWorkingDirectory(
+                    Constants.FileConstants.BASE_PATH + "/scripts/" + "autorun_" + currentMapName + ".lua"
+            );
+            try {
+                luaScriptContent.set(FileUtils.readFile(scriptFilePath));
+            } catch (Exception e) {
+                luaScriptContent.set("-- Lua script not found");
+            }
 
             // Load tile palette
             tilePalette.clear();
-            for (char c : PaletteInfoParser.getInstance().getCollisionTiles()) tilePalette.add(c);
+            for (char c : PaletteInfoParser.getInstance().getTiles()) {
+                tilePalette.add(c);
+            }
 
         } catch (Exception ex) {
             ex.printStackTrace();

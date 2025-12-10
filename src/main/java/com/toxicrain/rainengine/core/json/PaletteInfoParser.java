@@ -92,4 +92,12 @@ public class PaletteInfoParser extends BaseInstanceable<PaletteInfoParser> {
         }
         return collisionTiles;
     }
+
+    public Iterable<Character> getTiles() {
+        List<Character> collisionTiles = new ArrayList<>();
+        for (Map.Entry<Character, TileInfo> entry : tileMappings.entrySet()) {
+            collisionTiles.add(entry.getKey());
+        }
+        return collisionTiles;
+    }
 }
