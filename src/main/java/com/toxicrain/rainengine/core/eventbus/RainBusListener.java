@@ -35,6 +35,7 @@ import com.toxicrain.rainengine.sound.music.MusicManager;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import com.toxicrain.rainengine.util.FileUtils;
+import com.toxicrain.rainengine.util.ShaderUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiConfigFlags;
 import org.lwjgl.glfw.GLFWScrollCallback;
@@ -112,7 +113,6 @@ public class RainBusListener {
                         glMatrixMode(GL_PROJECTION);
                         glLoadMatrixf(GameEngine.createPerspectiveProjectionMatrix(SettingsInfoParser.getInstance().getFOV(), SettingsInfoParser.getInstance().getWindowWidth() / SettingsInfoParser.getInstance().getWindowHeight(), 1.0f, 100.0f));
 
-
                         GameFactory.load();
 
                         RainLogger.RAIN_LOGGER.info("Loading ImGUI");
@@ -137,7 +137,7 @@ public class RainBusListener {
                         soundSystem.postLoad();
 
                         RainLogger.RAIN_LOGGER.info("Loading Shaders");
-                        GameFactory.loadShaders();
+                        ShaderUtils.getInstance(); // Get instance here to create the object
 
                         SmeagleBus.getInstance().post(new ExecuteAllLuaScripts(ExecuteAllLuaScripts.EventStage.POST_ININT));
 

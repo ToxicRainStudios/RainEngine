@@ -12,7 +12,6 @@ import com.toxicrain.rainengine.util.ShaderUtils;
 
 import lombok.NonNull;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
 import java.nio.FloatBuffer;
@@ -60,8 +59,6 @@ public class BatchRenderer {
         vertexVboId = glGenBuffers();
         texCoordVboId = glGenBuffers();
         colorVboId = glGenBuffers();
-
-        ShaderUtils.getInstance();
 
         SmeagleBus.getInstance().post(new CreateShaderProgramEvent("lighting", "resources/shaders/light/lighting.vert", "resources/shaders/light/lighting.frag"));
 

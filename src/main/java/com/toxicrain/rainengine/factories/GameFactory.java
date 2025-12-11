@@ -1,18 +1,10 @@
 package com.toxicrain.rainengine.factories;
 
 import com.github.strubium.windowmanager.imgui.GuiManager;
-import com.github.strubium.windowmanager.imgui.ImguiHandler;
 import com.toxicrain.rainengine.artifacts.*;
 import com.toxicrain.rainengine.core.datatypes.Resource;
-import com.toxicrain.rainengine.gui.editor.ImMapEditorMenu;
 import com.toxicrain.rainengine.core.LangHelper;
-import com.toxicrain.rainengine.core.lua.LuaManager;
-import com.toxicrain.rainengine.core.lua.LuaEngine;
-import com.toxicrain.rainengine.gui.GuiLuaWrapper;
-import com.toxicrain.rainengine.gui.GuiReg;
 import com.toxicrain.rainengine.util.InputUtils;
-import imgui.ImGui;
-import imgui.flag.ImGuiConfigFlags;
 
 import static com.toxicrain.rainengine.core.GameEngine.windowManager;
 
@@ -32,9 +24,5 @@ public class GameFactory {
 
     public static void loadFonts() {
         // GuiBuilder.setFont("dos", FileUtils.getCurrentWorkingDirectory("resources/fonts/Perfect DOS VGA 437.ttf"), 30);
-    }
-
-    public static void loadShaders() {
-        // fogShaderProgram = ShaderUtils.createShaderProgram(FileUtils.getCurrentWorkingDirectory("resources/shaders/fog/fog_vertex.glsl"), FileUtils.getCurrentWorkingDirectory("resources/shaders/fog/fog_fragment.glsl"));
     }
 }
