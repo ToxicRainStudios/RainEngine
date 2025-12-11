@@ -4,7 +4,6 @@ import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.instanceable.BaseInstanceable;
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.eventbus.events.load.MapLoadEvent;
-import com.toxicrain.rainengine.core.eventbus.events.lua.ExecuteLuaScript;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.lua.LuaManager;
 import com.toxicrain.rainengine.core.registries.tiles.Tile;

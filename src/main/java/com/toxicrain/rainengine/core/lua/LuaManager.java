@@ -7,7 +7,8 @@ import com.toxicrain.rainengine.artifacts.npc.NPC;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.eventbus.events.lua.CategorizeScriptsEvent;
-import com.toxicrain.rainengine.core.eventbus.events.lua.ExecuteLuaScript;
+import com.toxicrain.rainengine.core.eventbus.events.lua.ExecuteAllLuaScripts;
+import com.toxicrain.rainengine.core.eventbus.events.lua.LoadLuaFunctions;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
@@ -40,27 +41,27 @@ public class LuaManager {
                 .subscribe(event -> {
                     categorizeScripts(event.filePath);
                 });
-        SmeagleBus.getInstance().listen(ExecuteLuaScript.class)
+        SmeagleBus.getInstance().listen(ExecuteAllLuaScripts.class)
                 .subscribe(event -> {
-                    if(event.eventStage == ExecuteLuaScript.EventStage.ININT){
+                    if(event.eventStage == ExecuteAllLuaScripts.EventStage.ININT){
                         executeInitScripts();
                     }
                 });
-        SmeagleBus.getInstance().listen(ExecuteLuaScript.class)
+        SmeagleBus.getInstance().listen(ExecuteAllLuaScripts.class)
                 .subscribe(event -> {
-                    if(event.eventStage == ExecuteLuaScript.EventStage.POST_ININT){
+                    if(event.eventStage == ExecuteAllLuaScripts.EventStage.POST_ININT){
                         executePostInitScripts();
                     }
                 });
-        SmeagleBus.getInstance().listen(ExecuteLuaScript.class)
+        SmeagleBus.getInstance().listen(ExecuteAllLuaScripts.class)
                 .subscribe(event -> {
-                    if(event.eventStage == ExecuteLuaScript.EventStage.TICK){
+                    if(event.eventStage == ExecuteAllLuaScripts.EventStage.TICK){
                         executeTickScripts();
                     }
                 });
-        SmeagleBus.getInstance().listen(ExecuteLuaScript.class)
+        SmeagleBus.getInstance().listen(ExecuteAllLuaScripts.class)
                 .subscribe(event -> {
-                    if(event.eventStage == ExecuteLuaScript.EventStage.ININT){
+                    if(event.eventStage == ExecuteAllLuaScripts.EventStage.ININT){
                         executeImguiScripts();
                     }
                 });

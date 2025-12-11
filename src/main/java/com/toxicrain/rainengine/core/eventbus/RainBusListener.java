@@ -11,7 +11,7 @@ import com.toxicrain.rainengine.core.eventbus.events.load.LangLoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.load.LoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.load.sound.SoundSystemLoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.lua.CategorizeScriptsEvent;
-import com.toxicrain.rainengine.core.eventbus.events.lua.ExecuteLuaScript;
+import com.toxicrain.rainengine.core.eventbus.events.lua.ExecuteAllLuaScripts;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.eventbus.events.render.RenderGuiEvent;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
@@ -75,7 +75,7 @@ public class RainBusListener {
 
                         SmeagleBus.getInstance().post(new CategorizeScriptsEvent("resources/scripts/"));
 
-                        SmeagleBus.getInstance().post(new ExecuteLuaScript(ExecuteLuaScript.EventStage.ININT));
+                        SmeagleBus.getInstance().post(new ExecuteAllLuaScripts(ExecuteAllLuaScripts.EventStage.ININT));
 
                         Tile.combineTouchingAABBs();
 
@@ -139,7 +139,7 @@ public class RainBusListener {
                         RainLogger.RAIN_LOGGER.info("Loading Shaders");
                         GameFactory.loadShaders();
 
-                        SmeagleBus.getInstance().post(new ExecuteLuaScript(ExecuteLuaScript.EventStage.POST_ININT));
+                        SmeagleBus.getInstance().post(new ExecuteAllLuaScripts(ExecuteAllLuaScripts.EventStage.POST_ININT));
 
                         SmeagleBus.getInstance().post(new LangLoadEvent(SettingsInfoParser.getInstance().getLanguage()));
 
@@ -237,7 +237,7 @@ public class RainBusListener {
 
                     ProjectileManager.getInstance().update(deltaTime);
 
-                    SmeagleBus.getInstance().post(new ExecuteLuaScript(ExecuteLuaScript.EventStage.TICK));
+                    SmeagleBus.getInstance().post(new ExecuteAllLuaScripts(ExecuteAllLuaScripts.EventStage.TICK));
                 });
 
         SmeagleBus.getInstance().listen(DrawMapEvent.class)
@@ -248,7 +248,7 @@ public class RainBusListener {
         SmeagleBus.getInstance().listen(RenderGuiEvent.class)
                 .subscribe(event -> {
                     GameFactory.guiManager.render();
-                    SmeagleBus.getInstance().post(new ExecuteLuaScript(ExecuteLuaScript.EventStage.IMGUI));
+                    SmeagleBus.getInstance().post(new ExecuteAllLuaScripts(ExecuteAllLuaScripts.EventStage.IMGUI));
                 });
 
         SmeagleBus.getInstance().listen(ScrollEvent.class)
