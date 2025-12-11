@@ -1,8 +1,9 @@
-package com.toxicrain.rainengine.util;
+package com.toxicrain.rainengine.core.render;
 
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.instanceable.BaseInstanceable;
-import com.toxicrain.rainengine.core.eventbus.events.render.CreateShaderProgramEvent;
+import com.toxicrain.rainengine.core.eventbus.events.render.shader.CreateShaderProgramEvent;
+import com.toxicrain.rainengine.core.eventbus.events.render.shader.ShaderProgramCreatedEvent;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -13,20 +14,24 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ShaderUtils extends BaseInstanceable<ShaderUtils> {
+public class ShaderSystem extends BaseInstanceable<ShaderSystem> {
 
-    private ShaderUtils(){
+    private ShaderSystem(){
         SmeagleBus.getInstance().listen(CreateShaderProgramEvent.class)
                 .subscribe(event -> {
-                    createShaderProgram(event.name, event.vertexShaderPath, event.fragmentShaderPath);
+                    int program = createShaderProgram(event.name, event.vertexShaderPath, event.fragmentShaderPath);
+
+                    SmeagleBus.getInstance().post(new ShaderProgramCreatedEvent(event.name, program));
                 });
     }
 
-    private final Map<String, Integer> shaderPrograms = new HashMap<>();
+    private final Map<String, Integer> SHADER_PROGRAMS = new HashMap<>();
+    private final Map<String, Map<String, Integer>> SHADER_UNIFORM_CACHE = new HashMap<>();
 
 
-    public static ShaderUtils getInstance(){
-        return BaseInstanceable.getInstance(ShaderUtils.class);
+
+    public static ShaderSystem getInstance(){
+        return BaseInstanceable.getInstance(ShaderSystem.class);
     }
 
     private int loadShader(int type, String filePath) {
@@ -49,8 +54,8 @@ public class ShaderUtils extends BaseInstanceable<ShaderUtils> {
     }
 
     private int createShaderProgram(String name, String vertexShaderPath, String fragmentShaderPath) {
-        RainLogger.RAIN_LOGGER.info("Loading Vertex Shader: " + vertexShaderPath);
-        RainLogger.RAIN_LOGGER.info("Loading Fragment Shader: " + fragmentShaderPath);
+        RainLogger.RAIN_LOGGER.info("Loading Vertex Shader: {}", vertexShaderPath);
+        RainLogger.RAIN_LOGGER.info("Loading Fragment Shader: {}", fragmentShaderPath);
 
         int vertexShader = loadShader(GL20.GL_VERTEX_SHADER, vertexShaderPath);
         int fragmentShader = loadShader(GL20.GL_FRAGMENT_SHADER, fragmentShaderPath);
@@ -67,24 +72,35 @@ public class ShaderUtils extends BaseInstanceable<ShaderUtils> {
         GL20.glDeleteShader(vertexShader);
         GL20.glDeleteShader(fragmentShader);
 
-        shaderPrograms.put(name, shaderProgram);
+        SHADER_PROGRAMS.put(name, shaderProgram);
         return shaderProgram;
     }
 
     public int getShader(String name) {
-        Integer program = shaderPrograms.get(name);
+        Integer program = SHADER_PROGRAMS.get(name);
         if (program == null)
             throw new IllegalArgumentException("Shader program '" + name + "' not found!");
         return program;
     }
 
-    public int getUniformLocation(String name, String uniformName){
-        return GL20.glGetUniformLocation(getShader(name), uniformName);
+    public int getUniformLocation(String shaderName, String uniformName) {
+        SHADER_UNIFORM_CACHE.putIfAbsent(shaderName, new HashMap<>());
+        Map<String, Integer> shaderUniforms = SHADER_UNIFORM_CACHE.get(shaderName);
+
+        return shaderUniforms.computeIfAbsent(uniformName,
+                u -> GL20.glGetUniformLocation(getShader(shaderName), u));
     }
+
 
     public void useProgram(String name){
         GL20.glUseProgram(getShader(name));
     }
+
+    public void deleteShaderProgram(String name) {
+        Integer program = SHADER_PROGRAMS.remove(name);
+        if (program != null) GL20.glDeleteProgram(program);
+    }
+
 
 
 }

@@ -2,13 +2,12 @@ package com.toxicrain.rainengine.core.render;
 
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
-import com.toxicrain.rainengine.core.eventbus.events.render.CreateShaderProgramEvent;
+import com.toxicrain.rainengine.core.eventbus.events.render.shader.CreateShaderProgramEvent;
 import com.toxicrain.rainengine.core.eventbus.events.render.batchrenderer.BuildBatchRendererEvent;
 import com.toxicrain.rainengine.core.eventbus.events.render.batchrenderer.RenderBatchRendererEvent;
 import com.toxicrain.rainengine.light.LightSystem;
 import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
-import com.toxicrain.rainengine.util.ShaderUtils;
 
 import lombok.NonNull;
 import org.lwjgl.BufferUtils;
@@ -63,14 +62,14 @@ public class BatchRenderer {
         SmeagleBus.getInstance().post(new CreateShaderProgramEvent("lighting", "resources/shaders/light/lighting.vert", "resources/shaders/light/lighting.frag"));
 
         // load shader
-        shaderProgram = ShaderUtils.getInstance().getShader("lighting");
+        shaderProgram = ShaderSystem.getInstance().getShader("lighting");
 
         // get uniform locations
-        uTextureLoc   = ShaderUtils.getInstance().getUniformLocation("lighting", "uTexture");
-        uLightCountLoc = ShaderUtils.getInstance().getUniformLocation("lighting", "uLightCount");
-        uLightPosLoc   = ShaderUtils.getInstance().getUniformLocation("lighting", "uLightPos");
-        uLightColorLoc = ShaderUtils.getInstance().getUniformLocation("lighting", "uLightColor");
-        uAmbientLoc    = ShaderUtils.getInstance().getUniformLocation("lighting", "uAmbient");
+        uTextureLoc   = ShaderSystem.getInstance().getUniformLocation("lighting", "uTexture");
+        uLightCountLoc = ShaderSystem.getInstance().getUniformLocation("lighting", "uLightCount");
+        uLightPosLoc   = ShaderSystem.getInstance().getUniformLocation("lighting", "uLightPos");
+        uLightColorLoc = ShaderSystem.getInstance().getUniformLocation("lighting", "uLightColor");
+        uAmbientLoc    = ShaderSystem.getInstance().getUniformLocation("lighting", "uAmbient");
 
         SmeagleBus.getInstance().post(new BuildBatchRendererEvent(this));
     }
@@ -273,7 +272,7 @@ public class BatchRenderer {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        ShaderUtils.getInstance().useProgram("lighting");
+        ShaderSystem.getInstance().useProgram("lighting");
 
         // texture sampler
         GL20.glUniform1i(uTextureLoc, 0);

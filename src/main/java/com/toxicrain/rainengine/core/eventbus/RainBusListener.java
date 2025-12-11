@@ -35,7 +35,7 @@ import com.toxicrain.rainengine.sound.music.MusicManager;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import com.toxicrain.rainengine.util.FileUtils;
-import com.toxicrain.rainengine.util.ShaderUtils;
+import com.toxicrain.rainengine.core.render.ShaderSystem;
 import imgui.ImGui;
 import imgui.flag.ImGuiConfigFlags;
 import org.lwjgl.glfw.GLFWScrollCallback;
@@ -137,7 +137,7 @@ public class RainBusListener {
                         soundSystem.postLoad();
 
                         RainLogger.RAIN_LOGGER.info("Loading Shaders");
-                        ShaderUtils.getInstance(); // Get instance here to create the object
+                        ShaderSystem.getInstance(); // Get instance here to create the object
 
                         SmeagleBus.getInstance().post(new ExecuteAllLuaScripts(ExecuteAllLuaScripts.EventStage.POST_ININT));
 

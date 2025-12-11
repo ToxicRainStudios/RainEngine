@@ -1,4 +1,4 @@
-package com.toxicrain.rainengine.core.eventbus.events.render;
+package com.toxicrain.rainengine.core.eventbus.events.render.shader;
 
 import lombok.AllArgsConstructor;
 
