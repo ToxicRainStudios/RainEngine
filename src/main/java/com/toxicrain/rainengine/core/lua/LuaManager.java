@@ -202,7 +202,7 @@ public class LuaManager {
                 NPC npc = new NPCBuilder()
                         .position(x, y)
                         .rotation(rotation)
-                        .size(size)
+                        //.size(size)
                         .fieldOfView(fov)
                         .visionDistance(visionDist)
                         .texture(texture)
