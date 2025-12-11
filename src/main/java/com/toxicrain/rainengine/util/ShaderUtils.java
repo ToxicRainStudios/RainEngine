@@ -78,5 +78,13 @@ public class ShaderUtils extends BaseInstanceable<ShaderUtils> {
         return program;
     }
 
+    public int getUniformLocation(String name, String uniformName){
+        return GL20.glGetUniformLocation(getShader(name), uniformName);
+    }
+
+    public void useProgram(String name){
+        GL20.glUseProgram(getShader(name));
+    }
+
 
 }

@@ -66,11 +66,11 @@ public class BatchRenderer {
         shaderProgram = ShaderUtils.getInstance().getShader("lighting");
 
         // get uniform locations
-        uTextureLoc   = GL20.glGetUniformLocation(shaderProgram, "uTexture");
-        uLightCountLoc = GL20.glGetUniformLocation(shaderProgram, "uLightCount");
-        uLightPosLoc   = GL20.glGetUniformLocation(shaderProgram, "uLightPos");
-        uLightColorLoc = GL20.glGetUniformLocation(shaderProgram, "uLightColor");
-        uAmbientLoc    = GL20.glGetUniformLocation(shaderProgram, "uAmbient");
+        uTextureLoc   = ShaderUtils.getInstance().getUniformLocation("lighting", "uTexture");
+        uLightCountLoc = ShaderUtils.getInstance().getUniformLocation("lighting", "uLightCount");
+        uLightPosLoc   = ShaderUtils.getInstance().getUniformLocation("lighting", "uLightPos");
+        uLightColorLoc = ShaderUtils.getInstance().getUniformLocation("lighting", "uLightColor");
+        uAmbientLoc    = ShaderUtils.getInstance().getUniformLocation("lighting", "uAmbient");
 
         SmeagleBus.getInstance().post(new BuildBatchRendererEvent(this));
     }
@@ -273,7 +273,7 @@ public class BatchRenderer {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        GL20.glUseProgram(shaderProgram);
+        ShaderUtils.getInstance().useProgram("lighting");
 
         // texture sampler
         GL20.glUniform1i(uTextureLoc, 0);
