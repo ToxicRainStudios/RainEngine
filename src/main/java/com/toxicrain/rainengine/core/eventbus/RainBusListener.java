@@ -19,20 +19,22 @@ import com.toxicrain.rainengine.core.json.PaletteInfoParser;
 import com.toxicrain.rainengine.core.json.SettingsInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
-import com.toxicrain.rainengine.core.lua.LuaManager;
 import com.toxicrain.rainengine.core.registries.manager.NPCManager;
 import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
 import com.toxicrain.rainengine.core.registries.manager.TriggerManager;
 import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.core.resources.ResourceManager;
 import com.toxicrain.rainengine.factories.GameFactory;
+import com.toxicrain.rainengine.gui.GuiReg;
+import com.toxicrain.rainengine.gui.editor.ImMapEditorMenu;
 import com.toxicrain.rainengine.sound.SoundInfo;
 import com.toxicrain.rainengine.sound.SoundSystem;
 import com.toxicrain.rainengine.sound.music.MusicManager;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import com.toxicrain.rainengine.util.FileUtils;
-import org.joml.Vector3f;
+import imgui.ImGui;
+import imgui.flag.ImGuiConfigFlags;
 import org.lwjgl.glfw.GLFWScrollCallback;
 
 import java.nio.file.Path;
@@ -56,7 +58,7 @@ public class RainBusListener {
                 .subscribe(event -> {
                     if(event.loadEventStage == LoadEvent.LoadEventStage.PRE){
                         RainLogger.RAIN_LOGGER.debug("Looking for: {}", GameInfoParser.getInstance().gameMainClass);
-                        GameLoader.loadAndInitGame(GameInfoParser.getInstance().gameMainClass);
+                        GameLoader.loadGame(GameInfoParser.getInstance().gameMainClass);
                     }
                 });
 
@@ -136,8 +138,6 @@ public class RainBusListener {
 
                         SmeagleBus.getInstance().post(new ExecuteLuaScript(ExecuteLuaScript.EventStage.POST_ININT));
 
-                        GameFactory.setupGUIs();
-
                         SmeagleBus.getInstance().post(new LangLoadEvent(SettingsInfoParser.getInstance().getLanguage()));
 
 
@@ -154,6 +154,28 @@ public class RainBusListener {
                         GameFactory.guiManager = new GuiManager();
                 }
                 });
+        SmeagleBus.getInstance().listen(LoadEvent.class)
+                .subscribe(event -> {
+                    if (event.loadEventStage == LoadEvent.LoadEventStage.GUI) {
+                        GuiReg guiReg;
+
+                        ImGui.getIO().setConfigFlags(ImGui.getIO().getConfigFlags() | ImGuiConfigFlags.DockingEnable);
+
+
+                        guiReg = new GuiReg();
+                        GameFactory.guiManager.registerGUI("MainMenu", (v) -> guiReg.drawMainMenu());
+                        GameFactory.guiManager.registerGUI("Settings", (v) -> guiReg.drawSettingsMenu());
+                        GameFactory.guiManager.registerGUI("Keybinds", (v) -> guiReg.drawKeyBindingInfo());
+                        GameFactory.guiManager.registerGUI("FileEditor", (v) -> guiReg.drawFileEditorUI());
+                        GameFactory.guiManager.registerGUI("Console", (v) -> guiReg.drawConsole());
+                        GameFactory.guiManager.registerGUI("Debug", (v) -> guiReg.drawDebugInfo());
+                        GameFactory.guiManager.registerGUI("DeathScreen", (v) -> guiReg.drawDeathScreen());
+                        GameFactory.guiManager.registerGUI("MapEditor", (v) -> ImMapEditorMenu.getInstance().draw());
+                        //guiManager.add`ActiveGUI("MapEditor");
+                        //guiManager.addActiveGUI("Debug");
+                        //guiManager.addActiveGUI("Keybinds");
+                        GameFactory.guiManager.addActiveGUI("MainMenu");
+                    }});
 
         SmeagleBus.getInstance().listen(KeyPressEvent.class)
                 .subscribe(event -> {
@@ -194,7 +216,7 @@ public class RainBusListener {
                 .subscribe(event -> {
                     // Update camera with player position
                     event.camera.setPosition(GameFactory.player.getPosition());
-                    event.camera.setRotation(new Vector3f(0, 35, 0));
+                    //event.camera.setRotation(new Vector3f(0, 35, 0));
 
                     });
 

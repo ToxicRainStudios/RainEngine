@@ -60,6 +60,8 @@ public class GameEngine {
 
         SmeagleBus.getInstance().post(new LoadEvent(LoadEvent.LoadEventStage.POST));
 
+        SmeagleBus.getInstance().post(new LoadEvent(LoadEvent.LoadEventStage.GUI));
+
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
 

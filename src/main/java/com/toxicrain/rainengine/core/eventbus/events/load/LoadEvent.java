@@ -11,7 +11,8 @@ public class LoadEvent {
         PRE,
         ININT,
         POST,
-        MANAGER
+        MANAGER,
+        GUI
     }
 
 }

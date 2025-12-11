@@ -19,7 +19,6 @@ import static com.toxicrain.rainengine.core.GameEngine.windowManager;
 public class GameFactory {
 
     public static ImguiHandler imguiApp;
-    public static GuiReg guiReg;
 
     public static Player player;
     public static GuiManager guiManager;
@@ -53,24 +52,5 @@ public class GameFactory {
     public static void loadLua() {
         guiLuaWrapper = new GuiLuaWrapper();
         functionManager = new LuaManager(LuaEngine.getInstance().getGlobals());
-    }
-
-    public static void setupGUIs() {
-        ImGui.getIO().setConfigFlags(ImGui.getIO().getConfigFlags() | ImGuiConfigFlags.DockingEnable);
-
-
-        guiReg = new GuiReg();
-        guiManager.registerGUI("MainMenu", (v) -> guiReg.drawMainMenu());
-        guiManager.registerGUI("Settings", (v) -> guiReg.drawSettingsMenu());
-        guiManager.registerGUI("Keybinds", (v) -> guiReg.drawKeyBindingInfo());
-        guiManager.registerGUI("FileEditor", (v) -> guiReg.drawFileEditorUI());
-        guiManager.registerGUI("Console", (v) -> guiReg.drawConsole());
-        guiManager.registerGUI("Debug", (v) -> guiReg.drawDebugInfo());
-        guiManager.registerGUI("DeathScreen", (v) -> guiReg.drawDeathScreen());
-        guiManager.registerGUI("MapEditor", (v) -> ImMapEditorMenu.getInstance().draw());
-        //guiManager.add`ActiveGUI("MapEditor");
-        //guiManager.addActiveGUI("Debug");
-        //guiManager.addActiveGUI("Keybinds");
-        guiManager.addActiveGUI("MainMenu");
     }
 }
