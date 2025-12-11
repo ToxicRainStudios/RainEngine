@@ -20,8 +20,6 @@ public class GameFactory {
     public static Player player;
     public static GuiManager guiManager;
     public static InputUtils inputUtils;
-    public static GuiLuaWrapper guiLuaWrapper;
-    public static LuaManager functionManager;
     public static LangHelper langHelper;
 
     public static void load() {
@@ -38,10 +36,5 @@ public class GameFactory {
 
     public static void loadShaders() {
         // fogShaderProgram = ShaderUtils.createShaderProgram(FileUtils.getCurrentWorkingDirectory("resources/shaders/fog/fog_vertex.glsl"), FileUtils.getCurrentWorkingDirectory("resources/shaders/fog/fog_fragment.glsl"));
-    }
-
-    public static void loadLua() {
-        guiLuaWrapper = new GuiLuaWrapper();
-        functionManager = new LuaManager(LuaEngine.getInstance().getGlobals());
     }
 }

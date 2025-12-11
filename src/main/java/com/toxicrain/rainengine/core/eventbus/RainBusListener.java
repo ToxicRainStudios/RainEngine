@@ -19,6 +19,7 @@ import com.toxicrain.rainengine.core.json.PaletteInfoParser;
 import com.toxicrain.rainengine.core.json.SettingsInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
+import com.toxicrain.rainengine.core.lua.LuaSystem;
 import com.toxicrain.rainengine.core.registries.manager.NPCManager;
 import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
 import com.toxicrain.rainengine.core.registries.manager.TriggerManager;
@@ -70,7 +71,7 @@ public class RainBusListener {
                     if(event.loadEventStage == LoadEvent.LoadEventStage.ININT){
 
                         RainLogger.RAIN_LOGGER.info("Loading Lua");
-                        GameFactory.loadLua();
+                        LuaSystem.getInstance().initialize();
 
                         SmeagleBus.getInstance().post(new CategorizeScriptsEvent("resources/scripts/"));
 
