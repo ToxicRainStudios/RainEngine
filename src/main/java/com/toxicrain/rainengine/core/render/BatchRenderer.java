@@ -2,12 +2,18 @@ package com.toxicrain.rainengine.core.render;
 
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
+import com.toxicrain.rainengine.core.eventbus.events.render.CreateShaderProgramEvent;
 import com.toxicrain.rainengine.core.eventbus.events.render.batchrenderer.BuildBatchRendererEvent;
 import com.toxicrain.rainengine.core.eventbus.events.render.batchrenderer.RenderBatchRendererEvent;
+import com.toxicrain.rainengine.light.LightSystem;
 import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
+import com.toxicrain.rainengine.util.ShaderUtils;
+
 import lombok.NonNull;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
@@ -34,6 +40,16 @@ public class BatchRenderer {
     private final int colorVboId;
 
     private int atlasTextureId = -1; // Store atlas texture ID after first addTexture call
+    private final int shaderProgram;
+
+    // shader uniform locations
+    private final int uTextureLoc;
+    private final int uLightCountLoc;
+    private final int uLightPosLoc;
+    private final int uLightColorLoc;
+    private final int uAmbientLoc;
+
+    private static final int MAX_LIGHTS = 32;
 
     public BatchRenderer() {
         vertexBuffer = BufferUtils.createFloatBuffer(MAX_TEXTURES * VERTICES_PER_QUAD * 3);
@@ -44,6 +60,20 @@ public class BatchRenderer {
         vertexVboId = glGenBuffers();
         texCoordVboId = glGenBuffers();
         colorVboId = glGenBuffers();
+
+        ShaderUtils.getInstance();
+
+        SmeagleBus.getInstance().post(new CreateShaderProgramEvent("lighting", "resources/shaders/light/lighting.vert", "resources/shaders/light/lighting.frag"));
+
+        // load shader
+        shaderProgram = ShaderUtils.getInstance().getShader("lighting");
+
+        // get uniform locations
+        uTextureLoc   = GL20.glGetUniformLocation(shaderProgram, "uTexture");
+        uLightCountLoc = GL20.glGetUniformLocation(shaderProgram, "uLightCount");
+        uLightPosLoc   = GL20.glGetUniformLocation(shaderProgram, "uLightPos");
+        uLightColorLoc = GL20.glGetUniformLocation(shaderProgram, "uLightColor");
+        uAmbientLoc    = GL20.glGetUniformLocation(shaderProgram, "uAmbient");
 
         SmeagleBus.getInstance().post(new BuildBatchRendererEvent(this));
     }
@@ -81,19 +111,25 @@ public class BatchRenderer {
         }
 
         // Capture atlas texture ID on first add
-        if (atlasTextureId == -1) {
+        if (atlasTextureId == -1)
             atlasTextureId = region.getTextureInfo().textureId;
-        }
 
-        float angle = params.angle != null ? params.angle : calculateRotationAngle(x, y, params.posX, params.posY);
-        float[] rotatedVertices = createRotatedVertices(region.getTextureInfo(), x, y, z, angle, params.scaleX, params.scaleY);
+        float angle = params.angle != null
+                ? params.angle
+                : calculateRotationAngle(x, y, params.posX, params.posY);
+
+        float[] rotatedVertices = createRotatedVertices(
+                region.getTextureInfo(),
+                x, y, z, angle,
+                params.scaleX, params.scaleY);
+
         float[] triangleVertices = generateTriangleVertices(rotatedVertices);
+
         float[] texCoords = createTexCoords(region);
         float[] triangleTexCoords = generateTriangleTexCoords(texCoords);
 
-        float[] color = params.color != null ? params.color : (params.lightPositions != null
-                ? determineColorBasedOnLightLevel(calculateLightLevel(params.lightPositions, rotatedVertices))
-                : new float[]{1f, 1f, 1f, 1f});
+        // tint only; lighting is now in shader
+        float[] color = params.color != null ? params.color : new float[]{1f, 1f, 1f, 1f};
         float[] triangleColors = generateTriangleColors(color);
 
         textureVertexInfos.add(new TextureVertexInfo(triangleVertices, triangleTexCoords, triangleColors));
@@ -104,8 +140,11 @@ public class BatchRenderer {
         return requiredVertices > MAX_TEXTURES * VERTICES_PER_QUAD;
     }
 
-    private float[] createRotatedVertices(com.toxicrain.rainengine.texture.TextureInfo textureInfo, float x, float y, float z,
-                                          float angle, float scaleX, float scaleY) {
+    private float[] createRotatedVertices(
+            com.toxicrain.rainengine.texture.TextureInfo textureInfo,
+            float x, float y, float z,
+            float angle, float scaleX, float scaleY)
+    {
         float aspectRatio = (float) textureInfo.width / textureInfo.height;
         float[] originalVertices = {
                 -aspectRatio * scaleX, -scaleY, 0f,
@@ -163,51 +202,19 @@ public class BatchRenderer {
     }
 
     private float[] generateTriangleColors(float[] color) {
-        float[] triangleColors = new float[24];
-        for (int i = 0; i < 6; i++) {
-            System.arraycopy(color, 0, triangleColors, i * 4, 4);
-        }
-        return triangleColors;
+        float[] out = new float[6 * 4];
+        for (int i = 0; i < 6; i++)
+            System.arraycopy(color, 0, out, i * 4, 4);
+        return out;
     }
 
-    private float calculateRotationAngle(float x, float y, float posX, float posY) {
-        return (float) Math.atan2(posY - y, posX - x);
-    }
-
-    private float[] determineColorBasedOnLightLevel(float lightLevel) {
-        float[] minLight = {0.03f, 0.03f, 0.03f, 1f};
-        float[] maxLight = {1f, 1f, 1f, 1f};
-        lightLevel = Math.max(0f, Math.min(lightLevel, 1f));
-        float[] result = new float[4];
-        for (int i = 0; i < 4; i++) {
-            result[i] = minLight[i] + (maxLight[i] - minLight[i]) * lightLevel;
-        }
-        return result;
-    }
-
-    private float calculateLightLevel(List<float[]> lightPositions, float[] vertices) {
-        float totalLight = 0f;
-        for (float[] light : lightPositions) {
-            float lx = light[0];
-            float ly = light[1];
-            float maxDist = light[2];
-
-            for (int i = 0; i < vertices.length; i += 3) {
-                float vx = vertices[i];
-                float vy = vertices[i + 1];
-                float dx = lx - vx;
-                float dy = ly - vy;
-                float dist = (float) Math.sqrt(dx * dx + dy * dy);
-                float intensity = Math.max(0, 1 - dist / maxDist);
-                totalLight += intensity;
-            }
-        }
-        int vertCount = vertices.length / 3;
-        return Math.min(1f, totalLight / vertCount);
+    private float calculateRotationAngle(float x, float y, float px, float py) {
+        return (float) Math.atan2(py - y, px - x);
     }
 
     public void renderBatch() {
-        if (textureVertexInfos.isEmpty() || atlasTextureId == -1) return;
+        if (textureVertexInfos.isEmpty() || atlasTextureId == -1)
+            return;
 
         vertexBuffer.clear();
         texCoordBuffer.clear();
@@ -233,15 +240,51 @@ public class BatchRenderer {
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         glDisableClientState(GL_COLOR_ARRAY);
-        glDisable(GL_TEXTURE_2D);
 
+        glDisable(GL_TEXTURE_2D);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
+    private void uploadLights() {
+        List<float[]> lights = LightSystem.getLightSources();
+
+        int count = Math.min(lights.size(), MAX_LIGHTS);
+        GL20.glUniform1i(uLightCountLoc, count);
+
+        float[] pos = new float[MAX_LIGHTS * 3];
+        float[] col = new float[MAX_LIGHTS * 3];
+
+        for (int i = 0; i < count; i++) {
+            float[] L = lights.get(i);
+            pos[i * 3]     = L[0];
+            pos[i * 3 + 1] = L[1];
+            pos[i * 3 + 2] = L[2]; // radius/strength
+
+            col[i * 3]     = 1f;
+            col[i * 3 + 1] = 1f;
+            col[i * 3 + 2] = 1f;
+        }
+
+        GL20.glUniform3fv(uLightPosLoc, pos);
+        GL20.glUniform3fv(uLightColorLoc, col);
+
+        // ambient
+        GL20.glUniform3f(uAmbientLoc, 0.03f, 0.03f, 0.03f);
     }
 
     private void renderCurrentBatch() {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        GL20.glUseProgram(shaderProgram);
+
+        // texture sampler
+        GL20.glUniform1i(uTextureLoc, 0);
+
+        // upload lights
+        uploadLights();
+
+        // VBOs
         glBindBuffer(GL_ARRAY_BUFFER, vertexVboId);
         glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_DYNAMIC_DRAW);
         glVertexPointer(3, GL_FLOAT, 0, 0);
@@ -255,5 +298,7 @@ public class BatchRenderer {
         glColorPointer(4, GL_FLOAT, 0, 0);
 
         glDrawArrays(GL_TRIANGLES, 0, vertexBuffer.limit() / 3);
+
+        GL20.glUseProgram(0);
     }
 }
