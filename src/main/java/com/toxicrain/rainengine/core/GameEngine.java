@@ -15,6 +15,7 @@ import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.factories.GameFactory;
+import com.toxicrain.rainengine.gui.ImguiSystem;
 import com.toxicrain.rainengine.light.LightSystem;
 import com.toxicrain.rainengine.sound.SoundSystem;
 import com.toxicrain.rainengine.texture.TextureRegion;
@@ -132,9 +133,9 @@ public class GameEngine {
         batchRenderer.renderBatch();
 
         // Start a new GUI frame
-        GameFactory.imguiApp.newFrame();
+        ImguiSystem.getInstance().getImguiApp().newFrame();
         SmeagleBus.getInstance().post(new RenderGuiEvent());
-        GameFactory.imguiApp.render();
+        ImguiSystem.getInstance().getImguiApp().render();
 
         // Swap buffers and poll window events
         windowManager.swapAndPoll();
@@ -178,7 +179,7 @@ public class GameEngine {
             render(batchRenderer, camera);
         }
 
-        GameFactory.imguiApp.cleanup();
+        ImguiSystem.getInstance().getImguiApp().cleanup();
         SoundSystem.getInstance().cleanup();
     }
 

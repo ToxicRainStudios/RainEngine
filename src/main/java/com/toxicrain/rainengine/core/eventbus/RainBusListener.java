@@ -26,6 +26,7 @@ import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.core.resources.ResourceManager;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.gui.GuiReg;
+import com.toxicrain.rainengine.gui.ImguiSystem;
 import com.toxicrain.rainengine.gui.editor.ImMapEditorMenu;
 import com.toxicrain.rainengine.sound.SoundInfo;
 import com.toxicrain.rainengine.sound.SoundSystem;
@@ -41,6 +42,7 @@ import java.nio.file.Path;
 import java.util.Locale;
 
 import static com.toxicrain.rainengine.core.GameEngine.drawMap;
+import static com.toxicrain.rainengine.core.GameEngine.windowManager;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetScrollCallback;
 import static org.lwjgl.opengl.GL11.*;
@@ -113,7 +115,7 @@ public class RainBusListener {
                         GameFactory.load();
 
                         RainLogger.RAIN_LOGGER.info("Loading ImGUI");
-                        GameFactory.loadImgui();
+                        ImguiSystem.getInstance().initialize(windowManager);
 
                         RainLogger.RAIN_LOGGER.info("Loading Fonts");
                         GameFactory.loadFonts();

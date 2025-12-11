@@ -17,9 +17,6 @@ import imgui.flag.ImGuiConfigFlags;
 import static com.toxicrain.rainengine.core.GameEngine.windowManager;
 
 public class GameFactory {
-
-    public static ImguiHandler imguiApp;
-
     public static Player player;
     public static GuiManager guiManager;
     public static InputUtils inputUtils;
@@ -33,12 +30,6 @@ public class GameFactory {
         player = new Player(new Resource("rainengine:playertexture"));
 
         inputUtils = new InputUtils(windowManager);
-    }
-
-
-    public static void loadImgui() {
-        imguiApp = new ImguiHandler(windowManager);
-        imguiApp.initialize("#version 130");
     }
 
     public static void loadFonts() {
