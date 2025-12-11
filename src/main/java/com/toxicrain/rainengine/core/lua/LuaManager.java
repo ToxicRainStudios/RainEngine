@@ -1,10 +1,13 @@
 package com.toxicrain.rainengine.core.lua;
 
+import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.artifacts.trigger.Trigger;
 import com.toxicrain.rainengine.artifacts.npc.NPCBuilder;
 import com.toxicrain.rainengine.artifacts.npc.NPC;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.datatypes.AABB;
+import com.toxicrain.rainengine.core.eventbus.events.lua.CategorizeScriptsEvent;
+import com.toxicrain.rainengine.core.eventbus.events.lua.ExecuteLuaScript;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
@@ -32,6 +35,35 @@ public class LuaManager {
     public LuaManager(Globals globals) {
         this.globals = globals;
         registerFunctions();
+
+        SmeagleBus.getInstance().listen(CategorizeScriptsEvent.class)
+                .subscribe(event -> {
+                    categorizeScripts(event.filePath);
+                });
+        SmeagleBus.getInstance().listen(ExecuteLuaScript.class)
+                .subscribe(event -> {
+                    if(event.eventStage == ExecuteLuaScript.EventStage.ININT){
+                        executeInitScripts();
+                    }
+                });
+        SmeagleBus.getInstance().listen(ExecuteLuaScript.class)
+                .subscribe(event -> {
+                    if(event.eventStage == ExecuteLuaScript.EventStage.POST_ININT){
+                        executePostInitScripts();
+                    }
+                });
+        SmeagleBus.getInstance().listen(ExecuteLuaScript.class)
+                .subscribe(event -> {
+                    if(event.eventStage == ExecuteLuaScript.EventStage.TICK){
+                        executeTickScripts();
+                    }
+                });
+        SmeagleBus.getInstance().listen(ExecuteLuaScript.class)
+                .subscribe(event -> {
+                    if(event.eventStage == ExecuteLuaScript.EventStage.ININT){
+                        executeImguiScripts();
+                    }
+                });
     }
 
     /**
@@ -498,7 +530,7 @@ public class LuaManager {
     /**
      * Executes all Lua scripts.
      */
-    public static void executeAllImguiScripts() {
+    public static void executeImguiScripts() {
         for (String script : imguiScripts) {
             loadScript(script, "resources/scripts/");
         }
