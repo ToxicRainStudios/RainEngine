@@ -229,15 +229,17 @@ public class RainBusListener {
 
                     double deltaTime = DeltaTimeUtil.getDeltaTime();
 
-                    GameFactory.player.update(deltaTime);
+                    if(!event.gamePaused){
+                        GameFactory.player.update(deltaTime);
 
-                    TriggerManager.getInstance().update(GameFactory.player.getPosition());
+                        TriggerManager.getInstance().update(GameFactory.player.getPosition());
 
-                    NPCManager.getInstance().update(deltaTime);
+                        NPCManager.getInstance().update(deltaTime);
 
-                    ProjectileManager.getInstance().update(deltaTime);
+                        ProjectileManager.getInstance().update(deltaTime);
 
-                    SmeagleBus.getInstance().post(new ExecuteAllLuaScripts(ExecuteAllLuaScripts.EventStage.TICK));
+                        SmeagleBus.getInstance().post(new ExecuteAllLuaScripts(ExecuteAllLuaScripts.EventStage.TICK));
+                    }
                 });
 
         SmeagleBus.getInstance().listen(DrawMapEvent.class)

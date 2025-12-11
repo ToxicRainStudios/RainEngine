@@ -8,7 +8,6 @@ import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.datatypes.AABB;
 import com.toxicrain.rainengine.core.eventbus.events.lua.CategorizeScriptsEvent;
 import com.toxicrain.rainengine.core.eventbus.events.lua.ExecuteAllLuaScripts;
-import com.toxicrain.rainengine.core.eventbus.events.lua.LoadLuaFunctions;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
