@@ -6,8 +6,8 @@ import com.toxicrain.rainengine.factories.GameFactory;
 
 public class NPC extends BaseNPC {
 
-    public NPC(float startingXpos, float startingYpos, float rotation, float size) {
-        super(new Resource("npcTexture"), startingXpos, startingYpos, rotation, size);
+    public NPC(float startingXpos, float startingYpos, float rotation) {
+        super(new Resource("npcTexture"), startingXpos, startingYpos, rotation);
 
         NPCManager.getInstance().addNPC(this, behaviorSequence);
     }

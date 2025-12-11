@@ -21,18 +21,18 @@ public class BaseNPC extends RenderableArtifact implements IArtifact {
 
     protected AABB npcAABB;
 
-    public BaseNPC(Resource imageLocation, float startingXpos, float startingYpos, float rotation, float size) {
-        super(imageLocation, startingXpos, startingYpos, rotation, size);
+    public BaseNPC(Resource imageLocation, float startingXpos, float startingYpos, float rotation) {
+        super(imageLocation, startingXpos, startingYpos, rotation);
 
         this.direction = new Vector2f((float) Math.cos(rotation), (float) Math.sin(rotation));
 
-        float halfSize = size / 2f;
-        this.npcAABB = new AABB(
-                position.x - halfSize,
-                position.y - halfSize,
-                position.x + halfSize,
-                position.y + halfSize
-        );
+//        float halfSize = size / 2f;
+//        this.npcAABB = new AABB(
+//                position.x - halfSize,
+//                position.y - halfSize,
+//                position.x + halfSize,
+//                position.y + halfSize
+//        );
     }
 
     public boolean canSeeTarget(Vector3f targetPos) {
@@ -73,31 +73,31 @@ public class BaseNPC extends RenderableArtifact implements IArtifact {
     }
 
     public void handleCollisions() {
-        float halfSize = this.size / 2f;
-
-        npcAABB.update(
-                position.x - halfSize,
-                position.y - halfSize,
-                position.x + halfSize,
-                position.y + halfSize
-        );
-
-        char collisionDirection = Collisions.collideWorld(npcAABB);
-
-        switch (collisionDirection) {
-            case 'u':
-                position.y += 0.002f;
-                break;
-            case 'd':
-                position.y -= 0.002f;
-                break;
-            case 'l':
-                position.x += 0.002f;
-                break;
-            case 'r':
-                position.x -= 0.002f;
-                break;
-        }
+//        float halfSize = this.size / 2f;
+//
+//        npcAABB.update(
+//                position.x - halfSize,
+//                position.y - halfSize,
+//                position.x + halfSize,
+//                position.y + halfSize
+//        );
+//
+//        char collisionDirection = Collisions.collideWorld(npcAABB);
+//
+//        switch (collisionDirection) {
+//            case 'u':
+//                position.y += 0.002f;
+//                break;
+//            case 'd':
+//                position.y -= 0.002f;
+//                break;
+//            case 'l':
+//                position.x += 0.002f;
+//                break;
+//            case 'r':
+//                position.x -= 0.002f;
+//                break;
+//        }
     }
 
     // Optional hooks for specialized NPCs

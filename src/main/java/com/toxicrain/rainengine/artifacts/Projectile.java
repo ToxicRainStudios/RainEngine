@@ -17,7 +17,7 @@ public class Projectile extends RenderableArtifact implements IArtifact {
     private float lifeTime;
 
     public Projectile(Resource imageLocation, float xpos, float ypos, float veloX, float veloY) {
-        super(imageLocation, xpos, ypos, 0f, 1f); // rotation = 0f, size = 1f (can adjust if needed)
+        super(imageLocation, xpos, ypos, 0f); // rotation = 0f
         this.position.z = Constants.PROJECTILE_ZLEVEL; // Set Z-level for projectile rendering
         this.velocity = new Vector2f(veloX, veloY);
 

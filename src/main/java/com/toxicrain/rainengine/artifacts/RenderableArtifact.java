@@ -1,8 +1,10 @@
 package com.toxicrain.rainengine.artifacts;
 
+import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.core.datatypes.Color;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
+import com.toxicrain.rainengine.core.eventbus.events.ArtifactUpdateEvent;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
 import com.toxicrain.rainengine.texture.TextureRegion;
@@ -23,21 +25,21 @@ public abstract class RenderableArtifact implements IArtifact {
 
     protected Vector3f position;
     protected float rotation;
-    protected float size;
 
     protected Resource textureResource;
     protected TextureRegion textureRegion;
 
-    public RenderableArtifact(Resource textureResource, float x, float y, float rotation, float size) {
+    public RenderableArtifact(Resource textureResource, float x, float y, float rotation) {
         this.textureResource = textureResource;
         this.position = new Vector3f(x, y, 1);
         this.rotation = rotation;
-        this.size = size;
     }
 
     @Override
     public void update(double deltaTime){
         textureRegion = TextureSystem.getInstance().getRegion(this.textureResource);
+
+        SmeagleBus.getInstance().post(new ArtifactUpdateEvent(this));
     }
 
     @Override

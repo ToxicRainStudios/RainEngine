@@ -3,7 +3,6 @@ package com.toxicrain.rainengine.artifacts;
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.datatypes.*;
-import com.toxicrain.rainengine.core.eventbus.events.ArtifactUpdateEvent;
 import com.toxicrain.rainengine.core.eventbus.events.load.MapLoadEvent;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
@@ -43,7 +42,7 @@ public class Player extends RenderableArtifact implements IArtifact {
     @Getter @Setter private float angle;
 
     public Player(Resource defaultTexture) {
-        super(defaultTexture, MapInfoParser.getInstance().playerSpawnPos.x, MapInfoParser.getInstance().playerSpawnPos.y, 0f, 1f);
+        super(defaultTexture, MapInfoParser.getInstance().playerSpawnPos.x, MapInfoParser.getInstance().playerSpawnPos.y, 0f);
         this.position.z = 5; // Player z-level
         this.defaultTexture = TextureSystem.getInstance().getRegion(defaultTexture);
         this.isSprinting = false;
@@ -94,8 +93,6 @@ public class Player extends RenderableArtifact implements IArtifact {
         super.update(deltaTime);
         getMouse();
         processInput(deltaTime);
-
-        SmeagleBus.getInstance().post(new ArtifactUpdateEvent("player"));
     }
 
     float[] getMouse() {
