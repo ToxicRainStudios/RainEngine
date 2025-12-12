@@ -142,13 +142,13 @@ public class Player extends RenderableArtifact implements IArtifact {
             forward(true, 1, deltaTime);
         }
         if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkBackward"))) {
-            forward(true, -1, deltaTime);
+            forward(-1, deltaTime);
         }
         if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkLeft"))) {
-            strafe(true, 1, deltaTime);
+            strafe(1, deltaTime);
         }
         if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkRight"))) {
-            strafe(true, -1, deltaTime);
+            strafe(-1, deltaTime);
         }
 
         position.z = MathUtils.clamp(position.z + scrollOffset * scrollSpeed, GameInfoParser.getInstance().minZoom, GameInfoParser.getInstance().maxZoom);
