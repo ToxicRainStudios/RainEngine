@@ -73,17 +73,17 @@ public class Player extends RenderableArtifact implements IArtifact {
         return this.angle;
     }
 
-    private void forward(boolean useMouse, int direction, double deltaTime) {
+    private void forward(int direction, double deltaTime) {
         getMouse();
         float rot = (float)Math.atan2((openglMousePos[1] - position.y),(openglMousePos[0] - position.x));
-        position.x += Math.cos(rot)* 9.3f * direction * deltaTime;
-        position.y += Math.sin(rot)* 9.3f * direction * deltaTime;
+        position.x += (float) (Math.cos(rot)* 9.3f * direction * deltaTime);
+        position.y += (float) (Math.sin(rot)* 9.3f * direction * deltaTime);
     }
-    private void strafe(boolean useMouse, int direction, double deltaTime) {
+    private void strafe(int direction, double deltaTime) {
         getMouse();
         float rot = (float)Math.atan2((openglMousePos[1] - position.y),(openglMousePos[0] - position.x));
-        position.x += Math.cos(rot+Math.PI/2)* 9.3f * direction * deltaTime;
-        position.y += Math.sin(rot+Math.PI/2)* 9.3f * direction * deltaTime;
+        position.x += (float) (Math.cos(rot+Math.PI/2)* 9.3f * direction * deltaTime);
+        position.y += (float) (Math.sin(rot+Math.PI/2)* 9.3f * direction * deltaTime);
     }
 
     public void update(double deltaTime) {
