@@ -75,18 +75,15 @@ public class Player extends RenderableArtifact implements IArtifact {
 
     private void forward(boolean useMouse, int direction, double deltaTime) {
         getMouse();
-
-        float angleXS = (float) Math.sin(angle) * -1;
-        float angleYS = (float) Math.cos(angle);
-        double distanceOfMouse = Math.sqrt(Math.pow(openglMousePos[0] - position.x, 2) + Math.pow(openglMousePos[1] - position.y, 2));
-
-        if (useMouse) {
-            position.x += ((openglMousePos[0] - position.x) / distanceOfMouse) * 9.3f * direction * deltaTime;
-            position.y += ((openglMousePos[1] - position.y) / distanceOfMouse) * 9.3f * direction * deltaTime;
-        } else {
-            position.x += angleXS * 5.2f * direction * deltaTime;
-            position.y += angleYS * 5.2f * direction * deltaTime;
-        }
+        float rot = (float)Math.atan2((openglMousePos[1] - position.y),(openglMousePos[0] - position.x));
+        position.x += Math.cos(rot)* 9.3f * direction * deltaTime;
+        position.y += Math.sin(rot)* 9.3f * direction * deltaTime;
+    }
+    private void strafe(boolean useMouse, int direction, double deltaTime) {
+        getMouse();
+        float rot = (float)Math.atan2((openglMousePos[1] - position.y),(openglMousePos[0] - position.x));
+        position.x += Math.cos(rot+Math.PI/2)* 9.3f * direction * deltaTime;
+        position.y += Math.sin(rot+Math.PI/2)* 9.3f * direction * deltaTime;
     }
 
     public void update(double deltaTime) {
@@ -148,10 +145,10 @@ public class Player extends RenderableArtifact implements IArtifact {
             forward(true, -1, deltaTime);
         }
         if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkLeft"))) {
-            forward(false, 1, deltaTime);
+            strafe(true, 1, deltaTime);
         }
         if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkRight"))) {
-            forward(false, -1, deltaTime);
+            strafe(true, -1, deltaTime);
         }
 
         position.z = MathUtils.clamp(position.z + scrollOffset * scrollSpeed, GameInfoParser.getInstance().minZoom, GameInfoParser.getInstance().maxZoom);
