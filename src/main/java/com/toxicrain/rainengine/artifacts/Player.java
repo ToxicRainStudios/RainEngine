@@ -139,7 +139,7 @@ public class Player extends RenderableArtifact implements IArtifact {
         handleSprinting();
 
         if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkForward"))) {
-            forward(true, 1, deltaTime);
+            forward(1, deltaTime);
         }
         if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkBackward"))) {
             forward(-1, deltaTime);
