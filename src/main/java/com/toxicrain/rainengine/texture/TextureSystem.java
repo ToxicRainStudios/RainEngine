@@ -21,7 +21,6 @@ public class TextureSystem extends BaseInstanceable<TextureSystem> {
         String textureDirectory = FileUtils.getCurrentWorkingDirectory(Constants.FileConstants.IMAGES_PATH);
         textureAtlas = new TextureAtlas(2048);
         textureAtlas.buildAtlas(textureDirectory);
-        textureAtlas.saveAtlasAsImage(textureDirectory + "/atlas/atlas.png");
         RainLogger.RAIN_LOGGER.info("Texture atlas built.");
     }
 

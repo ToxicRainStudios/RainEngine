@@ -41,7 +41,7 @@ public class GameEngine {
     private Camera camera;
 
     public static void run() {
-        Thread.setDefaultUncaughtExceptionHandler(new CrashReporter());
+        Thread.setDefaultUncaughtExceptionHandler(CrashReporter.getInstance());
         RainLogger.buildLoggers();
 
         RainLogger.RAIN_LOGGER.info("Hello LWJGL {}!", Version.getVersion());

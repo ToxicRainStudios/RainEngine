@@ -1,6 +1,10 @@
 package com.toxicrain.rainengine.core;
 
+import com.toxicrain.instanceable.BaseInstanceable;
 import com.toxicrain.rainengine.core.logging.RainLogger;
+import com.toxicrain.rainengine.texture.TextureSystem;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,9 +17,14 @@ import java.time.format.DateTimeFormatter;
  *
  * @author strubium
  */
-public class CrashReporter implements Thread.UncaughtExceptionHandler {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class CrashReporter extends BaseInstanceable<CrashReporter> implements Thread.UncaughtExceptionHandler {
 
     private static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    public static CrashReporter getInstance() {
+        return BaseInstanceable.getInstance(CrashReporter.class);
+    }
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
