@@ -3,32 +3,24 @@ package com.toxicrain.rainengine.core;
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.github.strubium.windowmanager.window.WindowManager;
 import com.toxicrain.rainengine.artifacts.Camera;
-import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.eventbus.RainBusListener;
 import com.toxicrain.rainengine.core.eventbus.events.*;
 import com.toxicrain.rainengine.core.eventbus.events.load.LoadEvent;
-import com.toxicrain.rainengine.core.eventbus.events.render.RenderGuiEvent;
+import com.toxicrain.rainengine.core.eventbus.events.render.AddRenderPassEvent;
 import com.toxicrain.rainengine.core.json.*;
 import com.toxicrain.rainengine.core.logging.RainLogger;
-import com.toxicrain.rainengine.core.registries.manager.NPCManager;
-import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
-import com.toxicrain.rainengine.core.render.BatchRenderer;
-import com.toxicrain.rainengine.core.registries.tiles.Tile;
-import com.toxicrain.rainengine.factories.GameFactory;
+import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;
+import com.toxicrain.rainengine.core.render.rendering.Renderer;
 import com.toxicrain.rainengine.gui.ImguiSystem;
-import com.toxicrain.rainengine.light.LightSystem;
 import com.toxicrain.rainengine.sound.SoundSystem;
-import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import lombok.experimental.UtilityClass;
-import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -65,77 +57,29 @@ public class GameEngine {
 
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
+        Renderer renderer = new Renderer(batchRenderer);
 
-        loop(batchRenderer);
+        SmeagleBus.getInstance().post(new AddRenderPassEvent(renderer));
+
+        loop(renderer);
 
         // Free the window callbacks and destroy the window
         windowManager.destroy();
     }
 
-    public static void drawMap(BatchRenderer batchRenderer) {
-        // Ensure the texture mappings have been loaded
-        if (PaletteInfoParser.tileMappings == null) {
-            throw new IllegalStateException("Texture mappings not loaded! Call PaletteInfoParser.loadTextureMappings() first.");
-        }
-
-        int size = MapInfoParser.getInstance().mapData.size();  // Get the size once
-
-        List<float[]> lights = LightSystem.getLightSources();
-
-        for (int k = size - 1; k >= 0; k--) {
-            // Get the TilePos object
-            Vector3f pos = MapInfoParser.getInstance().mapData.get(k);
-
-            // Get the character representing the texture
-            char textureChar = Tile.mapDataType.get(k);
-
-            TextureRegion region = PaletteInfoParser.getInstance().getTileInfo(textureChar).getTextureRegion();
-
-            // Render the tile with lighting
-            batchRenderer.addTexture(
-                    region,
-                    pos.x,
-                    pos.y,
-                    pos.z,
-                    new TileParameters(0f, 0f,0f, 1,1,null, lights)
-
-            );
-        }
-    }
-
-    private static void render(BatchRenderer batchRenderer, Camera camera) {
-        // Clear the color and depth buffers
+    private static void render(Renderer renderer, Camera camera) {
+        // Clear color and depth buffers (still done once per frame)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Set up the view matrix from the camera
+        // Update the view matrix
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-
-        // Convert the camera's view matrix to a FloatBuffer and load it
         FloatBuffer cameraBuffer = BufferUtils.createFloatBuffer(16);
         camera.getViewMatrix().get(cameraBuffer);
         glLoadMatrixf(cameraBuffer);
 
-        // Begin the batch renderer
-        batchRenderer.beginBatch();
-
-        // Post event to draw map tiles
-        SmeagleBus.getInstance().post(new DrawMapEvent(batchRenderer));
-
-        // Render NPCs and projectiles
-        NPCManager.getInstance().render(batchRenderer);
-        ProjectileManager.getInstance().render(batchRenderer);
-
-        // Render the player
-        GameFactory.player.render(batchRenderer);
-
-        // Render the batch
-        batchRenderer.renderBatch();
-
-        // Start a new GUI frame
-        ImguiSystem.getInstance().getImguiApp().newFrame();
-        SmeagleBus.getInstance().post(new RenderGuiEvent());
-        ImguiSystem.getInstance().getImguiApp().render();
+        // Execute all registered render passes
+        renderer.render(camera);
 
         // Swap buffers and poll window events
         windowManager.swapAndPoll();
@@ -143,7 +87,7 @@ public class GameEngine {
 
     public static boolean gamePaused = true;
 
-    private static void loop(BatchRenderer batchRenderer) {
+    private static void loop(Renderer renderer) {
         // Get initial window size
         IntBuffer widthBuffer = BufferUtils.createIntBuffer(1);
         IntBuffer heightBuffer = BufferUtils.createIntBuffer(1);
@@ -176,7 +120,7 @@ public class GameEngine {
                 camera.setAspectRatio((float) windowWidth / windowHeight);
             }
 
-            render(batchRenderer, camera);
+            render(renderer, camera);
         }
 
         ImguiSystem.getInstance().getImguiApp().cleanup();

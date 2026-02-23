@@ -5,7 +5,7 @@ import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
-import com.toxicrain.rainengine.core.render.BatchRenderer;
+import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;
 import com.toxicrain.rainengine.light.LightSystem;
 import lombok.Getter;
 import org.joml.Vector2f;

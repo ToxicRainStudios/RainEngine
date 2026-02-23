@@ -3,7 +3,7 @@ package com.toxicrain.rainengine.core.registries.manager;
 import com.toxicrain.instanceable.BaseInstanceable;
 import com.toxicrain.rainengine.artifacts.Projectile;
 import com.toxicrain.rainengine.core.logging.RainLogger;
-import com.toxicrain.rainengine.core.render.BatchRenderer;
+import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;
 
 import java.util.ArrayList;
 import java.util.List;

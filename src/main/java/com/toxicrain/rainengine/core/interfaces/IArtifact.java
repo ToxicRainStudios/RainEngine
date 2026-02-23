@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine.core.interfaces;
 
-import com.toxicrain.rainengine.core.render.BatchRenderer;
+import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;
 
 /**
  * Interface representing an "artifact" in RainEngine.

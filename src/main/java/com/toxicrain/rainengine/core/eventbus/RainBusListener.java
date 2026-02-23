@@ -12,8 +12,8 @@ import com.toxicrain.rainengine.core.eventbus.events.load.LoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.load.sound.SoundSystemLoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.lua.CategorizeScriptsEvent;
 import com.toxicrain.rainengine.core.eventbus.events.lua.ExecuteAllLuaScripts;
+import com.toxicrain.rainengine.core.eventbus.events.render.AddRenderPassEvent;
 import com.toxicrain.rainengine.core.logging.RainLogger;
-import com.toxicrain.rainengine.core.eventbus.events.render.RenderGuiEvent;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
 import com.toxicrain.rainengine.core.json.PaletteInfoParser;
 import com.toxicrain.rainengine.core.json.SettingsInfoParser;
@@ -24,6 +24,10 @@ import com.toxicrain.rainengine.core.registries.manager.NPCManager;
 import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
 import com.toxicrain.rainengine.core.registries.manager.TriggerManager;
 import com.toxicrain.rainengine.core.registries.tiles.Tile;
+import com.toxicrain.rainengine.core.render.rendering.Renderer;
+import com.toxicrain.rainengine.core.render.rendering.renderpass.ImguiRenderPass;
+import com.toxicrain.rainengine.core.render.rendering.renderpass.NPCRenderPass;
+import com.toxicrain.rainengine.core.render.rendering.renderpass.TileRenderPass;
 import com.toxicrain.rainengine.core.resources.ResourceManager;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.gui.GuiReg;
@@ -35,7 +39,7 @@ import com.toxicrain.rainengine.sound.music.MusicManager;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import com.toxicrain.rainengine.util.FileUtils;
-import com.toxicrain.rainengine.core.render.ShaderSystem;
+import com.toxicrain.rainengine.core.render.lowlevel.ShaderSystem;
 import imgui.ImGui;
 import imgui.flag.ImGuiConfigFlags;
 import org.lwjgl.glfw.GLFWScrollCallback;
@@ -43,7 +47,6 @@ import org.lwjgl.glfw.GLFWScrollCallback;
 import java.nio.file.Path;
 import java.util.Locale;
 
-import static com.toxicrain.rainengine.core.GameEngine.drawMap;
 import static com.toxicrain.rainengine.core.GameEngine.windowManager;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetScrollCallback;
@@ -242,15 +245,24 @@ public class RainBusListener {
                     }
                 });
 
-        SmeagleBus.getInstance().listen(DrawMapEvent.class)
+        SmeagleBus.getInstance().listen(AddRenderPassEvent.class)
                 .subscribe(event -> {
-                    drawMap(event.getBatchRenderer());
-                });
+                    Renderer renderer = event.renderer;
 
-        SmeagleBus.getInstance().listen(RenderGuiEvent.class)
-                .subscribe(event -> {
-                    GameFactory.guiManager.render();
-                    SmeagleBus.getInstance().post(new ExecuteAllLuaScripts(ExecuteAllLuaScripts.EventStage.IMGUI));
+                    // Tile pass
+                    renderer.addPass(new TileRenderPass());
+
+                    // NPC pass
+                    renderer.addPass(new NPCRenderPass());
+
+                    //Imgui pass
+                    renderer.addPass(new ImguiRenderPass());
+
+                    // Projectile pass
+                    renderer.addPass((batch, cam) -> ProjectileManager.getInstance().render(batch));
+
+                    // Player pass
+                    renderer.addPass((batch, cam) -> GameFactory.player.render(batch));
                 });
 
         SmeagleBus.getInstance().listen(ScrollEvent.class)
