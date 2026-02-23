@@ -3,8 +3,6 @@ package com.toxicrain.rainengine.artifacts.animation;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.render.BatchRenderer;
-import com.toxicrain.rainengine.factories.GameFactory;
-import com.toxicrain.rainengine.texture.TextureAtlas;
 import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import lombok.Getter;

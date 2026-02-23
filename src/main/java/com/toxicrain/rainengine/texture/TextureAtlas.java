@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBImageWrite;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -20,7 +21,7 @@ import static org.lwjgl.stb.STBImage.*;
 
 public class TextureAtlas {
 
-    private final Map<Resource, TextureRegion> regionMap = new HashMap<>();
+    private final Map<Resource, TextureRegion> regionMap;
     @Getter private final int atlasTextureId;
     @Getter private final int atlasSize;
 
@@ -29,6 +30,7 @@ public class TextureAtlas {
     public TextureAtlas(int atlasSize) {
         this.atlasSize = atlasSize;
         this.atlasTextureId = glGenTextures();
+        this.regionMap = new HashMap<>(256);
     }
 
     public void buildAtlas(String directory) {
@@ -41,28 +43,40 @@ public class TextureAtlas {
                     })
                     .toList();
 
+            if (imagePaths.isEmpty()) {
+                RainLogger.RAIN_LOGGER.warn("No textures found for atlas: {}", directory);
+                return;
+            }
+
+            // Allocate atlas buffer
             atlasBuffer = BufferUtils.createByteBuffer(atlasSize * atlasSize * 4);
 
+            int shelfX = 0;
             int shelfY = 0;
             int shelfHeight = 0;
-            int shelfX = 0;
 
-            for (Path path : imagePaths) {
-                String filePath = path.toString();
-                Resource resource = Resource.fromFile(directory, path);
+            // Single stack allocation for all image loads
+            try (MemoryStack stack = MemoryStack.stackPush()) {
+                IntBuffer widthBuffer = stack.mallocInt(1);
+                IntBuffer heightBuffer = stack.mallocInt(1);
+                IntBuffer channelsBuffer = stack.mallocInt(1);
 
-                try (MemoryStack stack = MemoryStack.stackPush()) {
-                    IntBuffer widthBuffer = stack.mallocInt(1);
-                    IntBuffer heightBuffer = stack.mallocInt(1);
-                    IntBuffer channelsBuffer = stack.mallocInt(1);
+                for (Path path : imagePaths) {
+                    String filePath = path.toString();
+                    Resource resource = Resource.fromFile(directory, path);
+
+                    widthBuffer.clear();
+                    heightBuffer.clear();
+                    channelsBuffer.clear();
 
                     ByteBuffer image = stbi_load(filePath, widthBuffer, heightBuffer, channelsBuffer, 4);
                     if (image == null) {
-                        throw new RuntimeException("Failed to load texture: " + filePath + " - " + stbi_failure_reason());
+                        throw new RuntimeException("Failed to load texture: "
+                                + filePath + " - " + stbi_failure_reason());
                     }
 
-                    int imageWidth = widthBuffer.get();
-                    int imageHeight = heightBuffer.get();
+                    int imageWidth = widthBuffer.get(0);
+                    int imageHeight = heightBuffer.get(0);
 
                     // New shelf if image doesn't fit in current row
                     if (shelfX + imageWidth > atlasSize) {
@@ -71,19 +85,39 @@ public class TextureAtlas {
                         shelfHeight = 0;
                     }
 
-                    // Check if atlas is overfilled
+                    // Check overflow
                     if (shelfY + imageHeight > atlasSize) {
-                        throw new RuntimeException("Texture atlas overflow. Consider using a larger atlas size.");
+                        stbi_image_free(image);
+                        throw new RuntimeException(
+                                "Texture atlas overflow. Increase atlas size or use better packing."
+                        );
                     }
 
-                    copyImageToAtlas(atlasBuffer, atlasSize, image, imageWidth, imageHeight, shelfX, shelfY);
+                    // FAST NATIVE COPY (memcpy per row)
+                    copyImageToAtlasNative(
+                            atlasBuffer,
+                            atlasSize,
+                            image,
+                            imageWidth,
+                            imageHeight,
+                            shelfX,
+                            shelfY
+                    );
 
                     float u0 = (float) shelfX / atlasSize;
                     float v0 = (float) shelfY / atlasSize;
                     float u1 = (float) (shelfX + imageWidth) / atlasSize;
                     float v1 = (float) (shelfY + imageHeight) / atlasSize;
 
-                    TextureInfo textureInfo = new TextureInfo(atlasTextureId, atlasSize, atlasSize, checkTransparency(image, imageWidth, imageHeight));
+                    boolean hasTransparency = checkTransparencyFast(image);
+
+                    TextureInfo textureInfo = new TextureInfo(
+                            atlasTextureId,
+                            atlasSize,
+                            atlasSize,
+                            hasTransparency
+                    );
+
                     TextureRegion region = new TextureRegion(textureInfo, u0, v0, u1, v1);
                     regionMap.put(resource, region);
 
@@ -94,39 +128,58 @@ public class TextureAtlas {
                 }
             }
 
-            uploadAtlasToGPU(atlasBuffer);
+            uploadAtlasToGPU();
 
         } catch (IOException e) {
             throw new RuntimeException("Failed to build texture atlas.", e);
         }
     }
 
-    private void copyImageToAtlas(ByteBuffer atlasBuffer, int atlasSize, ByteBuffer image, int imageWidth, int imageHeight, int xOffset, int yOffset) {
-        for (int y = 0; y < imageHeight; y++) {
-            for (int x = 0; x < imageWidth; x++) {
-                int srcIndex = (y * imageWidth + x) * 4;
-                int dstIndex = ((yOffset + y) * atlasSize + (xOffset + x)) * 4;
+    /**
+     * Ultra-fast native blit using LWJGL memCopy (row by row).
+     * Avoids lots of ByteBuffer get/put calls.
+     */
+    private void copyImageToAtlasNative(
+            ByteBuffer atlas,
+            int atlasSize,
+            ByteBuffer image,
+            int imageWidth,
+            int imageHeight,
+            int xOffset,
+            int yOffset
+    ) {
+        long atlasAddress = MemoryUtil.memAddress(atlas);
+        long imageAddress = MemoryUtil.memAddress(image);
 
-                atlasBuffer.put(dstIndex, image.get(srcIndex));         // R
-                atlasBuffer.put(dstIndex + 1, image.get(srcIndex + 1)); // G
-                atlasBuffer.put(dstIndex + 2, image.get(srcIndex + 2)); // B
-                atlasBuffer.put(dstIndex + 3, image.get(srcIndex + 3)); // A
-            }
+        int srcStride = imageWidth * 4;   // RGBA
+        int dstStride = atlasSize * 4;    // RGBA atlas row
+
+        for (int y = 0; y < imageHeight; y++) {
+            long src = imageAddress + (long) y * srcStride;
+            long dst = atlasAddress + (long) ((yOffset + y) * dstStride + xOffset * 4);
+
+            MemoryUtil.memCopy(src, dst, srcStride);
         }
     }
 
-    private ByteBuffer originalAtlasBuffer;
-
-
-    private void uploadAtlasToGPU(ByteBuffer atlasBuffer) {
-        // Store a copy for saving
-        this.originalAtlasBuffer = BufferUtils.createByteBuffer(atlasBuffer.capacity());
-        for (int i = 0; i < atlasBuffer.capacity(); i++) {
-            this.originalAtlasBuffer.put(i, atlasBuffer.get(i));
-        }
-
+    private void uploadAtlasToGPU() {
         glBindTexture(GL_TEXTURE_2D, atlasTextureId);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, atlasSize, atlasSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, atlasBuffer);
+
+        // Ensure tight packing (important for performance & correctness)
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+        glTexImage2D(
+                GL_TEXTURE_2D,
+                0,
+                GL_RGBA,
+                atlasSize,
+                atlasSize,
+                0,
+                GL_RGBA,
+                GL_UNSIGNED_BYTE,
+                atlasBuffer
+        );
+
         GL30.glGenerateMipmap(GL_TEXTURE_2D);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
@@ -137,12 +190,15 @@ public class TextureAtlas {
         RainLogger.RAIN_LOGGER.info("Texture atlas uploaded to GPU.");
     }
 
-
-    private boolean checkTransparency(ByteBuffer image, int width, int height) {
-        int pixelCount = width * height;
-        for (int i = 0; i < pixelCount; i++) {
-            int alpha = image.get(i * 4 + 3) & 0xFF;
-            if (alpha < 255) return true;
+    /**
+     * Fast transparency check using stride iteration
+     */
+    private boolean checkTransparencyFast(ByteBuffer image) {
+        int capacity = image.capacity();
+        for (int i = 3; i < capacity; i += 4) { // Check alpha channel only
+            if ((image.get(i) & 0xFF) < 255) {
+                return true;
+            }
         }
         return false;
     }
@@ -157,34 +213,24 @@ public class TextureAtlas {
      * @param filePath the path to save the image.
      */
     public void saveAtlasAsImage(String filePath) {
-        if (originalAtlasBuffer == null) {
+        if (atlasBuffer == null) {
             RainLogger.RAIN_LOGGER.error("No atlas buffer to save.");
             return;
         }
 
-        // Create a tightly packed buffer
-        ByteBuffer saveBuffer = BufferUtils.createByteBuffer(atlasSize * atlasSize * 4);
-
-        for (int y = 0; y < atlasSize; y++) {
-            for (int x = 0; x < atlasSize; x++) {
-                int index = (y * atlasSize + x) * 4;
-
-                saveBuffer.put(originalAtlasBuffer.get(index));       // R
-                saveBuffer.put(originalAtlasBuffer.get(index + 1));   // G
-                saveBuffer.put(originalAtlasBuffer.get(index + 2));   // B
-                saveBuffer.put(originalAtlasBuffer.get(index + 3));   // A
-            }
-        }
-
-        saveBuffer.flip();
-
-        boolean result = STBImageWrite.stbi_write_png(filePath, atlasSize, atlasSize, 4, saveBuffer, atlasSize * 4);
+        boolean result = STBImageWrite.stbi_write_png(
+                filePath,
+                atlasSize,
+                atlasSize,
+                4,
+                atlasBuffer,
+                atlasSize * 4
+        );
 
         if (result) {
             RainLogger.RAIN_LOGGER.info("Atlas successfully saved to: {}", filePath);
         } else {
-            RainLogger.RAIN_LOGGER.error("Failed to save atlas image.");
+            RainLogger.RAIN_LOGGER.error("Failed to save atlas image to {}", filePath);
         }
     }
-
 }
