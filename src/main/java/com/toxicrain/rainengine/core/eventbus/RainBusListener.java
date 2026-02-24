@@ -20,9 +20,7 @@ import com.toxicrain.rainengine.core.json.SettingsInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
 import com.toxicrain.rainengine.core.lua.LuaSystem;
-import com.toxicrain.rainengine.core.registries.manager.NPCManager;
-import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
-import com.toxicrain.rainengine.core.registries.manager.TriggerManager;
+import com.toxicrain.rainengine.core.registries.manager.ArtifactManager;
 import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.core.render.rendering.Renderer;
 import com.toxicrain.rainengine.core.render.rendering.renderpass.ImguiRenderPass;
@@ -235,11 +233,7 @@ public class RainBusListener {
                     if(!event.gamePaused){
                         GameFactory.player.update(deltaTime);
 
-                        TriggerManager.getInstance().update(deltaTime);
-
-                        NPCManager.getInstance().update(deltaTime);
-
-                        ProjectileManager.getInstance().update(deltaTime);
+                        ArtifactManager.getInstance().update(deltaTime);
 
                         SmeagleBus.getInstance().post(new ExecuteAllLuaScripts(ExecuteAllLuaScripts.EventStage.TICK));
                     }
@@ -257,9 +251,6 @@ public class RainBusListener {
 
                     //Imgui pass
                     renderer.addPass(new ImguiRenderPass());
-
-                    // Projectile pass
-                    renderer.addPass((batch, cam) -> ProjectileManager.getInstance().render(batch));
 
                     // Player pass
                     renderer.addPass((batch, cam) -> GameFactory.player.render(batch));

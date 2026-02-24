@@ -4,7 +4,7 @@ import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.interfaces.IArtifact;
-import com.toxicrain.rainengine.core.registries.manager.ProjectileManager;
+import com.toxicrain.rainengine.core.registries.manager.ArtifactManager;
 import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;
 import com.toxicrain.rainengine.light.LightSystem;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class Projectile extends RenderableArtifact implements IArtifact {
         this.position.z = Constants.PROJECTILE_ZLEVEL; // Set Z-level for projectile rendering
         this.velocity = new Vector2f(veloX, veloY);
 
-        ProjectileManager.getInstance().addProjectile(this);
+        ArtifactManager.getInstance().addArtifact(this);
     }
 
     @Override

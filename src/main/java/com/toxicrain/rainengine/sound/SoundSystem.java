@@ -6,7 +6,6 @@ import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.eventbus.events.load.sound.SoundInfoLoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.load.sound.SoundSystemLoadEvent;
 import com.toxicrain.rainengine.core.logging.RainLogger;
-import com.toxicrain.rainengine.core.registries.manager.NPCManager;
 import com.toxicrain.rainengine.core.resources.ResourceManager;
 import com.toxicrain.rainengine.util.FileUtils;
 import lombok.AccessLevel;

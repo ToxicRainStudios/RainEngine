@@ -1,7 +1,7 @@
 package com.toxicrain.rainengine.artifacts.npc;
 
 import com.toxicrain.rainengine.core.datatypes.Resource;
-import com.toxicrain.rainengine.core.registries.manager.NPCManager;
+import com.toxicrain.rainengine.core.registries.manager.ArtifactManager;
 import com.toxicrain.rainengine.factories.GameFactory;
 
 public class NPC extends BaseNPC {
@@ -9,7 +9,7 @@ public class NPC extends BaseNPC {
     public NPC(float startingXpos, float startingYpos, float rotation) {
         super(new Resource("npcTexture"), startingXpos, startingYpos, rotation);
 
-        NPCManager.getInstance().addNPC(this, behaviorSequence);
+        ArtifactManager.getInstance().addArtifact(this);
     }
 
     public boolean canSeePlayer() {
