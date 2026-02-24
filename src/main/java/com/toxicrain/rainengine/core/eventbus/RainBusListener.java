@@ -24,7 +24,7 @@ import com.toxicrain.rainengine.core.registries.manager.ArtifactManager;
 import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.core.render.rendering.Renderer;
 import com.toxicrain.rainengine.core.render.rendering.renderpass.ImguiRenderPass;
-import com.toxicrain.rainengine.core.render.rendering.renderpass.NPCRenderPass;
+import com.toxicrain.rainengine.core.render.rendering.renderpass.ArtifactRenderPass;
 import com.toxicrain.rainengine.core.render.rendering.renderpass.TileRenderPass;
 import com.toxicrain.rainengine.core.resources.ResourceManager;
 import com.toxicrain.rainengine.factories.GameFactory;
@@ -247,7 +247,7 @@ public class RainBusListener {
                     renderer.addPass(new TileRenderPass());
 
                     // NPC pass
-                    renderer.addPass(new NPCRenderPass());
+                    renderer.addPass(new ArtifactRenderPass());
 
                     //Imgui pass
                     renderer.addPass(new ImguiRenderPass());
