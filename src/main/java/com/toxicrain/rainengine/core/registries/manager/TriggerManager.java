@@ -29,9 +29,9 @@ public class TriggerManager extends BaseInstanceable<TriggerManager> {
         triggers.add(trigger);
     }
 
-    public void update(Vector3f tilePos) {
+    public void update(double deltaTime) {
         for (Trigger trigger : new ArrayList<>(triggers)) {
-            trigger.check(tilePos);
+            trigger.update(deltaTime);
         }
     }
 

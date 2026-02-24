@@ -177,7 +177,8 @@ public class LuaManager {
                 Trigger trigger = new Trigger(
                         new AABB(minX, minY, maxX, maxY),
                         () -> callback.call(), // call the Lua callback
-                        oneTime
+                        oneTime,
+                        ()-> GameFactory.player.getPosition()
                 );
 
                 return LuaValue.TRUE;

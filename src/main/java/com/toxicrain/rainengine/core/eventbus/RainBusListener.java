@@ -178,7 +178,7 @@ public class RainBusListener {
                         GameFactory.guiManager.registerGUI("DeathScreen", (v) -> guiReg.drawDeathScreen());
                         GameFactory.guiManager.registerGUI("MapEditor", (v) -> ImMapEditorMenu.getInstance().draw());
                         //guiManager.add`ActiveGUI("MapEditor");
-                        //guiManager.addActiveGUI("Debug");
+                        GameFactory.guiManager.addActiveGUI("Debug");
                         //guiManager.addActiveGUI("Keybinds");
                         GameFactory.guiManager.addActiveGUI("MainMenu");
                     }});
@@ -235,7 +235,7 @@ public class RainBusListener {
                     if(!event.gamePaused){
                         GameFactory.player.update(deltaTime);
 
-                        TriggerManager.getInstance().update(GameFactory.player.getPosition());
+                        TriggerManager.getInstance().update(deltaTime);
 
                         NPCManager.getInstance().update(deltaTime);
 
