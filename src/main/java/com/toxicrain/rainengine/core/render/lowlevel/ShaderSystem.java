@@ -2,6 +2,7 @@ package com.toxicrain.rainengine.core.render.lowlevel;
 
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.instanceable.BaseInstanceable;
+import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.eventbus.events.render.shader.CreateShaderProgramEvent;
 import com.toxicrain.rainengine.core.eventbus.events.render.shader.ShaderProgramCreatedEvent;
 import com.toxicrain.rainengine.core.logging.RainLogger;
@@ -34,6 +35,10 @@ public class ShaderSystem extends BaseInstanceable<ShaderSystem> {
         return BaseInstanceable.getInstance(ShaderSystem.class);
     }
 
+    public void loadShader(Resource shaderResource){
+        SmeagleBus.getInstance().post(new CreateShaderProgramEvent(shaderResource));
+    }
+
     private int loadShader(int type, String filePath) {
         String shaderSource;
         try {
@@ -54,8 +59,8 @@ public class ShaderSystem extends BaseInstanceable<ShaderSystem> {
     }
 
     private int createShaderProgram(String name, String vertexShaderPath, String fragmentShaderPath) {
-        RainLogger.RAIN_LOGGER.info("Loading Vertex Shader: {}", vertexShaderPath);
-        RainLogger.RAIN_LOGGER.info("Loading Fragment Shader: {}", fragmentShaderPath);
+        RainLogger.RAIN_LOGGER.debug("Loading Vertex Shader: {}", vertexShaderPath);
+        RainLogger.RAIN_LOGGER.debug("Loading Fragment Shader: {}", fragmentShaderPath);
 
         int vertexShader = loadShader(GL20.GL_VERTEX_SHADER, vertexShaderPath);
         int fragmentShader = loadShader(GL20.GL_FRAGMENT_SHADER, fragmentShaderPath);

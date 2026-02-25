@@ -1,6 +1,7 @@
 package com.toxicrain.rainengine.core.render.lowlevel;
 
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
+import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.eventbus.events.render.shader.CreateShaderProgramEvent;
 import com.toxicrain.rainengine.core.eventbus.events.render.batchrenderer.BuildBatchRendererEvent;
@@ -59,7 +60,7 @@ public class BatchRenderer {
         texCoordVboId = glGenBuffers();
         colorVboId = glGenBuffers();
 
-        SmeagleBus.getInstance().post(new CreateShaderProgramEvent("lighting", "resources/shaders/light/lighting.vert", "resources/shaders/light/lighting.frag"));
+        ShaderSystem.getInstance().loadShader(new Resource("lighting"));
 
         // load shader
         shaderProgram = ShaderSystem.getInstance().getShader("lighting");
