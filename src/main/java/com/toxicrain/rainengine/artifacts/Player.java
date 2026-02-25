@@ -7,6 +7,7 @@ import com.toxicrain.rainengine.core.eventbus.events.load.MapLoadEvent;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
+import com.toxicrain.rainengine.core.registries.manager.ArtifactManager;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
 import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;
 import com.toxicrain.rainengine.factories.GameFactory;
@@ -63,6 +64,8 @@ public class Player extends RenderableArtifact implements IArtifact {
                 .subscribe(event -> {
                     this.position.set(event.playerSpawnPos.x,event.playerSpawnPos.y, position.z);
                 });
+
+        ArtifactManager.getInstance().addArtifact(this);
     }
 
     private float getAngle(float targetX, float targetY) {

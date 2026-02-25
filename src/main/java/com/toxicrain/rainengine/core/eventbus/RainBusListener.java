@@ -231,8 +231,6 @@ public class RainBusListener {
                     double deltaTime = DeltaTimeUtil.getDeltaTime();
 
                     if(!event.gamePaused){
-                        GameFactory.player.update(deltaTime);
-
                         ArtifactManager.getInstance().update(deltaTime);
 
                         SmeagleBus.getInstance().post(new ExecuteAllLuaScripts(ExecuteAllLuaScripts.EventStage.TICK));
@@ -251,9 +249,6 @@ public class RainBusListener {
 
                     //Imgui pass
                     renderer.addPass(new ImguiRenderPass());
-
-                    // Player pass
-                    renderer.addPass((batch, cam) -> GameFactory.player.render(batch));
                 });
 
         SmeagleBus.getInstance().listen(ScrollEvent.class)
