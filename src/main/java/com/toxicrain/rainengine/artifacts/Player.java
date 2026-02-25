@@ -7,6 +7,7 @@ import com.toxicrain.rainengine.core.eventbus.events.load.MapLoadEvent;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
+import com.toxicrain.rainengine.core.json.key.MouseTracker;
 import com.toxicrain.rainengine.core.registries.manager.ArtifactManager;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
 import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;
@@ -15,7 +16,6 @@ import com.toxicrain.rainengine.light.LightSystem;
 import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.texture.TextureSystem;
-import com.toxicrain.rainengine.util.InputUtils;
 import com.toxicrain.rainengine.util.MathUtils;
 import com.toxicrain.rainengine.util.WindowUtils;
 import lombok.Getter;
@@ -95,7 +95,7 @@ public class Player extends RenderableArtifact implements IArtifact {
     }
 
     float[] getMouse() {
-        openglMousePos = InputUtils.mouseTracker.update(position);
+        openglMousePos = MouseTracker.getInstance().update(position);
         return openglMousePos;
     }
 

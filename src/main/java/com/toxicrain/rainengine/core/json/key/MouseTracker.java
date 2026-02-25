@@ -1,8 +1,8 @@
 package com.toxicrain.rainengine.core.json.key;
 
+import com.github.strubium.windowmanager.window.InputUtils;
 import com.toxicrain.instanceable.BaseInstanceable;
 import com.toxicrain.rainengine.core.json.SettingsInfoParser;
-import com.toxicrain.rainengine.util.InputUtils;
 import com.toxicrain.rainengine.factories.GameFactory;
 import org.joml.Vector3f;
 

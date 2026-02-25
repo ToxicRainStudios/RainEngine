@@ -4,7 +4,7 @@ import com.github.strubium.windowmanager.imgui.GuiManager;
 import com.toxicrain.rainengine.artifacts.*;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.LangHelper;
-import com.toxicrain.rainengine.util.InputUtils;
+import com.github.strubium.windowmanager.window.InputUtils;
 
 import static com.toxicrain.rainengine.core.GameEngine.windowManager;
 
@@ -19,7 +19,7 @@ public class GameFactory {
         // Load player using the atlas region
         player = new Player(new Resource("rainengine:playertexture"));
 
-        inputUtils = new InputUtils(windowManager);
+        inputUtils = new InputUtils(windowManager.window);
     }
 
     public static void loadFonts() {
