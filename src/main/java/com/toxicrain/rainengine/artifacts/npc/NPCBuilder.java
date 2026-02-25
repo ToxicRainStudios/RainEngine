@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine.artifacts.npc;
 
-import com.toxicrain.rainengine.artifacts.behavior.BehaviorSequence;
+import com.toxicrain.rainengine.artifacts.npc.behavior.BehaviorSequence;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 
 public class NPCBuilder {

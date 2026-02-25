@@ -1,4 +1,4 @@
-package com.toxicrain.rainengine.core.interfaces;
+package com.toxicrain.rainengine.artifacts;
 
 import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;
 

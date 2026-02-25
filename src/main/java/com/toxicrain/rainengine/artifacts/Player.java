@@ -6,7 +6,6 @@ import com.toxicrain.rainengine.core.datatypes.*;
 import com.toxicrain.rainengine.core.eventbus.events.load.MapLoadEvent;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
-import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
 import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;

@@ -1,7 +1,7 @@
 package com.toxicrain.rainengine.artifacts.trigger;
 
 import com.toxicrain.rainengine.core.datatypes.AABB;
-import com.toxicrain.rainengine.core.interfaces.IArtifact;
+import com.toxicrain.rainengine.artifacts.IArtifact;
 import com.toxicrain.rainengine.core.registries.manager.ArtifactManager;
 import io.reactivex.rxjava3.functions.Supplier;
 import lombok.Getter;

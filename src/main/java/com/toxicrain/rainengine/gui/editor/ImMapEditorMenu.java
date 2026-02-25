@@ -168,13 +168,12 @@ public class ImMapEditorMenu extends BaseInstanceable<ImMapEditorMenu> {
 
             char tileChar = tilePalette.get(i);
             TileInfo tileInfo = PaletteInfoParser.getInstance().getTileInfo(tileChar);
-            TextureRegion region = TextureSystem.getInstance().getRegion(tileInfo.getTextureResource());
 
             if (ImGui.imageButton(
                     TextureSystem.getInstance().getAtlasTextureId(),
                     32, 32,
-                    region.getU0(), region.getV0(),
-                    region.getU1(), region.getV1(),
+                    tileInfo.getTextureRegion().getU0(), tileInfo.getTextureRegion().getV0(),
+                    tileInfo.getTextureRegion().getU1(), tileInfo.getTextureRegion().getV1(),
                     selectedTileIndex == i ? 0x88888888 : 0x00000000
             )) {
                 selectedTileIndex = i;

@@ -1,8 +1,8 @@
 package com.toxicrain.rainengine.core.registries.manager;
 
 import com.toxicrain.instanceable.BaseInstanceable;
-import com.toxicrain.rainengine.artifacts.Projectile;
-import com.toxicrain.rainengine.core.interfaces.IArtifact;
+import com.toxicrain.rainengine.artifacts.projectile.Projectile;
+import com.toxicrain.rainengine.artifacts.IArtifact;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;
 

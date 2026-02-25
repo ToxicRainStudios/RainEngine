@@ -5,7 +5,6 @@ import com.toxicrain.rainengine.core.datatypes.Color;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
 import com.toxicrain.rainengine.core.eventbus.events.ArtifactUpdateEvent;
-import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;
 import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.texture.TextureSystem;
@@ -32,6 +31,11 @@ public abstract class RenderableArtifact implements IArtifact {
     public RenderableArtifact(Resource textureResource, float x, float y, float rotation) {
         this.textureResource = textureResource;
         this.position = new Vector3f(x, y, 1);
+        this.rotation = rotation;
+    }
+    public RenderableArtifact(Resource textureResource, Vector3f position,  float rotation) {
+        this.textureResource = textureResource;
+        this.position = position;
         this.rotation = rotation;
     }
 

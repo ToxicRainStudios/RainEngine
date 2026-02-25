@@ -1,14 +1,12 @@
 package com.toxicrain.rainengine.artifacts.npc;
 
 import com.toxicrain.rainengine.artifacts.RenderableArtifact;
-import com.toxicrain.rainengine.artifacts.behavior.BehaviorSequence;
+import com.toxicrain.rainengine.artifacts.npc.behavior.BehaviorSequence;
 import com.toxicrain.rainengine.core.datatypes.*;
-import com.toxicrain.rainengine.core.interfaces.IArtifact;
-import com.toxicrain.rainengine.core.registries.tiles.Collisions;
+import com.toxicrain.rainengine.artifacts.IArtifact;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.joml.Vector2f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 

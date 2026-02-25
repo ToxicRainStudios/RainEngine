@@ -1,9 +1,10 @@
-package com.toxicrain.rainengine.artifacts;
+package com.toxicrain.rainengine.artifacts.projectile;
 
+import com.toxicrain.rainengine.artifacts.IArtifact;
+import com.toxicrain.rainengine.artifacts.RenderableArtifact;
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
-import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.registries.manager.ArtifactManager;
 import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;
 import com.toxicrain.rainengine.light.LightSystem;
