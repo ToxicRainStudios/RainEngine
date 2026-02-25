@@ -2,7 +2,9 @@ package com.toxicrain.rainengine.texture;
 
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.logging.RainLogger;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL30;
@@ -51,81 +53,87 @@ public class TextureAtlas {
             // Allocate atlas buffer
             atlasBuffer = BufferUtils.createByteBuffer(atlasSize * atlasSize * 4);
 
-            int shelfX = 0;
-            int shelfY = 0;
-            int shelfHeight = 0;
+            // Load all images first (required for MaxRects packing)
+            List<LoadedImage> images = new ArrayList<>(imagePaths.size());
 
-            // Single stack allocation for all image loads
             try (MemoryStack stack = MemoryStack.stackPush()) {
-                IntBuffer widthBuffer = stack.mallocInt(1);
-                IntBuffer heightBuffer = stack.mallocInt(1);
-                IntBuffer channelsBuffer = stack.mallocInt(1);
+                IntBuffer w = stack.mallocInt(1);
+                IntBuffer h = stack.mallocInt(1);
+                IntBuffer c = stack.mallocInt(1);
 
                 for (Path path : imagePaths) {
                     String filePath = path.toString();
-                    Resource resource = Resource.fromFile(directory, path);
 
-                    widthBuffer.clear();
-                    heightBuffer.clear();
-                    channelsBuffer.clear();
+                    w.clear();
+                    h.clear();
+                    c.clear();
 
-                    ByteBuffer image = stbi_load(filePath, widthBuffer, heightBuffer, channelsBuffer, 4);
+                    ByteBuffer image = stbi_load(filePath, w, h, c, 4);
                     if (image == null) {
                         throw new RuntimeException("Failed to load texture: "
                                 + filePath + " - " + stbi_failure_reason());
                     }
 
-                    int imageWidth = widthBuffer.get(0);
-                    int imageHeight = heightBuffer.get(0);
+                    int width = w.get(0);
+                    int height = h.get(0);
 
-                    // New shelf if image doesn't fit in current row
-                    if (shelfX + imageWidth > atlasSize) {
-                        shelfY += shelfHeight;
-                        shelfX = 0;
-                        shelfHeight = 0;
-                    }
-
-                    // Check overflow
-                    if (shelfY + imageHeight > atlasSize) {
+                    if (width > atlasSize || height > atlasSize) {
                         stbi_image_free(image);
-                        throw new RuntimeException(
-                                "Texture atlas overflow. Increase atlas size or use better packing."
-                        );
+                        throw new RuntimeException("Image larger than atlas: " + filePath);
                     }
 
-                    // FAST NATIVE COPY (memcpy per row)
-                    copyImageToAtlasNative(
-                            atlasBuffer,
-                            atlasSize,
+                    images.add(new LoadedImage(
+                            path,
+                            Resource.fromFile(directory, path),
                             image,
-                            imageWidth,
-                            imageHeight,
-                            shelfX,
-                            shelfY
-                    );
-
-                    float u0 = (float) shelfX / atlasSize;
-                    float v0 = (float) shelfY / atlasSize;
-                    float u1 = (float) (shelfX + imageWidth) / atlasSize;
-                    float v1 = (float) (shelfY + imageHeight) / atlasSize;
-
-                    boolean hasTransparency = checkTransparencyFast(image);
-
-                    TextureInfo textureInfo = new TextureInfo(
-                            atlasTextureId,
-                            atlasSize,
-                            atlasSize,
-                            hasTransparency
-                    );
-
-                    TextureRegion region = new TextureRegion(textureInfo, u0, v0, u1, v1);
-                    regionMap.put(resource, region);
-
-                    shelfX += imageWidth;
-                    shelfHeight = Math.max(shelfHeight, imageHeight);
-
-                    stbi_image_free(image);
+                            width,
+                            height,
+                            checkTransparencyFast(image)
+                    ));
                 }
+            }
+
+            // Sort by height (better packing heuristic)
+            images.sort((a, b) -> Integer.compare(b.height, a.height));
+
+            MaxRectsPacker packer = new MaxRectsPacker(atlasSize, atlasSize);
+
+            for (LoadedImage img : images) {
+                Rect rect = packer.insert(img.width, img.height);
+                if (rect == null) {
+                    stbi_image_free(img.buffer);
+                    throw new RuntimeException(
+                            "Texture atlas overflow. Increase atlas size or use multiple atlases."
+                    );
+                }
+
+                // FAST NATIVE COPY (memcpy per row)
+                copyImageToAtlasNative(
+                        atlasBuffer,
+                        atlasSize,
+                        img.buffer,
+                        img.width,
+                        img.height,
+                        rect.x,
+                        rect.y
+                );
+
+                float u0 = (float) rect.x / atlasSize;
+                float v0 = (float) rect.y / atlasSize;
+                float u1 = (float) (rect.x + img.width) / atlasSize;
+                float v1 = (float) (rect.y + img.height) / atlasSize;
+
+                TextureInfo textureInfo = new TextureInfo(
+                        atlasTextureId,
+                        atlasSize,
+                        atlasSize,
+                        img.hasTransparency
+                );
+
+                TextureRegion region = new TextureRegion(textureInfo, u0, v0, u1, v1);
+                regionMap.put(img.resource, region);
+
+                stbi_image_free(img.buffer);
             }
 
             uploadAtlasToGPU();
@@ -134,7 +142,6 @@ public class TextureAtlas {
             throw new RuntimeException("Failed to build texture atlas.", e);
         }
     }
-
     /**
      * Ultra-fast native blit using LWJGL memCopy (row by row).
      * Avoids lots of ByteBuffer get/put calls.
@@ -231,6 +238,149 @@ public class TextureAtlas {
             RainLogger.RAIN_LOGGER.info("Atlas successfully saved to: {}", filePath);
         } else {
             RainLogger.RAIN_LOGGER.error("Failed to save atlas image to {}", filePath);
+        }
+    }
+
+    @AllArgsConstructor
+    private static class LoadedImage {
+        final Path path;
+        final Resource resource;
+        final ByteBuffer buffer;
+        final int width;
+        final int height;
+        final boolean hasTransparency;
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class Rect {
+        int x, y, w, h;
+    }
+
+    private static class MaxRectsPacker {
+
+        private final List<Rect> freeRects = new ArrayList<>();
+        private final List<Rect> usedRects = new ArrayList<>();
+
+        MaxRectsPacker(int width, int height) {
+            freeRects.add(new Rect(0, 0, width, height));
+        }
+
+        public Rect insert(int width, int height) {
+            Rect bestNode = null;
+            int bestShortSideFit = Integer.MAX_VALUE;
+            int bestLongSideFit = Integer.MAX_VALUE;
+
+            for (Rect free : freeRects) {
+                if (free.w >= width && free.h >= height) {
+                    int leftoverHoriz = Math.abs(free.w - width);
+                    int leftoverVert = Math.abs(free.h - height);
+                    int shortSideFit = Math.min(leftoverHoriz, leftoverVert);
+                    int longSideFit = Math.max(leftoverHoriz, leftoverVert);
+
+                    if (shortSideFit < bestShortSideFit ||
+                            (shortSideFit == bestShortSideFit && longSideFit < bestLongSideFit)) {
+                        bestNode = new Rect(free.x, free.y, width, height);
+                        bestShortSideFit = shortSideFit;
+                        bestLongSideFit = longSideFit;
+                    }
+                }
+            }
+
+            if (bestNode == null) {
+                return null;
+            }
+
+            splitFreeRects(bestNode);
+            usedRects.add(bestNode);
+            return bestNode;
+        }
+
+        private void splitFreeRects(Rect used) {
+            for (int i = 0; i < freeRects.size(); i++) {
+                Rect free = freeRects.get(i);
+
+                if (!intersects(used, free)) {
+                    continue;
+                }
+
+                if (used.x < free.x + free.w && used.x + used.w > free.x) {
+                    if (used.y > free.y && used.y < free.y + free.h) {
+                        freeRects.add(new Rect(
+                                free.x,
+                                free.y,
+                                free.w,
+                                used.y - free.y
+                        ));
+                    }
+
+                    if (used.y + used.h < free.y + free.h) {
+                        freeRects.add(new Rect(
+                                free.x,
+                                used.y + used.h,
+                                free.w,
+                                (free.y + free.h) - (used.y + used.h)
+                        ));
+                    }
+                }
+
+                if (used.y < free.y + free.h && used.y + used.h > free.y) {
+                    if (used.x > free.x && used.x < free.x + free.w) {
+                        freeRects.add(new Rect(
+                                free.x,
+                                free.y,
+                                used.x - free.x,
+                                free.h
+                        ));
+                    }
+
+                    if (used.x + used.w < free.x + free.w) {
+                        freeRects.add(new Rect(
+                                used.x + used.w,
+                                free.y,
+                                (free.x + free.w) - (used.x + used.w),
+                                free.h
+                        ));
+                    }
+                }
+
+                freeRects.remove(i);
+                i--;
+            }
+
+            pruneFreeList();
+        }
+
+        private boolean intersects(Rect a, Rect b) {
+            return a.x < b.x + b.w &&
+                    a.x + a.w > b.x &&
+                    a.y < b.y + b.h &&
+                    a.y + a.h > b.y;
+        }
+
+        private void pruneFreeList() {
+            for (int i = 0; i < freeRects.size(); i++) {
+                Rect a = freeRects.get(i);
+                for (int j = i + 1; j < freeRects.size(); j++) {
+                    Rect b = freeRects.get(j);
+                    if (isContainedIn(a, b)) {
+                        freeRects.remove(i);
+                        i--;
+                        break;
+                    }
+                    if (isContainedIn(b, a)) {
+                        freeRects.remove(j);
+                        j--;
+                    }
+                }
+            }
+        }
+
+        private boolean isContainedIn(Rect a, Rect b) {
+            return a.x >= b.x &&
+                    a.y >= b.y &&
+                    a.x + a.w <= b.x + b.w &&
+                    a.y + a.h <= b.y + b.h;
         }
     }
 }

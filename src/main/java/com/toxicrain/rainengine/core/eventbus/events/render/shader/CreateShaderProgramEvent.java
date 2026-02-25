@@ -1,10 +1,10 @@
 package com.toxicrain.rainengine.core.eventbus.events.render.shader;
 
+import com.github.strubium.smeaglebus.eventbus.CancelableEvent;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.logging.RainLogger;
-import lombok.AllArgsConstructor;
 
-public class CreateShaderProgramEvent {
+public class CreateShaderProgramEvent extends CancelableEvent {
     public final String name;
     public final String vertexShaderPath;
     public final String fragmentShaderPath;
