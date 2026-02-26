@@ -9,6 +9,7 @@ import com.toxicrain.rainengine.core.LangHelper;
 import com.toxicrain.rainengine.core.eventbus.events.*;
 import com.toxicrain.rainengine.core.eventbus.events.load.LangLoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.load.LoadEvent;
+import com.toxicrain.rainengine.core.eventbus.events.load.sound.MusicLoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.load.sound.SoundSystemLoadEvent;
 import com.toxicrain.rainengine.core.eventbus.events.lua.CategorizeScriptsEvent;
 import com.toxicrain.rainengine.core.eventbus.events.lua.ExecuteAllLuaScripts;
@@ -144,11 +145,9 @@ public class RainBusListener {
 
                         SmeagleBus.getInstance().post(new LangLoadEvent(SettingsInfoParser.getInstance().getLanguage()));
 
+                        SmeagleBus.getInstance().post(new MusicLoadEvent());
 
-                        //"COMBAT" is the normal track, "PANIC" is the low health track, "CALM" is the quiet track
-                        MusicManager.getInstance().setStartingSound("CALM0");
-                        MusicManager.getInstance().start();
-                        MusicManager.getInstance().setNextTrack("CALM1");
+
                     }
                 });
 
@@ -204,17 +203,26 @@ public class RainBusListener {
 
                 SoundSystem.getInstance().initSounds();
 
-                // Add sounds at runtime
-                MusicManager.getInstance().addOrUpdateSound("CALM0", SoundSystem.getSound("Intro"));
-                MusicManager.getInstance().addOrUpdateSound("CALM1", SoundSystem.getSound("A1"));
-                MusicManager.getInstance().addOrUpdateSound("CALM2", SoundSystem.getSound("A2"));
-                MusicManager.getInstance().addOrUpdateSound("CALM3", SoundSystem.getSound("A3"));
-                MusicManager.getInstance().addOrUpdateSound("BREAKDOWN", SoundSystem.getSound("Breakdown"));
-                MusicManager.getInstance().addOrUpdateSound("COMBAT", SoundSystem.getSound("B1"));
-                MusicManager.getInstance().addOrUpdateSound("PANIC1", SoundSystem.getSound("Panic1"));
-                MusicManager.getInstance().addOrUpdateSound("PANIC2", SoundSystem.getSound("Panic2"));
-                MusicManager.getInstance().addOrUpdateSound("PANIC3", SoundSystem.getSound("Panic3"));
             });
+
+        SmeagleBus.getInstance().listen(MusicLoadEvent.class)
+                .subscribe(event -> {
+                    // Add sounds at runtime
+                    MusicManager.getInstance().addOrUpdateSound("CALM0", SoundSystem.getSound("Intro"));
+                    MusicManager.getInstance().addOrUpdateSound("CALM1", SoundSystem.getSound("A1"));
+                    MusicManager.getInstance().addOrUpdateSound("CALM2", SoundSystem.getSound("A2"));
+                    MusicManager.getInstance().addOrUpdateSound("CALM3", SoundSystem.getSound("A3"));
+                    MusicManager.getInstance().addOrUpdateSound("BREAKDOWN", SoundSystem.getSound("Breakdown"));
+                    MusicManager.getInstance().addOrUpdateSound("COMBAT", SoundSystem.getSound("B1"));
+                    MusicManager.getInstance().addOrUpdateSound("PANIC1", SoundSystem.getSound("Panic1"));
+                    MusicManager.getInstance().addOrUpdateSound("PANIC2", SoundSystem.getSound("Panic2"));
+                    MusicManager.getInstance().addOrUpdateSound("PANIC3", SoundSystem.getSound("Panic3"));
+
+                    //"COMBAT" is the normal track, "PANIC" is the low health track, "CALM" is the quiet track
+                    MusicManager.getInstance().setStartingSound("CALM0");
+                    MusicManager.getInstance().start();
+                    MusicManager.getInstance().setNextTrack("CALM1");
+                });
 
         SmeagleBus.getInstance().listen(GameUpdateEvent.class)
                 .subscribe(event -> {
