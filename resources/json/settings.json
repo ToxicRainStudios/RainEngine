@@ -1,6 +1,6 @@
 {
+    "fullscreen": false,
     "vSync": false,
-    "fullscreen": true,
     "windowHeight": 1080,
     "language": "en_US",
     "fov": 90,

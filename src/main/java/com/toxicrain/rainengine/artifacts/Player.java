@@ -3,28 +3,24 @@ package com.toxicrain.rainengine.artifacts;
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.datatypes.*;
-import com.toxicrain.rainengine.core.eventbus.events.ArtifactUpdateEvent;
 import com.toxicrain.rainengine.core.eventbus.events.load.MapLoadEvent;
 import com.toxicrain.rainengine.core.json.GameInfoParser;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
-import com.toxicrain.rainengine.core.interfaces.IArtifact;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
+import com.toxicrain.rainengine.core.json.key.MouseTracker;
+import com.toxicrain.rainengine.core.registries.manager.ArtifactManager;
 import com.toxicrain.rainengine.core.registries.tiles.Collisions;
-import com.toxicrain.rainengine.core.render.BatchRenderer;
+import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.light.LightSystem;
 import com.toxicrain.rainengine.texture.TextureInfo;
 import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.texture.TextureSystem;
-import com.toxicrain.rainengine.util.InputUtils;
 import com.toxicrain.rainengine.util.MathUtils;
 import com.toxicrain.rainengine.util.WindowUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.joml.Vector3f;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 
@@ -39,21 +35,17 @@ public class Player extends RenderableArtifact implements IArtifact {
     private float cameraSpeed = 0.02f;
     private final float scrollSpeed = 0.5f;
 
-    private final List<Weapon> weapons;
-    @Getter private Weapon equippedWeapon;
-
     private float[] openglMousePos;
 
     @Getter private final AABB playerAABB;
 
     @Getter @Setter private float angle;
 
-    public Player(Resource defaultTexture, boolean isSprinting) {
-        super(defaultTexture, MapInfoParser.getInstance().playerSpawnPos.x, MapInfoParser.getInstance().playerSpawnPos.y, 0f, 1f);
+    public Player(Resource defaultTexture) {
+        super(defaultTexture, MapInfoParser.getInstance().playerSpawnPos.x, MapInfoParser.getInstance().playerSpawnPos.y, 0f);
         this.position.z = 5; // Player z-level
-        this.defaultTexture = TextureSystem.getRegion(defaultTexture);
-        this.isSprinting = isSprinting;
-        this.weapons = new ArrayList<>();
+        this.defaultTexture = TextureSystem.getInstance().getRegion(defaultTexture);
+        this.isSprinting = false;
 
         float playerHalfSize = Size.AVERAGE.getSize();
 
@@ -70,39 +62,10 @@ public class Player extends RenderableArtifact implements IArtifact {
 
         SmeagleBus.getInstance().listen(MapLoadEvent.class)
                 .subscribe(event -> {
-                    this.position.update(event.playerSpawnPos);
+                    this.position.set(event.playerSpawnPos.x,event.playerSpawnPos.y, position.z);
                 });
-    }
 
-    public void addWeapon(Weapon weapon) {
-        weapons.add(weapon);
-    }
-
-    public void equipWeapon(Weapon weapon) {
-        if (weapon != null && weapons.contains(weapon)) {
-            if (equippedWeapon != null) {
-                equippedWeapon.unequip();
-            }
-            equippedWeapon = weapon;
-            equippedWeapon.equip();
-        }
-    }
-
-    public boolean isWeaponEquipped(Weapon weapon) {
-        return equippedWeapon != null && equippedWeapon.equals(weapon);
-    }
-
-    public void attack() {
-        if (equippedWeapon != null) {
-            float[] mousePos = InputUtils.mouseTracker.update(position);
-
-            float worldMouseX = mousePos[0];
-            float worldMouseY = mousePos[1];
-
-            float playerAngle = getAngle(worldMouseX, worldMouseY);
-
-            equippedWeapon.attack(playerAngle, position.x, position.y);
-        }
+        ArtifactManager.getInstance().addArtifact(this);
     }
 
     private float getAngle(float targetX, float targetY) {
@@ -112,31 +75,27 @@ public class Player extends RenderableArtifact implements IArtifact {
         return this.angle;
     }
 
-    private void forward(boolean useMouse, int direction, double deltaTime) {
+    private void forward(int direction, double deltaTime) {
         getMouse();
-
-        float angleXS = (float) Math.sin(angle) * -1;
-        float angleYS = (float) Math.cos(angle);
-        double distanceOfMouse = Math.sqrt(Math.pow(openglMousePos[0] - position.x, 2) + Math.pow(openglMousePos[1] - position.y, 2));
-
-        if (useMouse) {
-            position.x += ((openglMousePos[0] - position.x) / distanceOfMouse) * 9.3f * direction * deltaTime;
-            position.y += ((openglMousePos[1] - position.y) / distanceOfMouse) * 9.3f * direction * deltaTime;
-        } else {
-            position.x += angleXS * 5.2f * direction * deltaTime;
-            position.y += angleYS * 5.2f * direction * deltaTime;
-        }
+        float rot = (float)Math.atan2((openglMousePos[1] - position.y),(openglMousePos[0] - position.x));
+        position.x += (float) (Math.cos(rot)* 9.3f * direction * deltaTime);
+        position.y += (float) (Math.sin(rot)* 9.3f * direction * deltaTime);
+    }
+    private void strafe(int direction, double deltaTime) {
+        getMouse();
+        float rot = (float)Math.atan2((openglMousePos[1] - position.y),(openglMousePos[0] - position.x));
+        position.x += (float) (Math.cos(rot+Math.PI/2)* 9.3f * direction * deltaTime);
+        position.y += (float) (Math.sin(rot+Math.PI/2)* 9.3f * direction * deltaTime);
     }
 
     public void update(double deltaTime) {
+        super.update(deltaTime);
         getMouse();
         processInput(deltaTime);
-
-        SmeagleBus.getInstance().post(new ArtifactUpdateEvent("player"));
     }
 
     float[] getMouse() {
-        openglMousePos = InputUtils.mouseTracker.update(position);
+        openglMousePos = MouseTracker.getInstance().update(position);
         return openglMousePos;
     }
 
@@ -180,19 +139,18 @@ public class Player extends RenderableArtifact implements IArtifact {
 
     private void processInput(double deltaTime) {
         handleSprinting();
-        handleAttack();
 
         if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkForward"))) {
-            forward(true, 1, deltaTime);
+            forward(1, deltaTime);
         }
         if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkBackward"))) {
-            forward(true, -1, deltaTime);
+            forward(-1, deltaTime);
         }
         if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkLeft"))) {
-            forward(false, 1, deltaTime);
+            strafe(1, deltaTime);
         }
         if (GameFactory.inputUtils.isKeyPressed(KeyMap.getKeyNumber("keyWalkRight"))) {
-            forward(false, -1, deltaTime);
+            strafe(-1, deltaTime);
         }
 
         position.z = MathUtils.clamp(position.z + scrollOffset * scrollSpeed, GameInfoParser.getInstance().minZoom, GameInfoParser.getInstance().maxZoom);
@@ -206,12 +164,6 @@ public class Player extends RenderableArtifact implements IArtifact {
         } else {
             isSprinting = false;
             cameraSpeed = 0.01f;
-        }
-    }
-
-    private void handleAttack() {
-        if (GameFactory.inputUtils.isMouseButtonPressed(0)) {
-            attack();
         }
     }
 }

@@ -1,13 +1,17 @@
 package com.toxicrain.rainengine.core.lua;
 
+import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.rainengine.artifacts.trigger.Trigger;
 import com.toxicrain.rainengine.artifacts.npc.NPCBuilder;
 import com.toxicrain.rainengine.artifacts.npc.NPC;
 import com.toxicrain.rainengine.core.GameEngine;
 import com.toxicrain.rainengine.core.datatypes.AABB;
+import com.toxicrain.rainengine.core.eventbus.events.lua.CategorizeScriptsEvent;
+import com.toxicrain.rainengine.core.eventbus.events.lua.ExecuteAllLuaScripts;
 import com.toxicrain.rainengine.core.logging.RainLogger;
 import com.toxicrain.rainengine.core.json.MapInfoParser;
 import com.toxicrain.rainengine.core.json.key.KeyMap;
+import com.toxicrain.rainengine.core.registries.manager.ArtifactManager;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.sound.SoundSystem;
 import com.toxicrain.rainengine.util.FileUtils;
@@ -20,8 +24,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.toxicrain.rainengine.factories.GameFactory.luaEngine;
-
 public class LuaManager {
     private final Globals globals;
     private static final List<String> initScripts = new ArrayList<>();
@@ -33,6 +35,35 @@ public class LuaManager {
     public LuaManager(Globals globals) {
         this.globals = globals;
         registerFunctions();
+
+        SmeagleBus.getInstance().listen(CategorizeScriptsEvent.class)
+                .subscribe(event -> {
+                    categorizeScripts(event.filePath);
+                });
+        SmeagleBus.getInstance().listen(ExecuteAllLuaScripts.class)
+                .subscribe(event -> {
+                    if(event.eventStage == ExecuteAllLuaScripts.EventStage.ININT){
+                        executeInitScripts();
+                    }
+                });
+        SmeagleBus.getInstance().listen(ExecuteAllLuaScripts.class)
+                .subscribe(event -> {
+                    if(event.eventStage == ExecuteAllLuaScripts.EventStage.POST_ININT){
+                        executePostInitScripts();
+                    }
+                });
+        SmeagleBus.getInstance().listen(ExecuteAllLuaScripts.class)
+                .subscribe(event -> {
+                    if(event.eventStage == ExecuteAllLuaScripts.EventStage.TICK){
+                        executeTickScripts();
+                    }
+                });
+        SmeagleBus.getInstance().listen(ExecuteAllLuaScripts.class)
+                .subscribe(event -> {
+                    if(event.eventStage == ExecuteAllLuaScripts.EventStage.ININT){
+                        executeImguiScripts();
+                    }
+                });
     }
 
     /**
@@ -124,7 +155,7 @@ public class LuaManager {
             public LuaValue call(LuaValue arg) {
                 try {
                     RainLogger.LUA_LOGGER.info("Loading Map Data");
-                    GameFactory.triggerManager.clearTriggers();
+                    ArtifactManager.getInstance().clearAll();
                     MapInfoParser.getInstance().parseMapFile(String.valueOf(arg));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -146,7 +177,8 @@ public class LuaManager {
                 Trigger trigger = new Trigger(
                         new AABB(minX, minY, maxX, maxY),
                         () -> callback.call(), // call the Lua callback
-                        oneTime
+                        oneTime,
+                        ()-> GameFactory.player.getPosition()
                 );
 
                 return LuaValue.TRUE;
@@ -171,7 +203,7 @@ public class LuaManager {
                 NPC npc = new NPCBuilder()
                         .position(x, y)
                         .rotation(rotation)
-                        .size(size)
+                        //.size(size)
                         .fieldOfView(fov)
                         .visionDistance(visionDist)
                         .texture(texture)
@@ -194,21 +226,21 @@ public class LuaManager {
         globals.set("beginWindow", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue title) {
-                GameFactory.guiLuaWrapper.luaBeginWindow(title.tojstring());
+                LuaSystem.getInstance().getGuiWrapper().luaBeginWindow(title.tojstring());
                 return LuaValue.TRUE;
             }
         });
         globals.set("setDisabled", new LuaFunction() {
             @Override
             public LuaValue call() {
-                GameFactory.guiLuaWrapper.luaSetDisabled();
+                LuaSystem.getInstance().getGuiWrapper().luaSetDisabled();
                 return LuaValue.TRUE;
             }
         });
         globals.set("setEnabled", new LuaFunction() {
             @Override
             public LuaValue call() {
-                GameFactory.guiLuaWrapper.luaSetEnabled();
+                LuaSystem.getInstance().getGuiWrapper().luaSetEnabled();
                 return LuaValue.TRUE;
             }
         });
@@ -216,7 +248,7 @@ public class LuaManager {
         globals.set("endWindow", new LuaFunction() {
             @Override
             public LuaValue call() {
-                GameFactory.guiLuaWrapper.luaEndWindow();
+                LuaSystem.getInstance().getGuiWrapper().luaEndWindow();
                 return LuaValue.TRUE;
             }
         });
@@ -224,7 +256,7 @@ public class LuaManager {
         globals.set("setWindowSize", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue width, LuaValue height) {
-                GameFactory.guiLuaWrapper.luaSetWindowSize(width.toint(), height.toint());
+                LuaSystem.getInstance().getGuiWrapper().luaSetWindowSize(width.toint(), height.toint());
                 return LuaValue.TRUE;
             }
         });
@@ -232,7 +264,7 @@ public class LuaManager {
         globals.set("createLabel", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue text) {
-                GameFactory.guiLuaWrapper.luaCreateLabel(text.tojstring());
+                LuaSystem.getInstance().getGuiWrapper().luaCreateLabel(text.tojstring());
                 return LuaValue.TRUE;
             }
         });
@@ -241,7 +273,7 @@ public class LuaManager {
             @Override
             public LuaValue call(LuaValue label) {
                 // Call the Java method and return the result as a Lua boolean
-                boolean isPushed = GameFactory.guiLuaWrapper.luaCreateButton(label.tojstring());
+                boolean isPushed = LuaSystem.getInstance().getGuiWrapper().luaCreateButton(label.tojstring());
                 return LuaValue.valueOf(isPushed);
             }
         });
@@ -249,7 +281,7 @@ public class LuaManager {
         globals.set("createCheckbox", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue label, LuaValue initialValue) {
-                boolean isChecked = GameFactory.guiLuaWrapper.luaCreateCheckbox(label.tojstring(), initialValue.toboolean());
+                boolean isChecked = LuaSystem.getInstance().getGuiWrapper().luaCreateCheckbox(label.tojstring(), initialValue.toboolean());
                 return LuaValue.valueOf(isChecked);
             }
         });
@@ -258,7 +290,7 @@ public class LuaManager {
             @Override
             public LuaValue call(LuaValue label) {
                 // Call the Java method to create the color picker
-                GameFactory.guiLuaWrapper.luaCreateColorPicker(label.tojstring());
+                LuaSystem.getInstance().getGuiWrapper().luaCreateColorPicker(label.tojstring());
 
                 // After the color picker is used, retrieve the current color (if needed)
                 // Update Lua state if necessary
@@ -359,7 +391,7 @@ public class LuaManager {
         globals.set("playSound", new LuaFunction() {
             @Override
             public LuaValue call(LuaValue sound) {
-                GameFactory.soundSystem.play(SoundSystem.getSound(String.valueOf(sound)));
+                SoundSystem.getInstance().play(SoundSystem.getSound(String.valueOf(sound)));
                 return LuaValue.valueOf(String.valueOf(sound));
             }
         });
@@ -499,7 +531,7 @@ public class LuaManager {
     /**
      * Executes all Lua scripts.
      */
-    public static void executeAllImguiScripts() {
+    public static void executeImguiScripts() {
         for (String script : imguiScripts) {
             loadScript(script, "resources/scripts/");
         }
@@ -522,7 +554,7 @@ public class LuaManager {
      */
     public static void loadScript(String scriptPath, String relativePath) {
         try {
-            Globals globals = luaEngine.getGlobals();
+            Globals globals = LuaEngine.getInstance().getGlobals();
             String script = FileUtils.readFile(FileUtils.getCurrentWorkingDirectory(relativePath + scriptPath));  // Read the script content
             LuaValue chunk = globals.load(script, scriptPath);  // Load the script from content
             chunk.call();  // Execute the script

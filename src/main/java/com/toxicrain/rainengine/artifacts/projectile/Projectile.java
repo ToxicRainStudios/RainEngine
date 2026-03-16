@@ -1,32 +1,34 @@
-package com.toxicrain.rainengine.artifacts;
+package com.toxicrain.rainengine.artifacts.projectile;
 
+import com.toxicrain.rainengine.artifacts.IArtifact;
+import com.toxicrain.rainengine.artifacts.RenderableArtifact;
 import com.toxicrain.rainengine.core.Constants;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
-import com.toxicrain.rainengine.core.datatypes.vector.Vector2;
-import com.toxicrain.rainengine.core.interfaces.IArtifact;
-import com.toxicrain.rainengine.core.render.BatchRenderer;
-import com.toxicrain.rainengine.factories.GameFactory;
+import com.toxicrain.rainengine.core.registries.manager.ArtifactManager;
+import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;
 import com.toxicrain.rainengine.light.LightSystem;
-import com.toxicrain.rainengine.texture.TextureRegion;
-import com.toxicrain.rainengine.texture.TextureSystem;
 import lombok.Getter;
+import org.joml.Vector2f;
 
 @Getter
 public class Projectile extends RenderableArtifact implements IArtifact {
 
-    private final Vector2 velocity;
+    private final Vector2f velocity;
     private float lifeTime;
 
     public Projectile(Resource imageLocation, float xpos, float ypos, float veloX, float veloY) {
-        super(imageLocation, xpos, ypos, 0f, 1f); // rotation = 0f, size = 1f (can adjust if needed)
+        super(imageLocation, xpos, ypos, 0f); // rotation = 0f
         this.position.z = Constants.PROJECTILE_ZLEVEL; // Set Z-level for projectile rendering
-        this.velocity = new Vector2(veloX, veloY);
+        this.velocity = new Vector2f(veloX, veloY);
 
-        GameFactory.projectileManager.addProjectile(this);
+        ArtifactManager.getInstance().addArtifact(this);
     }
 
-    public void update() {
+    @Override
+    public void update(double deltaTime) {
+        super.update(deltaTime);
+
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
         this.lifeTime += 0.0001f;
@@ -34,9 +36,7 @@ public class Projectile extends RenderableArtifact implements IArtifact {
 
     @Override
     public void render(BatchRenderer batchRenderer) {
-        TextureRegion region = TextureSystem.getRegion(this.textureResource);
-
-        batchRenderer.addTexture(region, this.position.x, this.position.y, this.position.z,
+        batchRenderer.addTexture(this.textureRegion, this.position.x, this.position.y, this.position.z,
                 new TileParameters(null, velocity.x, velocity.y, 1, 1, null, LightSystem.getLightSources()));
     }
 }

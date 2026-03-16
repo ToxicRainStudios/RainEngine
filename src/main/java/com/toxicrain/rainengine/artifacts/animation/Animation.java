@@ -2,9 +2,7 @@ package com.toxicrain.rainengine.artifacts.animation;
 
 import com.toxicrain.rainengine.core.datatypes.Resource;
 import com.toxicrain.rainengine.core.datatypes.TileParameters;
-import com.toxicrain.rainengine.core.render.BatchRenderer;
-import com.toxicrain.rainengine.factories.GameFactory;
-import com.toxicrain.rainengine.texture.TextureAtlas;
+import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;
 import com.toxicrain.rainengine.texture.TextureRegion;
 import com.toxicrain.rainengine.texture.TextureSystem;
 import lombok.Getter;
@@ -48,7 +46,7 @@ public class Animation {
 
         for (int i = 0; i < frameCount; i++) {
             String frameName = frameNamePrefix + "_" + i;
-            TextureRegion region = TextureSystem.getRegion(new Resource(frameName));
+            TextureRegion region = TextureSystem.getInstance().getRegion(new Resource(frameName));
             if (region == null) {
                 throw new RuntimeException("Frame not found in texture atlas: " + frameName);
             }

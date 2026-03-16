@@ -2,25 +2,25 @@ package com.toxicrain.rainengine.core;
 
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.github.strubium.windowmanager.window.WindowManager;
-import com.toxicrain.rainengine.core.datatypes.TileParameters;
-import com.toxicrain.rainengine.core.datatypes.TilePos;
+import com.toxicrain.rainengine.artifacts.Camera;
 import com.toxicrain.rainengine.core.eventbus.RainBusListener;
 import com.toxicrain.rainengine.core.eventbus.events.*;
 import com.toxicrain.rainengine.core.eventbus.events.load.LoadEvent;
-import com.toxicrain.rainengine.core.eventbus.events.render.RenderGuiEvent;
+import com.toxicrain.rainengine.core.eventbus.events.render.AddRenderPassEvent;
 import com.toxicrain.rainengine.core.json.*;
 import com.toxicrain.rainengine.core.logging.RainLogger;
-import com.toxicrain.rainengine.core.render.BatchRenderer;
-import com.toxicrain.rainengine.core.registries.tiles.Tile;
-import com.toxicrain.rainengine.factories.GameFactory;
-import com.toxicrain.rainengine.light.LightSystem;
-import com.toxicrain.rainengine.texture.TextureRegion;
+import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;
+import com.toxicrain.rainengine.core.render.rendering.Renderer;
+import com.toxicrain.rainengine.gui.ImguiSystem;
+import com.toxicrain.rainengine.sound.SoundSystem;
 import com.toxicrain.rainengine.util.DeltaTimeUtil;
 import lombok.experimental.UtilityClass;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFW;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -30,9 +30,10 @@ public class GameEngine {
 
     // The window handle
     public static WindowManager windowManager;
+    private Camera camera;
 
     public static void run() {
-        Thread.setDefaultUncaughtExceptionHandler(new CrashReporter());
+        Thread.setDefaultUncaughtExceptionHandler(CrashReporter.getInstance());
         RainLogger.buildLoggers();
 
         RainLogger.RAIN_LOGGER.info("Hello LWJGL {}!", Version.getVersion());
@@ -52,91 +53,80 @@ public class GameEngine {
 
         SmeagleBus.getInstance().post(new LoadEvent(LoadEvent.LoadEventStage.POST));
 
+        SmeagleBus.getInstance().post(new LoadEvent(LoadEvent.LoadEventStage.GUI));
+
         // Create the batch renderer
         BatchRenderer batchRenderer = new BatchRenderer();
+        Renderer renderer = new Renderer(batchRenderer);
 
-        loop(batchRenderer);
+        SmeagleBus.getInstance().post(new AddRenderPassEvent(renderer));
+
+        loop(renderer);
 
         // Free the window callbacks and destroy the window
         windowManager.destroy();
     }
 
-    public static void drawMap(BatchRenderer batchRenderer) {
-        // Ensure the texture mappings have been loaded
-        if (PaletteInfoParser.tileMappings == null) {
-            throw new IllegalStateException("Texture mappings not loaded! Call PaletteInfoParser.loadTextureMappings() first.");
-        }
-
-        int size = MapInfoParser.getInstance().mapData.size();  // Get the size once
-
-        for (int k = size - 1; k >= 0; k--) {
-            // Get the TilePos object
-            TilePos pos = MapInfoParser.getInstance().mapData.get(k);
-
-            // Get the character representing the texture
-            char textureChar = Tile.mapDataType.get(k);
-
-            TextureRegion region = PaletteInfoParser.getInstance().getTileInfo(textureChar).getTextureRegion();
-
-            // Render the tile with lighting
-            batchRenderer.addTexture(
-                    region,
-                    pos.x,
-                    pos.y,
-                    pos.z,
-                    new TileParameters(0f, 0f,0f, 1,1,null, LightSystem.getLightSources())
-
-            );
-        }
-    }
-
-    private static void render(BatchRenderer batchRenderer) {
-        // Clear the color and depth buffers
+    private static void render(Renderer renderer, Camera camera) {
+        // Clear color and depth buffers (still done once per frame)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Set up the view matrix
+        // Update the view matrix
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        glTranslatef(-GameFactory.player.getPosition().x, -GameFactory.player.getPosition().y, -GameFactory.player.getPosition().z);
+        FloatBuffer cameraBuffer = BufferUtils.createFloatBuffer(16);
+        camera.getViewMatrix().get(cameraBuffer);
+        glLoadMatrixf(cameraBuffer);
 
-        // Begin the batch
-        batchRenderer.beginBatch();
+        // Execute all registered render passes
+        renderer.render(camera);
 
-        SmeagleBus.getInstance().post(new DrawMapEvent(batchRenderer));
-
-        GameFactory.npcManager.render(batchRenderer);
-        GameFactory.projectileManager.render(batchRenderer);
-        GameFactory.player.render(batchRenderer);
-
-        // Render the batch
-        batchRenderer.renderBatch();
-
-        GameFactory.imguiApp.handleInput(windowManager.window);
-        GameFactory.imguiApp.newFrame();
-
-        SmeagleBus.getInstance().post(new RenderGuiEvent());
-
-        GameFactory.imguiApp.render();
-
-        // Swap buffers and poll events
+        // Swap buffers and poll window events
         windowManager.swapAndPoll();
-
     }
 
     public static boolean gamePaused = true;
 
-    private static void loop(BatchRenderer batchRenderer) {
-        // Run the rendering loop until the user has attempted to close the window/pressed the ESCAPE key.
+    private static void loop(Renderer renderer) {
+        // Get initial window size
+        IntBuffer widthBuffer = BufferUtils.createIntBuffer(1);
+        IntBuffer heightBuffer = BufferUtils.createIntBuffer(1);
+        GLFW.glfwGetWindowSize(windowManager.window, widthBuffer, heightBuffer);
+        int windowWidth = widthBuffer.get(0);
+        int windowHeight = heightBuffer.get(0);
+
+        // Create camera with correct aspect ratio
+        camera = new Camera(
+                70f,
+                (float) windowWidth / windowHeight,
+                0.1f,
+                1000f
+        );
+
         while (!windowManager.shouldClose()) {
             DeltaTimeUtil.update();
+            SmeagleBus.getInstance().post(new GameUpdateEvent(gamePaused, camera));
 
-            SmeagleBus.getInstance().post(new GameUpdateEvent(gamePaused));
 
-            render(batchRenderer);
+            // update camera aspect if window resized
+            widthBuffer.clear();
+            heightBuffer.clear();
+            GLFW.glfwGetWindowSize(windowManager.window, widthBuffer, heightBuffer);
+            int newWidth = widthBuffer.get(0);
+            int newHeight = heightBuffer.get(0);
+            if (newWidth != windowWidth || newHeight != windowHeight) {
+                windowWidth = newWidth;
+                windowHeight = newHeight;
+                camera.setAspectRatio((float) windowWidth / windowHeight);
+            }
+
+            render(renderer, camera);
         }
-        GameFactory.imguiApp.cleanup();
-        GameFactory.soundSystem.cleanup();
+
+        ImguiSystem.getInstance().getImguiApp().cleanup();
+        SoundSystem.getInstance().cleanup();
     }
+
 
     /**
      * Checks the internal engine version with what gameinfo.json is asking for

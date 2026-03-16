@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine.core.eventbus.events.render.batchrenderer;
 
-import com.toxicrain.rainengine.core.render.BatchRenderer;
+import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;
 
 public class RenderBatchRendererEvent {
 

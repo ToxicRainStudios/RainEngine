@@ -1,10 +1,10 @@
 package com.toxicrain.rainengine.core.json.key;
 
+import com.github.strubium.windowmanager.window.InputUtils;
 import com.toxicrain.instanceable.BaseInstanceable;
-import com.toxicrain.rainengine.core.datatypes.vector.Vector3;
 import com.toxicrain.rainengine.core.json.SettingsInfoParser;
-import com.toxicrain.rainengine.util.InputUtils;
 import com.toxicrain.rainengine.factories.GameFactory;
+import org.joml.Vector3f;
 
 public class MouseTracker extends BaseInstanceable<MouseTracker> {
     private float[] openglMousePos = new float[]{0f, 0f};
@@ -24,7 +24,7 @@ public class MouseTracker extends BaseInstanceable<MouseTracker> {
         return openglMousePos;
     }
 
-    public float[] update(Vector3 vector3) {
+    public float[] update(Vector3f vector3) {
         float[] mousePos = safeGetMousePosition();
         openglMousePos = InputUtils.convertToOpenGLCoordinatesOffset(
                 mousePos[0], mousePos[1],

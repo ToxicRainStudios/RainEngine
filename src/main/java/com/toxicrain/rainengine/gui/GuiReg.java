@@ -8,6 +8,7 @@ import com.toxicrain.rainengine.core.json.SettingsInfoParser;
 import com.toxicrain.rainengine.core.logging.RainConsoleAppender;
 import com.toxicrain.rainengine.factories.GameFactory;
 import com.toxicrain.rainengine.sound.SoundSystem;
+import com.toxicrain.rainengine.sound.music.MusicManager;
 import com.toxicrain.rainengine.util.FileUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
@@ -189,7 +190,7 @@ public class GuiReg {
 
                 // Add the centered "Play" button
                 .pushFont("dos")
-                .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.play"),  () -> runAll(() ->GameFactory.guiManager.removeActiveGUI("MainMenu"), () -> GameFactory.soundSystem.play(SoundSystem.getSound("removeMeClick"), () -> GameEngine.gamePaused = false)), ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
+                .addButtonCentered(GameFactory.langHelper.get("gui.mainmenu.play"),  () -> runAll(() ->GameFactory.guiManager.removeActiveGUI("MainMenu"), () -> SoundSystem.getInstance().play(SoundSystem.getSound("removeMeClick"), () -> GameEngine.gamePaused = false)), ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
 
 
                 // Add the centered "Settings" button
@@ -223,7 +224,7 @@ public class GuiReg {
 
                 // Add the centered "Play" button
                 .pushFont("dos")
-                .addButtonCentered(GameFactory.langHelper.get("gui.deathscreen.exit"),  () -> runAll(() ->GameFactory.guiManager.removeActiveGUI("DeathScreen"), () ->GameFactory.soundSystem.play(SoundSystem.getSound("removeMeClick"))), ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
+                .addButtonCentered(GameFactory.langHelper.get("gui.deathscreen.exit"),  () -> runAll(() ->GameFactory.guiManager.removeActiveGUI("DeathScreen"), () -> SoundSystem.getInstance().play(SoundSystem.getSound("removeMeClick"))), ImGui.getIO().getDisplaySizeY() / 2, 20, 5)
 
 
 
@@ -237,26 +238,6 @@ public class GuiReg {
                         ImGui.getIO().getDisplaySizeY() - ImGui.calcTextSize("© 2024 " + GameInfoParser.getInstance().gameMakers + " - " + GameInfoParser.getInstance().gameVersion).y - 10)
 
                 // End window context
-                .endWindow();
-    }
-
-    public void drawInventory(){
-        GuiBuilder builder = new GuiBuilder();
-
-        String string;
-
-        if (GameFactory.player.getEquippedWeapon() == null){
-            string = "No Weapon";
-        }
-        else {
-            string = GameFactory.player.getEquippedWeapon().getName();
-        }
-
-        builder.beginWindow("Inventory", windowFlags)
-                .pushFont("dos")
-                .addTextCentered(string, 1)
-
-                .popFont()
                 .endWindow();
     }
 
@@ -348,7 +329,7 @@ public class GuiReg {
 
                 .addText("Player XYZ" + ": " + GameFactory.player.getPosition().toString())
 
-                .addText(GameFactory.langHelper.get("gui.debug.text.music_track") + ": " + GameFactory.musicManager.getCurrentTrackName())
+                .addText(GameFactory.langHelper.get("gui.debug.text.music_track") + ": " + MusicManager.getInstance().getCurrentTrackName())
 
 
                 // End Window

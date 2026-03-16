@@ -1,6 +1,7 @@
 package com.toxicrain.rainengine.core.datatypes;
 
-import com.toxicrain.rainengine.core.datatypes.vector.Vector2;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 /**
  * The Axis Aligned Bounding Box
@@ -16,7 +17,7 @@ public class AABB {
         this.maxY = maxY;
     }
 
-    public AABB(Vector2 min, Vector2 max) {
+    public AABB(Vector2f min, Vector2f max) {
         this.minX = min.x;
         this.minY = min.y;
         this.maxX = max.x;
@@ -54,7 +55,7 @@ public class AABB {
                 y >= minY && y <= maxY;
     }
 
-    public boolean contains(TilePos pos) {
+    public boolean contains(Vector3f pos) {
         return contains(pos.x, pos.y);
     }
 

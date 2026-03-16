@@ -1,10 +1,10 @@
 package com.toxicrain.rainengine.core.eventbus.events;
 
-public class ArtifactUpdateEvent {
+import com.github.strubium.smeaglebus.eventbus.CancelableEvent;
+import lombok.AllArgsConstructor;
 
-    public final String artifactName;
+@AllArgsConstructor
+public class ArtifactUpdateEvent extends CancelableEvent {
 
-    public ArtifactUpdateEvent( String artifactName){
-        this.artifactName = artifactName;
-    }
+    public final Object artifact;
 }

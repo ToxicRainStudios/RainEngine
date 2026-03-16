@@ -1,6 +1,6 @@
-package com.toxicrain.rainengine.core.interfaces;
+package com.toxicrain.rainengine.artifacts;
 
-import com.toxicrain.rainengine.core.render.BatchRenderer;
+import com.toxicrain.rainengine.core.render.lowlevel.BatchRenderer;
 
 /**
  * Interface representing an "artifact" in RainEngine.
@@ -12,7 +12,7 @@ public interface IArtifact {
      * Updates the state of the artifact.
      * This method is intended to be overridden by implementing classes.
      */
-    static void update() {
+    default void update(double deltaTime) {
     }
 
     /**
@@ -21,6 +21,6 @@ public interface IArtifact {
      *
      * @param batchRenderer The renderer used to draw the artifact.
      */
-    static void render(BatchRenderer batchRenderer) {
+    default void render(BatchRenderer batchRenderer) {
     }
 }

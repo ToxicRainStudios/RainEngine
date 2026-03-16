@@ -7,7 +7,13 @@ import java.lang.reflect.Method;
 
 public class GameLoader {
 
-    public static void loadAndInitGame(@NonNull String className) {
+
+    /**
+     * Load the game class
+     *
+     * @param className  The class to load
+     */
+    public static void loadGame(@NonNull String className) {
         try {
             // Load the class
             Class<?> clazz = Class.forName(className);

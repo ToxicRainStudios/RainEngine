@@ -1,3 +1,5 @@
+import org.gradle.internal.os.OperatingSystem
+
 plugins {
     id 'java'
     id 'application'
@@ -6,13 +8,39 @@ plugins {
 group 'com.toxicrain'
 version 'Dev-4'
 
-sourceCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_1_8
 
-project.ext.lwjglVersion = '3.3.6'
-project.ext.jomlVersion = '1.10.1'
-project.ext.imguiVersion = '1.86.11'
-project.ext.luajVersion = '3.0.1'
-project.ext.lwjglNatives = 'natives-windows'
+ext {
+    lwjglVersion = '3.4.1'
+    jomlVersion  = '1.10.1'
+    imguiVersion = '1.86.11'
+    luajVersion  = '3.0.1'
+}
+
+// Platform detection
+def os   = OperatingSystem.current()
+def arch = System.getProperty("os.arch").toLowerCase()
+
+ext {
+    // LWJGL natives
+    lwjglNatives =
+            os.isWindows() ? 'natives-windows' :
+                    os.isMacOsX()  ? 'natives-macos'   :
+                            os.isLinux() && arch.contains('arm') ? 'natives-linux-arm64' :
+                                    os.isLinux()  ? 'natives-linux' :
+                                            null
+
+    // JavaWindowManager classifier
+    jwmClassifier =
+            os.isWindows() ? 'windows' :
+                    os.isMacOsX()  ? 'macos'   :
+                            os.isLinux()   ? 'linux'   :
+                                    null
+}
+
+if (!lwjglNatives || !jwmClassifier) {
+    throw new GradleException("Unsupported platform: OS=${os}, ARCH=${arch}")
+}
 
 repositories {
     mavenCentral()
@@ -35,7 +63,6 @@ tasks.register('generateJavadoc', Javadoc) {
     }
 }
 
-
 dependencies {
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
@@ -45,19 +72,20 @@ dependencies {
     implementation 'org.lwjgl:lwjgl-openal'
     implementation 'org.lwjgl:lwjgl-opengl'
     implementation 'org.lwjgl:lwjgl-stb'
+
     runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+
     implementation "org.joml:joml:$jomlVersion"
-    implementation 'org.lwjgl:lwjgl-stb:$lwjglVersion'
 
     // JSON
     implementation 'org.json:json:20231013'
 
-    // IMGUI
+    // ImGui
     implementation "io.github.spair:imgui-java-binding:$imguiVersion"
     implementation "io.github.spair:imgui-java-lwjgl3:$imguiVersion"
     implementation "io.github.spair:imgui-java-$lwjglNatives:$imguiVersion"
@@ -71,26 +99,25 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.5.16'
 
     // Lombok
-    compileOnly 'org.projectlombok:lombok:1.18.28' // Use the latest version available
-    annotationProcessor 'org.projectlombok:lombok:1.18.28' // Necessary for annotation processing
+    compileOnly 'org.projectlombok:lombok:1.18.28'
+    annotationProcessor 'org.projectlombok:lombok:1.18.28'
 
-    implementation 'com.github.strubium:JavaWindowManager:1.0.5:windows'
+    // JavaWindowManager
+    implementation "com.github.strubium:JavaWindowManager:1.0.7:$jwmClassifier"
+
     implementation 'com.github.strubium:SmeagleBus:1.0.1'
     implementation 'com.github.ToxicRainStudios:Instanceable:1.0.0'
 
     implementation "io.reactivex.rxjava3:rxjava:3.1.10"
-
 }
 
 application {
-    mainClassName = 'com.toxicrain.rainengine.Application'
+    mainClass = 'com.toxicrain.rainengine.Application'
 }
 
 jar {
     manifest {
-        attributes(
-                'Main-Class': mainClassName
-        )
+        attributes 'Main-Class': application.mainClass
     }
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }

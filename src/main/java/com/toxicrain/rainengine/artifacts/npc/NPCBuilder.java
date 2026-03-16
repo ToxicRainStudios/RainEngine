@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine.artifacts.npc;
 
-import com.toxicrain.rainengine.artifacts.behavior.BehaviorSequence;
+import com.toxicrain.rainengine.artifacts.npc.behavior.BehaviorSequence;
 import com.toxicrain.rainengine.core.datatypes.Resource;
 
 public class NPCBuilder {
@@ -8,7 +8,6 @@ public class NPCBuilder {
     private float x = 0f;
     private float y = 0f;
     private float rotation = 0f;
-    private float size = 1f;
     private float fieldOfViewAngle = 90f;
     private float visionDistance = 300f;
     private String texture = "npcTexture";
@@ -22,11 +21,6 @@ public class NPCBuilder {
 
     public NPCBuilder rotation(float rotation) {
         this.rotation = rotation;
-        return this;
-    }
-
-    public NPCBuilder size(float size) {
-        this.size = size;
         return this;
     }
 
@@ -51,7 +45,7 @@ public class NPCBuilder {
     }
 
     public NPC build() {
-        NPC npc = new NPC(x, y, rotation, size);
+        NPC npc = new NPC(x, y, rotation);
         npc.setFieldOfViewAngle(fieldOfViewAngle);
         npc.setVisionDistance(visionDistance);
         npc.setBehaviorSequence(behaviorSequence);

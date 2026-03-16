@@ -1,6 +1,6 @@
 package com.toxicrain.rainengine.core.datatypes;
 
-import com.toxicrain.rainengine.core.datatypes.vector.Vector3;
+import org.joml.Vector3f;
 
 import static java.util.Arrays.stream;
 
@@ -65,7 +65,7 @@ public enum Color {
         this.blue = blue;
     }
 
-    Color(Vector3 color) {
+    Color(Vector3f color) {
         this.red = color.x;
         this.green = color.y;
         this.blue = color.z;

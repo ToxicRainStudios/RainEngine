@@ -3,16 +3,16 @@ package com.toxicrain.rainengine.core.json;
 import com.github.strubium.smeaglebus.eventbus.SmeagleBus;
 import com.toxicrain.instanceable.BaseInstanceable;
 import com.toxicrain.rainengine.core.Constants;
-import com.toxicrain.rainengine.core.datatypes.vector.Vector2;
 import com.toxicrain.rainengine.core.eventbus.events.load.MapLoadEvent;
 import com.toxicrain.rainengine.core.logging.RainLogger;
-import com.toxicrain.rainengine.core.datatypes.TilePos;
 import com.toxicrain.rainengine.core.lua.LuaManager;
 import com.toxicrain.rainengine.core.registries.tiles.Tile;
 import com.toxicrain.rainengine.util.FileUtils;
 import com.toxicrain.rainengine.light.LightSystem;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,10 +24,10 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MapInfoParser extends BaseInstanceable<MapInfoParser> {
 
-    public Vector2 mapSize = new Vector2(0, 0);
-    public Vector2 playerSpawnPos = new Vector2(0, 0);
+    public Vector2f mapSize = new Vector2f(0, 0);
+    public Vector2f playerSpawnPos = new Vector2f(0, 0);
     public int tiles = 0;
-    public ArrayList<TilePos> mapData = new ArrayList<>();
+    public ArrayList<Vector3f> mapData = new ArrayList<>();
 
     public static MapInfoParser getInstance() {
         return BaseInstanceable.getInstance(MapInfoParser.class);
@@ -41,8 +41,8 @@ public class MapInfoParser extends BaseInstanceable<MapInfoParser> {
 
     public void parseMapFile(String mapName) throws IOException {
         // Clear all previous data for a fresh load
-        mapSize = new Vector2(0, 0);
-        playerSpawnPos = new Vector2(0, 0);
+        mapSize = new Vector2f(0, 0);
+        playerSpawnPos = new Vector2f(0, 0);
         tiles = 0;
         mapData.clear();
         Tile.mapDataType.clear();
@@ -104,7 +104,7 @@ public class MapInfoParser extends BaseInstanceable<MapInfoParser> {
                                 int tileX = l + offsetX;
                                 int tileY = k + offsetY;
 
-                                mapData.add(new TilePos(tileX * 2, tileY * -2, 0.0001f));
+                                mapData.add(new Vector3f(tileX * 2, tileY * -2, 0.0001f));
                                 tiles++;
                                 Tile.mapDataType.add(tileChar);
 

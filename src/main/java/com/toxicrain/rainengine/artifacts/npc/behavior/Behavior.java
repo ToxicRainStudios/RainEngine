@@ -1,4 +1,4 @@
-package com.toxicrain.rainengine.artifacts.behavior;
+package com.toxicrain.rainengine.artifacts.npc.behavior;
 
 import com.toxicrain.rainengine.artifacts.npc.NPC;
 
